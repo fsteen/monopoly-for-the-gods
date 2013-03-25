@@ -12,6 +12,7 @@ public class Property {
 	private int[] _cost;
 	private int _numHouses;
 	private int _ownerID;
+	private boolean _isMortgaged;
 
 	/**
 	 * Constructs a new property
@@ -65,6 +66,30 @@ public class Property {
 	 */
 	public void setOwner(int newOwnerID){
 		_ownerID=newOwnerID;
+	}
+	
+	/**
+	 * 
+	 * @return number of houses
+	 */
+	public int getNumHouses(){
+		return _numHouses;
+	}
+	
+	/**
+	 * 
+	 * @return if it's mortgaged
+	 */
+	public boolean getMortgagedState(){
+		return _isMortgaged;
+	}
+	
+	/**
+	 * 
+	 * @param newMortgagedState
+	 */
+	public void setMortgagedState(boolean newMortgagedState){
+		_isMortgaged=newMortgagedState;
 	}
 
 }
