@@ -11,7 +11,7 @@ public class Property {
 	public final int MortgageValue;
 	private int[] _cost;
 	private int _numHouses;
-	private int _ownerID;
+	private GamePlayer _owner;
 	private boolean _isMortgaged;
 
 	/**
@@ -40,7 +40,7 @@ public class Property {
 		_cost[5]=hotelCost;
 		
 		_numHouses=0;
-		_ownerID=-1;
+		_owner=null;
 		
 	}
 	
@@ -48,24 +48,24 @@ public class Property {
 	 * 
 	 * @return rent owed
 	 */
-	public int getRent(){
+	public int getRent() throws Exception{
 		return _cost[_numHouses];
 	}
 	
 	/**
 	 * 
-	 * @return ownerID
+	 * @return owner
 	 */
-	public int getOwner(){
-		return _ownerID;
+	public GamePlayer getOwner(){
+		return _owner;
 	}
 	
 	/**
 	 * 
 	 * @param newOwnerID
 	 */
-	public void setOwner(int newOwnerID){
-		_ownerID=newOwnerID;
+	public void setOwner(GamePlayer newOwner){
+		_owner=newOwner;
 	}
 	
 	/**
@@ -74,6 +74,17 @@ public class Property {
 	 */
 	public int getNumHouses(){
 		return _numHouses;
+	}
+	
+	/**
+	 * adds a house to the property
+	 * @throws Exception 
+	 */
+	public void addHouse() throws Exception{
+		if(_numHouses==5){
+			throw new Exception("Too many houses, cannot add more");
+		}
+		_numHouses+=1;
 	}
 	
 	/**

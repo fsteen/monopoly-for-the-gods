@@ -57,7 +57,7 @@ public class GamePlayer {
 		}
 		else{
 			//TODO: decide if it wants to buy the property
-			property.setOwner(_player.ID);
+			property.setOwner(this);
 			_cash-=property.Price;
 			//TODO: decide if property is a railroad or utility add that in
 			return true;
@@ -132,7 +132,21 @@ public class GamePlayer {
 		return (_turnsInJail!=0);
 	}
 	
+	/**
+	 * 
+	 * @return number of railroads owned
+	 */
+	public int getNumRailroads(){
+		return _numRailroads;
+	}
 	
+	/**
+	 * 
+	 * @return number of utitilies owned
+	 */
+	public int getNumUtilities(){
+		return _numUtilities;
+	}
 
 
 }
