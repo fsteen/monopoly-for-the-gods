@@ -47,6 +47,16 @@ public class GamePlayer {
 	}
 	
 	/**
+	 * has the player pay income tax
+	 */
+	public int payIncomeTax(){
+		int payment=Math.min(200, _totalWealth/10);
+		payMoney(payment);
+		return payment;
+		
+	}
+	
+	/**
 	 * Attempts to buy the property
 	 * @param property
 	 * @return if the property was bought
@@ -58,7 +68,15 @@ public class GamePlayer {
 		else{
 			//TODO: decide if it wants to buy the property
 			property.setOwner(this);
-			_cash-=property.Price;
+			_properties.add(property);
+			
+			//checks if the property now creates a monopoly
+			if((property.getSibling1()==null||property.getSibling1().getOwner()==this) &&(property.getSibling2()==null||property.getSibling2().getOwner()==this)){
+				property.setMonopolyState(true);
+				if(property.getSibling1()!=null) property.getSibling1().setMonopolyState(true);
+				if(property.getSibling2()!=null) property.getSibling2().setMonopolyState(true);
+			}
+			payMoney(property.Price);
 			//TODO: decide if property is a railroad or utility add that in
 			return true;
 		}
@@ -122,6 +140,14 @@ public class GamePlayer {
 	 */
 	public void getOutOfJail(){
 		_turnsInJail=0;
+	}
+	
+	/**
+	 * set it so player is out of jail
+	 */
+	public void goToJail(){
+		_turnsInJail=1;
+		//TODO: move position to jail, do not collect $200
 	}
 	
 	/**

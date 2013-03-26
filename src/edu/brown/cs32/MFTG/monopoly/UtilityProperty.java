@@ -3,7 +3,7 @@ package edu.brown.cs32.MFTG.monopoly;
 public class UtilityProperty extends Property {
 
 	public UtilityProperty(String name) {
-		super(name, 150, 75, 0, Integer.MAX_VALUE, Integer.MAX_VALUE,Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE);
+		super(name, "white", 150, 75, 0, 0, 0,0,0,0, Integer.MAX_VALUE);
 	}
 
 	@Override

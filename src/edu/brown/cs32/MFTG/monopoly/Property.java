@@ -13,6 +13,9 @@ public class Property {
 	private int _numHouses;
 	private GamePlayer _owner;
 	private boolean _isMortgaged;
+	private boolean _isMonopoly;
+	public final String Color;
+	public Property _p1, _p2;
 
 	/**
 	 * Constructs a new property
@@ -26,10 +29,11 @@ public class Property {
 	 * @param fourHouseCost
 	 * @param hotelCost
 	 */
-	public Property(String name, int price, int mortgageValue, int rent, int oneHouseCost, int twoHouseCost, int threeHouseCost, int fourHouseCost, int hotelCost){
+	public Property(String name, String color, int price, int mortgageValue, int rent, int oneHouseCost, int twoHouseCost, int threeHouseCost, int fourHouseCost, int hotelCost, int costperhouse){
 		Name=name;
 		Price=price;
 		MortgageValue=mortgageValue;
+		Color=color;
 		
 		_cost = new int[6];
 		_cost[0]=rent;
@@ -41,6 +45,7 @@ public class Property {
 		
 		_numHouses=0;
 		_owner=null;
+		_isMonopoly=false;
 		
 	}
 	
@@ -49,6 +54,12 @@ public class Property {
 	 * @return rent owed
 	 */
 	public int getRent() throws Exception{
+		if(_isMortgaged){
+			return 0;
+		}
+		if(_numHouses==0&&_isMonopoly){
+			return _cost[0]*2;
+		}
 		return _cost[_numHouses];
 	}
 	
@@ -102,5 +113,49 @@ public class Property {
 	public void setMortgagedState(boolean newMortgagedState){
 		_isMortgaged=newMortgagedState;
 	}
+	
+	/**
+	 * 
+	 * @param newMonopolyState
+	 */
+	public void setMonopolyState(boolean newMonopolyState){
+		_isMonopoly=newMonopolyState;
+	}
+	
+	/**
+	 * 
+	 * @return if it's a monopoly
+	 */
+	public boolean getMonopolyState(){
+		return _isMonopoly;
+	}
+	
+	/**
+	 * Sets the other properties of the same color
+	 * @param p1
+	 * @param p2
+	 */
+	public void setSiblings(Property p1, Property p2){
+		_p1=p1;
+		_p2=p2;
+	}
+	
+	/**
+	 * 
+	 * @return property of same color
+	 */
+	public Property getSibling1(){
+		return _p1;
+	}
+	
+	/**
+	 * 
+	 * @return property of the same color
+	 */
+	public Property getSibling2(){
+		return _p2;
+	}
+	
+	
 
 }

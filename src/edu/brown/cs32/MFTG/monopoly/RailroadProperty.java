@@ -3,7 +3,7 @@ package edu.brown.cs32.MFTG.monopoly;
 public class RailroadProperty extends Property {
 
 	public RailroadProperty(String name) {
-		super(name, 200, 100, 25, Integer.MAX_VALUE, Integer.MAX_VALUE,Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE);
+		super(name, "black", 200, 100, 25, 0, 0,0,0,0, Integer.MAX_VALUE);
 	}
 
 	@Override
