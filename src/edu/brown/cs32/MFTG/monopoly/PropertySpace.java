@@ -1,5 +1,6 @@
 package edu.brown.cs32.MFTG.monopoly;
 
+
 /**
  * This class models a space with a property on it
  * @author JudahSchvimer

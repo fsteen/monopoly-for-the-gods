@@ -2,6 +2,7 @@ package edu.brown.cs32.MFTG.monopoly;
 
 import java.util.HashMap;
 
+
 /**
  * wrapper around the board for the array
  * @author JudahSchvimer

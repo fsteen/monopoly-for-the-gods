@@ -1,5 +1,6 @@
 package edu.brown.cs32.MFTG.monopoly;
 
+
 /**
  * models a FreeParking space on board
  * @author JudahSchvimer

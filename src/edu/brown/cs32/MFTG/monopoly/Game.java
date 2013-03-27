@@ -1,6 +1,7 @@
 package edu.brown.cs32.MFTG.monopoly;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 
 public class Game implements Runnable{
@@ -28,7 +29,8 @@ public class Game implements Runnable{
 			_numPlayers++;
 			_players.add(new GamePlayer(p));
 		}
-		_currentPlayer = _players.get((int) (Math.random()*_numPlayers));
+		Collections.shuffle(_players);
+		_currentPlayer = _players.get(0);
 		_currentTurn=0;
 		_defaultFP=freeParking;
 		_freeParkingMoney = _defaultFP;
@@ -68,7 +70,8 @@ public class Game implements Runnable{
 					//decide whether to get out
 				}
 				else{
-					movePlayer(_currentPlayer, roll);
+					Space s=movePlayer(_currentPlayer, roll);
+					s.react(this, _currentPlayer);
 				}
 
 				tryTrading(_currentPlayer);
@@ -107,20 +110,22 @@ public class Game implements Runnable{
 	 * Moves player a given number of spaces
 	 * @param player
 	 * @param numSpaces
+	 * @return space player lands on
 	 */
-	void movePlayer (GamePlayer player, int numSpaces){
+	Space movePlayer (GamePlayer player, int numSpaces){
 		player.movePlayer(numSpaces);
-		_board.get(player.getPosition()).react(this, player);
+		return _board.get(player.getPosition());
 	}
 	
 	/**
 	 * moves player to a given space
 	 * @param player
 	 * @param spaceName
+	 * @return space player lands on
 	 */
-	void movePlayer (GamePlayer player, String spaceName){
+	Space movePlayer (GamePlayer player, String spaceName){
 		player.setPosition(_board.get(spaceName).getPosition());
-		_board.get(spaceName).react(this, player);
+		return _board.get(spaceName);
 	}
 	
 	/**

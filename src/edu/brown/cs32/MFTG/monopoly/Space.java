@@ -1,5 +1,6 @@
 package edu.brown.cs32.MFTG.monopoly;
 
+
 /**
  * Class modeling a space on the board
  * @author JudahSchvimer
