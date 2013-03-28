@@ -3,20 +3,20 @@ package edu.brown.cs32.MFTG.monopoly;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 
 public class Game implements Runnable{
 	private ArrayList<GamePlayer> _players;
-	private int _numPlayers;
 	private GamePlayer _currentPlayer;
-	private int _currentTurn,_freeParkingMoney, _defaultFP, _numHousesLeft, _numHotelsLeft;
-	private boolean _auctions;
+	private int _numPlayers, _currentTurn,_freeParkingMoney, _defaultFP, _numHousesLeft, _numHotelsLeft;
 	private Board _board;
 	private Dice _dice;
-	private static final int TURNS_PER_TIMESTAMP=5;
-	private boolean _playing;
+	private static final int TURNS_PER_TIMESTAMP=20;
+	private boolean _playing, _doubleOnGo, _auctions;
 	private int _doublesInRow;
 	private CommunityChestDeck _comChest;
 	private ChanceDeck _chance;
+	private GameData _gameData;
 
 	/**
 	 * Constructs a new game
@@ -24,7 +24,7 @@ public class Game implements Runnable{
 	 * @param auctions
 	 * @param players
 	 */
-	public Game(int freeParking,boolean auctions, Player...players) {
+	public Game(int freeParking,boolean doubleOnGo, boolean auctions, Player...players) {
 		for(Player p:players){
 			_numPlayers++;
 			_players.add(new GamePlayer(p));
@@ -34,6 +34,7 @@ public class Game implements Runnable{
 		_currentTurn=0;
 		_defaultFP=freeParking;
 		_freeParkingMoney = _defaultFP;
+		_doubleOnGo=doubleOnGo;
 		
 		_auctions=auctions;
 		_numHousesLeft=32;
@@ -50,16 +51,25 @@ public class Game implements Runnable{
 		_comChest=new CommunityChestDeck();
 		_chance= new ChanceDeck();
 		
+		_gameData=new GameData(_numPlayers);
+		
 					
 	}
 
 	@Override
 	public void run() {
 		while(_playing){
+			if(_currentPlayer.isInJail()){
+				_currentPlayer.incrementTurnsInJail();
+			}
 			int roll = _dice.rollDice();
 			boolean wasDoubles=_dice.wasDoubles();
 			if(wasDoubles){
 				_doublesInRow++;
+				if(_currentPlayer.isInJail()){
+					_currentPlayer.getOutOfJail();
+					wasDoubles=false;
+				}
 			}
 			if(_doublesInRow==3){
 				sendPlayerToJail(_currentPlayer);
@@ -67,13 +77,19 @@ public class Game implements Runnable{
 			}
 			else{
 				if(_currentPlayer.isInJail()){
-					//decide whether to get out
+					if(_currentPlayer.getTurnsInJail()==3){
+						_currentPlayer.getOutOfJail();
+						transferMoney(_currentPlayer, null, 50);
+					}
+					else{
+						tryGettingOutOfJail(_currentPlayer);
+					}
 				}
-				else{
+				if(_currentPlayer.isInJail()==false){
 					Space s=movePlayer(_currentPlayer, roll);
 					s.react(this, _currentPlayer);
 				}
-
+				tryUnmortgaging(_currentPlayer);
 				tryTrading(_currentPlayer);
 				tryBuilding(_currentPlayer);
 				
@@ -86,12 +102,22 @@ public class Game implements Runnable{
 		
 	}
 	
+	public GameData getGameData(){
+		return _gameData;
+	}
+	
 	/**
 	 * Ends the current turn, saves data if necessary, makes it the next person's turn.
 	 */
-	public void endTurn(){
+	void endTurn(){
 		if(_currentTurn%TURNS_PER_TIMESTAMP==0){
-			//TODO: add data
+			for(GamePlayer player: _players){
+				_gameData.setWealthAtTime(player.getPlayer().ID, player.getCash(), player.getTotalWealth());
+				for(Property prop: player.getProperties()){
+					_gameData.setPropertyAtTime(prop.Name, player.getPlayer().ID, prop.getNumHouses(), prop.getPersonalRevenueWith(),prop.getPersonalRevenueWithout(),prop.getTotalRevenueWithHouses(),prop.getTotalRevenueWithoutHouses(), prop.getMortgagedState());
+				}
+			}
+
 		}
 		_currentTurn++;
 		_currentPlayer = _players.get(_currentTurn%_numPlayers);
@@ -103,6 +129,7 @@ public class Game implements Runnable{
 	 * triggers the end of the game and cleans it up
 	 */
 	private void endGame(){
+		_gameData.setWinner(_players.get(0).getPlayer().ID);
 		_playing=false;
 	}
 	
@@ -113,7 +140,12 @@ public class Game implements Runnable{
 	 * @return space player lands on
 	 */
 	Space movePlayer (GamePlayer player, int numSpaces){
-		player.movePlayer(numSpaces);
+		int curr=player.getPosition();
+		int next =(curr+numSpaces)%40;
+		if(curr>next){
+			player.addMoney(200);
+		}
+		player.setPosition(next);
 		return _board.get(player.getPosition());
 	}
 	
@@ -124,7 +156,13 @@ public class Game implements Runnable{
 	 * @return space player lands on
 	 */
 	Space movePlayer (GamePlayer player, String spaceName){
-		player.setPosition(_board.get(spaceName).getPosition());
+		int curr=player.getPosition();
+		int next =_board.get(spaceName).getPosition();
+		//if we have to go around the board
+		if(spaceName.equals("jail")==false&&curr>next){
+			player.addMoney(200);
+		}
+		player.setPosition(next);
 		return _board.get(spaceName);
 	}
 	
@@ -133,20 +171,87 @@ public class Game implements Runnable{
 	 * @param player
 	 */
 	void sendPlayerToJail(GamePlayer player){
+		movePlayer(player, "jail");
 		player.goToJail();
 		
 	}
 	
+	/**
+	 * Transfers from a player to another
+	 * @param payer
+	 * @param receiver (bank if null)
+	 * @param amountOwed
+	 * @return if the player was bankrupted
+	 */
+	boolean transferMoney(GamePlayer payer, GamePlayer receiver, int amountOwed){
+		int actuallyPaid=payer.payMoney(amountOwed);
+		if(receiver!=null){
+			receiver.addMoney(actuallyPaid);
+		} else {
+			addFreeParkingMoney(actuallyPaid);
+		}
+
+		if(actuallyPaid<amountOwed){
+			bankruptPlayer(payer,receiver);
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * called if players runs out of assets and loses
+	 * removes player and gives assets either to bank or to 
+	 * @param bankruptPlayer
+	 * @param creditor
+	 */
+	void bankruptPlayer(GamePlayer bankruptPlayer, GamePlayer creditor){
+		if(creditor!=null){
+			for(Property p: bankruptPlayer.getProperties()){
+				creditor.gainProperty(p);
+			}
+		}
+		else{
+			for(Property p: bankruptPlayer.getProperties()){
+				p.setOwner(null);
+				p.setMortgagedState(false);
+				p.setMonopolyState(false);
+				auction(p);
+			}
+		}
+		_players.remove(bankruptPlayer);
+		_numPlayers--;
+		if(_numPlayers==1){
+			endGame();
+		}
+	}
+	
+	/**
+	 * 
+	 * @param position
+	 * @return space at that position
+	 */
+	Space getSpace(int position){
+		return _board.get(position);
+	}
+	
 	private void tryTrading(GamePlayer player){
-		
+		//TODO
 	}
 	
 	private void tryBuilding(GamePlayer player){
-		
+		//TODO
+	}
+	
+	private void tryUnmortgaging(GamePlayer player){
+		//TODO
+	}
+	
+	private void tryGettingOutOfJail(GamePlayer player){
+		//TODO
 	}
 	
 	void auction(Property property){
-		
+		//TODO
 	}
 	
 	/**
@@ -197,6 +302,29 @@ public class Game implements Runnable{
 	 */
 	boolean playWithFreeParking(){
 		return (_defaultFP>=0);
+	}
+	
+	/**
+	 * 
+	 * @return if you're playing with double on Go
+	 */
+	boolean playWithDoubleOnGo(){
+		return _doubleOnGo;
+	}
+	
+	/**
+	 * 
+	 * @param player
+	 * @return list of other players
+	 */
+	List<GamePlayer> getOtherPlayers(GamePlayer player){
+		List<GamePlayer> result = new ArrayList<>();
+		for(GamePlayer p: _players){
+			if (p!=player){
+				result.add(p);
+			}
+		}
+		return result;
 	}
 
 }

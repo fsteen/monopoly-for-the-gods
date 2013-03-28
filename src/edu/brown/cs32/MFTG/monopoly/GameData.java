@@ -11,6 +11,7 @@ import java.util.List;
 public class GameData {
 	private ArrayList<TimeStamp> _data;
 	private int _time, _numPlayers;
+	private int _winner;
 	
 	/**
 	 * Constructs the game data objects
@@ -32,6 +33,21 @@ public class GameData {
 
 		
 	}
+	
+	/**
+	 * @return the _winner
+	 */
+	public int getWinner() {
+		return _winner;
+	}
+
+	/**
+	 * @param _winner the _winner to set
+	 */
+	public void setWinner(int winner) {
+		_winner = winner;
+	}
+
 	
 	/**
 	 * called to add a new time to the gamedata objects
@@ -57,8 +73,8 @@ public class GameData {
 	 * @param revenue
 	 * @param mortgaged
 	 */
-	void setPropertyAtTime(String propertyName, int ownerID, int numHouses, int revenue, boolean mortgaged){
-		_data.get(_time).setPropertyData(propertyName,ownerID,numHouses,revenue,mortgaged);
+	void setPropertyAtTime(String propertyName, int ownerID, int numHouses,  int personalRevenueWithHouses, int personalRevenueWithoutHouses,int totalRevenueWithHouses,int totalRevenueWithoutHouses, boolean mortgaged){
+		_data.get(_time).setPropertyData(propertyName,ownerID,numHouses,personalRevenueWithHouses, personalRevenueWithoutHouses, totalRevenueWithHouses, totalRevenueWithoutHouses,mortgaged);
 	}
 	
 	/**
@@ -94,8 +110,8 @@ public class GameData {
 		 * @param revenue
 		 * @param mortgaged
 		 */
-		void setPropertyData(String propertyName, int ownerID, int numHouses, int revenue, boolean mortgaged){
-			_propertyData.add(new PropertyData(propertyName,ownerID,numHouses,revenue,mortgaged));
+		void setPropertyData(String propertyName, int ownerID, int numHouses, int personalRevenueWithHouses, int personalRevenueWithoutHouses,int totalRevenueWithHouses,int totalRevenueWithoutHouses, boolean mortgaged){
+			_propertyData.add(new PropertyData(propertyName,ownerID,numHouses, personalRevenueWithHouses, personalRevenueWithoutHouses, totalRevenueWithHouses, totalRevenueWithoutHouses,mortgaged));
 		}
 		
 		/**
@@ -150,13 +166,19 @@ public class GameData {
 		public String propertyName;
 		public int ownerID;
 		public int numHouses;
-		public int revenue;
+		public int personalRevenueWithHouses;
+		public int personalRevenueWithoutHouses;
+		public int totalRevenueWithHouses;
+		public int totalRevenueWithoutHouses;
 		public boolean mortgaged;
-		public PropertyData(String propertyName, int ownerID, int numHouses, int revenue, boolean mortgaged){
+		public PropertyData(String propertyName, int ownerID, int numHouses, int personalRevenueWithHouses, int personalRevenueWithoutHouses,int totalRevenueWithHouses,int totalRevenueWithoutHouses,boolean mortgaged){
 			this.propertyName=propertyName;
 			this.ownerID=ownerID;
 			this.numHouses=numHouses;
-			this.revenue=revenue;
+			this.personalRevenueWithHouses=personalRevenueWithHouses;
+			this.personalRevenueWithoutHouses=personalRevenueWithoutHouses;
+			this.totalRevenueWithHouses=totalRevenueWithHouses;
+			this.totalRevenueWithoutHouses=totalRevenueWithoutHouses;
 			this.mortgaged=mortgaged;
 		}
 	}

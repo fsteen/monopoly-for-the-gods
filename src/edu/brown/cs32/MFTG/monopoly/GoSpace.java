@@ -22,7 +22,8 @@ public class GoSpace extends Space {
 	 * Models a go space
 	 */
 	public void react(Game game, GamePlayer player){
-		player.addMoney(200);
+		if(game.playWithDoubleOnGo())
+			player.addMoney(200);
 	}
 
 }

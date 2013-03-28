@@ -22,7 +22,7 @@ public class IncomeTaxSpace extends Space {
 	 * Models a income tax space
 	 */
 	public void react(Game game, GamePlayer player){
-		game.addFreeParkingMoney(player.payIncomeTax());
+		game.transferMoney(player, null, Math.min(200, player.getTotalWealth()/10));
 	}
 
 }

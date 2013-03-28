@@ -64,7 +64,7 @@ public class Board {
 		_spaces.put("virginia avenue", _board[14]);
 		
 		_board[15]=new PropertySpace(15,new RailroadProperty("pennsylvania railroad"));
-		_spaces.put("reading railroad", _board[15]);
+		_spaces.put("pennsylvania railroad", _board[15]);
 		
 		_board[16]=new PropertySpace(16,new Property("st. james place","orange",180,90,14,70,200,550,750,950,100));
 		_spaces.put("st. james place", _board[16]);

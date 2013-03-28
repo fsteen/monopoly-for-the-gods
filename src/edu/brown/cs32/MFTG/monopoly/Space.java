@@ -30,4 +30,12 @@ public abstract class Space {
 	public int getPosition(){
 		return _position;
 	}
+	
+	/**
+	 * 
+	 * @return property on space, or null if it's not a property space
+	 */
+	public Property getProperty(){
+		return null;
+	}
 }

@@ -21,6 +21,9 @@ public class UtilityProperty extends Property {
 	 * @return rent owed
 	 */
 	public int getRent() throws Exception{
+		if(this.getMortgagedState()){
+			return 0;
+		}
 		int numUtil=this.getOwner().getNumUtilities();
 		Dice dice = new Dice();
 		switch(numUtil){

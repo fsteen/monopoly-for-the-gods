@@ -9,6 +9,7 @@ public class Property {
 	public final String Name;
 	public final int Price;
 	public final int MortgageValue;
+	public final int CostPerHouse;
 	private int[] _cost;
 	private int _numHouses;
 	private GamePlayer _owner;
@@ -16,6 +17,10 @@ public class Property {
 	private boolean _isMonopoly;
 	public final String Color;
 	public Property _p1, _p2;
+	private int _revenueWithoutHouses;
+	private int _revenueWithHouses;
+	private int _personalRevenueWithout;
+	private int _personalRevenueWith;
 
 	/**
 	 * Constructs a new property
@@ -34,6 +39,7 @@ public class Property {
 		Price=price;
 		MortgageValue=mortgageValue;
 		Color=color;
+		CostPerHouse=costperhouse;
 		
 		_cost = new int[6];
 		_cost[0]=rent;
@@ -46,6 +52,8 @@ public class Property {
 		_numHouses=0;
 		_owner=null;
 		_isMonopoly=false;
+		_revenueWithHouses=0;
+		_revenueWithoutHouses=0;
 		
 	}
 	
@@ -76,6 +84,11 @@ public class Property {
 	 * @param newOwnerID
 	 */
 	public void setOwner(GamePlayer newOwner){
+		//resets the personal revenue counter
+		if(newOwner!=_owner){
+			_personalRevenueWith=0;
+			_personalRevenueWithout=0;
+		}
 		_owner=newOwner;
 	}
 	
@@ -123,6 +136,15 @@ public class Property {
 	}
 	
 	/**
+	 * sells a house off the property
+	 * @return amount made
+	 */
+	public int sellHouse(){
+		_numHouses--;
+		return CostPerHouse/2;
+	}
+	
+	/**
 	 * 
 	 * @return if it's a monopoly
 	 */
@@ -155,6 +177,65 @@ public class Property {
 	public Property getSibling2(){
 		return _p2;
 	}
+	
+	/**
+	 * add revenue
+	 * @param rent
+	 */
+	public void addRevenue(int rent){
+		if(_numHouses==0){
+			_revenueWithoutHouses+=rent;
+			_personalRevenueWithout+=rent;
+		}
+		else{
+			_revenueWithHouses+=rent;
+			_personalRevenueWith+=rent;
+		}
+	}
+	
+	/**
+	 * subtract revenue from the property
+	 * @param payment
+	 */
+	public void loseRevenue(int payment){
+		if(_numHouses==0){
+			_revenueWithoutHouses-=payment;
+			_personalRevenueWithout-=payment;
+		}
+		else{
+			_revenueWithHouses-=payment;
+			_personalRevenueWith-=payment;
+		}
+	}
+	
+	/**
+	 * @return the _revenueWithoutHouses
+	 */
+	public int getTotalRevenueWithoutHouses() {
+		return _revenueWithoutHouses;
+	}
+
+	/**
+	 * @return the _revenueWithHouses
+	 */
+	public int getTotalRevenueWithHouses() {
+		return _revenueWithHouses;
+	}
+
+	/**
+	 * @return the _personalRevenueWithout
+	 */
+	public int getPersonalRevenueWithout() {
+		return _personalRevenueWithout;
+	}
+
+	/**
+	 * @return the _personalRevenueWith
+	 */
+	public int getPersonalRevenueWith() {
+		return _personalRevenueWith;
+	}
+
 	
 	
 

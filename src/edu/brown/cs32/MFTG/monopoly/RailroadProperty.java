@@ -21,6 +21,9 @@ public class RailroadProperty extends Property {
 	 * @return rent owed
 	 */
 	public int getRent() throws Exception{
+		if(this.getMortgagedState()){
+			return 0;
+		}
 		int numRail=this.getOwner().getNumRailroads();
 		switch(numRail){
 		case 1:  return 25;

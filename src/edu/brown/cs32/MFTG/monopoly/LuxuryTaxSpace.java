@@ -22,8 +22,7 @@ public class LuxuryTaxSpace extends Space {
 	 * Models a  LuxuryTax space
 	 */
 	public void react(Game game, GamePlayer player){
-		player.payMoney(75);
-		game.addFreeParkingMoney(75);
+		game.transferMoney(player, null, 75);
 	}
 
 }

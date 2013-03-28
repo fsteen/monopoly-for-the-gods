@@ -24,19 +24,28 @@ public class PropertySpace extends Space {
 	 * Reacts by allowing the user to buy it and if it'snot bought auction it
 	 */
 	public void react(Game game, GamePlayer currentPlayer) {
-		if(_property.getOwner()==null){
+		if(_property.getOwner()!=null){
 			try {
-				currentPlayer.payMoney(_property.getRent());
-				_property.getOwner().addMoney(_property.getRent());
+				int rent =_property.getRent();
+				game.transferMoney(currentPlayer, _property.getOwner(), rent);
+				_property.addRevenue(rent);
 			} catch (Exception e) {
 				System.out.println("ERROR: "+e.getMessage());
 			}
 
 		}
-		boolean bought=currentPlayer.buyProperty(_property);
-		if(!bought){
-			game.auction(_property);
+		else{
+			boolean bought=currentPlayer.buyProperty(_property);
+			if(!bought){
+				game.auction(_property);
+			}
 		}
+
+	}
+	
+	@Override
+	public Property getProperty(){
+		return _property;
 	}
 
 }
