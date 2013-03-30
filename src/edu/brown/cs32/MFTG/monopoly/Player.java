@@ -21,6 +21,7 @@ public class Player {
 	private int _jailWait;
 	private Expense _mortgageChoice;
 	private Amount _houseSelling;
+	private Expense _sellingChoice;
 	private Balance _buildingEvenness;
 	private Expense _buildingChoice;
 	private Balance _buildingTiming;
@@ -48,8 +49,10 @@ public class Player {
 		_jailWait=3;
 		
 		_mortgageChoice=Expense.EXPENSIVE;
+		
 		_buildingEvenness=Balance.UNEVEN;
 		_buildingChoice=Expense.CHEAP;
+		_houseSelling=Amount.FEWER;
 		
 		//even represents buying slowly
 		//uneven represents buying all at once
@@ -240,6 +243,20 @@ public class Player {
 	 */
 	public void setBuildingChoice(Expense buildingChoice) {
 		_buildingChoice = buildingChoice;
+	}
+	
+	/**
+	 * @return the sellingChoice
+	 */
+	public Expense getSellingChoice() {
+		return _sellingChoice;
+	}
+
+	/**
+	 * @param _sellingChoice the _sellingChoice to set
+	 */
+	public void setSellingChoice(Expense sellingChoice) {
+		_sellingChoice = sellingChoice;
 	}
 
 	/**

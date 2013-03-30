@@ -104,11 +104,22 @@ public class Property {
 	 * adds a house to the property
 	 * @throws Exception 
 	 */
-	public void addHouse() throws Exception{
+	public void buildHouse() throws Exception{
 		if(_numHouses==5){
 			throw new Exception("Too many houses, cannot add more");
 		}
+		else if(_p1.getNumHouses()<_numHouses ||_p2.getNumHouses()<_numHouses){
+			throw new Exception("Cannot build houses unevenly");
+		}
 		_numHouses+=1;
+	}
+	
+	/**
+	 * 
+	 * @return if you can build another house
+	 */
+	public boolean canBuildHouse(){
+		return (_numHouses<5&&_p1.getNumHouses()>=_numHouses &&_p2.getNumHouses()>=_numHouses);
 	}
 	
 	/**
@@ -139,9 +150,23 @@ public class Property {
 	 * sells a house off the property
 	 * @return amount made
 	 */
-	public int sellHouse(){
+	public int sellHouse() throws Exception{
+		if(_p1.getNumHouses()>_numHouses ||_p2.getNumHouses()>_numHouses){
+			throw new Exception("Cannot sell houses unevenly");
+		}
+		else if(_numHouses==0){
+			throw new Exception("No houses to sell");
+		}
 		_numHouses--;
 		return CostPerHouse/2;
+	}
+	
+	/**
+	 * 
+	 * @return if you can sell a house on this property
+	 */
+	public boolean canSellHouse(){
+		return (_numHouses>0&&_p1.getNumHouses()<=_numHouses &&_p2.getNumHouses()<=_numHouses);
 	}
 	
 	/**

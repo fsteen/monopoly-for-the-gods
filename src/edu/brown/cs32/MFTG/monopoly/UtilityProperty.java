@@ -8,11 +8,34 @@ public class UtilityProperty extends Property {
 
 	@Override
 	/**
-	 * adds a house to the property
-	 * @throws Exception 
+	 * Cannot build a house on utility
 	 */
-	public void addHouse() throws Exception{
+	public void buildHouse() throws Exception{
 		throw new Exception ("Cannot add house to a utility");
+	}
+	
+	@Override
+	/**
+	 * can never build on utility
+	 */
+	public boolean canBuildHouse(){
+		return false;
+	}
+	
+	@Override
+	/**
+	 * can never sell on utility
+	 */
+	public int sellHouse() throws Exception{
+		throw new Exception("Cannot sell house on a utility");
+	}
+	
+	@Override
+	/**
+	 * can never sell house on utility
+	 */
+	public boolean canSellHouse(){
+		return false;
 	}
 
 	@Override

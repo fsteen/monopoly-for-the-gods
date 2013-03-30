@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.PriorityQueue;
 
 import edu.brown.cs32.MFTG.monopoly.Player.*;
 
@@ -11,6 +12,7 @@ public class GamePlayer {
 	private final Player _player;
 	private int _cash, _numGetOutOfJailFree, _position, _turnsInJail, _numRailroads, _numUtilities;
 	private ArrayList<Property> _properties;
+	
 	
 	public GamePlayer(Player player) {
 		_player=player;
@@ -61,7 +63,6 @@ public class GamePlayer {
 			throw new IllegalArgumentException("Money lost must be positive");
 		}
 		
-		//TODO:start selling and mortgaging and somehow tell the game if the player is bankrupt
 		if(_cash>=lostMoney){
 			_cash-=lostMoney;
 			return lostMoney;
@@ -83,89 +84,91 @@ public class GamePlayer {
 	 * @return amount actually gotten
 	 */
 	private int tryMortgagingOrSelling(int total){
-		int amountPaid=mortgageProperties(total);
-		if(_player.getBuildingEvenness()==Balance.EVEN){
-			
-		}
-		else{
-			
-		}
-			
-		return 0;
-	}
-	
-	private int mortgageProperties(int total){
 		int amountPaid=0;
-		//mortgage properties without houses
-		List<Property> unmonopolized = new ArrayList<>();
 		List<Property> unhoused = new ArrayList<>();
+		PriorityQueue<Property> housed = new PriorityQueue<>(_properties.size(),new HouseSellingComparator());
+		//separate all properties into those with houses and those without
 		for(Property p: _properties){
 			if(p.getMortgagedState()){
 				continue;
 			}
-			else if(p.getMonopolyState()==false){
-				unmonopolized.add(p);
-			}
 			else if(p.getNumHouses()==0){
 				unhoused.add(p);
 			}
-		}
-		Collections.sort(unmonopolized,new MortgagePriceComparator());
-		
-		//mortgages unmonopolized properties
-		if(_player.getMortgageChoice()==Expense.CHEAP){
-			for(int i=0; i<unmonopolized.size();i++){
-				unmonopolized.get(i).setMortgagedState(true);
-				amountPaid+=unmonopolized.get(i).MortgageValue;
-				if(amountPaid>=total){
-					_cash=amountPaid-total;
-					return total;
-				}
-				unmonopolized.remove(i);
-				i--;
-			}
-		}
-		else{
-			for(int i=unmonopolized.size()-1; i>=0;i--){
-				unmonopolized.get(i).setMortgagedState(true);
-				amountPaid+=unmonopolized.get(i).MortgageValue;
-				if(amountPaid>=total){
-					_cash=amountPaid-total;
-					return total;
-				}
-				unmonopolized.remove(i);
-				i++;
+			else{
+				housed.add(p);
 			}
 		}
 		
-		Collections.sort(unhoused,new MortgagePriceComparator());
+		Collections.sort(unhoused,new MortgageComparator());
+		//mortgage all unhoused properties in order of preference
+		for(int i=0; i<unhoused.size();i++){
+			unhoused.get(i).setMortgagedState(true);
+			amountPaid+=unhoused.get(i).MortgageValue;
+			if(amountPaid>=total){
+				_cash=amountPaid-total;
+				return total;
+			}
+			unhoused.remove(i);
+			i--;
+		}
+		//sell all houses and mortgage unhoused properties in order of preference
+		while(amountPaid<total){
+			try {
+				//find a property that can sell a house and then add back in all of the ones taht couldn't
+				List<Property> temp = new ArrayList<>();
+				Property curr = housed.poll();
+				//if the queue is empty then we've sold all houses and mortgaged eveyrthing so we're bankrupt
+				if(curr==null){
+					return amountPaid;
+				}
+				while(curr.canSellHouse()==false){
+					temp.add(curr);
+					curr=housed.poll();
+				}
+				housed.addAll(temp);
+				
+				//sell house on current property
+				amountPaid+=curr.sellHouse();
+				//if we still need money and this property has no houses we mortgage in it
+				if(curr.getNumHouses()==0&&amountPaid<total){
+					curr.setMortgagedState(true);
+					amountPaid+=curr.MortgageValue;
+				}
+				//add it back in at the correct position
+				else{
+					housed.add(curr);
+				}
+			} catch (Exception e) {
+				System.out.println("ERROR: "+ e.getMessage());
+			}
+
+		}
+		_cash=amountPaid-total;
+		return total;
+	}
+	
+	public void tryUnmortgaging(){
+		//TODO
+		List<Property> mortgaged = new ArrayList<>();
+		//separate all properties into those with houses and those without
+		for(Property p: _properties){
+			if(p.getMortgagedState()){
+				mortgaged.add(p);
+			}
+		}
 		
-		//mortgages unhoused but monopolized properties
-		if(_player.getMortgageChoice()==Expense.CHEAP){
-			for(int i=0; i<unhoused.size();i++){
-				unhoused.get(i).setMortgagedState(true);
-				amountPaid+=unhoused.get(i).MortgageValue;
-				if(amountPaid>=total){
-					_cash=amountPaid-total;
-					return total;
-				}
-				unhoused.remove(i);
-				i--;
+		Collections.sort(mortgaged,new MortgageComparator());
+		//mortgage all unhoused properties in order of preference
+		while(_cash>=_player.getMinBuildCash()){
+			try {
+				unmortgageProperty(mortgaged.get(0));
+				mortgaged.remove(0);
+			} catch (Exception e) {
+				System.err.println("ERROR: "+e.getMessage());
 			}
+
 		}
-		else{
-			for(int i=unhoused.size()-1; i>=0;i--){
-				unhoused.get(i).setMortgagedState(true);
-				amountPaid+=unhoused.get(i).MortgageValue;
-				if(amountPaid>=total){
-					_cash=amountPaid-total;
-					return total;
-				}
-				unhoused.remove(i);
-				i++;
-			}
-		}
-		return amountPaid;
 	}
 	
 	/**
@@ -200,6 +203,10 @@ public class GamePlayer {
 		}
 	}
 	
+	/**
+	 * gain a property for free
+	 * @param property
+	 */
 	public void gainProperty(Property property){
 		property.setOwner(this);
 		_properties.add(property);
@@ -340,52 +347,99 @@ public class GamePlayer {
 	
 	/**
 	 * Compares two properties based on mortgage price
+	 * bigger properties are ones that are more valuable to keep
+	 * monopolized ones are more valuable then unmonopolized ones
+	 * then if they prefer to mortgage cheap ones those are ranked less valuable or vice versa
+	 * 
 	 * @author JudahSchvimer
 	 *
 	 */
-	public class MortgagePriceComparator implements Comparator<Property> {
+	public class MortgageComparator implements Comparator<Property> {
 
-		public MortgagePriceComparator() {}
-
-		@Override
-		public int compare(Property o1, Property o2) {
-			return o1.MortgageValue-o2.MortgageValue;
-		}
-
-	}
-	
-	/**
-	 * Compares two properties based on number of houses and then by price
-	 * @author JudahSchvimer
-	 *
-	 */
-	public class HouseNumberComparator implements Comparator<Property> {
-
-		public HouseNumberComparator() {}
+		public MortgageComparator() {}
 
 		@Override
-		public int compare(Property o1, Property o2) {
-			int dif =o1.getNumHouses()-o2.getNumHouses();
-			if(dif==0){
-				dif=o1.Price-o2.Price;
+		public int compare(Property prop1, Property prop2) {
+			if(prop1.getMortgagedState()&&prop2.getMortgagedState()==false){
+				return 1;
 			}
-			return dif;
+			else if(prop1.getMortgagedState()==false&&prop2.getMortgagedState()){
+				return -1;
+			}
+			else{
+				if(_player.getMortgageChoice()==Expense.CHEAP){
+					return prop1.MortgageValue-prop2.MortgageValue;
+				}
+				else{
+					return prop2.MortgageValue-prop1.MortgageValue;
+				}
+			}
+
 		}
 
 	}
 	
 	/**
-	 * Compares two properties based on price
+	 * Compares two properties on which to sell houses on first
+	 * bigger ones are more valuable to keep
+	 * first go based on houseselling
+	 * then by expense of house
+	 * then by expense of property
+	 * 
 	 * @author JudahSchvimer
 	 *
 	 */
-	public class PriceComparator implements Comparator<Property> {
-
-		public PriceComparator() {}
+	public class HouseSellingComparator implements Comparator<Property> {
+		
+		public HouseSellingComparator() {}
 
 		@Override
-		public int compare(Property o1, Property o2) {
-			return o1.Price-o2.Price;
+		public int compare(Property prop1, Property prop2) {
+
+			int dif =prop1.getNumHouses()-prop2.getNumHouses();
+			if(dif!=0){
+				if(_player.getHouseSelling()==Amount.FEWER){
+					return dif;
+				}
+				else{
+					return (-1)*dif;
+				}
+			}
+			else{
+				dif=prop1.CostPerHouse-prop2.CostPerHouse;
+				if(dif!=0){
+					if(_player.getSellingChoice()==Expense.CHEAP){
+						return (-1)*dif;
+					}
+					else{
+						return dif;
+					}
+				}
+				else{
+					return prop1.Price-prop2.Price;
+				}
+			}
+		}
+
+	}
+
+	/**
+	 * Compares two properties on which to build houses on first
+	 * bigger ones are more less likely to sell on
+	 * first go based on evenness
+	 * then by expense of house
+	 * then by expense of property
+	 * 
+	 * @author JudahSchvimer
+	 *
+	 */
+	public class BuildComparator implements Comparator<Property> {
+
+		public BuildComparator() {}
+
+		@Override
+		public int compare(Property prop1, Property prop2) {
+			return 0;
 		}
 
 	}

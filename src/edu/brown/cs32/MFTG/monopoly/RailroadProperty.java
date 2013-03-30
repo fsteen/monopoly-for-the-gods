@@ -8,13 +8,35 @@ public class RailroadProperty extends Property {
 
 	@Override
 	/**
-	 * adds a house to the property
-	 * @throws Exception 
+	 * Cannot build a house on railroad
 	 */
-	public void addHouse() throws Exception{
+	public void buildHouse() throws Exception{
 		throw new Exception ("Cannot add house to a railroad");
 	}
-
+	
+	@Override
+	/**
+	 * can never build on railroad
+	 */
+	public boolean canBuildHouse(){
+		return false;
+	}
+	
+	@Override
+	/**
+	 * can never sell on railroad
+	 */
+	public int sellHouse() throws Exception{
+		throw new Exception("Cannot sell house on a railroad");
+	}
+	
+	@Override
+	/**
+	 * can never sell house on railroad
+	 */
+	public boolean canSellHouse(){
+		return false;
+	}
 	@Override
 	/**
 	 * 

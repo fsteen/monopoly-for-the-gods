@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.PriorityQueue;
+
+import edu.brown.cs32.MFTG.monopoly.GamePlayer.HouseSellingComparator;
+import edu.brown.cs32.MFTG.monopoly.GamePlayer.MortgageComparator;
 
 public class Game implements Runnable{
 	private ArrayList<GamePlayer> _players;
@@ -243,7 +247,7 @@ public class Game implements Runnable{
 	}
 	
 	private void tryUnmortgaging(GamePlayer player){
-		//TODO
+		player.tryUnmortgaging();
 	}
 	
 	private void tryGettingOutOfJail(GamePlayer player){
