@@ -55,4 +55,12 @@ public class UtilityProperty extends Property {
 		default: throw new Exception ("Cannot have "+numUtil+" utilities");
 		}
 	}
+	
+	@Override
+	/**
+	 *@return that it's not part of a monopoly
+	 */
+	public boolean getMonopolyState(){
+		return false;
+	}
 }

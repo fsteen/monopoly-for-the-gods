@@ -52,7 +52,15 @@ public class RailroadProperty extends Property {
 		case 2:  return 50;
 		case 3:  return 100;
 		case 4:  return 200;
-		default: throw new Exception ("Cannot have "+numRail+" railroads");
+		default: throw new Exception (this.toString()+": Cannot have "+numRail+" railroads");
 		}
+	}
+	
+	@Override
+	/**
+	 *@return that it's not part of a monopoly
+	 */
+	public boolean getMonopolyState(){
+		return false;
 	}
 }

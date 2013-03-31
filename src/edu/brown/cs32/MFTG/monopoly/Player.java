@@ -314,6 +314,11 @@ public class Player {
 	public void setJailRich(int jailRich) {
 		_jailRich = jailRich;
 	}
+	
+	@Override
+	public String toString(){
+		return String.format("Player %d", ID);
+	}
 
 
 }

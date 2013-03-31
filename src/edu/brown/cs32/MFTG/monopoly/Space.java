@@ -21,7 +21,7 @@ public abstract class Space {
 	 * @param game
 	 * @param currentPlayer
 	 */
-	public void react(Game game, GamePlayer currentPlayer){}
+	public void react(Game game, GamePlayer currentPlayer) throws Exception{}
 	
 	/**
 	 * 

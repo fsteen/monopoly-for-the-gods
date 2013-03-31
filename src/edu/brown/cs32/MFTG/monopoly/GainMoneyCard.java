@@ -7,13 +7,16 @@ package edu.brown.cs32.MFTG.monopoly;
  */
 public class GainMoneyCard implements Card {
 	private int _amountReceived;
-	public GainMoneyCard(int amountReceived) {
+	private Deck _deck;
+	public GainMoneyCard(int amountReceived, Deck deck) {
 		_amountReceived=amountReceived;
+		_deck=deck;
 	}
 
 	@Override
 	public void react(Game game, GamePlayer currentPlayer) {
 		currentPlayer.addMoney(_amountReceived);
+		_deck.putCardOnBottom(this);
 	}
 
 }

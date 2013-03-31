@@ -22,8 +22,7 @@ public class GameData {
 		
 		//this is a list of players, each player has a list 
 		_data = new ArrayList<>();
-		_time=0;
-		_data.add(new TimeStamp(_time));
+		_time=-1;
 		
 		//list of players where for each player it has a list of times
 		//each time has a list of wealth data

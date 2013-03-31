@@ -16,7 +16,7 @@ public class Property {
 	private boolean _isMortgaged;
 	private boolean _isMonopoly;
 	public final String Color;
-	public Property _p1, _p2;
+	private Property _p1, _p2;
 	private int _revenueWithoutHouses;
 	private int _revenueWithHouses;
 	private int _personalRevenueWithout;
@@ -108,7 +108,10 @@ public class Property {
 		if(_numHouses==5){
 			throw new Exception("Too many houses, cannot add more");
 		}
-		else if(_p1.getNumHouses()<_numHouses ||_p2.getNumHouses()<_numHouses){
+		else if(_p1!=null&&_p1.getNumHouses()<_numHouses){
+			throw new Exception("Cannot build houses unevenly");
+		}
+		else if(_p2!=null&&_p2.getNumHouses()<_numHouses){
 			throw new Exception("Cannot build houses unevenly");
 		}
 		_numHouses+=1;
@@ -119,7 +122,13 @@ public class Property {
 	 * @return if you can build another house
 	 */
 	public boolean canBuildHouse(){
-		return (_numHouses<5&&_p1.getNumHouses()>=_numHouses &&_p2.getNumHouses()>=_numHouses);
+		if(_p1!=null&&_p1.getNumHouses()<_numHouses){
+			return false;
+		}
+		if(_p2!=null&&_p2.getNumHouses()<_numHouses){
+			return false;
+		}
+		return (_numHouses<5);
 	}
 	
 	/**
@@ -147,11 +156,22 @@ public class Property {
 	}
 	
 	/**
+	 * 
+	 * @return if it's a monopoly
+	 */
+	public boolean getMonopolyState(){
+		return _isMonopoly;
+	}
+	
+	/**
 	 * sells a house off the property
 	 * @return amount made
 	 */
 	public int sellHouse() throws Exception{
-		if(_p1.getNumHouses()>_numHouses ||_p2.getNumHouses()>_numHouses){
+		if(_p1!=null&&_p1.getNumHouses()>_numHouses){
+			throw new Exception("Cannot sell houses unevenly");
+		}
+		else if(_p2!=null&&_p2.getNumHouses()>_numHouses){
 			throw new Exception("Cannot sell houses unevenly");
 		}
 		else if(_numHouses==0){
@@ -166,15 +186,13 @@ public class Property {
 	 * @return if you can sell a house on this property
 	 */
 	public boolean canSellHouse(){
-		return (_numHouses>0&&_p1.getNumHouses()<=_numHouses &&_p2.getNumHouses()<=_numHouses);
-	}
-	
-	/**
-	 * 
-	 * @return if it's a monopoly
-	 */
-	public boolean getMonopolyState(){
-		return _isMonopoly;
+		if(_p1!=null&&_p1.getNumHouses()>_numHouses){
+			return false;
+		}
+		if(_p2!=null&&_p2.getNumHouses()>_numHouses){
+			return false;
+		}
+		return (_numHouses>0);
 	}
 	
 	/**
@@ -259,6 +277,11 @@ public class Property {
 	 */
 	public int getPersonalRevenueWith() {
 		return _personalRevenueWith;
+	}
+	
+	@Override
+	public String toString(){
+		return Name;
 	}
 
 	

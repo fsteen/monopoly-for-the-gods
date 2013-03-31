@@ -6,12 +6,16 @@ package edu.brown.cs32.MFTG.monopoly;
  *
  */
 public class GoBackThreeSpacesCard implements Card {
-	public GoBackThreeSpacesCard() {}
+	private Deck _deck;
+	public GoBackThreeSpacesCard(Deck deck) {
+		_deck=deck;
+	}
 
 	@Override
-	public void react(Game game, GamePlayer currentPlayer) {
+	public void react(Game game, GamePlayer currentPlayer) throws Exception {
 		currentPlayer.setPosition(currentPlayer.getPosition()-3);
 		game.getSpace(currentPlayer.getPosition()-3).react(game, currentPlayer);
+		_deck.putCardOnBottom(this);
 	}
 
 }

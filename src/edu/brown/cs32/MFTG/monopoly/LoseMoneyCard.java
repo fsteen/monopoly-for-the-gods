@@ -7,13 +7,16 @@ package edu.brown.cs32.MFTG.monopoly;
  */
 public class LoseMoneyCard implements Card {
 	private int _amountLost;
-	public LoseMoneyCard(int amountLost) {
+	private Deck _deck;
+	public LoseMoneyCard(int amountLost, Deck deck) {
 		_amountLost=amountLost;
+		_deck=deck;
 	}
 
 	@Override
-	public void react(Game game, GamePlayer currentPlayer) {
+	public void react(Game game, GamePlayer currentPlayer) throws Exception {
 		game.transferMoney(currentPlayer, null, _amountLost);
+		_deck.putCardOnBottom(this);
 		
 	}
 

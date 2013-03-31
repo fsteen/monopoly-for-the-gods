@@ -9,12 +9,14 @@ import java.util.List;
  */
 public class LoseMoneyToEachPlayerCard implements Card {
 	private int _amountLost;
-	public LoseMoneyToEachPlayerCard(int amountLost) {
+	private Deck _deck;
+	public LoseMoneyToEachPlayerCard(int amountLost, Deck deck) {
 		_amountLost=amountLost;
+		_deck=deck;
 	}
 
 	@Override
-	public void react(Game game, GamePlayer currentPlayer) {
+	public void react(Game game, GamePlayer currentPlayer) throws Exception {
 		int total=currentPlayer.payMoney(_amountLost);
 		List<GamePlayer> others =game.getOtherPlayers(currentPlayer);
 		int numPlayers=others.size();
@@ -24,6 +26,7 @@ public class LoseMoneyToEachPlayerCard implements Card {
 		if(total<_amountLost){
 			game.bankruptPlayer(currentPlayer, null);
 		}
+		_deck.putCardOnBottom(this);
 	}
 
 }

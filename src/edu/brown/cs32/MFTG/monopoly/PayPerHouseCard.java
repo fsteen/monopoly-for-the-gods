@@ -9,13 +9,15 @@ import java.util.List;
  */
 public class PayPerHouseCard implements Card {
 	private int _houseCost,_hotelCost;
-	public PayPerHouseCard(int houseCost, int hotelCost) {
+	private Deck _deck;
+	public PayPerHouseCard(int houseCost, int hotelCost, Deck deck) {
 		_houseCost=houseCost;
 		_hotelCost=hotelCost;
+		_deck=deck;
 	}
 
 	@Override
-	public void react(Game game, GamePlayer currentPlayer) {
+	public void react(Game game, GamePlayer currentPlayer) throws Exception {
 		int amountToPay=0;
 		List<Property> props=currentPlayer.getProperties();
 		for(Property p: props){
@@ -30,6 +32,7 @@ public class PayPerHouseCard implements Card {
 			}
 		}
 		game.transferMoney(currentPlayer, null, amountToPay);
+		_deck.putCardOnBottom(this);
 	}
 
 }

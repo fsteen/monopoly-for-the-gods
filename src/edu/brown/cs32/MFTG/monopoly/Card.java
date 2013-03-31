@@ -6,5 +6,5 @@ package edu.brown.cs32.MFTG.monopoly;
  *
  */
 public interface Card {
-	public void react(Game game, GamePlayer currentPlayer);
+	public void react(Game game, GamePlayer currentPlayer) throws Exception;
 }

@@ -6,10 +6,13 @@ package edu.brown.cs32.MFTG.monopoly;
  *
  */
 public class AdvanceToNearestUtilityCard implements Card {
-	public AdvanceToNearestUtilityCard() {}
+	private Deck _deck;
+	public AdvanceToNearestUtilityCard(Deck deck) {
+		_deck=deck;
+	}
 
 	@Override
-	public void react(Game game, GamePlayer currentPlayer) {
+	public void react(Game game, GamePlayer currentPlayer) throws Exception {
 		String space;
 		if(currentPlayer.getPosition()<12){
 			space="electric company";
@@ -18,19 +21,15 @@ public class AdvanceToNearestUtilityCard implements Card {
 			space="water works";
 		}
 		Property p=game.movePlayer(currentPlayer, space).getProperty();
-		
+
 		if(p.getOwner()!=null){
-			try {
-				if(p.getMortgagedState()){
-					return;
-				}
-				Dice dice = new Dice();
-				int rent =dice.rollDice()*10;
-				p.addRevenue(rent);
-				game.transferMoney(currentPlayer, p.getOwner(), rent);
-			} catch (Exception e) {
-				System.out.println("ERROR: "+e.getMessage());
+			if(p.getMortgagedState()){
+				return;
 			}
+			Dice dice = new Dice();
+			int rent =dice.rollDice()*10;
+			p.addRevenue(rent);
+			game.transferMoney(currentPlayer, p.getOwner(), rent);
 
 		}
 		else{
@@ -39,6 +38,7 @@ public class AdvanceToNearestUtilityCard implements Card {
 				game.auction(p);
 			}
 		}
+		_deck.putCardOnBottom(this);
 	}
 
 }

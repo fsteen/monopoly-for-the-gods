@@ -6,8 +6,10 @@ package edu.brown.cs32.MFTG.monopoly;
  *
  */
 public class GetOutOfJailFreeCard implements Card {
-
-	public GetOutOfJailFreeCard() {}
+	private Deck _deck;
+	public GetOutOfJailFreeCard(Deck deck) {
+		_deck=deck;
+	}
 
 	@Override
 	public void react(Game game, GamePlayer currentPlayer) {

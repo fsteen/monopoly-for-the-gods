@@ -8,7 +8,7 @@ package edu.brown.cs32.MFTG.monopoly;
  */
 public class PropertySpace extends Space {
 	private Property _property;
-	
+
 	/**
 	 * Constructs the space with a property and position
 	 * @param position
@@ -23,15 +23,12 @@ public class PropertySpace extends Space {
 	/**
 	 * Reacts by allowing the user to buy it and if it'snot bought auction it
 	 */
-	public void react(Game game, GamePlayer currentPlayer) {
+	public void react(Game game, GamePlayer currentPlayer) throws Exception {
 		if(_property.getOwner()!=null){
-			try {
-				int rent =_property.getRent();
-				game.transferMoney(currentPlayer, _property.getOwner(), rent);
-				_property.addRevenue(rent);
-			} catch (Exception e) {
-				System.out.println("ERROR: "+e.getMessage());
-			}
+			int rent =_property.getRent();
+			System.out.println(String.format("%s landed on %s and paid %d to %s", currentPlayer, _property, rent, _property.getOwner()));
+			game.transferMoney(currentPlayer, _property.getOwner(), rent);
+			_property.addRevenue(rent);
 
 		}
 		else{
@@ -39,10 +36,13 @@ public class PropertySpace extends Space {
 			if(!bought){
 				game.auction(_property);
 			}
+			else{
+				System.out.println(String.format("%s bought %s for %d", currentPlayer, _property, _property.Price));
+			}
 		}
 
 	}
-	
+
 	@Override
 	public Property getProperty(){
 		return _property;

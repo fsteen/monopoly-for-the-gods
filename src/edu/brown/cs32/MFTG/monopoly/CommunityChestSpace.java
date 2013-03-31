@@ -20,7 +20,7 @@ public class CommunityChestSpace extends Space{
 	/**
 	 * Reacts by allowing the user to pick a card
 	 */
-	public void react(Game game, GamePlayer currentPlayer) {
+	public void react(Game game, GamePlayer currentPlayer) throws Exception {
 		Card c=game.getCommunityChestDeck().drawCard();
 		c.react(game, currentPlayer);	
 	}

@@ -6,10 +6,13 @@ package edu.brown.cs32.MFTG.monopoly;
  *
  */
 public class AdvanceToNearestRailroadCard implements Card {
-	public AdvanceToNearestRailroadCard() {}
+	private Deck _deck;
+	public AdvanceToNearestRailroadCard(Deck deck) {
+		_deck=deck;
+	}
 
 	@Override
-	public void react(Game game, GamePlayer currentPlayer) {
+	public void react(Game game, GamePlayer currentPlayer) throws Exception {
 		String space;
 		if(currentPlayer.getPosition()<5){
 			space="reading railroad";
@@ -25,18 +28,14 @@ public class AdvanceToNearestRailroadCard implements Card {
 		}
 
 		Property p=game.movePlayer(currentPlayer, space).getProperty();
-		
+
 		if(p.getOwner()!=null){
-			try {
-				if(p.getMortgagedState()){
-					return;
-				}
-				int rent =p.getRent()*2;
-				p.addRevenue(rent);
-				game.transferMoney(currentPlayer, p.getOwner(), rent);
-			} catch (Exception e) {
-				System.out.println("ERROR: "+e.getMessage());
+			if(p.getMortgagedState()){
+				return;
 			}
+			int rent =p.getRent()*2;
+			p.addRevenue(rent);
+			game.transferMoney(currentPlayer, p.getOwner(), rent);
 
 		}
 		else{
@@ -45,6 +44,7 @@ public class AdvanceToNearestRailroadCard implements Card {
 				game.auction(p);
 			}
 		}
+		_deck.putCardOnBottom(this);
 	}
 
 }
