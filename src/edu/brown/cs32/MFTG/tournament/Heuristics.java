@@ -3,6 +3,7 @@ package edu.brown.cs32.MFTG.tournament;
 import edu.brown.cs32.MFTG.monopoly.GamePlayer;
 import edu.brown.cs32.MFTG.monopoly.Property;
 
+//this is probably going to end up in a different class
 public class Heuristics {
 	
 	/**
