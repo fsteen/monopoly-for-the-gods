@@ -1,6 +1,11 @@
 .project
 .classpath
 .settings
+.metadata
 org.eclipse.core.resources.prefs
 build.xml
+
+*.jar
+*.war
+*.ear
 *.class
