@@ -1,6 +1,7 @@
 package edu.brown.cs32.MFTG.monopoly;
 
 import java.util.HashMap;
+import com.fasterxml.jackson.annotation.*;
 
 public class Player {
 	public enum Expense {
@@ -28,7 +29,8 @@ public class Player {
 	private int _minBuildCash;
 	private int _jailPoor, _jailRich;
 	
-	public Player(int id){
+	@JsonCreator
+	public Player(@JsonProperty("id") int id){
 		ID=id;
 		_propertyValues= new HashMap<>();
 		
@@ -95,6 +97,14 @@ public class Player {
 		monopoly[2]=breakingOpponentValue;
 		monopoly[3]=sameColorEffect;
 		_colorValues.put(color, monopoly);
+	}
+	
+	/**
+	 * 
+	 * @return _colorValues
+	 */
+	public HashMap<String, Double[]> getColorValues(){
+		return _colorValues;
 	}
 	
 	/**

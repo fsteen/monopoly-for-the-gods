@@ -1,10 +1,9 @@
 package edu.brown.cs32.MFTG.tournament;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import edu.brown.cs32.MFTG.monopoly.Player;
-import edu.brown.cs32.MFTG.networking.NetworkingInterfaceFrontend;
+import edu.brown.cs32.MFTG.networking.iClientHandler;
 
 //there is no threading in tournament, tournament simply interfaces with the networking interface
 public class Tournament {

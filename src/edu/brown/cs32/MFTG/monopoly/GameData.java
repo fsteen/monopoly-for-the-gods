@@ -3,6 +3,9 @@ package edu.brown.cs32.MFTG.monopoly;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Models game data, game
  * @author JudahSchvimer
@@ -10,14 +13,16 @@ import java.util.List;
  */
 public class GameData {
 	private ArrayList<TimeStamp> _data;
-	private int _time, _numPlayers;
+	private int _time;
+	public final int _numPlayers;
 	private int _winner;
 	
 	/**
 	 * Constructs the game data objects
 	 * @param numPlayers
 	 */
-	public GameData(int numPlayers){
+	@JsonCreator
+	public GameData(@JsonProperty("numPlayers") int numPlayers){
 		_numPlayers=numPlayers;
 		
 		//this is a list of players, each player has a list 
@@ -34,6 +39,22 @@ public class GameData {
 	}
 	
 	/**
+	 * Getter for the time attribute
+	 * @return _time
+	 */
+	public int getTime(){
+		return _time;
+	}
+	
+	/**
+	 * 
+	 * @param t the _time to set
+	 */
+	public void setTime(int t){
+		_time = t;
+	}
+	
+	/**
 	 * @return the _winner
 	 */
 	public int getWinner() {
@@ -46,7 +67,6 @@ public class GameData {
 	public void setWinner(int winner) {
 		_winner = winner;
 	}
-
 	
 	/**
 	 * called to add a new time to the gamedata objects
@@ -65,6 +85,14 @@ public class GameData {
 	}
 	
 	/**
+	 * Setter for the data attribute
+	 * @param data the data to set _data to
+	 */
+	public void setData(ArrayList<TimeStamp> data){
+		_data = data;
+	}
+	
+	/**
 	 * Sets data for a property at the given time
 	 * @param propertyName
 	 * @param ownerID
@@ -73,7 +101,7 @@ public class GameData {
 	 * @param mortgaged
 	 */
 	void setPropertyAtTime(String propertyName, int ownerID, int numHouses,  int personalRevenueWithHouses, int personalRevenueWithoutHouses,int totalRevenueWithHouses,int totalRevenueWithoutHouses, boolean mortgaged){
-		_data.get(_time).setPropertyData(propertyName,ownerID,numHouses,personalRevenueWithHouses, personalRevenueWithoutHouses, totalRevenueWithHouses, totalRevenueWithoutHouses,mortgaged);
+		_data.get(_time).addPropertyData(propertyName,ownerID,numHouses,personalRevenueWithHouses, personalRevenueWithoutHouses, totalRevenueWithHouses, totalRevenueWithoutHouses,mortgaged);
 	}
 	
 	/**
@@ -83,7 +111,7 @@ public class GameData {
 	 * @param totalWealth
 	 */
 	void setWealthAtTime(int ownerID, int cash, int totalWealth){
-		_data.get(_time).setWealthData(ownerID,cash,totalWealth);
+		_data.get(_time).addWealthData(ownerID,cash,totalWealth);
 	}
 	
 	/**
@@ -94,8 +122,10 @@ public class GameData {
 	public class TimeStamp{
 		ArrayList<PropertyData> _propertyData;
 		ArrayList<PlayerWealthData> _wealthData;
-		private int _time;
-		public TimeStamp(int time){
+		public final int _time;
+		
+		@JsonCreator
+		public TimeStamp(@JsonProperty("time") int time){
 			_time=time;
 			_propertyData = new ArrayList<>();
 			_wealthData = new ArrayList<>();
@@ -109,7 +139,7 @@ public class GameData {
 		 * @param revenue
 		 * @param mortgaged
 		 */
-		void setPropertyData(String propertyName, int ownerID, int numHouses, int personalRevenueWithHouses, int personalRevenueWithoutHouses,int totalRevenueWithHouses,int totalRevenueWithoutHouses, boolean mortgaged){
+		void addPropertyData(String propertyName, int ownerID, int numHouses, int personalRevenueWithHouses, int personalRevenueWithoutHouses,int totalRevenueWithHouses,int totalRevenueWithoutHouses, boolean mortgaged){
 			_propertyData.add(new PropertyData(propertyName,ownerID,numHouses, personalRevenueWithHouses, personalRevenueWithoutHouses, totalRevenueWithHouses, totalRevenueWithoutHouses,mortgaged));
 		}
 		
@@ -122,12 +152,20 @@ public class GameData {
 		}
 		
 		/**
+		 * A setter for the propertyData attribute
+		 * @param propertyData the value to set _propertyData to
+		 */
+		void setPropertyData(ArrayList<PropertyData> propertyData){
+			_propertyData = propertyData;
+		}
+		
+		/**
 		 * sets wealth data for the given owner at the given time
 		 * @param ownerID
 		 * @param cash
 		 * @param totalWealth
 		 */
-		void setWealthData(int ownerID, int cash, int totalWealth){
+		void addWealthData(int ownerID, int cash, int totalWealth){
 			_wealthData.add(new PlayerWealthData(ownerID,cash,totalWealth));
 		}
 		
@@ -138,6 +176,14 @@ public class GameData {
 		public ArrayList<PlayerWealthData> getWealthData(){
 			return _wealthData;
 		}
+		
+		/**
+		 * Setter for the wealthData attribute
+		 * @param wealthData
+		 */
+		public void setWealthData(ArrayList<PlayerWealthData> wealthData){
+			_wealthData = wealthData;
+		}
 	}
 	
 	/**
@@ -146,10 +192,13 @@ public class GameData {
 	 *
 	 */
 	public class PlayerWealthData{
-		public int ownerID;
-		public int cash;
-		public int totalWealth;
-		public PlayerWealthData(int ownerID, int cash, int totalWealth){
+		public final  int ownerID;
+		public final int cash;
+		public final int totalWealth;
+		
+		@JsonCreator
+		public PlayerWealthData(@JsonProperty("ownerID") int ownerID, @JsonProperty("cash") int cash, 
+								@JsonProperty("totalWealth") int totalWealth){
 			this.ownerID=ownerID;
 			this.cash=cash;
 			this.totalWealth=totalWealth;
@@ -162,15 +211,25 @@ public class GameData {
 	 *
 	 */
 	public class PropertyData{
-		public String propertyName;
-		public int ownerID;
-		public int numHouses;
-		public int personalRevenueWithHouses;
-		public int personalRevenueWithoutHouses;
-		public int totalRevenueWithHouses;
-		public int totalRevenueWithoutHouses;
-		public boolean mortgaged;
-		public PropertyData(String propertyName, int ownerID, int numHouses, int personalRevenueWithHouses, int personalRevenueWithoutHouses,int totalRevenueWithHouses,int totalRevenueWithoutHouses,boolean mortgaged){
+		public final String propertyName;
+		public final int ownerID;
+		public final int numHouses;
+		public final int personalRevenueWithHouses;
+		public final int personalRevenueWithoutHouses;
+		public final int totalRevenueWithHouses;
+		public final int totalRevenueWithoutHouses;
+		public final boolean mortgaged;
+		
+		@JsonCreator
+		public PropertyData(@JsonProperty("propertyName") String propertyName, 
+							@JsonProperty("ownerID") int ownerID,
+							@JsonProperty("numHouses") int numHouses, 
+							@JsonProperty("personalRevenueWithHouses") int personalRevenueWithHouses, 
+							@JsonProperty("personalRevenueWIthoutHouses") int personalRevenueWithoutHouses,
+							@JsonProperty("totalRevenueWithHouses") int totalRevenueWithHouses,
+							@JsonProperty("totalRevenueWithoutHouses") int totalRevenueWithoutHouses,
+							@JsonProperty("mortgaged") boolean mortgaged){
+			
 			this.propertyName=propertyName;
 			this.ownerID=ownerID;
 			this.numHouses=numHouses;
