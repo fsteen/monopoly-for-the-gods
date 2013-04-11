@@ -57,7 +57,7 @@ public class ClientHandler implements iClientHandler{
 		return null;
 	}
 
-	public void sendGameData(List<GameData> combinedData) {
+	public void setGameData(List<GameData> combinedData) {
 		// TODO Auto-generated method stub
 		
 	}
