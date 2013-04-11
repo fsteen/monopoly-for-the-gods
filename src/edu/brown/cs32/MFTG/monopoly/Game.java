@@ -343,5 +343,10 @@ public class Game implements Runnable{
 		}
 		return result;
 	}
+	
+	//TODO added by Frances ... take out if you think it's bad, but I will need something like this for my code
+	public Game copy(){
+		return new Game(_defaultFP,_doubleOnGo,_auctions,(Player[])_players.toArray());
+	}
 
 }

@@ -1,4 +1,4 @@
-package edu.brown.cs32.MFTG.tournament;
+package edu.brown.cs32.MFTG.networking;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -15,9 +15,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.brown.cs32.MFTG.monopoly.GameData;
 import edu.brown.cs32.MFTG.monopoly.Player;
-import edu.brown.cs32.MFTG.networking.ClientRequestContainer;
-import edu.brown.cs32.MFTG.networking.ClientRequestContainer.Method;
-import edu.brown.cs32.MFTG.networking.iClientHandler;
+import edu.brown.cs32.MFTG.tournament.Settings;
 
 public class ClientHandler implements iClientHandler{
 	final Socket _client;

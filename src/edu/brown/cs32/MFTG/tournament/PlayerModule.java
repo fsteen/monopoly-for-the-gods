@@ -38,16 +38,24 @@ public class PlayerModule implements iClientHandler{
 	 */
 	@Override
 	public void playGames(List<Player> players, Settings settings, int numGames){
-		//question: can i run a game over and over again, or must i create a new one each time?
-		
+		//construct a game from the settings
 		Game game = new Game(-1,false, false, (Player[])players.toArray()); //TODO must change later!
+		GameRunnerFactory gameRunnerFactory = new GameRunnerFactory(game,this);
+		
 		ExecutorService pool = Executors.newFixedThreadPool(NUM_THREADS);
 		
 		for(int i = 0; i < numGames; i++){ //execute games and record data
-			pool.execute(game);
-			_data.add(game.getGameData());
+			pool.execute(gameRunnerFactory.build());
 		}
 		
+	}
+	
+	public synchronized void addGameData(GameData gameData){
+		_data.add(gameData);
+		if(_data.size() >= DATA_PACKET_SIZE){
+			//display some data
+			_data.clear(); //not entire sure what will end up happening here
+		}
 	}
 	
 	@Override
@@ -61,5 +69,4 @@ public class PlayerModule implements iClientHandler{
 		// TODO Auto-generated method stub
 		
 	}
-
 }
