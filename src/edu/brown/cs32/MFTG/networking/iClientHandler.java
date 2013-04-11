@@ -18,15 +18,16 @@ public interface iClientHandler {
 	 * Sends an encoding of the players to the client and a request to play numGame games
 	 * @param players
 	 * @param numGames
+	 * @return the GameData collected from playing the round of games
 	 */
-	public void playGames(List<Player> players, Settings settings, int numGames);
+	public List<GameData> playGames(List<Player> players, Settings settings, int numGames);
 	
-	/**
-	 * Returns GameData to the requesting object
-	 * @return
-	 */
-	public List<GameData> getGameData();
-	
+//	/**
+//	 * Returns GameData to the requesting object
+//	 * @return
+//	 */
+//	public List<GameData> getGameData();
+//	
 	/**
 	 * Gives GameData to the iClientHandler to deal with 
 	 * @param combinedData
