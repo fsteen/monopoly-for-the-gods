@@ -56,7 +56,7 @@ public class Game implements Runnable{
 		_comChest=new CommunityChestDeck();
 		_chance= new ChanceDeck();
 
-		_gameData=new GameData(_numPlayers);
+		//_gameData=new GameData(_numPlayers);
 
 
 	}
@@ -67,11 +67,13 @@ public class Game implements Runnable{
 			while(_playing){
 				System.out.println("	Turn: "+_currentTurn+" Player: "+_currentPlayer+" cash: "+_currentPlayer.getCash()+ " wealth: "+_currentPlayer.getTotalWealth());
 				if(_currentPlayer.isInJail()){
+					System.out.println("In Jail");
 					_currentPlayer.incrementTurnsInJail();
 				}
 				int roll = _dice.rollDice();
 				boolean wasDoubles=_dice.wasDoubles();
 				if(wasDoubles){
+					System.out.println("wasDoubles");
 					_doublesInRow++;
 					if(_currentPlayer.isInJail()){
 						_currentPlayer.getOutOfJail();
@@ -79,31 +81,40 @@ public class Game implements Runnable{
 					}
 				}
 				if(_doublesInRow==3){
+					System.out.println("out of jail");
 					sendPlayerToJail(_currentPlayer);
 					endTurn();
 				}
 				else{
 					if(_currentPlayer.isInJail()){
+						System.out.println("In Jail");
 						//System.out.println(_currentPlayer+" is in jail");
 						if(_currentPlayer.getTurnsInJail()==3){
+							System.out.println("Out of jail after 3 turns");
 							_currentPlayer.getOutOfJail();
 
 							transferMoney(_currentPlayer, null, 50);
 						}
 						else{
+							System.out.println("Trying to get out of jail");
 							tryGettingOutOfJail(_currentPlayer);
 						}
 					}
 					if(_currentPlayer.isInJail()==false){
+						System.out.println("make move");
 						Space s=movePlayer(_currentPlayer, roll);
 						s.react(this, _currentPlayer);
 					}
+					System.out.println("try unmortgaging");
 					tryUnmortgaging(_currentPlayer);
+					System.out.println("try trading");
 					tryTrading(_currentPlayer);
+					System.out.println("try building");
 					tryBuilding(_currentPlayer);
 					//System.out.println(_currentPlayer.getCash());
 
 					if(!wasDoubles){
+						System.out.println("turn over");
 						endTurn();
 					}
 				}
@@ -125,7 +136,7 @@ public class Game implements Runnable{
 	 * Ends the current turn, saves data if necessary, makes it the next person's turn.
 	 */
 	void endTurn(){
-		if(_currentTurn%TURNS_PER_TIMESTAMP==0){
+		/*if(_currentTurn%TURNS_PER_TIMESTAMP==0){
 			_gameData.addNewTime();
 			for(GamePlayer player: _players){
 				_gameData.setWealthAtTime(player.getPlayer().ID, player.getCash(), player.getTotalWealth());
@@ -134,7 +145,7 @@ public class Game implements Runnable{
 				}
 			}
 
-		}
+		}*/
 		_currentTurn++;
 		_currentPlayer = _players.get(_currentTurn%_numPlayers);
 		_doublesInRow=0;

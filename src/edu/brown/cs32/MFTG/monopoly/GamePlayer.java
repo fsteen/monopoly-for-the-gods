@@ -184,7 +184,7 @@ public class GamePlayer {
 	 * @throws Exception 
 	 */
 	public void tryBuilding() throws Exception{
-		ArrayList<Property> monopolies = new ArrayList<>();
+		PriorityQueue<Property> monopolies = new PriorityQueue<>(_properties.size(),new HouseBuildingComparator());
 		for(Property p: _properties){
 			if(p.getMonopolyState()&&p.getNumHouses()!=5){
 				monopolies.add(p);
@@ -193,17 +193,32 @@ public class GamePlayer {
 		if(monopolies.isEmpty()){
 			return;
 		}
-		//TODO: Make this not suck
 		System.out.println(monopolies);
-		while(monopolies.get(0).CostPerHouse<_cash){
-			if(monopolies.get(0).canBuildHouse()){
-				monopolies.get(0).buildHouse();
-				_cash-=monopolies.remove(0).CostPerHouse;
-			}
-			if(monopolies.isEmpty()){
-				break;
-			}
+		List<Property> temp = new ArrayList<>();
+		Property curr=monopolies.poll();
+		while(curr.canBuildHouse()==false){
+			temp.add(curr);
+			curr=monopolies.poll();
 		}
+		monopolies.addAll(temp);
+		while(curr.CostPerHouse<_cash-_player.getMinBuildCash()){
+
+			_cash-=curr.CostPerHouse;
+			monopolies.add(curr);
+			curr = monopolies.poll();
+			if(curr==null){
+				return;
+			}
+			while(curr.canBuildHouse()==false){
+				temp.add(curr);
+				curr=monopolies.poll();
+			}
+			monopolies.addAll(temp);
+			
+
+		}
+		
+
 	}
 
 	/**
@@ -445,7 +460,7 @@ public class GamePlayer {
 
 			int dif =prop1.getNumHouses()-prop2.getNumHouses();
 			if(dif!=0){
-				if(_player.getHouseSelling()==Amount.FEWER){
+				if(_player.getBuildingEvenness()==Balance.EVEN){
 					return dif;
 				}
 				else{
@@ -453,18 +468,25 @@ public class GamePlayer {
 				}
 			}
 			else{
-				dif=prop1.CostPerHouse-prop2.CostPerHouse;
+				double colordif=_player.getHouseValueOfColor(prop1.Color)-_player.getHouseValueOfColor(prop2.Color);
 				if(dif!=0){
-					if(_player.getSellingChoice()==Expense.CHEAP){
-						return (-1)*dif;
-					}
-					else{
-						return dif;
-					}
+					return (int) ((-1)*Math.ceil(colordif));
 				}
 				else{
-					return prop1.Price-prop2.Price;
+					dif=prop1.CostPerHouse-prop2.CostPerHouse;
+					if(dif!=0){
+						if(_player.getBuildingChoice()==Expense.CHEAP){
+							return dif;
+						}
+						else{
+							return (-1)*dif;
+						}
+					}
+					else{
+						return -1;
+					}
 				}
+				
 			}
 		}
 
@@ -480,9 +502,9 @@ public class GamePlayer {
 	 * @author JudahSchvimer
 	 *
 	 */
-	public class BuildComparator implements Comparator<Property> {
+	public class HouseBuildingComparator implements Comparator<Property> {
 
-		public BuildComparator() {}
+		public HouseBuildingComparator() {}
 
 		@Override
 		public int compare(Property prop1, Property prop2) {

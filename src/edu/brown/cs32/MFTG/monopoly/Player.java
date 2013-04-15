@@ -1,7 +1,7 @@
 package edu.brown.cs32.MFTG.monopoly;
 
 import java.util.HashMap;
-import com.fasterxml.jackson.annotation.*;
+//import com.fasterxml.jackson.annotation.*;
 
 public class Player {
 	public enum Expense {
@@ -29,8 +29,8 @@ public class Player {
 	private int _minBuildCash;
 	private int _jailPoor, _jailRich;
 	
-	@JsonCreator
-	public Player(@JsonProperty("id") int id){
+	//@JsonCreator
+	public Player(/*@JsonProperty("id")*/ int id){
 		ID=id;
 		_propertyValues= new HashMap<>();
 		
