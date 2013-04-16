@@ -196,29 +196,48 @@ public class GamePlayer {
 		System.out.println(monopolies);
 		List<Property> temp = new ArrayList<>();
 		Property curr=monopolies.poll();
-		while(curr.canBuildHouse()==false){
+		while(keepIterating(curr)){
 			temp.add(curr);
 			curr=monopolies.poll();
 		}
 		monopolies.addAll(temp);
-		while(curr.CostPerHouse<_cash-_player.getMinBuildCash()){
+		while(curr.CostPerHouse<=_cash-_player.getMinBuildCash()){
 
 			_cash-=curr.CostPerHouse;
+			System.out.println(this + " built on "+curr+" for a total of "+ curr.getNumHouses()+" houses.");
 			monopolies.add(curr);
 			curr = monopolies.poll();
 			if(curr==null){
 				return;
 			}
-			while(curr.canBuildHouse()==false){
+			//while you can't build a house or while you don't have money to build a house but might for future ones
+			while(keepIterating(curr)){
 				temp.add(curr);
 				curr=monopolies.poll();
 			}
 			monopolies.addAll(temp);
-			
 
+		}	
+
+	}
+	
+	/**
+	 * Checks if the loop above in building should keep iterating
+	 * @param current property
+	 * @return
+	 */
+	private boolean keepIterating(Property curr) {
+		if(curr.canBuildHouse()==false) {
+			return true;
 		}
-		
-
+		else if (curr.canBuildHouse()==true && curr.CostPerHouse>_cash-_player.getMinBuildCash() &&_player.getBuildingChoice()==Expense.EXPENSIVE) {
+			return true;
+		}
+		return false;
+	}
+	
+	public void tryGettingOutofJail() {
+		//TODO
 	}
 
 	/**
@@ -252,6 +271,14 @@ public class GamePlayer {
 			}
 			return true;
 		}
+	}
+	
+	private int getPropertyValue(Property property) {
+		int initialValue= _player.getPropertyValue(property.Name);
+		int finalValue=initialValue;
+		
+		return finalValue;
+		
 	}
 
 	/**

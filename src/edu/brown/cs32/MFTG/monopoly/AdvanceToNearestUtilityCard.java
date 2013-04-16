@@ -26,8 +26,7 @@ public class AdvanceToNearestUtilityCard implements Card {
 			if(p.getMortgagedState()){
 				return;
 			}
-			Dice dice = new Dice();
-			int rent =dice.rollDice()*10;
+			int rent =game.getDice().rollDice()*10;
 			p.addRevenue(rent);
 			game.transferMoney(currentPlayer, p.getOwner(), rent);
 

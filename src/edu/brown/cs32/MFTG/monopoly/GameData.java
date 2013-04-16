@@ -3,6 +3,7 @@ package edu.brown.cs32.MFTG.monopoly;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**

@@ -11,10 +11,12 @@ import java.util.HashMap;
 public class Board {
 	private Space[] _board;
 	private HashMap<String, Space> _spaces;
+	private Game _game;
 	/**
 	 * Constructs a new board
 	 */
-	public Board() {
+	public Board(Game game) {
+		_game=game;
 		_board = new Space[40];
 		_spaces = new HashMap<>(40);
 		
@@ -65,7 +67,7 @@ public class Board {
 		_board[11]=new PropertySpace(11,new Property("st. charles place","pink",140,70,10,50,150,450,625,750,100));
 		_spaces.put("st. charles place", _board[11]);
 		
-		_board[12]=new PropertySpace(12,new UtilityProperty("electric company"));
+		_board[12]=new PropertySpace(12,new UtilityProperty("electric company", _game));
 		_spaces.put("electric company", _board[12]);
 		
 		_board[13]=new PropertySpace(13,new Property("states avenue","pink",140,70,10,50,150,450,625,750,100));
@@ -131,7 +133,7 @@ public class Board {
 		_board[27]=new PropertySpace(27,new Property("ventnor avenue","yellow",260,130,22,110,330,800,975,1150,150));
 		_spaces.put("ventnor avenue", _board[27]);
 		
-		_board[28]=new PropertySpace(28,new UtilityProperty("water works"));
+		_board[28]=new PropertySpace(28,new UtilityProperty("water works", _game));
 		_spaces.put("water works", _board[28]);
 		
 		_board[29]=new PropertySpace(29,new Property("marvin gardens","yellow",280,140,24,120,360,850,1025,1200,150));

@@ -1,7 +1,7 @@
 package edu.brown.cs32.MFTG.monopoly;
 
 import java.util.HashMap;
-//import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.*;
 
 public class Player {
 	public enum Expense {
@@ -12,6 +12,9 @@ public class Player {
 	}
 	public enum Balance {
 		EVEN, UNEVEN
+	}
+	public enum Aggression {
+		PASSIVE, AGGRESSIVE
 	}
 	public final int ID;
 	private HashMap<String, Integer> _propertyValues;
@@ -25,12 +28,12 @@ public class Player {
 	private Expense _sellingChoice;
 	private Balance _buildingEvenness;
 	private Expense _buildingChoice;
-	private Balance _buildingTiming;
+	private Aggression _buyAggression;
 	private int _minBuildCash;
 	private int _jailPoor, _jailRich;
 	
-	//@JsonCreator
-	public Player(/*@JsonProperty("id")*/ int id){
+	@JsonCreator
+	public Player(@JsonProperty("id") int id){
 		ID=id;
 		_propertyValues= new HashMap<>();
 		
@@ -56,15 +59,13 @@ public class Player {
 		_buildingChoice=Expense.CHEAP;
 		_houseSelling=Amount.FEWER;
 		
-		//even represents buying slowly
-		//uneven represents buying all at once
-		_buildingTiming=Balance.EVEN;
-		
 		//a number from 1-3 specifying the number of turns they'd like to stay in if they're doing well/poorly
 		_jailPoor=3;
 		_jailRich=3;
 		
 		_minBuildCash=0;
+		
+		_buyAggression=Aggression.AGGRESSIVE;
 	}
 	
 	/**
@@ -256,6 +257,20 @@ public class Player {
 	}
 	
 	/**
+	 * @return the buy aggression
+	 */
+	public Aggression getBuyAggression() {
+		return _buyAggression;
+	}
+
+	/**
+	 * @param sets the buy aggression
+	 */
+	public void setBuyAggression(Aggression buyAggression) {
+		_buyAggression=buyAggression;
+	}
+	
+	/**
 	 * @return the sellingChoice
 	 */
 	public Expense getSellingChoice() {
@@ -267,20 +282,6 @@ public class Player {
 	 */
 	public void setSellingChoice(Expense sellingChoice) {
 		_sellingChoice = sellingChoice;
-	}
-
-	/**
-	 * @return the _buildingTiming
-	 */
-	public Balance getBuildingTiming() {
-		return _buildingTiming;
-	}
-
-	/**
-	 * @param _buildingTiming the _buildingTiming to set
-	 */
-	public void setBuildingTiming(Balance buildingTiming) {
-		_buildingTiming = buildingTiming;
 	}
 
 	/**

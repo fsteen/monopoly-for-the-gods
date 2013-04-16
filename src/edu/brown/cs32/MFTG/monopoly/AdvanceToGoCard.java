@@ -10,7 +10,7 @@ public class AdvanceToGoCard implements Card {
 	public AdvanceToGoCard() {}
 
 	@Override
-	public void react(Game game, GamePlayer currentPlayer) {
+	public void react(Game game, GamePlayer currentPlayer) throws Exception {
 		Space s=game.movePlayer(currentPlayer, "go");
 		s.react(game, currentPlayer);
 	}

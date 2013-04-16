@@ -45,7 +45,7 @@ public class Game implements Runnable{
 		_numHousesLeft=32;
 		_numHotelsLeft=12;
 
-		_board = new Board();
+		_board = new Board(this);
 		_dice = new Dice();
 
 		_playing = true;
@@ -56,7 +56,7 @@ public class Game implements Runnable{
 		_comChest=new CommunityChestDeck();
 		_chance= new ChanceDeck();
 
-		//_gameData=new GameData(_numPlayers);
+		_gameData=new GameData(_numPlayers);
 
 
 	}
@@ -127,7 +127,19 @@ public class Game implements Runnable{
 		}
 
 	}
+	
+	/**
+	 * 
+	 * @return game's dice
+	 */
+	public Dice getDice() {
+		return _dice;
+	}
 
+	/** 
+	 * 
+	 * @return game data
+	 */
 	public GameData getGameData(){
 		return _gameData;
 	}
@@ -136,7 +148,7 @@ public class Game implements Runnable{
 	 * Ends the current turn, saves data if necessary, makes it the next person's turn.
 	 */
 	void endTurn(){
-		/*if(_currentTurn%TURNS_PER_TIMESTAMP==0){
+		if(_currentTurn%TURNS_PER_TIMESTAMP==0){
 			_gameData.addNewTime();
 			for(GamePlayer player: _players){
 				_gameData.setWealthAtTime(player.getPlayer().ID, player.getCash(), player.getTotalWealth());
@@ -145,7 +157,7 @@ public class Game implements Runnable{
 				}
 			}
 
-		}*/
+		}
 		_currentTurn++;
 		_currentPlayer = _players.get(_currentTurn%_numPlayers);
 		_doublesInRow=0;

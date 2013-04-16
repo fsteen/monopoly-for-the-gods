@@ -1,9 +1,10 @@
 package edu.brown.cs32.MFTG.monopoly;
 
 public class UtilityProperty extends Property {
-
-	public UtilityProperty(String name) {
+	private Game _game;
+	public UtilityProperty(String name, Game game) {
 		super(name, "white", 150, 75, 0, 0, 0,0,0,0, Integer.MAX_VALUE);
+		_game=game;
 	}
 
 	@Override
@@ -48,7 +49,7 @@ public class UtilityProperty extends Property {
 			return 0;
 		}
 		int numUtil=this.getOwner().getNumUtilities();
-		Dice dice = new Dice();
+		Dice dice = _game.getDice();
 		switch(numUtil){
 		case 1:  return dice.rollDice()*4;
 		case 2:  return dice.rollDice()*10;
