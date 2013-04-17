@@ -32,7 +32,7 @@ public class Game implements Runnable{
 		_players=new ArrayList<>(players.length);
 		for(Player p:players){
 			_numPlayers++;
-			_players.add(new GamePlayer(p));
+			_players.add(new GamePlayer(this,p));
 		}
 		Collections.shuffle(_players);
 		_currentPlayer = _players.get(0);
@@ -105,11 +105,8 @@ public class Game implements Runnable{
 						Space s=movePlayer(_currentPlayer, roll);
 						s.react(this, _currentPlayer);
 					}
-					System.out.println("try unmortgaging");
 					tryUnmortgaging(_currentPlayer);
-					System.out.println("try trading");
 					tryTrading(_currentPlayer);
-					System.out.println("try building");
 					tryBuilding(_currentPlayer);
 					//System.out.println(_currentPlayer.getCash());
 

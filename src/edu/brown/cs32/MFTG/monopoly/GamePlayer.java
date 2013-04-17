@@ -11,10 +11,11 @@ import edu.brown.cs32.MFTG.monopoly.Player.*;
 public class GamePlayer {
 	private final Player _player;
 	private int _cash, _numGetOutOfJailFree, _position, _turnsInJail, _numRailroads, _numUtilities;
+	private Game _game;
 	private ArrayList<Property> _properties;
 
 
-	public GamePlayer(Player player) {
+	public GamePlayer(Game game, Player player) {
 		_player=player;
 		_cash=1500;
 		_numGetOutOfJailFree=0;
@@ -23,6 +24,7 @@ public class GamePlayer {
 		_numRailroads=0;
 		_numUtilities=0;
 		_properties= new ArrayList<>();
+		_game=game;
 
 	}
 
@@ -184,6 +186,9 @@ public class GamePlayer {
 	 * @throws Exception 
 	 */
 	public void tryBuilding() throws Exception{
+		if(_properties.size()<2) {
+			return;
+		}
 		PriorityQueue<Property> monopolies = new PriorityQueue<>(_properties.size(),new HouseBuildingComparator());
 		for(Property p: _properties){
 			if(p.getMonopolyState()&&p.getNumHouses()!=5){
@@ -199,11 +204,15 @@ public class GamePlayer {
 		while(keepIterating(curr)){
 			temp.add(curr);
 			curr=monopolies.poll();
+			if(curr==null){
+				return;
+			}
 		}
 		monopolies.addAll(temp);
 		while(curr.CostPerHouse<=_cash-_player.getMinBuildCash()){
 
 			_cash-=curr.CostPerHouse;
+			curr.buildHouse();
 			System.out.println(this + " built on "+curr+" for a total of "+ curr.getNumHouses()+" houses.");
 			monopolies.add(curr);
 			curr = monopolies.poll();
@@ -214,6 +223,9 @@ public class GamePlayer {
 			while(keepIterating(curr)){
 				temp.add(curr);
 				curr=monopolies.poll();
+				if(curr==null){
+					return;
+				}
 			}
 			monopolies.addAll(temp);
 
@@ -230,14 +242,52 @@ public class GamePlayer {
 		if(curr.canBuildHouse()==false) {
 			return true;
 		}
-		else if (curr.canBuildHouse()==true && curr.CostPerHouse>_cash-_player.getMinBuildCash() &&_player.getBuildingChoice()==Expense.EXPENSIVE) {
-			return true;
+		if(_player.getBuyAggression()==Aggression.AGGRESSIVE) {
+			if (curr.canBuildHouse()==true && curr.CostPerHouse>_cash-_player.getMinBuildCash() &&_player.getBuildingChoice()==Expense.EXPENSIVE) {
+				return true;
+			}
 		}
 		return false;
 	}
 	
-	public void tryGettingOutofJail() {
-		//TODO
+	/**
+	 * tries to get the player out of jail
+	 * @throws Exception 
+	 */
+	public void tryGettingOutofJail() throws Exception {
+		//if they don't have the money just wait
+		if(_cash<=50) {
+			return;
+		}
+		//if they've been in jail too long get em out
+		if(_turnsInJail>=_player.getJailWait()) {
+			getOutOfJail();
+			_game.transferMoney(this, null, 50);
+			return;
+		}
+		boolean rich=true;
+		//if they're super poor,stay in for the length of term then
+		for(GamePlayer p: _game.getOtherPlayers(this)) {
+			if(p.getTotalWealth()>getTotalWealth()*2) {
+				if(_turnsInJail>=_player.getJailPoor()) {
+					getOutOfJail();
+					_game.transferMoney(this, null, 50);
+					return;
+				}
+			}
+			else if(2*p.getTotalWealth()>getTotalWealth()) {
+				rich=false;
+			}
+		}
+		//if they're rich, let em out when they want
+		if(rich==true) {
+			if(_turnsInJail>=_player.getJailRich()) {
+				getOutOfJail();
+				_game.transferMoney(this, null, 50);
+				return;
+			}
+		}
+		
 	}
 
 	/**
@@ -487,6 +537,56 @@ public class GamePlayer {
 
 			int dif =prop1.getNumHouses()-prop2.getNumHouses();
 			if(dif!=0){
+				if(_player.getHouseSelling()==Amount.FEWER){
+					return dif;
+				}
+				else{
+					return (-1)*dif;
+				}
+			}
+			else{
+				dif=prop1.CostPerHouse-prop2.CostPerHouse;
+				if(dif!=0){
+					if(_player.getSellingChoice()==Expense.CHEAP){
+						return (-1)*dif;
+					}
+					else{
+						return dif;
+					}
+				}
+				else{
+					double colordif=_player.getHouseValueOfColor(prop1.Color)-_player.getHouseValueOfColor(prop2.Color);
+					if(colordif!=0) {
+						return (int) (Math.ceil(colordif));
+					}
+					else {
+						return prop1.Price-prop2.Price;
+					}
+					
+				}
+			}
+
+		}
+	}
+
+	/**
+	 * Compares two properties on which to build houses on first
+	 * bigger ones are more less likely to sell on
+	 * first go based on evenness
+	 * then by expense of house
+	 * then by expense of property
+	 * 
+	 * @author JudahSchvimer
+	 *
+	 */
+	public class HouseBuildingComparator implements Comparator<Property> {
+
+		public HouseBuildingComparator() {}
+
+		@Override
+		public int compare(Property prop1, Property prop2) {
+			int dif =prop1.getNumHouses()-prop2.getNumHouses();
+			if(dif!=0){
 				if(_player.getBuildingEvenness()==Balance.EVEN){
 					return dif;
 				}
@@ -515,27 +615,6 @@ public class GamePlayer {
 				}
 				
 			}
-		}
-
-	}
-
-	/**
-	 * Compares two properties on which to build houses on first
-	 * bigger ones are more less likely to sell on
-	 * first go based on evenness
-	 * then by expense of house
-	 * then by expense of property
-	 * 
-	 * @author JudahSchvimer
-	 *
-	 */
-	public class HouseBuildingComparator implements Comparator<Property> {
-
-		public HouseBuildingComparator() {}
-
-		@Override
-		public int compare(Property prop1, Property prop2) {
-			return 0;
 		}
 
 	}
