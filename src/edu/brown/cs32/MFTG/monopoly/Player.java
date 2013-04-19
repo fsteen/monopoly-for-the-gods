@@ -36,20 +36,23 @@ public class Player {
 	public Player(@JsonProperty("id") int id){
 		ID=id;
 		_propertyValues= new HashMap<>();
+		setPropertyValues();
 		
 		//a hashmap of values for each color. for each color there is an array such that;
 		//T[0]=value of monopoly
 		//T[1]=value of houses for the color
 		//T[2]=value of breaking an opponent's monopoly
-		//T[3]=how much value is affected by how many other properties of the same color you have
+		//T[3]=how much value is affected if you have 1 other property of the same color, but this would not give you a monopoly
 		_colorValues = new HashMap<>();
 		setColorValues();
 		
 		//a number from 1-10 specifying how much they're willing to spend as they have more money
-		_liquidity=5;
+		//1 means you don't care if you have more money, 10 means you're much more likely to buy with more money
+		_liquidity=1;
 		
-		//a number from 1-10 specifying how much more they value a property as time goes on
-		_timeChange=1;
+		//a number from 1-10 specifying how much more/less they value a property as time goes on
+		//1 means you prefer buying earlier 10 means you prefer buying at the end, 5 means it doesn't matter
+		_timeChange=5;
 		
 		_minBuyCash=0;
 		_jailWait=3;
@@ -358,6 +361,41 @@ public class Player {
 		
 		Double[] darkblue={500.0,200.0,400.0,2.0};
 		_colorValues.put("dark blue", darkblue);
+		
+	}
+	
+	/**
+	 * Sets property value defaults
+	 */
+	private void setPropertyValues() {
+		_propertyValues.put("mediterranean avenue", 60);
+		_propertyValues.put("baltic avenue", 60);
+		_propertyValues.put("reading railroad", 200);
+		_propertyValues.put("oriental avenue", 100);
+		_propertyValues.put("vermont avenue", 100);
+		_propertyValues.put("connecticut avenue", 120);
+		_propertyValues.put("st. charles place", 140);
+		_propertyValues.put("electric company", 150);
+		_propertyValues.put("states avenue", 140);
+		_propertyValues.put("virginia avenue", 160);
+		_propertyValues.put("pennsylvania railroad", 200);
+		_propertyValues.put("st. james place", 180);
+		_propertyValues.put("tennessee avenue", 180);	
+		_propertyValues.put("new york avenue", 200);	
+		_propertyValues.put("kentucky avenue", 220);	
+		_propertyValues.put("indiana avenue", 220);	
+		_propertyValues.put("illinois avenue", 240);		
+		_propertyValues.put("b and o railroad",200);		
+		_propertyValues.put("atlantic avenue", 260);		
+		_propertyValues.put("ventnor avenue", 260);		
+		_propertyValues.put("water works",150);		
+		_propertyValues.put("marvin gardens", 280);	
+		_propertyValues.put("pacific avenue", 300);
+		_propertyValues.put("north carolina avenue", 300);
+		_propertyValues.put("pennsylvania avenue", 320);
+		_propertyValues.put("short line", 200);
+		_propertyValues.put("park place", 350);
+		_propertyValues.put("boardwalk", 400);
 		
 	}
 	

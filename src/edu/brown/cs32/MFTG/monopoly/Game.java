@@ -129,7 +129,7 @@ public class Game implements Runnable{
 	 * 
 	 * @return game's dice
 	 */
-	public Dice getDice() {
+	Dice getDice() {
 		return _dice;
 	}
 
@@ -240,8 +240,9 @@ public class Game implements Runnable{
 	 * removes player and gives assets either to bank or to 
 	 * @param bankruptPlayer
 	 * @param creditor
+	 * @throws Exception 
 	 */
-	void bankruptPlayer(GamePlayer bankruptPlayer, GamePlayer creditor){
+	void bankruptPlayer(GamePlayer bankruptPlayer, GamePlayer creditor) throws Exception{
 		if(creditor!=null){
 			for(Property p: bankruptPlayer.getProperties()){
 				creditor.gainProperty(p);
@@ -283,12 +284,30 @@ public class Game implements Runnable{
 		player.tryUnmortgaging();
 	}
 
-	private void tryGettingOutOfJail(GamePlayer player){
-		//TODO
+	private void tryGettingOutOfJail(GamePlayer player) throws Exception{
+		player.tryGettingOutofJail();
 	}
 
-	void auction(Property property){
-		//TODO
+	void auction(Property property) throws Exception{
+		GamePlayer maxPlayer=null;
+		double maxBid=0;
+		double secondBid=0;
+		for(GamePlayer p: _players) {
+			double bid = p.getPropertyValue(property);
+			if(bid>maxBid) {
+				secondBid=maxBid+1;
+				maxBid=bid;
+				maxPlayer=p;
+			}
+			//if they have same bid, have the player with more wealth bid 1 more dollar
+			else if(bid==maxBid&&p.getTotalWealth()>maxPlayer.getTotalWealth()) {
+				secondBid=maxBid+1;
+				maxBid=bid+1;
+				maxPlayer=p;
+			}
+		}
+		maxPlayer.payMoney((int)secondBid);
+		maxPlayer.gainProperty(property);
 	}
 
 	/**
@@ -362,6 +381,14 @@ public class Game implements Runnable{
 			}
 		}
 		return result;
+	}
+	
+	double getNumberofUnownedProperties() {
+		double num=28;
+		for(GamePlayer player: _players){
+			num-=player.getProperties().size();
+		}
+		return num;
 	}
 	
 	//TODO added by Frances ... take out if you think it's bad, but I will need something like this for my code

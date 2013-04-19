@@ -78,6 +78,83 @@ public class GamePlayer {
 	}
 
 	/**
+	 * Attempts to buy the property
+	 * @param property
+	 * @return if the property was bought
+	 * @throws Exception 
+	 */
+	public boolean buyProperty(Property property) throws Exception{
+		if(_cash-property.Price<_player.getMinBuyCash()) {
+			return false;
+		}
+		else{
+			if(getPropertyValue(property)<property.Price) {
+				return false;
+			}
+			
+			property.setOwner(this);
+			_properties.add(property);
+
+			//checks if the property now creates a monopoly
+			if((property.getSibling1()==null||property.getSibling1().getOwner()==this) &&(property.getSibling2()==null||property.getSibling2().getOwner()==this)){
+				property.setMonopolyState(true);
+				if(property.getSibling1()!=null) property.getSibling1().setMonopolyState(true);
+				if(property.getSibling2()!=null) property.getSibling2().setMonopolyState(true);
+			}
+			payMoney(property.Price);
+			if(property.Name.equals("electric company")||property.Name.equals("water works")){
+				_numUtilities++;
+			}
+			else if(property.Name.equals("reading railroad")||property.Name.equals("pennsylvania railroad")||property.Name.equals("b and o railroad")||property.Name.equals("short line")){
+				_numRailroads++;
+			}
+			return true;
+		}
+	}
+	
+	/**
+	 * 
+	 * @param property
+	 * @return valuation of the property for this player
+	 */
+	double getPropertyValue(Property property) {
+		double initialValue= _player.getPropertyValue(property.Name);
+		//this has the effect of making it so someone near 1 wants to buy more near the beginning (from 1.4 to 1)and 10 near the end (from .5 to 1) 
+		//double timeEffect=(5-_player.getTimeChange())*(Math.sqrt(_game.getNumberofUnownedProperties()/28.0)*Math.abs(5-_player.getTimeChange())/50)+(2*Math.sqrt(_player.getTimeChange())+7)/10;
+		
+		//this has the effect of making it so someone near 1 wants to buy more near the beginning (from 1.3 to 1)and 10 near the end (from 1 to 1.3) 
+		double timeEffect=(_game.getNumberofUnownedProperties()/28.0)*(5.0-((double)_player.getTimeChange()))/5.0+(5.0+((double)_player.getTimeChange()))/10.0;
+		timeEffect=Math.max(1, timeEffect*2/3);
+		
+		//this has the effect of making it so someone near 1 wants to buy nothing more with more money, and 10 wants to buy a lot more
+		//this yields values near 1 for low cash values and low liquidities and 20 for large values
+		double liquidEffect=_cash*_cash/20000000*(_player.getLiquidity()+1)+.85;
+		double finalValue=-1;
+		GamePlayer otherOwner=property.getCloseToMonopoly();
+		if(otherOwner==null) {
+			if(property.getSibling1()!=null && property.getSibling1().getOwner()==this) {
+				finalValue=_player.getSameColorEffect(property.Color);
+			}
+			else if(property.getSibling2()!=null && property.getSibling2().getOwner()==this) {
+				finalValue=_player.getSameColorEffect(property.Color);
+			}
+			else {
+				finalValue=initialValue;
+			}
+		}
+		else if(otherOwner==this) {
+			finalValue=_player.getMonopolyValue(property.Color);
+		}
+		else {
+			finalValue=_player.getBreakingOpponentMonopolyValue(property.Color);
+		}
+		finalValue*=timeEffect*=liquidEffect;
+		
+		return finalValue;
+		
+	}
+	
+	/**
 	 * tries selling houses and mortgaging buildings to get the money
 	 * first mortgages unmonopolized things
 	 * then mortgages monopolies without houses
@@ -107,6 +184,7 @@ public class GamePlayer {
 		Collections.sort(unhoused,new MortgageComparator());
 		//mortgage all unhoused properties in order of preference
 		for(int i=0; i<unhoused.size();i++){
+			System.out.println(this +" mortgaged "+unhoused.get(i));
 			unhoused.get(i).setMortgagedState(true);
 			amountPaid+=unhoused.get(i).MortgageValue;
 			if(amountPaid>=total){
@@ -130,11 +208,12 @@ public class GamePlayer {
 				curr=housed.poll();
 			}
 			housed.addAll(temp);
-
+			System.out.println(this +" sold a house from " +curr+ " to leave a total of "+curr.getNumHouses()+ " houses");
 			//sell house on current property
 			amountPaid+=curr.sellHouse();
 			//if we still need money and this property has no houses we mortgage in it
 			if(curr.getNumHouses()==0&&amountPaid<total){
+				System.out.println(this +" mortgaged "+curr);
 				curr.setMortgagedState(true);
 				amountPaid+=curr.MortgageValue;
 			}
@@ -175,6 +254,7 @@ public class GamePlayer {
 					continue;
 				}
 			}
+			System.out.println(this +" unmortgaged "+mortgaged.get(0));
 			unmortgageProperty(mortgaged.get(0));
 			mortgaged.remove(0);
 
@@ -287,47 +367,6 @@ public class GamePlayer {
 				return;
 			}
 		}
-		
-	}
-
-	/**
-	 * Attempts to buy the property
-	 * @param property
-	 * @return if the property was bought
-	 * @throws Exception 
-	 */
-	public boolean buyProperty(Property property) throws Exception{
-		if(_cash<property.Price){
-			return false;
-		}
-		else{
-			//TODO: decide if it wants to buy the property
-
-			property.setOwner(this);
-			_properties.add(property);
-
-			//checks if the property now creates a monopoly
-			if((property.getSibling1()==null||property.getSibling1().getOwner()==this) &&(property.getSibling2()==null||property.getSibling2().getOwner()==this)){
-				property.setMonopolyState(true);
-				if(property.getSibling1()!=null) property.getSibling1().setMonopolyState(true);
-				if(property.getSibling2()!=null) property.getSibling2().setMonopolyState(true);
-			}
-			payMoney(property.Price);
-			if(property.Name.equals("electric company")||property.Name.equals("water works")){
-				_numUtilities++;
-			}
-			else if(property.Name.equals("reading railroad")||property.Name.equals("pennsylvania railroad")||property.Name.equals("b and o railroad")||property.Name.equals("short line")){
-				_numRailroads++;
-			}
-			return true;
-		}
-	}
-	
-	private int getPropertyValue(Property property) {
-		int initialValue= _player.getPropertyValue(property.Name);
-		int finalValue=initialValue;
-		
-		return finalValue;
 		
 	}
 

@@ -207,7 +207,7 @@ public class Property {
 	
 	/**
 	 * 
-	 * @return property of same color
+	 * @return property of same color, only null for utilities and railroads
 	 */
 	public Property getSibling1(){
 		return _p1;
@@ -215,10 +215,30 @@ public class Property {
 	
 	/**
 	 * 
-	 * @return property of the same color
+	 * @return property of the same color, can be null
 	 */
 	public Property getSibling2(){
 		return _p2;
+	}
+	
+	/**
+	 * 
+	 * @return owner if both siblings have same owner or if only 1 sibling, null otherwise
+	 */
+	public GamePlayer getCloseToMonopoly() {
+		if(_p1==null) {
+			return null;
+		}
+		else if(_p2==null && _p1.getOwner()==null) {
+			return null;
+		}
+		else if(_p2==null && _p1.getOwner()!=null) {
+			return _p1.getOwner();
+		}
+		else if(_p2.getOwner()==_p1.getOwner()) {
+			return _p1.getOwner();
+		}
+		return null;
 	}
 	
 	/**
