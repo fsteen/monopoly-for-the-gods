@@ -13,7 +13,7 @@ public class GoSpace extends Space {
 	 * @param position
 	 */
 	public GoSpace(int position) {
-		super(position);
+		super(position, "Go");
 		
 	}
 	

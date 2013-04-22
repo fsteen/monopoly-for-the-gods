@@ -13,7 +13,7 @@ public class IncomeTaxSpace extends Space {
 	 * @param position
 	 */
 	public IncomeTaxSpace(int position) {
-		super(position);
+		super(position, "Income Tax");
 		
 	}
 	

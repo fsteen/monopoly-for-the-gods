@@ -8,12 +8,14 @@ package edu.brown.cs32.MFTG.monopoly;
  */
 public abstract class Space {
 	private int _position;
+	private String _name;
 	/**
 	 * constructs the space with a positon
 	 * @param position
 	 */
-	public Space(int position){
+	public Space(int position, String name){
 		_position=position;
+		_name=name;
 	}
 	
 	/**
@@ -37,5 +39,11 @@ public abstract class Space {
 	 */
 	public Property getProperty(){
 		return null;
+	}
+	
+	@Override
+	public String toString() {
+		return String.format("%d: %s", _position, _name);
+		
 	}
 }

@@ -13,7 +13,7 @@ public class JailSpace extends Space {
 	 * @param position
 	 */
 	public JailSpace(int position) {
-		super(position);
+		super(position, "Jail");
 		
 	}
 

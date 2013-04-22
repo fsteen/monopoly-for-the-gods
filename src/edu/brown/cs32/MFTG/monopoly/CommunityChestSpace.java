@@ -13,7 +13,7 @@ public class CommunityChestSpace extends Space{
 	 * @param position
 	 */
 	public CommunityChestSpace(int position) {
-		super(position);
+		super(position, "Community Chest");
 	}
 	
 	@Override

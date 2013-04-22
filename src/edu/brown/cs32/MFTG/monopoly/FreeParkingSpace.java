@@ -13,7 +13,7 @@ public class FreeParkingSpace extends Space {
 	 * @param position
 	 */
 	public FreeParkingSpace(int position) {
-		super(position);
+		super(position, "Free Parking");
 		
 	}
 	
@@ -22,8 +22,7 @@ public class FreeParkingSpace extends Space {
 	 * Models a FreeParking space
 	 */
 	public void react(Game game, GamePlayer player){
-		if(game.playWithFreeParking())
-			player.addMoney(game.resetFreeParkingMoney());
+		game.giveFreeParkingMoney(player);
 	}
 
 }

@@ -13,7 +13,7 @@ public class ChanceSpace extends Space{
 	 * @param position
 	 */
 	public ChanceSpace(int position) {
-		super(position);
+		super(position, "Chance");
 	}
 	
 	@Override

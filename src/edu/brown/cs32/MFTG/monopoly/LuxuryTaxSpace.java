@@ -13,7 +13,7 @@ public class LuxuryTaxSpace extends Space {
 	 * @param position
 	 */
 	public LuxuryTaxSpace(int position) {
-		super(position);
+		super(position, "Luxury Tax");
 		
 	}
 	

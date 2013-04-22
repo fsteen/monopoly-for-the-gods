@@ -70,10 +70,10 @@ public class Game implements Runnable{
 	public void run() {
 		try {
 			while(_playing){
-				System.out.println("	Turn: "+_currentTurn+" Player: "+_currentPlayer+" cash: "+_currentPlayer.getCash()+ " wealth: "+_currentPlayer.getTotalWealth());
+				System.out.println("	Turn: "+_currentTurn+", "+_currentPlayer+" cash: "+_currentPlayer.getCash()+ " wealth: "+_currentPlayer.getTotalWealth());
 				if(_currentPlayer.isInJail()){
-					System.out.println("In Jail");
 					_currentPlayer.incrementTurnsInJail();
+					System.out.println(_currentPlayer.getTurnsInJail()+" Turn In Jail");
 				}
 				int roll = _dice.rollDice();
 				boolean wasDoubles=_dice.wasDoubles();
@@ -106,9 +106,8 @@ public class Game implements Runnable{
 						}
 					}
 					if(_currentPlayer.isInJail()==false){
-						System.out.println("make move");
 						Space s=movePlayer(_currentPlayer, roll);
-						System.out.println(_currentPlayer+" landed on "+s);
+						System.out.println("Landed on "+s);
 						s.react(this, _currentPlayer);
 					}
 					tryUnmortgaging(_currentPlayer);
@@ -294,6 +293,9 @@ public class Game implements Runnable{
 	}
 
 	void auction(Property property) throws Exception{
+		if(_auctions==false) {
+			return;
+		}
 		GamePlayer maxPlayer=null;
 		double maxBid=0;
 		double secondBid=0;
@@ -332,14 +334,6 @@ public class Game implements Runnable{
 	}
 
 	/**
-	 * 
-	 * @return money in freeparking
-	 */
-	int getFreeParkingMoney(){
-		return _freeParkingMoney;
-	}
-
-	/**
 	 * adds money to the freeparking pot
 	 * @param extraMoney
 	 */
@@ -351,20 +345,13 @@ public class Game implements Runnable{
 	 * resets the free parking money
 	 * @return amount of money in free parking before it's resetted
 	 */
-	int resetFreeParkingMoney(){
-		int temp = _freeParkingMoney;
-		_freeParkingMoney=_defaultFP;
-		return temp;
+	void giveFreeParkingMoney(GamePlayer player){
+		if(_defaultFP>=0) {
+			player.addMoney(_freeParkingMoney);
+			_freeParkingMoney=_defaultFP;
+		}
 	}
-
-	/**
-	 * 
-	 * @return if you're playing with free parking
-	 */
-	boolean playWithFreeParking(){
-		return (_defaultFP>=0);
-	}
-
+	
 	/**
 	 * 
 	 * @return if you're playing with double on Go

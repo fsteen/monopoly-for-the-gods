@@ -89,8 +89,10 @@ public class GamePlayer {
 		}
 		else{
 			if(getPropertyValue(property)<property.Price) {
+				System.out.println("not bought");
 				return false;
 			}
+			System.out.println("bought");
 			
 			property.setOwner(this);
 			_properties.add(property);
@@ -101,7 +103,7 @@ public class GamePlayer {
 				if(property.getSibling1()!=null) property.getSibling1().setMonopolyState(true);
 				if(property.getSibling2()!=null) property.getSibling2().setMonopolyState(true);
 			}
-			payMoney(property.Price);
+			_game.transferMoney(this, null, property.Price);
 			if(property.Name.equals("electric company")||property.Name.equals("water works")){
 				_numUtilities++;
 			}
@@ -128,7 +130,7 @@ public class GamePlayer {
 		
 		//this has the effect of making it so someone near 1 wants to buy nothing more with more money, and 10 wants to buy a lot more
 		//this yields values near 1 for low cash values and low liquidities and 20 for large values
-		double liquidEffect=_cash*_cash/20000000*(_player.getLiquidity()+1)+.85;
+		double liquidEffect=((double)(_cash*_cash))/20000000.0*(_player.getLiquidity()+1)+.85;
 		double finalValue=-1;
 		GamePlayer otherOwner=property.getCloseToMonopoly();
 		if(otherOwner==null) {
@@ -149,7 +151,7 @@ public class GamePlayer {
 			finalValue=_player.getBreakingOpponentMonopolyValue(property.Color);
 		}
 		finalValue*=timeEffect*=liquidEffect;
-		
+		System.out.println(property.Name+" value: "+finalValue+" TimeEffect: "+timeEffect+" LiquidEffect: "+liquidEffect);
 		return finalValue;
 		
 	}
@@ -165,6 +167,7 @@ public class GamePlayer {
 	 * @throws Exception 
 	 */
 	private int tryMortgagingOrSelling(int total) throws Exception{
+		if(_cash!=0) throw new Exception("Cash is not 0, ye trying to mortgage/sell");
 		int amountPaid=0;
 		List<Property> unhoused = new ArrayList<>();
 		PriorityQueue<Property> housed = new PriorityQueue<>(_properties.size(),new HouseSellingComparator());
@@ -184,7 +187,7 @@ public class GamePlayer {
 		Collections.sort(unhoused,new MortgageComparator());
 		//mortgage all unhoused properties in order of preference
 		for(int i=0; i<unhoused.size();i++){
-			System.out.println(this +" mortgaged "+unhoused.get(i));
+			System.out.println("MORTGAGE: "+unhoused.get(i));
 			unhoused.get(i).setMortgagedState(true);
 			amountPaid+=unhoused.get(i).MortgageValue;
 			if(amountPaid>=total){
@@ -208,12 +211,12 @@ public class GamePlayer {
 				curr=housed.poll();
 			}
 			housed.addAll(temp);
-			System.out.println(this +" sold a house from " +curr+ " to leave a total of "+curr.getNumHouses()+ " houses");
+			System.out.println("SELL HOUSE ON: " +curr+ " to leave a total of "+curr.getNumHouses()+ " houses");
 			//sell house on current property
 			amountPaid+=curr.sellHouse();
 			//if we still need money and this property has no houses we mortgage in it
 			if(curr.getNumHouses()==0&&amountPaid<total){
-				System.out.println(this +" mortgaged "+curr);
+				System.out.println("MORTGAGE: "+curr);
 				curr.setMortgagedState(true);
 				amountPaid+=curr.MortgageValue;
 			}
@@ -254,7 +257,7 @@ public class GamePlayer {
 					continue;
 				}
 			}
-			System.out.println(this +" unmortgaged "+mortgaged.get(0));
+			System.out.println("UNMORTGAGE: "+mortgaged.get(0));
 			unmortgageProperty(mortgaged.get(0));
 			mortgaged.remove(0);
 
@@ -289,12 +292,13 @@ public class GamePlayer {
 			}
 		}
 		monopolies.addAll(temp);
+		temp.clear();
 		while(curr.CostPerHouse<=_cash-_player.getMinBuildCash()){
-
 			_cash-=curr.CostPerHouse;
 			curr.buildHouse();
-			System.out.println(this + " built on "+curr+" for a total of "+ curr.getNumHouses()+" houses.");
+			System.out.println("BUILD: "+curr+" for a total of "+ curr.getNumHouses()+" houses.");
 			monopolies.add(curr);
+			//System.out.println(monopolies);
 			curr = monopolies.poll();
 			if(curr==null){
 				return;
@@ -308,6 +312,7 @@ public class GamePlayer {
 				}
 			}
 			monopolies.addAll(temp);
+			temp.clear();
 
 		}	
 
@@ -396,7 +401,7 @@ public class GamePlayer {
 	 * @param property
 	 */
 	public void mortgageProperty(Property property){
-		_cash+=property.MortgageValue;
+		addMoney(property.MortgageValue);
 		property.setMortgagedState(true);
 	}
 
@@ -410,7 +415,7 @@ public class GamePlayer {
 		if(cost>_cash){
 			throw new Exception(String.format("Cannot unmortgage without enough cash; cash: %d, cost: %d", _cash, cost));
 		}
-		_cash-=cost;
+		_game.transferMoney(this, null, cost);
 		property.setMortgagedState(false);
 	}
 
@@ -649,7 +654,7 @@ public class GamePlayer {
 						}
 					}
 					else{
-						return -1;
+						return prop2.Price-prop1.Price;
 					}
 				}
 				

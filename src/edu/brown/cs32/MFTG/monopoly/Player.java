@@ -42,7 +42,7 @@ public class Player {
 		//T[0]=value of monopoly
 		//T[1]=value of houses for the color
 		//T[2]=value of breaking an opponent's monopoly
-		//T[3]=how much value is affected if you have 1 other property of the same color, but this would not give you a monopoly
+		//T[3]=how much value is if you have 1 other property of the same color, but this would not give you a monopoly
 		_colorValues = new HashMap<>();
 		setColorValues();
 		
@@ -338,28 +338,28 @@ public class Player {
 	 * Sets color value defaults
 	 */
 	private void setColorValues() {
-		Double[] purple={200.0,50.0,150.0,2.0};
+		Double[] purple={200.0,50.0,150.0,100.0};
 		_colorValues.put("purple", purple);
 		
-		Double[] lightblue={250.0,50.0,200.0,2.0};
+		Double[] lightblue={250.0,50.0,200.0,200.0};
 		_colorValues.put("light blue", lightblue);
 		
-		Double[] pink={275.0,100.0,225.0,2.0};
+		Double[] pink={275.0,100.0,225.0,250.0};
 		_colorValues.put("pink", pink);
 		
-		Double[] orange={300.0,100.0,250.0,2.0};
+		Double[] orange={300.0,100.0,250.0,275.0};
 		_colorValues.put("orange", orange);
 		
-		Double[] red={325.0,150.0,275.0,2.0};
+		Double[] red={325.0,150.0,275.0,300.0};
 		_colorValues.put("red", red);
 		
-		Double[] yellow={350.0,150.0,300.0,2.0};
+		Double[] yellow={350.0,150.0,300.0,325.0};
 		_colorValues.put("yellow", yellow);
 		
-		Double[] green={375.0,200.0,325.0,2.0};
+		Double[] green={375.0,200.0,325.0,350.0};
 		_colorValues.put("green", green);
 		
-		Double[] darkblue={500.0,200.0,400.0,2.0};
+		Double[] darkblue={500.0,200.0,400.0,450.0};
 		_colorValues.put("dark blue", darkblue);
 		
 	}
@@ -401,7 +401,7 @@ public class Player {
 	
 	@Override
 	public String toString(){
-		return String.format("Player %d", ID);
+		return String.format("%d-Player", ID);
 	}
 
 
