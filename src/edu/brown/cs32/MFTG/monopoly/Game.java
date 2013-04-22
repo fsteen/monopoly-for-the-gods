@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.PriorityQueue;
+import java.util.Random;
 
 import edu.brown.cs32.MFTG.monopoly.GamePlayer.HouseSellingComparator;
 import edu.brown.cs32.MFTG.monopoly.GamePlayer.MortgageComparator;
@@ -21,6 +22,7 @@ public class Game implements Runnable{
 	private CommunityChestDeck _comChest;
 	private ChanceDeck _chance;
 	private GameData _gameData;
+	private long _seed;
 
 	/**
 	 * Constructs a new game
@@ -28,14 +30,17 @@ public class Game implements Runnable{
 	 * @param auctions
 	 * @param players
 	 */
-	public Game(int freeParking,boolean doubleOnGo, boolean auctions, Player...players) {
+	public Game(long seed, int freeParking,boolean doubleOnGo, boolean auctions, Player...players) {
+		 Random rand= new Random(seed);
 		_players=new ArrayList<>(players.length);
 		for(Player p:players){
 			_numPlayers++;
 			_players.add(new GamePlayer(this,p));
 		}
-		Collections.shuffle(_players);
+		Collections.shuffle(_players, rand);
 		_currentPlayer = _players.get(0);
+		
+		_seed=seed;
 		_currentTurn=0;
 		_defaultFP=freeParking;
 		_freeParkingMoney = _defaultFP;
@@ -46,15 +51,15 @@ public class Game implements Runnable{
 		_numHotelsLeft=12;
 
 		_board = new Board(this);
-		_dice = new Dice();
+		_dice = new Dice(rand);
 
 		_playing = true;
 
 
 		_doublesInRow=0;
 
-		_comChest=new CommunityChestDeck();
-		_chance= new ChanceDeck();
+		_comChest=new CommunityChestDeck(rand);
+		_chance= new ChanceDeck(rand);
 
 		_gameData=new GameData(_numPlayers);
 
@@ -103,12 +108,12 @@ public class Game implements Runnable{
 					if(_currentPlayer.isInJail()==false){
 						System.out.println("make move");
 						Space s=movePlayer(_currentPlayer, roll);
+						System.out.println(_currentPlayer+" landed on "+s);
 						s.react(this, _currentPlayer);
 					}
 					tryUnmortgaging(_currentPlayer);
 					tryTrading(_currentPlayer);
 					tryBuilding(_currentPlayer);
-					//System.out.println(_currentPlayer.getCash());
 
 					if(!wasDoubles){
 						System.out.println("turn over");
@@ -393,7 +398,7 @@ public class Game implements Runnable{
 	
 	//TODO added by Frances ... take out if you think it's bad, but I will need something like this for my code
 	public Game copy(){
-		return new Game(_defaultFP,_doubleOnGo,_auctions,(Player[])_players.toArray());
+		return new Game(_seed, _defaultFP,_doubleOnGo,_auctions,(Player[])_players.toArray());
 	}
 
 }

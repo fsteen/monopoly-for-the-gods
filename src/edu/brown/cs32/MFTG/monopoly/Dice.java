@@ -13,8 +13,8 @@ public class Dice {
 	/**
 	 * Constructs two dice with unique seeds
 	 */
-	public Dice() {
-		_die= new Random(System.currentTimeMillis());
+	public Dice(Random rand) {
+		_die= rand;
 	}
 	
 	/**

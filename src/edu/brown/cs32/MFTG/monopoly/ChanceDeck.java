@@ -2,13 +2,14 @@ package edu.brown.cs32.MFTG.monopoly;
 
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.Random;
 public class ChanceDeck implements Deck{
 	private LinkedList<Card> _deck;
 	
 	/**
 	 * constructs a new deck
 	 */
-	public ChanceDeck() {
+	public ChanceDeck(Random rand) {
 		_deck = new LinkedList<Card>();
 		_deck.add(new AdvanceToSpaceCard("go", this));
 		_deck.add(new AdvanceToSpaceCard("illinois avenue", this));
@@ -26,7 +27,7 @@ public class ChanceDeck implements Deck{
 		_deck.add(new LoseMoneyToEachPlayerCard(50, this));
 		_deck.add(new GainMoneyCard(150, this));
 		_deck.add(new GainMoneyCard(100, this));
-		Collections.shuffle(_deck);		
+		Collections.shuffle(_deck, rand);		
 	}
 
 	/**

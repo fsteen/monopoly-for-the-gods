@@ -12,7 +12,7 @@ public class GameTest {
 		Player p0=new Player(0);
 		Player p1=new Player(1);
 		
-		Game g = new Game(-1,false, false, p0,p1);
+		Game g = new Game(9, -1,false, false, p0,p1);
 		g.run();
 		
 	}

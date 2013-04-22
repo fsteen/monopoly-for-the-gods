@@ -2,13 +2,14 @@ package edu.brown.cs32.MFTG.monopoly;
 
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.Random;
 public class CommunityChestDeck implements Deck{
 	private LinkedList<Card> _deck;
 	
 	/**
 	 * constructs a new deck
 	 */
-	public CommunityChestDeck() {
+	public CommunityChestDeck(Random rand) {
 		_deck = new LinkedList<Card>();
 		_deck.add(new AdvanceToSpaceCard("go",this));
 		_deck.add(new GainMoneyCard(200,this));
@@ -27,7 +28,7 @@ public class CommunityChestDeck implements Deck{
 		_deck.add(new PayPerHouseCard(40,115,this));
 		_deck.add(new GainMoneyCard(10,this));
 		_deck.add(new GainMoneyCard(100,this));
-		Collections.shuffle(_deck);		
+		Collections.shuffle(_deck, rand);		
 	}
 
 	/**
