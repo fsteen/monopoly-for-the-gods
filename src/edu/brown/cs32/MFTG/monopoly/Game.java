@@ -23,6 +23,7 @@ public class Game implements Runnable{
 	private ChanceDeck _chance;
 	private GameData _gameData;
 	private long _seed;
+	private GamePlayer _banker;
 
 	/**
 	 * Constructs a new game
@@ -39,6 +40,8 @@ public class Game implements Runnable{
 		}
 		Collections.shuffle(_players, rand);
 		_currentPlayer = _players.get(0);
+		
+		_banker = new GamePlayer(this, null);
 		
 		_seed=seed;
 		_currentTurn=0;
@@ -137,6 +140,14 @@ public class Game implements Runnable{
 		return _dice;
 	}
 
+	/**
+	 * 
+	 * @return banker
+	 */
+	GamePlayer getBanker() {
+		return _banker;
+	}
+	
 	/** 
 	 * 
 	 * @return game data
@@ -171,6 +182,13 @@ public class Game implements Runnable{
 	private void endGame(){
 		_gameData.setWinner(_players.get(0).getPlayer().ID);
 		_playing=false;
+		_gameData.addNewTime();
+		for(GamePlayer player: _players){
+			_gameData.setWealthAtTime(player.getPlayer().ID, player.getCash(), player.getTotalWealth());
+			for(Property prop: player.getProperties()){
+				_gameData.setPropertyAtTime(prop.Name, player.getPlayer().ID, prop.getNumHouses(), prop.getPersonalRevenueWith(),prop.getPersonalRevenueWithout(),prop.getTotalRevenueWithHouses(),prop.getTotalRevenueWithoutHouses(), prop.getMortgagedState());
+			}
+		}
 	}
 
 	/**
@@ -184,6 +202,7 @@ public class Game implements Runnable{
 		int next =(curr+numSpaces)%40;
 		if(curr>next){
 			player.addMoney(200);
+			System.out.println(player+" collects $200 passing Go");
 		}
 		player.setPosition(next);
 		return _board.get(player.getPosition());
@@ -201,6 +220,7 @@ public class Game implements Runnable{
 		//if we have to go around the board
 		if(spaceName.equals("jail")==false&&curr>next){
 			player.addMoney(200);
+			System.out.println(player+" collects $200 passing Go");
 		}
 		player.setPosition(next);
 		return _board.get(spaceName);
@@ -228,8 +248,10 @@ public class Game implements Runnable{
 		int actuallyPaid=payer.payMoney(amountOwed);
 		if(receiver!=null){
 			receiver.addMoney(actuallyPaid);
-		} else {
+		} 
+		else if(receiver!=_banker) {
 			addFreeParkingMoney(actuallyPaid);
+			System.out.println(actuallyPaid +" was added to free parking");
 		}
 
 		if(actuallyPaid<amountOwed){
@@ -247,7 +269,7 @@ public class Game implements Runnable{
 	 * @throws Exception 
 	 */
 	void bankruptPlayer(GamePlayer bankruptPlayer, GamePlayer creditor) throws Exception{
-		if(creditor!=null){
+		if(creditor!=null && creditor!=_banker){
 			for(Property p: bankruptPlayer.getProperties()){
 				creditor.gainProperty(p);
 			}
@@ -301,10 +323,14 @@ public class Game implements Runnable{
 		double secondBid=0;
 		for(GamePlayer p: _players) {
 			double bid = p.getPropertyValue(property);
+			System.out.println(p +" bidded "+bid);
 			if(bid>maxBid) {
 				secondBid=maxBid+1;
 				maxBid=bid;
 				maxPlayer=p;
+			}
+			else if(bid>=secondBid) {
+				secondBid=bid+1;
 			}
 			//if they have same bid, have the player with more wealth bid 1 more dollar
 			else if(bid==maxBid&&p.getTotalWealth()>maxPlayer.getTotalWealth()) {
@@ -313,6 +339,7 @@ public class Game implements Runnable{
 				maxPlayer=p;
 			}
 		}
+		System.out.println(maxPlayer + " paid "+secondBid);
 		maxPlayer.payMoney((int)secondBid);
 		maxPlayer.gainProperty(property);
 	}
@@ -347,6 +374,7 @@ public class Game implements Runnable{
 	 */
 	void giveFreeParkingMoney(GamePlayer player){
 		if(_defaultFP>=0) {
+			System.out.println(player + " won jackpot of $"+_freeParkingMoney);
 			player.addMoney(_freeParkingMoney);
 			_freeParkingMoney=_defaultFP;
 		}

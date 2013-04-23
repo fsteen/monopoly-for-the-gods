@@ -25,8 +25,11 @@ public class PropertySpace extends Space {
 	 */
 	public void react(Game game, GamePlayer currentPlayer) throws Exception {
 		if(_property.getOwner()!=null){
+			if(_property.getOwner()==currentPlayer) {
+				return;
+			}
 			int rent =_property.getRent();
-			System.out.println(String.format("%s paid %d to %s for %s", currentPlayer, rent, _property.getOwner(),_property));
+			System.out.println(String.format("%s paid %d to %s on %s", currentPlayer, rent, _property.getOwner(),_property));
 			game.transferMoney(currentPlayer, _property.getOwner(), rent);
 			_property.addRevenue(rent);
 

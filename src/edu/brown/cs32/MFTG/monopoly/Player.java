@@ -21,7 +21,7 @@ public class Player {
 	private HashMap<String, Double[]> _colorValues;
 	private double _liquidity;
 	private double _timeChange;
-	private int _minBuyCash;
+	private int _minBuyCash, _minBuildCash, _minUnmortgageCash;
 	private int _jailWait;
 	private Expense _mortgageChoice;
 	private Amount _houseSelling;
@@ -29,7 +29,6 @@ public class Player {
 	private Balance _buildingEvenness;
 	private Expense _buildingChoice;
 	private Aggression _buyAggression;
-	private int _minBuildCash;
 	private int _jailPoor, _jailRich;
 	
 	@JsonCreator
@@ -55,6 +54,7 @@ public class Player {
 		_timeChange=5;
 		
 		_minBuyCash=0;
+		_minUnmortgageCash=0;
 		_jailWait=3;
 		
 		_mortgageChoice=Expense.EXPENSIVE;
@@ -300,6 +300,20 @@ public class Player {
 	 */
 	public void setMinBuildCash(int minBuildCash) {
 		_minBuildCash = minBuildCash;
+	}
+	
+	/**
+	 * @return the _MinUnMortgageCash
+	 */
+	public int getMinUnmortgageCash() {
+		return _minUnmortgageCash;
+	}
+
+	/**
+	 * @param _MinUnMortgageCash the _MinUnMortgageCash to set
+	 */
+	public void setMinUnmortgageCash(int minUnmortgageCash) {
+		_minUnmortgageCash = minUnmortgageCash;
 	}
 
 	/**

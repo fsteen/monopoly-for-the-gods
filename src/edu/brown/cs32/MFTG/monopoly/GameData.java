@@ -114,6 +114,23 @@ public class GameData {
 		_data.get(_time).addWealthData(ownerID,cash,totalWealth);
 	}
 	
+	public void printData() {
+		for(TimeStamp t: _data) {
+			System.out.println(t.time);
+			for(PropertyData prop: t.getPropertyData()) {
+				System.out.println(String.format("Property: %s OwnerID: %s numHouses: %d personalRevenueWithHouses: %d personalRevenueWithoutHouses: %d totalRevenueWithHouses: %d totalRevenueWithoutHouses: %d morgaged: %b", prop.propertyName, prop.ownerID, prop.numHouses, prop.personalRevenueWithHouses, prop.personalRevenueWithoutHouses, prop.totalRevenueWithHouses, prop.totalRevenueWithoutHouses, prop.mortgaged));
+			}
+		}
+		for(TimeStamp t: _data) {
+			System.out.println(t.time);
+			for(PlayerWealthData play: t.getWealthData()) {
+				System.out.println(String.format("OwnerID: %s Cash: %d TotalWealth: %d", play.ownerID, play.cash, play.totalWealth));
+
+			}
+		}
+
+	}
+	
 	/**
 	 * class to hold all data for a given property at any given time
 	 * @author Jschvime
@@ -122,11 +139,11 @@ public class GameData {
 	public class TimeStamp{
 		ArrayList<PropertyData> _propertyData;
 		ArrayList<PlayerWealthData> _wealthData;
-		public final int _time;
+		public final int time;
 		
 		@JsonCreator
 		public TimeStamp(@JsonProperty("time") int time){
-			_time=time;
+			this.time=time;
 			_propertyData = new ArrayList<>();
 			_wealthData = new ArrayList<>();
 		}
@@ -240,4 +257,5 @@ public class GameData {
 			this.mortgaged=mortgaged;
 		}
 	}
+	
 }

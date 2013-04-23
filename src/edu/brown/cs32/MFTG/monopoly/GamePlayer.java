@@ -103,7 +103,7 @@ public class GamePlayer {
 				if(property.getSibling1()!=null) property.getSibling1().setMonopolyState(true);
 				if(property.getSibling2()!=null) property.getSibling2().setMonopolyState(true);
 			}
-			_game.transferMoney(this, null, property.Price);
+			_game.transferMoney(this, _game.getBanker(), property.Price);
 			if(property.Name.equals("electric company")||property.Name.equals("water works")){
 				_numUtilities++;
 			}
@@ -187,7 +187,7 @@ public class GamePlayer {
 		Collections.sort(unhoused,new MortgageComparator());
 		//mortgage all unhoused properties in order of preference
 		for(int i=0; i<unhoused.size();i++){
-			System.out.println("MORTGAGE: "+unhoused.get(i));
+			System.out.println("MORTGAGE: "+unhoused.get(i)+" for "+unhoused.get(i).MortgageValue);
 			unhoused.get(i).setMortgagedState(true);
 			amountPaid+=unhoused.get(i).MortgageValue;
 			if(amountPaid>=total){
@@ -213,10 +213,11 @@ public class GamePlayer {
 			housed.addAll(temp);
 			System.out.println("SELL HOUSE ON: " +curr+ " to leave a total of "+curr.getNumHouses()+ " houses");
 			//sell house on current property
+			curr.addRevenue(curr.CostPerHouse/2);
 			amountPaid+=curr.sellHouse();
 			//if we still need money and this property has no houses we mortgage in it
 			if(curr.getNumHouses()==0&&amountPaid<total){
-				System.out.println("MORTGAGE: "+curr);
+				System.out.println("MORTGAGE: "+curr+" for "+curr.MortgageValue);
 				curr.setMortgagedState(true);
 				amountPaid+=curr.MortgageValue;
 			}
@@ -247,7 +248,7 @@ public class GamePlayer {
 		}
 		Collections.sort(mortgaged,new MortgageComparator());
 		//mortgage all unhoused properties in order of preference
-		while(mortgaged.isEmpty()==false&&_cash>=_player.getMinBuildCash()){
+		while(mortgaged.isEmpty()==false&&_cash>=_player.getMinUnmortgageCash()){
 			if(_cash<mortgaged.get(0).MortgageValue*1.1){
 				if(_player.getMortgageChoice()==Expense.CHEAP){
 					return;
@@ -296,6 +297,7 @@ public class GamePlayer {
 		while(curr.CostPerHouse<=_cash-_player.getMinBuildCash()){
 			_cash-=curr.CostPerHouse;
 			curr.buildHouse();
+			curr.loseRevenue(curr.CostPerHouse);
 			System.out.println("BUILD: "+curr+" for a total of "+ curr.getNumHouses()+" houses.");
 			monopolies.add(curr);
 			//System.out.println(monopolies);
@@ -415,7 +417,7 @@ public class GamePlayer {
 		if(cost>_cash){
 			throw new Exception(String.format("Cannot unmortgage without enough cash; cash: %d, cost: %d", _cash, cost));
 		}
-		_game.transferMoney(this, null, cost);
+		_game.transferMoney(this, _game.getBanker(), cost);
 		property.setMortgagedState(false);
 	}
 
