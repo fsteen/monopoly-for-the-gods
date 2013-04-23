@@ -1,0 +1,11 @@
+http://www.cowtowncoder.com/blog/archives/2010/08/entry_409.html
+
+http://wiki.fasterxml.com/JacksonInFiveMinutes
+
+http://jackson.codehaus.org/1.1.2/javadoc/org/codehaus/jackson/JsonFactory.html#createJsonGenerator(java.io.OutputStream, org.codehaus.jackson.JsonEncoding)
+
+http://blog.inflinx.com/2012/05/10/using-jackson-for-javajson-conversion/
+
+http://programmerbruce.blogspot.com/2011/05/deserialize-json-with-jackson-into.html
+
+http://stackoverflow.com/questions/7766791/serializing-enums-with-jackson
