@@ -49,6 +49,7 @@ public class ClientHandler implements iClientHandler{
 		//set up a data structure for collecting game data
 		//create a thread pool for playing the games
 		//
+		return null;
 	}
 	
 //	public List<GameData> getGameData(){
