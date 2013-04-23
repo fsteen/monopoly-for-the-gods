@@ -10,10 +10,15 @@ import java.util.Random;
 import edu.brown.cs32.MFTG.monopoly.GamePlayer.HouseSellingComparator;
 import edu.brown.cs32.MFTG.monopoly.GamePlayer.MortgageComparator;
 
+/**
+ * this class models a game and is a runnable so it can run in its own thread
+ * @author jschvime
+ *
+ */
 public class Game implements Runnable{
 	private ArrayList<GamePlayer> _players;
 	private GamePlayer _currentPlayer;
-	private int _numPlayers, _currentTurn,_freeParkingMoney, _defaultFP, _numHousesLeft, _numHotelsLeft;
+	private int _numPlayers, _currentTurn,_freeParkingMoney, _defaultFP, _numHousesLeft, _numHotelsLeft, _maxNumTurns;
 	private Board _board;
 	private Dice _dice;
 	private static final int TURNS_PER_TIMESTAMP=20;
@@ -31,7 +36,8 @@ public class Game implements Runnable{
 	 * @param auctions
 	 * @param players
 	 */
-	public Game(long seed, int freeParking,boolean doubleOnGo, boolean auctions, Player...players) {
+	public Game(long seed, int maxNumTurns, int freeParking,boolean doubleOnGo, boolean auctions, Player...players) {
+		_maxNumTurns=maxNumTurns;
 		 Random rand= new Random(seed);
 		_players=new ArrayList<>(players.length);
 		for(Player p:players){
@@ -71,6 +77,7 @@ public class Game implements Runnable{
 
 	@Override
 	public void run() {
+		Thread.currentThread().setName("Monopoly Game: "+_seed);
 		try {
 			while(_playing){
 				System.out.println("	Turn: "+_currentTurn+", "+_currentPlayer+" cash: "+_currentPlayer.getCash()+ " wealth: "+_currentPlayer.getTotalWealth());
@@ -139,6 +146,14 @@ public class Game implements Runnable{
 	Dice getDice() {
 		return _dice;
 	}
+	
+	/**
+	 * 
+	 * @param stacked dice, used for testing
+	 */
+	void setDice(Dice dice) {
+		_dice=dice;
+	}
 
 	/**
 	 * 
@@ -160,6 +175,9 @@ public class Game implements Runnable{
 	 * Ends the current turn, saves data if necessary, makes it the next person's turn.
 	 */
 	void endTurn(){
+		if(_currentTurn==_maxNumTurns-1) {
+			tieGame();
+		}
 		if(_currentTurn%TURNS_PER_TIMESTAMP==0){
 			_gameData.addNewTime();
 			for(GamePlayer player: _players){
@@ -181,6 +199,21 @@ public class Game implements Runnable{
 	 */
 	private void endGame(){
 		_gameData.setWinner(_players.get(0).getPlayer().ID);
+		_playing=false;
+		_gameData.addNewTime();
+		for(GamePlayer player: _players){
+			_gameData.setWealthAtTime(player.getPlayer().ID, player.getCash(), player.getTotalWealth());
+			for(Property prop: player.getProperties()){
+				_gameData.setPropertyAtTime(prop.Name, player.getPlayer().ID, prop.getNumHouses(), prop.getPersonalRevenueWith(),prop.getPersonalRevenueWithout(),prop.getTotalRevenueWithHouses(),prop.getTotalRevenueWithoutHouses(), prop.getMortgagedState());
+			}
+		}
+	}
+	
+	/**
+	 * ends game with a tie
+	 */
+	private void tieGame() {
+		_gameData.setWinner(-1);
 		_playing=false;
 		_gameData.addNewTime();
 		for(GamePlayer player: _players){
@@ -269,6 +302,7 @@ public class Game implements Runnable{
 	 * @throws Exception 
 	 */
 	void bankruptPlayer(GamePlayer bankruptPlayer, GamePlayer creditor) throws Exception{
+		System.out.println("BANKRUPT: "+bankruptPlayer +" by "+creditor);
 		if(creditor!=null && creditor!=_banker){
 			for(Property p: bankruptPlayer.getProperties()){
 				creditor.gainProperty(p);
@@ -298,8 +332,8 @@ public class Game implements Runnable{
 		return _board.get(position);
 	}
 
-	private void tryTrading(GamePlayer player){
-		//TODO
+	private void tryTrading(GamePlayer player) throws Exception{
+		player.tryTrading();
 	}
 
 	private void tryBuilding(GamePlayer player) throws Exception{
@@ -413,7 +447,7 @@ public class Game implements Runnable{
 	
 	//TODO added by Frances ... take out if you think it's bad, but I will need something like this for my code
 	public Game copy(){
-		return new Game(_seed, _defaultFP,_doubleOnGo,_auctions,(Player[])_players.toArray());
+		return new Game(_seed, _maxNumTurns,_defaultFP,_doubleOnGo,_auctions,(Player[])_players.toArray());
 	}
 
 }

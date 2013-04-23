@@ -8,6 +8,11 @@ import java.util.PriorityQueue;
 
 import edu.brown.cs32.MFTG.monopoly.Player.*;
 
+/**
+ * models a player for the game that keeps track of a position, jail, properties, cash... and makes decisions based on state
+ * @author jschvime
+ *
+ */
 public class GamePlayer {
 	private final Player _player;
 	private int _cash, _numGetOutOfJailFree, _position, _turnsInJail, _numRailroads, _numUtilities;
@@ -151,7 +156,7 @@ public class GamePlayer {
 			finalValue=_player.getBreakingOpponentMonopolyValue(property.Color);
 		}
 		finalValue*=timeEffect*=liquidEffect;
-		System.out.println(property.Name+" value: "+finalValue+" TimeEffect: "+timeEffect+" LiquidEffect: "+liquidEffect);
+		//System.out.println(property.Name+" value: "+finalValue+" TimeEffect: "+timeEffect+" LiquidEffect: "+liquidEffect);
 		return finalValue;
 		
 	}
@@ -246,11 +251,11 @@ public class GamePlayer {
 		if(mortgaged.isEmpty()){
 			return;
 		}
-		Collections.sort(mortgaged,new MortgageComparator());
-		//mortgage all unhoused properties in order of preference
+		Collections.sort(mortgaged,new UnmortgageComparator());
+		//unmortgage all unhoused properties in order of preference
 		while(mortgaged.isEmpty()==false&&_cash>=_player.getMinUnmortgageCash()){
 			if(_cash<mortgaged.get(0).MortgageValue*1.1){
-				if(_player.getMortgageChoice()==Expense.CHEAP){
+				if(_player.getMortgageChoice()==Expense.EXPENSIVE){
 					return;
 				}
 				else{
@@ -376,12 +381,119 @@ public class GamePlayer {
 		}
 		
 	}
+	
+	/**
+	 * try trading properties
+	 * @throws Exception
+	 */
+	public void tryTrading() throws Exception{
+		//see if there are any properties you have that you value less than another player who has a property that you value more than they do
+			
+			for(GamePlayer player: _game.getOtherPlayers(this)) {
+				Outerloop:
+				for(int i=0; i<player.getProperties().size(); i++) {
+					Property theres=player.getProperties().get(i);
+					if (theres.getNumHouses()!=0) continue;
+					
+					//q is the property i'm taking from the oppoenent, I am gaining myVal1-oppVal1
+					double oppVal1=player.getTradingValue(theres);
+					double myVal1=getTradingValue(theres);
+					
+					for(int j=0; j< _properties.size(); j++) {
+						Property mine=_properties.get(j);
+						
+						if(mine.getNumHouses()!=0) continue;
+						if(theres.isSibling(mine)) continue; //can't trade properties of same color
+						
+						//p is the property i'm giving to the oppoenent, I am losing oppVal2-myVal2
+						double oppVal2=player.getTradingValue(mine);
+						double myVal2=getTradingValue(mine);
+						
+						//if we're both happy about the deal
+						if(myVal1>oppVal1 && oppVal2>myVal2) {
+							
+							loseProperty(mine);
+							player.loseProperty(theres);
+							gainProperty(theres);
+							player.gainProperty(mine);
+							
+							double money=myVal1-oppVal2;
+							System.out.println("TRADE: "+ mine + " for "+theres+" and $"+money);
+							/*9System.out.println("oppValTheres "+oppVal1);
+							System.out.println("myValTheres "+myVal1);
+							System.out.println("oppValMine "+oppVal2);
+							System.out.println("myValMine "+myVal2);*/
+							
+							//I got the better deal
+							if(money>0) {
+								_game.transferMoney(this, player, (int)money);
+							}
+							//I got the worse deal
+							else if(money<0) {
+								_game.transferMoney(player, this, (int)((-1)*money));
+							}				
+							i--;
+							continue Outerloop;
+						}
+						
+					}
+				}
+			}
+	}
+	
+	private double getTradingValue(Property property) {
+		double initialValue= _player.getPropertyValue(property.Name);
+		
+		//this has the effect of making it so someone near 1 wants to buy nothing more with more money, and 10 wants to buy a lot more
+		//this yields values near 1 for low cash values and low liquidities and 20 for large values
+		double liquidEffect=((double)(_cash*_cash))/20000000.0*(_player.getLiquidity()+1)+.85;
+		double finalValue=-1;
+		GamePlayer otherOwner=property.getCloseToMonopoly();
+		if(otherOwner==null) {
+			if(property.getSibling1()!=null && property.getSibling1().getOwner()==this) {
+				finalValue=_player.getSameColorEffect(property.Color);
+			}
+			else if(property.getSibling2()!=null && property.getSibling2().getOwner()==this) {
+				finalValue=_player.getSameColorEffect(property.Color);
+			}
+			else {
+				finalValue=initialValue;
+			}
+		}
+		else if(otherOwner==this) {
+			finalValue=_player.getMonopolyValue(property.Color);
+		}
+		else {
+			finalValue=_player.getBreakingOpponentMonopolyValue(property.Color);
+		}
+		if(property.getOwner()==this) {
+			if(liquidEffect<1) {
+				finalValue=finalValue/liquidEffect;
+			}
+			finalValue*=_player.getTradingFear();
+		}
+		else {
+			if(liquidEffect>1) {
+				finalValue=finalValue*liquidEffect;
+			}
+		}
+		//System.out.println(property.Name+" value: "+finalValue+" LiquidEffect: "+liquidEffect);
+		if(property.getMortgagedState()) {
+			finalValue-=(property.MortgageValue*1.1);
+		}
+		return finalValue;
+	}
+
 
 	/**
 	 * gain a property for free
 	 * @param property
+	 * @throws Exception 
 	 */
-	public void gainProperty(Property property){
+	public void gainProperty(Property property) throws Exception{
+		if(property.getOwner()==this) {
+			throw new Exception("Property already owned");
+		}
 		property.setOwner(this);
 		_properties.add(property);
 		//checks if the property now creates a monopoly
@@ -395,6 +507,25 @@ public class GamePlayer {
 		}
 		else if(property.Name.equals("reading railroad")||property.Name.equals("pennsylvania railroad")||property.Name.equals("b and o railroad")||property.Name.equals("short line")){
 			_numRailroads++;
+		}
+	}
+	
+	public void loseProperty(Property property) throws Exception {
+		if(property.getOwner()!=this) {
+			throw new Exception("Property not already owned");
+		}
+		_properties.remove(property);
+		//checks if the property now creates a monopoly
+		if(property.getMonopolyState()) {
+			property.setMonopolyState(false);
+			if(property.getSibling1()!=null)property.getSibling1().setMonopolyState(false);
+			if(property.getSibling2()!=null)property.getSibling2().setMonopolyState(false);
+		}
+		if(property.Name.equals("electric company")||property.Name.equals("water works")){
+			_numUtilities--;
+		}
+		else if(property.Name.equals("reading railroad")||property.Name.equals("pennsylvania railroad")||property.Name.equals("b and o railroad")||property.Name.equals("short line")){
+			_numRailroads--;
 		}
 	}
 
@@ -533,7 +664,6 @@ public class GamePlayer {
 	/**
 	 * Compares two properties based on mortgage price
 	 * bigger properties are ones that are more valuable to keep
-	 * monopolized ones are more valuable then unmonopolized ones
 	 * then if they prefer to mortgage cheap ones those are ranked less valuable or vice versa
 	 * 
 	 * @author JudahSchvimer
@@ -561,6 +691,49 @@ public class GamePlayer {
 			}
 
 		}
+
+	}
+	
+	/**
+	 * Compares two properties based on mortgage price
+	 * bigger properties are ones that are more valuable to keep
+	 * if one is monopolized then you want to unmortgage that one first
+	 * then if they prefer to mortgage cheap ones those are ranked less valuable or vice versa
+	 * 
+	 * @author JudahSchvimer
+	 *
+	 */
+	public class UnmortgageComparator implements Comparator<Property> {
+
+		public UnmortgageComparator() {}
+
+		@Override
+		public int compare(Property prop1, Property prop2) {
+			if(prop1.getMortgagedState()&&prop2.getMortgagedState()==false){
+				return -1;
+			}
+			else if(prop1.getMortgagedState()==false&&prop2.getMortgagedState()){
+				return 1;
+			}
+			else{
+				if(prop1.getMonopolyState()&&prop1.getMonopolyState()==false) {
+					return -1;
+				}
+				else if(prop1.getMonopolyState()==false&&prop1.getMonopolyState()) {
+					return 1;
+				}
+				else {
+					if(_player.getMortgageChoice()==Expense.EXPENSIVE){
+						return prop1.MortgageValue-prop2.MortgageValue;
+					}
+					else{
+						return prop2.MortgageValue-prop1.MortgageValue;
+					}
+				}
+			}
+
+		}
+		
 
 	}
 

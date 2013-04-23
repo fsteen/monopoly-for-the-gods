@@ -3,6 +3,11 @@ package edu.brown.cs32.MFTG.monopoly;
 import java.util.HashMap;
 import com.fasterxml.jackson.annotation.*;
 
+/**
+ * This class models a player
+ * @author jschvime
+ *
+ */
 public class Player {
 	public enum Expense {
 		CHEAP, EXPENSIVE
@@ -19,8 +24,7 @@ public class Player {
 	public final int ID;
 	private HashMap<String, Integer> _propertyValues;
 	private HashMap<String, Double[]> _colorValues;
-	private double _liquidity;
-	private double _timeChange;
+	private double _liquidity, _timeChange, _tradingFear;
 	private int _minBuyCash, _minBuildCash, _minUnmortgageCash;
 	private int _jailWait;
 	private Expense _mortgageChoice;
@@ -70,6 +74,17 @@ public class Player {
 		_minBuildCash=0;
 		
 		_buyAggression=Aggression.AGGRESSIVE;
+		
+		//this is a number that multiplies your valuation of a property you own if your opponent wants to trade for it (since likely
+		//it will help them a lot if they want it)
+		_tradingFear=1.25;
+	}
+	
+	/**
+	 * does nothing for human player, called however everytime to see if it wants to set its own heuristics
+	 */
+	public void setHeuristics() {
+		
 	}
 	
 	/**
@@ -160,6 +175,20 @@ public class Player {
 	 */
 	public void setLiquidity(double liquidity) {
 		_liquidity = liquidity;
+	}
+	
+	/**
+	 * @return the _tradingFear
+	 */
+	public double getTradingFear() {
+		return _tradingFear;
+	}
+
+	/**
+	 * @param _tradingFear the _tradingFear to set
+	 */
+	public void setTradingFear(double tradingFear) {
+		_tradingFear = tradingFear;
 	}
 
 	/**
