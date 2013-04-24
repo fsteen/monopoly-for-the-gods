@@ -7,8 +7,11 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -18,6 +21,7 @@ import java.text.ParseException;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
+import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 import edu.brown.cs32.MFTG.gui.Constants;
@@ -32,7 +36,7 @@ public class PropertyButton extends JButton {
 	
 	/* Game results and Heuristics */
 	private double _timeOwned;
-	private JFormattedTextField _profitField;
+	private JLabel _profitField;
 	private double _profit;
 	private JFormattedTextField _valueField;
 	private double _value;
@@ -56,13 +60,17 @@ public class PropertyButton extends JButton {
 		/* Initialize the button */
 		super();
 		this.setLayout(null);
-		this.addActionListener(new ButtonListener(this));
+		this.addMouseListener(new ButtonMouseListener());
 		
 		this.setLocation(0, 0);
-		if(orientation == Orientation.UP || orientation == Orientation.DOWN) 
+		if(orientation == Orientation.UP || orientation == Orientation.DOWN) {
 			this.setPreferredSize(new Dimension(Constants.ACTUAL_WIDTH, Constants.ACTUAL_HEIGHT));
-		else
+			this.setMaximumSize(new Dimension(Constants.ACTUAL_WIDTH, Constants.ACTUAL_HEIGHT));
+		}
+		else {
 			this.setPreferredSize(new Dimension(Constants.ACTUAL_HEIGHT, Constants.ACTUAL_WIDTH));
+			this.setMaximumSize(new Dimension(Constants.ACTUAL_HEIGHT, Constants.ACTUAL_WIDTH));
+		}
 		
 		/* Set instance variables */
 		_property = property;
@@ -91,6 +99,8 @@ public class PropertyButton extends JButton {
 		/* Draw to a buffered image which will then be resized and rotated appropriately */
 		BufferedImage image = new BufferedImage(Constants.WIDTH, Constants.HEIGHT, BufferedImage.TYPE_INT_RGB);
 		Graphics2D g2 = image.createGraphics();
+		
+		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		
 		g2.setColor(Constants.BACKGROUND_COLOR);
 		g2.fill(_spaceBackground);
@@ -138,7 +148,9 @@ public class PropertyButton extends JButton {
 	}
 	
 	public void initializeProfitField () {
-		_profitField = new JFormattedTextField(NumberFormat.getInstance());
+		_profitField = new JLabel();
+		NumberFormat numFormat = NumberFormat.getCurrencyInstance();
+		numFormat.setMaximumFractionDigits(0);
 		_profitField.setFont(Constants.FONT);
 		_profitField.setForeground(Color.BLACK);
 		_profitField.setHorizontalAlignment(JTextField.CENTER);
@@ -146,8 +158,7 @@ public class PropertyButton extends JButton {
 		_profitField.setLocation(0, _orientation.getHeight()/2 - 40);
 		_profitField.setBorder(BorderFactory.createLineBorder(Color.WHITE, 0));
 		_profitField.setOpaque(false);
-		_profitField.setValue(new Double(_profit));
-		_profitField.setEditable(false);
+		_profitField.setText(numFormat.format(_profit));
 	}
 	
 	public void initializeValueField () {
@@ -177,17 +188,41 @@ public class PropertyButton extends JButton {
 		}
 	}
 	
-	private class ButtonListener implements ActionListener {
+	private class ButtonMouseListener implements MouseListener {
 
-		private PropertyButton _button;
-		public ButtonListener (PropertyButton button) {
-			_button = button;
-		}
-		
 		@Override
-		public void actionPerformed(ActionEvent e) {
-			if(_viewer == Viewer.ME) _property.changeViewer(Viewer.ALL);
-			else _property.changeViewer(Viewer.ME);
+		public void mouseClicked(MouseEvent e) {
+			if(e.getButton() == MouseEvent.BUTTON1 && e.getClickCount()==2) {
+				if(_viewer == Viewer.ME) _property.changeViewer(Viewer.ALL);
+				else _property.changeViewer(Viewer.ME);
+			}
+			if(e.getButton() == MouseEvent.BUTTON3) {
+				_property.popup();
+			}
 		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			// TODO Auto-generated method stub
+		}
+
 	}
 }
