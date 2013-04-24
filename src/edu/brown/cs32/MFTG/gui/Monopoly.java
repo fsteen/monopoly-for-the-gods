@@ -1,14 +1,6 @@
 package edu.brown.cs32.MFTG.gui;
 
-import java.awt.Color;
-
-import edu.brown.cs32.MFTG.gui.Constants.Orientation;
-import edu.brown.cs32.MFTG.gui.Constants.Viewer;
-
 import javax.swing.JFrame;
-import javax.swing.JPanel;
-
-import spaces.PropertyButton;
 
 
 public class Monopoly extends JFrame {

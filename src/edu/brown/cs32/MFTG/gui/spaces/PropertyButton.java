@@ -18,10 +18,11 @@ import java.text.ParseException;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
-import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import edu.brown.cs32.MFTG.gui.Constants;
+import edu.brown.cs32.MFTG.gui.Constants.Orientation;
+import edu.brown.cs32.MFTG.gui.Constants.Viewer;
 import edu.brown.cs32.MFTG.gui.Helper;
 
 public class PropertyButton extends JButton {

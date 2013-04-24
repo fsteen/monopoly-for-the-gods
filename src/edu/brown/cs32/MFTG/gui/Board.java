@@ -2,6 +2,7 @@ package edu.brown.cs32.MFTG.gui;
 
 import edu.brown.cs32.MFTG.gui.Constants.Orientation;
 import edu.brown.cs32.MFTG.gui.Constants.Viewer;
+import edu.brown.cs32.MFTG.gui.spaces.PropertyButton;
 
 import java.awt.Color;
 import java.awt.GridBagConstraints;
@@ -10,9 +11,6 @@ import java.awt.image.BufferedImage;
 import java.util.HashMap;
 
 import javax.swing.JPanel;
-
-import spaces.Property;
-import spaces.PropertyButton;
 
 public class Board extends JPanel {
 
@@ -30,8 +28,11 @@ public class Board extends JPanel {
 		
 		setLayout(new GridBagLayout());
 		_c = new GridBagConstraints();
-		
-		Property property = new Property (this, Orientation.DOWN, Color.BLUE);
-		this.add(property);
+	}
+	
+	public void put (PropertyButton oldButton, PropertyButton newButton) {
+		this.remove(oldButton);
+		this.add(newButton);
+		this.revalidate();
 	}
 }

@@ -5,10 +5,12 @@ import java.awt.Color;
 import javax.swing.JPanel;
 
 import edu.brown.cs32.MFTG.gui.Board;
+import edu.brown.cs32.MFTG.gui.Constants.Orientation;
+import edu.brown.cs32.MFTG.gui.Constants.Viewer;
 
 
 
-public class Property extends JPanel {
+public class Property  {
 
 	private PropertyButton _myButton;
 	private PropertyButton _generalButton;
@@ -18,7 +20,7 @@ public class Property extends JPanel {
 		_board = board;
 		_myButton = new PropertyButton(this, orientation, color, Viewer.ME, .75, 10000, 500, 2.1);
 		_generalButton = new PropertyButton(this, orientation, color, Viewer.ME, 1, 8999, 0, 2.9);
-		this.add(_myButton);
+		_board.put(null, _myButton);
 	}
 	
 	public void changeViewer (Viewer viewer) {
