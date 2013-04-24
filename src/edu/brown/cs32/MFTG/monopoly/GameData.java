@@ -6,6 +6,7 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.Objects;
 
 /**
  * Models game data, game
@@ -128,6 +129,23 @@ public class GameData {
 		}
 
 	}
+	@Override
+	public boolean equals(Object other){
+		if(other instanceof GameData){
+			GameData otherData= (GameData)other;
+			for(int i=0; i<_data.size();i++) {
+				if(otherData.getData().get(i)==null) {
+					return false;
+				}
+				if(otherData.getData().get(i).equals(_data.get(i))==false) {
+					return false;
+				}
+			}
+			return true;
+
+		}
+		return false;
+	}
 	
 	@Override
 	public boolean equals(Object o){
@@ -216,6 +234,82 @@ public class GameData {
 		public void setWealthData(ArrayList<PlayerWealthData> wealthData){
 			_wealthData = wealthData;
 		}
+<<<<<<< HEAD
+=======
+		
+		@Override
+		public boolean equals(Object other){
+			if(other instanceof TimeStamp){
+				TimeStamp otherTime= (TimeStamp)other;
+				for(int i=0; i<_propertyData.size();i++) {
+					if(otherTime.getPropertyData().get(i)==null) {
+						return false;
+					}
+					if(otherTime.getPropertyData().get(i).equals(_propertyData.get(i))==false) {
+						return false;
+					}
+				}
+				for(int j=0; j<_wealthData.size();j++) {
+					if(otherTime.getWealthData().get(j)==null) {
+						return false;
+					}
+					if(otherTime.getWealthData().get(j).equals(_wealthData.get(j))==false) {
+						return false;
+					}
+				}
+				return true;
+
+			}
+			return false;
+		}
+	}
+	
+	/**
+	 * class to hold all data for a owner at a given time
+	 * @author Jschvime
+	 *
+	 */
+	public class PlayerWealthData{
+		public final  int ownerID;
+		public final int cash;
+		public final int totalWealth;
+		
+		@JsonCreator
+		public PlayerWealthData(@JsonProperty("ownerID") int ownerID, @JsonProperty("cash") int cash, 
+								@JsonProperty("totalWealth") int totalWealth){
+			this.ownerID=ownerID;
+			this.cash=cash;
+			this.totalWealth=totalWealth;
+		}
+		@Override
+		public boolean equals(Object other){
+			if(other instanceof PlayerWealthData){
+				PlayerWealthData otherData= (PlayerWealthData)other;
+				if(otherData.ownerID!=this.ownerID) return false;
+				if(otherData.cash!=this.cash) return false;
+				if(otherData.totalWealth!=this.totalWealth) return false;
+				return true;
+
+			}
+			return false;
+		}
+	}
+	
+	/**
+	 * class to hold all data for a given property at any given time
+	 * @author Jschvime
+	 *
+	 */
+	public class PropertyData{
+		public final String propertyName;
+		public final int ownerID;
+		public final int numHouses;
+		public final int personalRevenueWithHouses;
+		public final int personalRevenueWithoutHouses;
+		public final int totalRevenueWithHouses;
+		public final int totalRevenueWithoutHouses;
+		public final boolean mortgaged;
+>>>>>>> 1d885643d68a74d36b935bb5c29526236300f006
 		
 		@Override
 		public boolean equals(Object o){
@@ -226,5 +320,28 @@ public class GameData {
 			
 			return Objects.equals(_propertyData, that.getPropertyData()) && Objects.equals(_wealthData, that.getWealthData()) && _time == that._time;
 		}
+		
+		@Override
+		public boolean equals(Object other){
+			if(other instanceof PropertyData){
+				PropertyData otherData= (PropertyData)other;
+				if(otherData.propertyName.equals(this.propertyName)==false) return false;
+				if(otherData.ownerID!=this.ownerID) return false;
+				if(otherData.numHouses!=this.numHouses) return false;
+				if(otherData.personalRevenueWithHouses!=this.personalRevenueWithHouses) return false;
+				if(otherData.personalRevenueWithoutHouses!=this.personalRevenueWithoutHouses) return false;
+				if(otherData.totalRevenueWithHouses!=this.totalRevenueWithHouses) return false;
+				if(otherData.totalRevenueWithoutHouses!=this.totalRevenueWithoutHouses) return false;
+				if(otherData.mortgaged!=this.mortgaged) return false;
+				return true;
+
+			}
+			return false;
+		}
 	}
+<<<<<<< HEAD
+=======
+	
+	
+>>>>>>> 1d885643d68a74d36b935bb5c29526236300f006
 }

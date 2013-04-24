@@ -223,6 +223,15 @@ public class Property {
 	
 	/**
 	 * 
+	 * @param sib
+	 * @return if the property is a sibling
+	 */
+	public boolean isSibling(Property sib) {
+		return (sib==_p1||sib==_p2);
+	}
+	
+	/**
+	 * 
 	 * @return owner if both siblings have same owner or if only 1 sibling, null otherwise
 	 */
 	public GamePlayer getCloseToMonopoly() {
