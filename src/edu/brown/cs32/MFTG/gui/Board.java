@@ -26,7 +26,7 @@ public class Board extends JPanel {
 		super();
 
 		/* Set initialization information */
-		java.awt.Dimension size = new java.awt.Dimension(9*Constants.WIDTH + 2*Constants.HEIGHT, 9*Constants.WIDTH + 2*Constants.HEIGHT);
+		java.awt.Dimension size = new java.awt.Dimension(Constants.FULL_WIDTH,Constants.FULL_HEIGHT);
 		this.setPreferredSize(size);
 		this.setSize(size);
 		this.setBackground(Color.GRAY);

@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Font;
 
 public class Constants {
-
 	public final static int WIDTH = (int) 135/2;
 	public final static int HEIGHT = (int) 225/2;
 	public final static int HEADER_HEIGHT = (int) 50/2;
@@ -13,6 +12,9 @@ public class Constants {
 	public static int ACTUAL_WIDTH = (int) WIDTH;
 	public static int ACTUAL_HEIGHT = (int) HEIGHT;
 	public static Color BACKGROUND_COLOR = new Color(211, 211, 211);
+	
+	public final static int FULL_WIDTH=9*Constants.WIDTH + 2*Constants.HEIGHT;
+	public final static int FULL_HEIGHT=9*Constants.WIDTH + 2*Constants.HEIGHT;
 	
 	public static final Font FONT = new Font("sansserif", Font.BOLD, 12);
 
