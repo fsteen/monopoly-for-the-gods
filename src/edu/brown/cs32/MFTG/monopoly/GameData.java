@@ -2,7 +2,6 @@ package edu.brown.cs32.MFTG.monopoly;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -129,23 +128,6 @@ public class GameData {
 		}
 
 	}
-	@Override
-	public boolean equals(Object other){
-		if(other instanceof GameData){
-			GameData otherData= (GameData)other;
-			for(int i=0; i<_data.size();i++) {
-				if(otherData.getData().get(i)==null) {
-					return false;
-				}
-				if(otherData.getData().get(i).equals(_data.get(i))==false) {
-					return false;
-				}
-			}
-			return true;
-
-		}
-		return false;
-	}
 	
 	@Override
 	public boolean equals(Object o){
@@ -154,7 +136,7 @@ public class GameData {
 		
 		GameData that = (GameData) o;
 		
-		return Objects.equals(_data, that.getData()) && _time == that.getTime() && _numPlayers == that._numPlayers && _winner == that.getWinner();
+		return java.util.Objects.equals(_data, that.getData()) && _time == that.getTime() && _numPlayers == that._numPlayers && _winner == that.getWinner();
 	}
 	
 	/**
@@ -234,8 +216,6 @@ public class GameData {
 		public void setWealthData(ArrayList<PlayerWealthData> wealthData){
 			_wealthData = wealthData;
 		}
-<<<<<<< HEAD
-=======
 		
 		@Override
 		public boolean equals(Object other){
@@ -294,54 +274,4 @@ public class GameData {
 			return false;
 		}
 	}
-	
-	/**
-	 * class to hold all data for a given property at any given time
-	 * @author Jschvime
-	 *
-	 */
-	public class PropertyData{
-		public final String propertyName;
-		public final int ownerID;
-		public final int numHouses;
-		public final int personalRevenueWithHouses;
-		public final int personalRevenueWithoutHouses;
-		public final int totalRevenueWithHouses;
-		public final int totalRevenueWithoutHouses;
-		public final boolean mortgaged;
->>>>>>> 1d885643d68a74d36b935bb5c29526236300f006
-		
-		@Override
-		public boolean equals(Object o){
-			if (o == null || !(o instanceof TimeStamp))
-				return false;
-			
-			TimeStamp that = (TimeStamp) o;
-			
-			return Objects.equals(_propertyData, that.getPropertyData()) && Objects.equals(_wealthData, that.getWealthData()) && _time == that._time;
-		}
-		
-		@Override
-		public boolean equals(Object other){
-			if(other instanceof PropertyData){
-				PropertyData otherData= (PropertyData)other;
-				if(otherData.propertyName.equals(this.propertyName)==false) return false;
-				if(otherData.ownerID!=this.ownerID) return false;
-				if(otherData.numHouses!=this.numHouses) return false;
-				if(otherData.personalRevenueWithHouses!=this.personalRevenueWithHouses) return false;
-				if(otherData.personalRevenueWithoutHouses!=this.personalRevenueWithoutHouses) return false;
-				if(otherData.totalRevenueWithHouses!=this.totalRevenueWithHouses) return false;
-				if(otherData.totalRevenueWithoutHouses!=this.totalRevenueWithoutHouses) return false;
-				if(otherData.mortgaged!=this.mortgaged) return false;
-				return true;
-
-			}
-			return false;
-		}
-	}
-<<<<<<< HEAD
-=======
-	
-	
->>>>>>> 1d885643d68a74d36b935bb5c29526236300f006
 }
