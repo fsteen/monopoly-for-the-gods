@@ -2,6 +2,7 @@ package edu.brown.cs32.MFTG.monopoly;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -33,9 +34,6 @@ public class GameData {
 		//each time has a list of wealth data
 		//data (in order): cash, total wealth
 		_data = new ArrayList<>();
-
-
-		
 	}
 	
 	/**
@@ -116,19 +114,29 @@ public class GameData {
 	
 	public void printData() {
 		for(TimeStamp t: _data) {
-			System.out.println(t.time);
+			System.out.println(t._time);
 			for(PropertyData prop: t.getPropertyData()) {
 				System.out.println(String.format("Property: %s OwnerID: %s numHouses: %d personalRevenueWithHouses: %d personalRevenueWithoutHouses: %d totalRevenueWithHouses: %d totalRevenueWithoutHouses: %d morgaged: %b", prop.propertyName, prop.ownerID, prop.numHouses, prop.personalRevenueWithHouses, prop.personalRevenueWithoutHouses, prop.totalRevenueWithHouses, prop.totalRevenueWithoutHouses, prop.mortgaged));
 			}
 		}
 		for(TimeStamp t: _data) {
-			System.out.println(t.time);
+			System.out.println(t._time);
 			for(PlayerWealthData play: t.getWealthData()) {
 				System.out.println(String.format("OwnerID: %s Cash: %d TotalWealth: %d", play.ownerID, play.cash, play.totalWealth));
 
 			}
 		}
 
+	}
+	
+	@Override
+	public boolean equals(Object o){
+		if (o == null || !(o instanceof GameData))
+			return false;
+		
+		GameData that = (GameData) o;
+		
+		return Objects.equals(_data, that.getData()) && _time == that.getTime() && _numPlayers == that._numPlayers && _winner == that.getWinner();
 	}
 	
 	/**
@@ -139,13 +147,20 @@ public class GameData {
 	public class TimeStamp{
 		ArrayList<PropertyData> _propertyData;
 		ArrayList<PlayerWealthData> _wealthData;
-		public final int time;
+		int _time;
 		
-		@JsonCreator
-		public TimeStamp(@JsonProperty("time") int time){
-			this.time=time;
+		public TimeStamp(int time){
+			_time=time;
 			_propertyData = new ArrayList<>();
 			_wealthData = new ArrayList<>();
+		}
+		
+		public int getTime(){
+			return _time;
+		}
+		
+		public void setTime(int t){
+			_time = t;
 		}
 		
 		/**
@@ -201,61 +216,15 @@ public class GameData {
 		public void setWealthData(ArrayList<PlayerWealthData> wealthData){
 			_wealthData = wealthData;
 		}
-	}
-	
-	/**
-	 * class to hold all data for a owner at a given time
-	 * @author Jschvime
-	 *
-	 */
-	public class PlayerWealthData{
-		public final  int ownerID;
-		public final int cash;
-		public final int totalWealth;
 		
-		@JsonCreator
-		public PlayerWealthData(@JsonProperty("ownerID") int ownerID, @JsonProperty("cash") int cash, 
-								@JsonProperty("totalWealth") int totalWealth){
-			this.ownerID=ownerID;
-			this.cash=cash;
-			this.totalWealth=totalWealth;
-		}
-	}
-	
-	/**
-	 * class to hold all data for a given property at any given time
-	 * @author Jschvime
-	 *
-	 */
-	public class PropertyData{
-		public final String propertyName;
-		public final int ownerID;
-		public final int numHouses;
-		public final int personalRevenueWithHouses;
-		public final int personalRevenueWithoutHouses;
-		public final int totalRevenueWithHouses;
-		public final int totalRevenueWithoutHouses;
-		public final boolean mortgaged;
-		
-		@JsonCreator
-		public PropertyData(@JsonProperty("propertyName") String propertyName, 
-							@JsonProperty("ownerID") int ownerID,
-							@JsonProperty("numHouses") int numHouses, 
-							@JsonProperty("personalRevenueWithHouses") int personalRevenueWithHouses, 
-							@JsonProperty("personalRevenueWIthoutHouses") int personalRevenueWithoutHouses,
-							@JsonProperty("totalRevenueWithHouses") int totalRevenueWithHouses,
-							@JsonProperty("totalRevenueWithoutHouses") int totalRevenueWithoutHouses,
-							@JsonProperty("mortgaged") boolean mortgaged){
+		@Override
+		public boolean equals(Object o){
+			if (o == null || !(o instanceof TimeStamp))
+				return false;
 			
-			this.propertyName=propertyName;
-			this.ownerID=ownerID;
-			this.numHouses=numHouses;
-			this.personalRevenueWithHouses=personalRevenueWithHouses;
-			this.personalRevenueWithoutHouses=personalRevenueWithoutHouses;
-			this.totalRevenueWithHouses=totalRevenueWithHouses;
-			this.totalRevenueWithoutHouses=totalRevenueWithoutHouses;
-			this.mortgaged=mortgaged;
+			TimeStamp that = (TimeStamp) o;
+			
+			return Objects.equals(_propertyData, that.getPropertyData()) && Objects.equals(_wealthData, that.getWealthData()) && _time == that._time;
 		}
 	}
-	
 }
