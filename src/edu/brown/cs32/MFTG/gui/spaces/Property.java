@@ -19,7 +19,7 @@ public class Property  {
 	public Property(Board board, Orientation orientation, Color color) {
 		_board = board;
 		_myButton = new PropertyButton(this, orientation, color, Viewer.ME, .75, 10000, 500, 2.1);
-		_generalButton = new PropertyButton(this, orientation, color, Viewer.ME, 1, 8999, 0, 2.9);
+		_generalButton = new PropertyButton(this, orientation, color, Viewer.ALL, 1, 8999, 0, 2.9);
 		_board.put(null, _myButton);
 	}
 	
