@@ -12,7 +12,7 @@ import edu.brown.cs32.MFTG.networking.iClientHandler;
 
 public class PlayerModule {
 	
-//	GUI gui;
+	DummyGUI _gui;
 	private static final int NUM_THREADS=10;
 	private static final int DATA_PACKET_SIZE=10;
 	private int _nextDisplaySize;
@@ -20,6 +20,7 @@ public class PlayerModule {
 	
 	public PlayerModule(){
 		_data = new ArrayList<>();
+		_gui = new DummyGUI();
 	}
 	
 	/**
@@ -28,25 +29,20 @@ public class PlayerModule {
 	 */
 	public Player getPlayer(){
 		//TODO calls method in the GUI to get player
-		return null;
+		return _gui.getPlayer();
 	}
 	
-	/**
-	 * Sends an encoding of the players to the client and a request to play numGame games
-	 * @param players
-	 * @param numGames
-	 */
-	public List<GameData> playGames(List<Player> players, Settings settings, int numGames){
+
+	public List<GameData> playGames(List<Player> players, Settings settings, List<Long> seeds){
 		_data.clear();
 		_nextDisplaySize = DATA_PACKET_SIZE;
 		
 		//construct a game from the settings
-		Game game = new Game(-1,false, false, (Player[])players.toArray()); //TODO must change later!
-		GameRunnerFactory gameRunnerFactory = new GameRunnerFactory(game,this);
+		GameRunnerFactory gameRunnerFactory = new GameRunnerFactory(this, 1000,-1,false,false,(Player[])players.toArray());
 		
 		ExecutorService pool = Executors.newFixedThreadPool(NUM_THREADS);
-		for(int i = 0; i < numGames; i++){ //execute games and record data
-			pool.execute(gameRunnerFactory.build());
+		for(int i = 0; i < seeds.size(); i++){ //execute games and record data
+			pool.execute(gameRunnerFactory.build(seeds.get(i)));
 		}
 		
 		return _data;

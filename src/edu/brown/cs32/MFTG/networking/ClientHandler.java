@@ -44,7 +44,7 @@ public class ClientHandler implements iClientHandler{
 	 * @param numGames
 	 * @return the GameData collected from playing the round of games
 	 */
-	public List<GameData> playGames(List<Player> players, Settings settings, int numGames){
+	public List<GameData> playGames(List<Player> players, Settings settings, List<Long> seeds){
 		//TODO implement
 		//set up a data structure for collecting game data
 		//create a thread pool for playing the games

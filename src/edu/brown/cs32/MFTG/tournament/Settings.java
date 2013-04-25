@@ -1,8 +1,20 @@
 package edu.brown.cs32.MFTG.tournament;
 
 public class Settings {
-	private static final int NUM_GAMES_PER_ROUND=10;
-	private static final int NUM_ROUNDS=10;
+	public enum Turns {
+		STAGGERED, BUNCHED
+	}
+	public enum WinningCondition {
+		MOST_GAMES_WON
+	}
+	
+	private final int NUM_GAMES_PER_ROUND;
+	private final int NUM_ROUNDS;
+	
+	public Settings(int numGamesPerRound, int numRounds){
+		NUM_GAMES_PER_ROUND = numGamesPerRound;
+		NUM_ROUNDS = numRounds;
+	}
 	
 	/**
 	 * Returns the number of games to be played per round

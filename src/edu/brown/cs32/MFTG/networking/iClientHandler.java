@@ -20,7 +20,7 @@ public interface iClientHandler {
 	 * @param numGames
 	 * @return the GameData collected from playing the round of games
 	 */
-	public List<GameData> playGames(List<Player> players, Settings settings, int numGames);
+	public List<GameData> playGames(List<Player> players, Settings settings, List<Long> seeds);
 	
 //	/**
 //	 * Returns GameData to the requesting object
