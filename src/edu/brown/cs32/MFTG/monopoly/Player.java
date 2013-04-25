@@ -34,7 +34,7 @@ public class Player {
 	private Expense _sellingChoice;
 	private Balance _buildingEvenness;
 	private Expense _buildingChoice;
-	private Aggression _buyAggression;
+	private Aggression _buildAggression;
 	private int _jailPoor, _jailRich;
 	
 	@JsonCreator
@@ -75,7 +75,7 @@ public class Player {
 		
 		_minBuildCash=0;
 		
-		_buyAggression=Aggression.AGGRESSIVE;
+		_buildAggression=Aggression.AGGRESSIVE;
 		
 		//this is a number that multiplies your valuation of a property you own if your opponent wants to trade for it (since likely
 		//it will help them a lot if they want it)
@@ -324,15 +324,15 @@ public class Player {
 	/**
 	 * @return the buy aggression
 	 */
-	public Aggression getBuyAggression() {
-		return _buyAggression;
+	public Aggression getBuildAggression() {
+		return _buildAggression;
 	}
 
 	/**
 	 * @param sets the buy aggression
 	 */
-	public void setBuyAggression(Aggression buyAggression) {
-		_buyAggression=buyAggression;
+	public void setBuildAggression(Aggression buildAggression) {
+		_buildAggression=buildAggression;
 	}
 	
 	/**
@@ -520,7 +520,7 @@ public class Player {
 			&& _sellingChoice == that.getSellingChoice()
 			&& _buildingEvenness == that.getBuildingEvenness()
 			&& _buildingChoice == that.getBuildingChoice()
-			&& _buyAggression == that.getBuyAggression()
+			&& _buildAggression == that.getBuyAggression()
 			&& _jailPoor == that.getJailPoor()
 			&& _jailRich == that.getJailRich();
 	}
