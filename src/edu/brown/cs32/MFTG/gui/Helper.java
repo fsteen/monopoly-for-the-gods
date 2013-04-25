@@ -2,13 +2,21 @@ package edu.brown.cs32.MFTG.gui;
 
 import edu.brown.cs32.MFTG.gui.Constants.Orientation;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
+import java.awt.image.FilteredImageSource;
+import java.awt.image.ImageFilter;
+import java.awt.image.ImageProducer;
+import java.awt.image.RGBImageFilter;
 import java.awt.image.WritableRaster;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Helper {
 
@@ -43,6 +51,24 @@ public class Helper {
 		ColorModel cm = original.getColorModel();
 		WritableRaster raster = original.copyData(null);
 		return new BufferedImage(cm, raster, original.isAlphaPremultiplied(), null);
+	}
+	
+	public static Image tranparent (BufferedImage image) {
+		ImageFilter filter = new RGBImageFilter() {
+			
+			public final int filterRGB(int x, int y, int rgb) {
+				Color color = new Color(rgb);
+				if(color.getGreen() > 100) {
+					//System.out.println(rgb);
+					return 0x00FFFFFF & rgb;
+				}
+				
+				//System.out.println("black: " + rgb);
+				return rgb;
+			}
+		};
+		ImageProducer ip = new FilteredImageSource(image.getSource(), filter);
+		return Toolkit.getDefaultToolkit().createImage(ip);
 	}
 
 }

@@ -8,6 +8,7 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
@@ -18,9 +19,12 @@ import java.awt.font.FontRenderContext;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.io.IOException;
 import java.text.NumberFormat;
 import java.text.ParseException;
 
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
@@ -30,13 +34,14 @@ import javax.swing.JTextField;
 import edu.brown.cs32.MFTG.gui.Constants;
 import edu.brown.cs32.MFTG.gui.Constants.Orientation;
 import edu.brown.cs32.MFTG.gui.Constants.PropertyInfo;
+import edu.brown.cs32.MFTG.gui.Constants.RailRoadInfo;
 import edu.brown.cs32.MFTG.gui.Constants.Viewer;
 import edu.brown.cs32.MFTG.gui.Helper;
 
-public class PropertyButton extends JButton {
+public class RailRoadUtilityButton extends JButton {
 
 	/* My board */
-	private Property _property;
+	private RailRoadUtility _railroad;
 	
 	/* Game results and Heuristics */
 	private double _timeOwned;
@@ -44,22 +49,18 @@ public class PropertyButton extends JButton {
 	private double _profit;
 	private JFormattedTextField _valueField;
 	private double _value;
-	private double _houses;
 	
 	/* Space specific information */
 	private Viewer _viewer;
-	private PropertyInfo _propertyInfo;
-	private Color _color;
+	private RailRoadInfo _railRoadInfo;
 	private Orientation _orientation;
 	
 	/* Background and border rectangles */
 	private Rectangle _spaceBackground;
-	private Rectangle _headerOutline;
 	private Rectangle _spaceOutline;
 	
 	/* Percentage owned and profit rectangle */
 	private Rectangle _profitBlock;
-	private Houses _houseRow;
 	
 	/* Font sizes */
 	private int _valueFont = Constants.FONT_SIZE;
@@ -67,7 +68,10 @@ public class PropertyButton extends JButton {
 	private FontRenderContext _fontRenderContext;
 	private boolean _checkFont = false;
 	
-	public PropertyButton(Property property, PropertyInfo propertyInfo, Viewer viewer, double timeOwned, double profit, double value, double houses) {
+	/* Train */
+	private Image _icon;
+	
+	public RailRoadUtilityButton(RailRoadUtility railroad, RailRoadInfo railRoadInfo, Viewer viewer, double timeOwned, double profit, double value) throws IOException {
 		/* Initialize the button */
 		super();
 		this.setFocusPainted(false);
@@ -76,7 +80,7 @@ public class PropertyButton extends JButton {
 		this.addMouseListener(new ButtonMouseListener());
 		
 		this.setLocation(0, 0);
-		_orientation = propertyInfo.getOrientation();
+		_orientation = railRoadInfo.getOrientation();
 		if(_orientation == Orientation.UP || _orientation == Orientation.DOWN) {
 			this.setPreferredSize(new Dimension(Constants.ACTUAL_WIDTH, Constants.ACTUAL_HEIGHT));
 			this.setMaximumSize(new Dimension(Constants.ACTUAL_WIDTH, Constants.ACTUAL_HEIGHT));
@@ -86,22 +90,33 @@ public class PropertyButton extends JButton {
 			this.setMaximumSize(new Dimension(Constants.ACTUAL_HEIGHT, Constants.ACTUAL_WIDTH));
 		}
 		
+		BufferedImage t;
+		if(railRoadInfo == RailRoadInfo.WATER_WORKS) {
+			t = ImageIO.read(new File("Deed_Cards/faucet.jpg"));
+		}
+		else if (railRoadInfo == RailRoadInfo.ELECTRIC_COMPANY) {
+			t = ImageIO.read(new File("Deed_Cards/lightbulb.jpg"));
+		}
+		else {
+			t = ImageIO.read(new File("Deed_Cards/railroad.jpg"));
+		}
+		t = Helper.resize(t, (int) (Constants.WIDTH*(9./10)), (int) (Constants.HEIGHT/2));
+		//_train = t;
+		_icon = Helper.tranparent(t);
+		
 		/* Set instance variables */
-		_property = property;
-		_propertyInfo = propertyInfo;
-		_color = propertyInfo.getColor();
+		_railroad = railroad;
+		_railRoadInfo = railRoadInfo;
 		_viewer = viewer;
 		_timeOwned = timeOwned;
 		_profit = profit;
 		_value = value;
-		_houses = houses;
 		
 		/* Initialize Components */
 		initializeBackground();
 		initializeProfitBlock();
 		initializeProfitField();
 		if(_viewer == Viewer.ME) initializeValueField();
-		_houseRow = new Houses(_houses, _color, _timeOwned, _profit);
 		
 		/* Add text fields */
 		this.add(_profitField);
@@ -135,17 +150,17 @@ public class PropertyButton extends JButton {
 		g2.setColor(Constants.BACKGROUND_COLOR);
 		g2.fill(_spaceBackground);
 		
-		Color c = new Color(_color.getRed(), _color.getGreen(), _color.getBlue(), (int) (255*_profit/10000.));
+		Color c = new Color(Color.DARK_GRAY.getRed(), Color.DARK_GRAY.getGreen(), Color.DARK_GRAY.getBlue(), (int) (255*_profit/10000.));
 		g2.setColor(c);
 		g2.fill(_profitBlock);
 		
-		_houseRow.paint(g2);
-		
 		g2.setColor(_viewer.getColor());
 		g2.setStroke(new BasicStroke(Constants.BORDER/2));
-		g2.draw(_headerOutline);
 		g2.setStroke(new BasicStroke(Constants.BORDER));
 		g2.draw(_spaceOutline);
+		
+		/* Paint the train */
+		g2.drawImage(_icon, (int) (Constants.WIDTH/20), (int) (Constants.HEIGHT/2), null);
 		
 		/* Rotate and resize the image */
 		image = Helper.resize(image,  Constants.ACTUAL_WIDTH, Constants.ACTUAL_HEIGHT);
@@ -160,11 +175,6 @@ public class PropertyButton extends JButton {
 		_spaceBackground = new Rectangle();
 		_spaceBackground.setSize(Constants.WIDTH, Constants.HEIGHT);
 		_spaceBackground.setLocation(0, 0);
-		
-		/* Make the header outline */
-		_headerOutline = new Rectangle();
-		_headerOutline.setSize(Constants.WIDTH - Constants.BORDER, Constants.HEADER_HEIGHT - Constants.BORDER);
-		_headerOutline.setLocation(Constants.BORDER/2, Constants.BORDER/2);
 		
 		/* Make the box outline */
 		_spaceOutline = new Rectangle();
@@ -186,17 +196,21 @@ public class PropertyButton extends JButton {
 		_profitField.setForeground(Color.BLACK);
 		_profitField.setHorizontalAlignment(JTextField.CENTER);
 		
-		if(_orientation == Orientation.UP || _orientation == Orientation.DOWN) {
+		if(_orientation == Orientation.UP){
 			_profitField.setSize(_orientation.getWidth(), 40);
-			_profitField.setLocation(0, _orientation.getHeight()/2 - 30);
+			_profitField.setLocation(0, _orientation.getHeight()/2 -10);
+		}
+		else if ( _orientation == Orientation.DOWN) {
+			_profitField.setSize(_orientation.getWidth(), 40);
+			_profitField.setLocation(0, _orientation.getHeight()/2 - 50);
 		}
 		else if (_orientation == Orientation.RIGHT) {
-			_profitField.setSize((int) (_orientation.getWidth()*(3./4)), 40);
-			_profitField.setLocation(_orientation.getWidth()/4, _orientation.getHeight()/2 - 30);
+			_profitField.setSize((int) (_orientation.getWidth()/2), 40);
+			_profitField.setLocation(_orientation.getWidth()/16, _orientation.getHeight()/2 - 30);
 		}
 		else {
-			_profitField.setSize((int) (_orientation.getWidth()*(3./4)), 40);
-			_profitField.setLocation(0, _orientation.getHeight()/2 - 30);
+			_profitField.setSize((int) (_orientation.getWidth()/2), 40);
+			_profitField.setLocation(_orientation.getWidth()/2 - _orientation.getWidth()/16, _orientation.getHeight()/2 - 30);
 		}
 		
 			_profitField.setBorder(BorderFactory.createLineBorder(Color.WHITE, 0));
@@ -216,17 +230,21 @@ public class PropertyButton extends JButton {
 		_valueField.setHorizontalAlignment(JTextField.CENTER);
 		
 		
-		if(_orientation == Orientation.UP || _orientation == Orientation.DOWN) {
+		if(_orientation == Orientation.UP) {
 			_valueField.setSize(_orientation.getWidth(), 40);
-			_valueField.setLocation(0, _orientation.getHeight()/2 - 10);
+			_valueField.setLocation(0, _orientation.getHeight()/2 + 10);
+		}
+		else if(_orientation == Orientation.DOWN) {
+			_valueField.setSize(_orientation.getWidth(), 40);
+			_valueField.setLocation(0, _orientation.getHeight()/2 - 30);
 		}
 		else if (_orientation == Orientation.RIGHT){
-			_valueField.setSize((int) (_orientation.getWidth()*(3./4)), 40);
-			_valueField.setLocation(_orientation.getWidth()/4, _orientation.getHeight()/2 - 10);
+			_valueField.setSize((int) (_orientation.getWidth()/2), 40);
+			_valueField.setLocation(_orientation.getWidth()/16, _orientation.getHeight()/2 - 10);
 		}
 		else {
-			_valueField.setSize((int) (_orientation.getWidth()*(3./4)), 40);
-			_valueField.setLocation(0, _orientation.getHeight()/2 - 10);
+			_valueField.setSize((int) (_orientation.getWidth()/2), 40);
+			_valueField.setLocation(_orientation.getWidth()/2 - _orientation.getWidth()/16, _orientation.getHeight()/2 - 10);
 		}
 	}
 
@@ -248,11 +266,11 @@ public class PropertyButton extends JButton {
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			if(e.getButton() == MouseEvent.BUTTON1 && e.getClickCount()==2) {
-				if(_viewer == Viewer.ME) _property.changeViewer(Viewer.ALL);
-				else _property.changeViewer(Viewer.ME);
+				if(_viewer == Viewer.ME) _railroad.changeViewer(Viewer.ALL);
+				else _railroad.changeViewer(Viewer.ME);
 			}
 			if(e.getButton() == MouseEvent.BUTTON3) {
-				_property.popup();
+				_railroad.popup();
 			}
 		}
 

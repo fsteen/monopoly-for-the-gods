@@ -14,7 +14,8 @@ public class Constants {
 	public static int ACTUAL_HEIGHT = (int) HEIGHT;
 	public static Color BACKGROUND_COLOR = new Color(211, 211, 211);
 	
-	public static final Font FONT = new Font("sansserif", Font.BOLD, 12);
+	public static final int FONT_SIZE = 12;
+	public static final Font FONT = new Font("sansserif", Font.BOLD, FONT_SIZE);
 
 	public enum Viewer {
 		ME(Color.BLACK), ALL(Color.WHITE);
@@ -49,6 +50,27 @@ public class Constants {
 			this.color = new Color(r,g,b);
 		}
 		public Color getColor() { return color; }
+	}
+	
+	public enum RailRoadInfo {
+		READING_RAILROAD(Orientation.DOWN, "Reading Railroad", "Deed_Cards/reading_railroad.jpg"),
+		PENNSYLVANIA_RAILROAD(Orientation.LEFT, "Pennsylvania Railroad", "Deed_Cards/pennsylvania_railroad.jpg"),
+		B_AND_O_RAILROAD(Orientation.UP, "B. and O. Railroad", "Deed_Cards/b_and_o_railroad.jpg"),
+		SHORT_LINE(Orientation.RIGHT, "Short Line", "Deed_Cards/short_line.jpg"),
+		ELECTRIC_COMPANY(Orientation.LEFT, "Electric Company", "Deed_Cards/electric_company.jpg"),
+		WATER_WORKS(Orientation.UP, "Water Works", "Deed_Cards/water_works.jpg");
+		
+		private Orientation orientation;
+		private String name;
+		private String file;
+		RailRoadInfo(Orientation orientation, String name, String file) {
+			this.orientation = orientation;
+			this.name = name;
+			this.file = file;
+		}
+		public Orientation getOrientation() { return orientation; }
+		public String getName() { return name; }
+		public String getFile() { return file; }
 	}
 	
 	public enum PropertyInfo {

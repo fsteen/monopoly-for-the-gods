@@ -8,6 +8,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.UIManager.LookAndFeelInfo;
 
 import edu.brown.cs32.MFTG.gui.Board;
+import edu.brown.cs32.MFTG.gui.Constants;
 
 public class Main extends JFrame{
 
@@ -15,6 +16,9 @@ public class Main extends JFrame{
 		super("Monopoly");
 		
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		
+		this.setSize(9*Constants.WIDTH + 2*Constants.HEIGHT, 9*Constants.WIDTH + 2*Constants.HEIGHT);
+		this.setResizable(false);
 		
 		Board board = new Board();
 		this.add(board);
