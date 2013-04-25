@@ -11,22 +11,20 @@ import edu.brown.cs32.MFTG.monopoly.Player;
 import edu.brown.cs32.MFTG.tournament.Settings;
 
 public class ClientRequestContainer {
-	public enum Method {GETPLAYER, PLAYGAMES, GETGAMEDATA, SENDGAMEDATA};
+	public enum Method {GETPLAYER, SENDPLAYER, PLAYGAMES, GETGAMEDATA, SENDGAMEDATA};
 	
 	public final Method _method;
-	public final Collection<Player> _players;
-	public final int _numGames;
-	public final List<GameData> _gameData;
+	public final List<String> _arguments;
 	
 	@JsonCreator
-	public ClientRequestContainer(@JsonProperty("method") Method method, 
-								  @JsonProperty("players") Collection<Player> players, 
-								  @JsonProperty("numGames") int numGames,
-								  @JsonProperty("gameData") List<GameData> gameData ){
+	public ClientRequestContainer(@JsonProperty("method") Method method, @JsonProperty("arguments") List<String> arguments){
 		_method = method;
-		_players = players;
-		_numGames = numGames;
-		_gameData = gameData;
+		_arguments = arguments;
 	}
-	
 }
+
+/*
+Collection<Player> players, 
+int numGames,
+List<GameData> gameData )
+*/
