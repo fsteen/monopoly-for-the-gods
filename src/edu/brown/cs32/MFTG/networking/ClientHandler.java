@@ -44,26 +44,29 @@ public class ClientHandler implements iClientHandler{
 	public Player getPlayer(){
 		ClientRequestContainer request = new ClientRequestContainer(Method.GETPLAYER, new ArrayList<String>());
 		try {
-			
+		
+		// ask the client for gameData
 		_oMapper.writeValue(_output, request);
-		ClientRequestContainer c = _oMapper.readValue(_input, ClientRequestContainer.class);
 		
-		if (c._method != Method.SENDPLAYER){
+		// read in the response
+		ClientRequestContainer response = _oMapper.readValue(_input, ClientRequestContainer.class);
+		
+		if (response._method != Method.SENDPLAYER){
 			// throw an exception or some shit
 		}
 		
-		if (c._arguments.size() != 1){
+		if (response._arguments == null || response._arguments.size() < 1){
 			// throw an exception or some shit
 		}
 		
+		Player p = _oMapper.readValue(response._arguments.get(0), Player.class);
 		
+		return p;
 		
 		} catch (Exception e){
 			// TODO fix this
 			return null;
 		}
-		
-		return null;
 	}
 	
 	/**
@@ -72,18 +75,38 @@ public class ClientHandler implements iClientHandler{
 	 * @param numGames
 	 * @return the GameData collected from playing the round of games
 	 */
-	public List<GameData> playGames(List<Player> players, Settings settings, List<Long> seeds){
-		//TODO implement
-		//set up a data structure for collecting game data
-		//create a thread pool for playing the games
-		//
-		return null;
+	public List<GameData> playGames(List<Player> players, List<Long> seeds){
+		try {
+		String playerList = _oMapper.writeValueAsString(players);
+		String seedList = _oMapper.writeValueAsString(seeds);
+		
+		ClientRequestContainer request = new ClientRequestContainer(Method.PLAYGAMES, Arrays.asList(playerList, seedList));
+		
+		// request that the client play the games
+		_oMapper.writeValue(_output, request);
+		
+		
+		// read in the response
+		ClientRequestContainer response = _oMapper.readValue(_input, ClientRequestContainer.class);
+		
+		if (response._method != Method.SENDGAMEDATA){
+			// do something
+		}
+		
+		if (response._arguments == null || response._arguments.size() < 1){
+			// shit fucked up, son!
+		}
+		
+		JavaType listOfGameData = _oMapper.getTypeFactory().constructCollectionType(List.class, GameData.class);
+		List<GameData> gameData = _oMapper.readValue(response._arguments.get(0), listOfGameData);
+		
+		return gameData;
+		
+		} catch (Exception e){
+			// TODO fix this
+			return null;
+		}
 	}
-	
-//	public List<GameData> getGameData(){
-//		//TODO
-//		return null;
-//	}
 
 	public void setGameData(List<GameData> combinedData) {
 		// TODO Auto-generated method stub

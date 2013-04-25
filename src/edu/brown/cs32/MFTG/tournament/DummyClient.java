@@ -20,9 +20,8 @@ public class DummyClient implements iClientHandler{
 	}
 
 	@Override
-	public List<GameData> playGames(List<Player> players, Settings settings,
-			List<Long> seeds) {
-		return _module.playGames(players, settings, seeds);
+	public List<GameData> playGames(List<Player> players, List<Long> seeds) {
+		return _module.playGames(players, seeds);
 	}
 
 	@Override
