@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Font;
 
 public class Constants {
-
 	public final static int WIDTH = (int) 135/2;
 	public final static int HEIGHT = (int) 225/2;
 	public final static int HEADER_HEIGHT = (int) 50/2;
@@ -16,6 +15,9 @@ public class Constants {
 	
 	public static final int FONT_SIZE = 12;
 	public static final Font FONT = new Font("sansserif", Font.BOLD, FONT_SIZE);
+
+	public final static int FULL_WIDTH=9*Constants.WIDTH + 2*Constants.HEIGHT;
+	public final static int FULL_HEIGHT=9*Constants.WIDTH + 2*Constants.HEIGHT;
 
 	public enum Viewer {
 		ME(Color.BLACK), ALL(Color.WHITE);

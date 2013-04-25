@@ -34,9 +34,6 @@ public class GameData {
 		//each time has a list of wealth data
 		//data (in order): cash, total wealth
 		_data = new ArrayList<>();
-
-
-		
 	}
 	
 	/**
@@ -117,13 +114,13 @@ public class GameData {
 	
 	public void printData() {
 		for(TimeStamp t: _data) {
-			System.out.println(t.time);
+			System.out.println(t._time);
 			for(PropertyData prop: t.getPropertyData()) {
 				System.out.println(String.format("Property: %s OwnerID: %s numHouses: %d personalRevenueWithHouses: %d personalRevenueWithoutHouses: %d totalRevenueWithHouses: %d totalRevenueWithoutHouses: %d morgaged: %b", prop.propertyName, prop.ownerID, prop.numHouses, prop.personalRevenueWithHouses, prop.personalRevenueWithoutHouses, prop.totalRevenueWithHouses, prop.totalRevenueWithoutHouses, prop.mortgaged));
 			}
 		}
 		for(TimeStamp t: _data) {
-			System.out.println(t.time);
+			System.out.println(t._time);
 			for(PlayerWealthData play: t.getWealthData()) {
 				System.out.println(String.format("OwnerID: %s Cash: %d TotalWealth: %d", play.ownerID, play.cash, play.totalWealth));
 
@@ -131,22 +128,15 @@ public class GameData {
 		}
 
 	}
+	
 	@Override
-	public boolean equals(Object other){
-		if(other instanceof GameData){
-			GameData otherData= (GameData)other;
-			for(int i=0; i<_data.size();i++) {
-				if(otherData.getData().get(i)==null) {
-					return false;
-				}
-				if(otherData.getData().get(i).equals(_data.get(i))==false) {
-					return false;
-				}
-			}
-			return true;
-
-		}
-		return false;
+	public boolean equals(Object o){
+		if (o == null || !(o instanceof GameData))
+			return false;
+		
+		GameData that = (GameData) o;
+		
+		return java.util.Objects.equals(_data, that.getData()) && _time == that.getTime() && _numPlayers == that._numPlayers && _winner == that.getWinner();
 	}
 	
 	/**
@@ -157,13 +147,20 @@ public class GameData {
 	public class TimeStamp{
 		ArrayList<PropertyData> _propertyData;
 		ArrayList<PlayerWealthData> _wealthData;
-		public final int time;
+		int _time;
 		
-		@JsonCreator
-		public TimeStamp(@JsonProperty("time") int time){
-			this.time=time;
+		public TimeStamp(int time){
+			_time=time;
 			_propertyData = new ArrayList<>();
 			_wealthData = new ArrayList<>();
+		}
+		
+		public int getTime(){
+			return _time;
+		}
+		
+		public void setTime(int t){
+			_time = t;
 		}
 		
 		/**
@@ -277,60 +274,4 @@ public class GameData {
 			return false;
 		}
 	}
-	
-	/**
-	 * class to hold all data for a given property at any given time
-	 * @author Jschvime
-	 *
-	 */
-	public class PropertyData{
-		public final String propertyName;
-		public final int ownerID;
-		public final int numHouses;
-		public final int personalRevenueWithHouses;
-		public final int personalRevenueWithoutHouses;
-		public final int totalRevenueWithHouses;
-		public final int totalRevenueWithoutHouses;
-		public final boolean mortgaged;
-		
-		@JsonCreator
-		public PropertyData(@JsonProperty("propertyName") String propertyName, 
-							@JsonProperty("ownerID") int ownerID,
-							@JsonProperty("numHouses") int numHouses, 
-							@JsonProperty("personalRevenueWithHouses") int personalRevenueWithHouses, 
-							@JsonProperty("personalRevenueWIthoutHouses") int personalRevenueWithoutHouses,
-							@JsonProperty("totalRevenueWithHouses") int totalRevenueWithHouses,
-							@JsonProperty("totalRevenueWithoutHouses") int totalRevenueWithoutHouses,
-							@JsonProperty("mortgaged") boolean mortgaged){
-			
-			this.propertyName=propertyName;
-			this.ownerID=ownerID;
-			this.numHouses=numHouses;
-			this.personalRevenueWithHouses=personalRevenueWithHouses;
-			this.personalRevenueWithoutHouses=personalRevenueWithoutHouses;
-			this.totalRevenueWithHouses=totalRevenueWithHouses;
-			this.totalRevenueWithoutHouses=totalRevenueWithoutHouses;
-			this.mortgaged=mortgaged;
-		}
-		
-		@Override
-		public boolean equals(Object other){
-			if(other instanceof PropertyData){
-				PropertyData otherData= (PropertyData)other;
-				if(otherData.propertyName.equals(this.propertyName)==false) return false;
-				if(otherData.ownerID!=this.ownerID) return false;
-				if(otherData.numHouses!=this.numHouses) return false;
-				if(otherData.personalRevenueWithHouses!=this.personalRevenueWithHouses) return false;
-				if(otherData.personalRevenueWithoutHouses!=this.personalRevenueWithoutHouses) return false;
-				if(otherData.totalRevenueWithHouses!=this.totalRevenueWithHouses) return false;
-				if(otherData.totalRevenueWithoutHouses!=this.totalRevenueWithoutHouses) return false;
-				if(otherData.mortgaged!=this.mortgaged) return false;
-				return true;
-
-			}
-			return false;
-		}
-	}
-	
-	
 }

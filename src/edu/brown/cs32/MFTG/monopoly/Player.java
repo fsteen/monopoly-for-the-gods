@@ -1,6 +1,8 @@
 package edu.brown.cs32.MFTG.monopoly;
 
 import java.util.HashMap;
+import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.*;
 
 /**
@@ -39,7 +41,7 @@ public class Player {
 	public Player(@JsonProperty("id") int id){
 		ID=id;
 		_propertyValues= new HashMap<>();
-		setPropertyValues();
+		initializePropertyValues();
 		
 		//a hashmap of values for each color. for each color there is an array such that;
 		//T[0]=value of monopoly
@@ -47,7 +49,7 @@ public class Player {
 		//T[2]=value of breaking an opponent's monopoly
 		//T[3]=how much value is if you have 1 other property of the same color, but this would not give you a monopoly
 		_colorValues = new HashMap<>();
-		setColorValues();
+		initializeColorValues();
 		
 		//a number from 1-10 specifying how much they're willing to spend as they have more money
 		//1 means you don't care if you have more money, 10 means you're much more likely to buy with more money
@@ -88,10 +90,26 @@ public class Player {
 	}
 	
 	/**
+	 * @return _propertyValues
+	 */
+	public HashMap<String, Integer> getPropertyValues(){
+		return _propertyValues;
+	}
+	
+	/**
+	 * sets the _propertyValues attribute
+	 * @param propertyValues
+	 */
+	public void setPropertyValues(HashMap<String, Integer> propertyValues){
+		_propertyValues = propertyValues;
+	}
+	
+	/**
 	 * sets property value
 	 * @param property
 	 * @param value
 	 */
+	@JsonIgnore
 	public void setPropertyValue(String property, int value){
 		_propertyValues.put(property, value);
 	}
@@ -101,6 +119,7 @@ public class Player {
 	 * @param property
 	 * @return property value
 	 */
+	@JsonIgnore
 	public int getPropertyValue(String property){
 		return _propertyValues.get(property);
 	}
@@ -110,6 +129,7 @@ public class Player {
 	 * @param color
 	 * @param value
 	 */
+	@JsonIgnore
 	public void setColorValue(String color, double monopolyValue, double housesValue, double breakingOpponentValue, double sameColorEffect ){
 		Double[] monopoly = new Double[4];
 		monopoly[0]=monopolyValue;
@@ -128,10 +148,19 @@ public class Player {
 	}
 	
 	/**
+	 * Sets _colorValues
+	 * @param colorValues
+	 */
+	public void setColorValues(HashMap<String, Double[]> colorValues){
+		_colorValues = colorValues;
+	}
+	
+	/**
 	 * 
 	 * @param color
 	 * @return value of monopoly
 	 */
+	@JsonIgnore
 	public double getMonopolyValue(String color){
 		return _colorValues.get(color)[0];
 	}
@@ -141,6 +170,7 @@ public class Player {
 	 * @param color
 	 * @return value of houses on color
 	 */
+	@JsonIgnore
 	public double getHouseValueOfColor(String color){
 		return _colorValues.get(color)[1];
 	}
@@ -150,6 +180,7 @@ public class Player {
 	 * @param color
 	 * @return value of breaking opponents value
 	 */
+	@JsonIgnore
 	public double getBreakingOpponentMonopolyValue(String color){
 		return _colorValues.get(color)[2];
 	}
@@ -159,6 +190,7 @@ public class Player {
 	 * @param color
 	 * @return how much value is affected by how many other properties of the same color you have
 	 */
+	@JsonIgnore
 	public double getSameColorEffect(String color){
 		return _colorValues.get(color)[3];
 	}
@@ -380,7 +412,7 @@ public class Player {
 	/**
 	 * Sets color value defaults
 	 */
-	private void setColorValues() {
+	private void initializeColorValues() {
 		Double[] purple={200.0,50.0,150.0,100.0};
 		_colorValues.put("purple", purple);
 		
@@ -410,7 +442,7 @@ public class Player {
 	/**
 	 * Sets property value defaults
 	 */
-	private void setPropertyValues() {
+	private void initializePropertyValues() {
 		_propertyValues.put("mediterranean avenue", 60);
 		_propertyValues.put("baltic avenue", 60);
 		_propertyValues.put("reading railroad", 200);
@@ -446,6 +478,50 @@ public class Player {
 	public String toString(){
 		return String.format("%d-Player", ID);
 	}
+	
+	private boolean colorValuesEqual(Player that){
+		HashMap<String, Double[]> thatMap = that.getColorValues();
+		
+		for (String s : _colorValues.keySet()){
+			if (!thatMap.containsKey(s))
+				return false;
+			
+			Double[] thisArray = _colorValues.get(s);
+			Double[] thatArray = thatMap.get(s);
+			
+			if(thisArray.length != thatArray.length)
+				return false;
+			
+			for (int i = 0; i < thisArray.length; i++){
+				if(!thisArray[i].equals(thatArray[i]))
+					return false;
+			}
+		}
+		return true;
+	}
 
-
+	@Override
+	public boolean equals(Object o){
+		if (o == null || !(o instanceof Player))
+			return false;
+		
+		Player that = (Player) o;
+		
+		return Objects.equals(_propertyValues, that.getPropertyValues())
+			&& colorValuesEqual(that)
+			&& _liquidity == that.getLiquidity()
+			&& _timeChange == that.getTimeChange()
+			&& _minBuyCash == that.getMinBuyCash()
+			&& _minBuildCash == that.getMinBuildCash()
+			&& _minUnmortgageCash == that.getMinUnmortgageCash()
+			&& _jailWait == that.getJailWait()
+			&& _mortgageChoice == that.getMortgageChoice()
+			&& _houseSelling == that.getHouseSelling()
+			&& _sellingChoice == that.getSellingChoice()
+			&& _buildingEvenness == that.getBuildingEvenness()
+			&& _buildingChoice == that.getBuildingChoice()
+			&& _buyAggression == that.getBuyAggression()
+			&& _jailPoor == that.getJailPoor()
+			&& _jailRich == that.getJailRich();
+	}
 }

@@ -61,18 +61,4 @@ public class ClientHandler implements iClientHandler{
 		// TODO Auto-generated method stub
 		
 	}
-	
-	/*
-	public static void main(String[] args) throws JsonProcessingException{
-		Player player1 = new Player(1);
-		player1.setLiquidity(17);
-		
-		Collection<Player> players = Arrays.asList(player1);
-		ClientRequestContainer c = new ClientRequestContainer(Method.GETPLAYER, players, null, 5);
-		ObjectMapper objectMapper = new ObjectMapper();
-		String json = objectMapper.writeValueAsString(c);
-		System.out.println(json);
-	}
-	*/
-
 }
