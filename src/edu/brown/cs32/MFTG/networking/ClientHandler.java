@@ -62,6 +62,8 @@ public class ClientHandler implements iClientHandler{
 			// TODO fix this
 			return null;
 		}
+		
+		return null;
 	}
 	
 	/**
