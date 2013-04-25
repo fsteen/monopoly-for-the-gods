@@ -520,7 +520,7 @@ public class Player {
 			&& _sellingChoice == that.getSellingChoice()
 			&& _buildingEvenness == that.getBuildingEvenness()
 			&& _buildingChoice == that.getBuildingChoice()
-			&& _buildAggression == that.getBuyAggression()
+			&& _buildAggression == that.getBuildAggression()
 			&& _jailPoor == that.getJailPoor()
 			&& _jailRich == that.getJailRich();
 	}
