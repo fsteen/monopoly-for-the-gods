@@ -24,10 +24,20 @@ public class Tournament implements Runnable{
 	
 	@Override
 	public void run() {
+		int gamesPerModule = (int)Math.ceil(_settings.getNumGamesPerRound()/_clients.size());
+		List<Player> players;
+		List<List<GameData>> data;
+		List<Integer> confirmationIndices;
+		
 		for(int i = 0; i < _settings.getNumRounds(); i++){
-			List<Player> players = getNewPlayers();
-			List<List<GameData>> data = playRoundOfGames(players, null);
-			displayEndOfRoundData();
+			players = getNewPlayers();
+			confirmationIndices = DataProcessor.generateConfirmationIndices(gamesPerModule, .1);
+			data = playRoundOfGames(players, DataProcessor.generateSeeds(gamesPerModule, players.size(), confirmationIndices));
+			
+			if(DataProcessor.isCorrupted(data, confirmationIndices)){
+				System.out.println("SOMEONE IS CHEATING!!!!!");
+			}
+//			displayEndOfRoundData(data);
 		}
 		displayEndOfGameData();
 	}
@@ -64,8 +74,11 @@ public class Tournament implements Runnable{
 		return null;
 	}
 
-	private void displayEndOfRoundData(){
+	private void displayEndOfRoundData(GameData aggregatedData){
 		//TODO implement
+		for(iClientHandler c : _clients){
+			c.setGameData(aggregatedData);
+		}
 	}
 	
 	private void displayEndOfGameData(){
