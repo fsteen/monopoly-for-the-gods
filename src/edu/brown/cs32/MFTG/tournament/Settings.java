@@ -1,7 +1,7 @@
 package edu.brown.cs32.MFTG.tournament;
 
 public class Settings {
-<<<<<<< HEAD
+
 	public enum Turns {
 		STAGGERED, BUNCHED
 	}
@@ -16,10 +16,7 @@ public class Settings {
 		NUM_GAMES_PER_ROUND = numGamesPerRound;
 		NUM_ROUNDS = numRounds;
 	}
-=======
-	public final int NUM_GAMES_PER_ROUND=10;
-	public final int NUM_ROUNDS=10;
->>>>>>> branch 'master' of https://github.com/fsteen/monopoly-for-the-gods.git
+
 	
 	/**
 	 * Returns the number of games to be played per round
