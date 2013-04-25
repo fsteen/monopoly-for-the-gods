@@ -128,7 +128,6 @@ public class GreetingPanel extends JPanel{
 			int yloc=e.getY();
 			if(intersects(xloc,yloc,_playLite,_playLoc)) {
 				if(_playDark.isVisible()) {
-					System.out.println("Play");
 					_main.switchPanels("lobby");
 				}
 				else {
@@ -138,7 +137,7 @@ public class GreetingPanel extends JPanel{
 			else if(intersects(xloc,yloc,_settingsLite,_settingsLoc)) {
 				
 				if(_settingsDark.isVisible()) {
-					System.out.println("Settings");
+					//TODO
 				}
 				else {
 					fixPanels();
@@ -146,7 +145,7 @@ public class GreetingPanel extends JPanel{
 			}
 			else if(intersects(xloc,yloc,_recordsLite,_recordsLoc)) {
 				if(_recordsDark.isVisible()) {
-					System.out.println("Records");
+					//TODO
 				}
 				else {
 					fixPanels();

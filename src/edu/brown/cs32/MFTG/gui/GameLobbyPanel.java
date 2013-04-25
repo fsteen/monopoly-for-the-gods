@@ -112,7 +112,6 @@ public class GameLobbyPanel extends JPanel{
 			int yloc=e.getY();
 			if(intersects(xloc,yloc,_createLite,_createLoc)) {
 				if(_createDark.isVisible()) {
-					System.out.println("create");
 					_main.switchPanels("create");
 				}
 				else {
@@ -121,7 +120,7 @@ public class GameLobbyPanel extends JPanel{
 			}
 			else if(intersects(xloc,yloc,_joinLite,_joinLoc)) {
 				if(_joinDark.isVisible()) {
-					System.out.println("join");
+					//TODO
 				}
 				else {
 					fixPanels();

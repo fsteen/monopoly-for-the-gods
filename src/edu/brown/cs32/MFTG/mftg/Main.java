@@ -18,7 +18,7 @@ public class Main extends JFrame{
 	private JPanel _currentPanel;
 	private HashMap<String, JPanel> _panels;
 	public Main() {
-		super("Monopoly");
+		super("Monopoly for the GODS");
 
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		_panels = new HashMap<>(5);
@@ -42,7 +42,6 @@ public class Main extends JFrame{
 	 * @param panel
 	 */
 	public void switchPanels(String panel) {
-		System.out.println("Switch");
 		remove(_currentPanel);
 		_currentPanel=_panels.get(panel);
 		add(_currentPanel);

@@ -1,30 +1,36 @@
 package edu.brown.cs32.MFTG.gui;
 
 import java.awt.Color;
+import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
+import java.awt.TextField;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.swing.ButtonGroup;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.event.MouseInputAdapter;
 
 
 public class CreateGamePanel extends JPanel{
-	private ImagePanel _createLite, _whiteBack,_backLite, _backDark, _goLite, _goDark;
+	private ImagePanel _createLite, _backLite, _backDark, _goLite, _goDark;
 	private BufferedImage _background;
 	private Point _createLoc, _whiteLoc;
+	private CreateBottomPanel _bottomPanel;
+	
 	private final int BUTTON_HEIGHT=Constants.FULL_HEIGHT/8;
 	private final int BUTTON_WIDTH=2*Constants.FULL_HEIGHT/3;
 	private final int START_HEIGHT=Constants.FULL_HEIGHT/5;
 	private final int START_WIDTH=Constants.FULL_WIDTH/6;
-	private final int BOTTOM_HEIGHT=Constants.FULL_HEIGHT/2;
-	private final int BOTTOM_WIDTH=Constants.FULL_WIDTH*7/8;
+
 	public CreateGamePanel() {
 		try {
 			java.awt.Dimension size = new java.awt.Dimension(Constants.FULL_WIDTH,Constants.FULL_HEIGHT);
@@ -38,16 +44,16 @@ public class CreateGamePanel extends JPanel{
 			_createLite = new ImagePanel(Helper.resize(ImageIO.read(new File("images/CreateGameLite.png")), BUTTON_WIDTH-40, BUTTON_HEIGHT));
 			_createLoc= new Point(START_WIDTH, START_HEIGHT);
 			_createLite.setLocation(_createLoc);
-			
-			_whiteBack = new ImagePanel(Helper.resize(ImageIO.read(new File("images/WhiteBack.png")), BOTTOM_WIDTH, BOTTOM_HEIGHT));
+					
 			_whiteLoc= new Point(Constants.FULL_WIDTH/16, START_HEIGHT+BUTTON_HEIGHT*6/5);
-			_whiteBack.setLocation(_whiteLoc);
+			_bottomPanel=new CreateBottomPanel();
+			_bottomPanel.setLocation(_whiteLoc);
 			
-				
+			
 			addMouseListener(new MyMouseListener());
 			
 			add(_createLite);
-			add(_whiteBack);
+			add(_bottomPanel);
 
 			
 		} catch (IOException e) {
@@ -78,6 +84,7 @@ public class CreateGamePanel extends JPanel{
 				_createLite.setVisible(false);
 				repaint();
 			}*/
+			//TODO
 
 		}
 		
@@ -93,6 +100,7 @@ public class CreateGamePanel extends JPanel{
 				else {
 					fixPanels();
 				}*/
+				//TODO
 			}
 			else {
 				fixPanels();
