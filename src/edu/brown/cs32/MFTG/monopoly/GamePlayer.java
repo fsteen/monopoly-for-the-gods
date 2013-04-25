@@ -388,12 +388,13 @@ public class GamePlayer {
 	 */
 	public void tryTrading() throws Exception{
 		//see if there are any properties you have that you value less than another player who has a property that you value more than they do
-			
+			List<Property> traded = new ArrayList<>();
 			for(GamePlayer player: _game.getOtherPlayers(this)) {
 				Outerloop:
 				for(int i=0; i<player.getProperties().size(); i++) {
 					Property theres=player.getProperties().get(i);
 					if (theres.getNumHouses()!=0) continue;
+					if(traded.contains(theres)) continue;
 					
 					//q is the property i'm taking from the oppoenent, I am gaining myVal1-oppVal1
 					double oppVal1=player.getTradingValue(theres);
@@ -404,6 +405,7 @@ public class GamePlayer {
 						
 						if(mine.getNumHouses()!=0) continue;
 						if(theres.isSibling(mine)) continue; //can't trade properties of same color
+						if(traded.contains(mine)) continue;
 						
 						//p is the property i'm giving to the oppoenent, I am losing oppVal2-myVal2
 						double oppVal2=player.getTradingValue(mine);
@@ -416,6 +418,8 @@ public class GamePlayer {
 							player.loseProperty(theres);
 							gainProperty(theres);
 							player.gainProperty(mine);
+							traded.add(theres);
+							traded.add(mine);
 							
 							double money=myVal1-oppVal2;
 							System.out.println("TRADE: "+ mine + " for "+theres+" and $"+money);
