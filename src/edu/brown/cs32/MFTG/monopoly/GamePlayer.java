@@ -334,7 +334,7 @@ public class GamePlayer {
 		if(curr.canBuildHouse()==false) {
 			return true;
 		}
-		if(_player.getBuyAggression()==Aggression.AGGRESSIVE) {
+		if(_player.getBuildAggression()==Aggression.AGGRESSIVE) {
 			if (curr.canBuildHouse()==true && curr.CostPerHouse>_cash-_player.getMinBuildCash() &&_player.getBuildingChoice()==Expense.EXPENSIVE) {
 				return true;
 			}
@@ -349,12 +349,6 @@ public class GamePlayer {
 	public void tryGettingOutofJail() throws Exception {
 		//if they don't have the money just wait
 		if(_cash<=50) {
-			return;
-		}
-		//if they've been in jail too long get em out
-		if(_turnsInJail>=_player.getJailWait()) {
-			getOutOfJail();
-			_game.transferMoney(this, null, 50);
 			return;
 		}
 		boolean rich=true;
@@ -379,6 +373,13 @@ public class GamePlayer {
 				return;
 			}
 		}
+		//if they've been in jail and they're neither poor nor rich, too long get em out
+		if(_turnsInJail>=_player.getJailWait()) {
+			getOutOfJail();
+			_game.transferMoney(this, null, 50);
+			return;
+		}
+		
 		
 	}
 	

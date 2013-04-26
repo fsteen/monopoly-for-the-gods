@@ -19,40 +19,61 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.event.MouseInputAdapter;
 
+import edu.brown.cs32.MFTG.mftg.Main;
+
 
 public class CreateGamePanel extends JPanel{
 	private ImagePanel _createLite, _backLite, _backDark, _goLite, _goDark;
 	private BufferedImage _background;
-	private Point _createLoc, _whiteLoc;
+	private Point _createLoc, _whiteLoc, _backLoc, _goLoc;
 	private CreateBottomPanel _bottomPanel;
+	private Main _main;
 	
 	private final int BUTTON_HEIGHT=Constants.FULL_HEIGHT/8;
 	private final int BUTTON_WIDTH=2*Constants.FULL_HEIGHT/3;
-	private final int START_HEIGHT=Constants.FULL_HEIGHT/5;
+	private final int START_HEIGHT=Constants.FULL_HEIGHT/8;
 	private final int START_WIDTH=Constants.FULL_WIDTH/6;
 
-	public CreateGamePanel() {
+	public CreateGamePanel(Main main) {
 		try {
+			_main=main;
 			java.awt.Dimension size = new java.awt.Dimension(Constants.FULL_WIDTH,Constants.FULL_HEIGHT);
 			this.setPreferredSize(size);
 			this.setSize(size);
 			this.setBackground(Color.GRAY);
 			this.setLayout(null);
-			_background = ImageIO.read(new File("images/mountain.jpg"));
-			
+			_background = Helper.resize(ImageIO.read(new File("images/mountain2.png")),this.getWidth(),this.getHeight());
 			
 			_createLite = new ImagePanel(Helper.resize(ImageIO.read(new File("images/CreateGameLite.png")), BUTTON_WIDTH-40, BUTTON_HEIGHT));
 			_createLoc= new Point(START_WIDTH, START_HEIGHT);
 			_createLite.setLocation(_createLoc);
 					
-			_whiteLoc= new Point(Constants.FULL_WIDTH/16, START_HEIGHT+BUTTON_HEIGHT*6/5);
+			_whiteLoc= new Point(Constants.FULL_WIDTH/32, START_HEIGHT+BUTTON_HEIGHT*6/5);
 			_bottomPanel=new CreateBottomPanel();
 			_bottomPanel.setLocation(_whiteLoc);
+			
+			_backLite = new ImagePanel(Helper.resize(ImageIO.read(new File("images/BackLite.png")), 100, 50));
+			_backDark = new ImagePanel(Helper.resize(ImageIO.read(new File("images/BackDark.png")), 100, 50));
+			_backLoc= new Point(this.getWidth()-_backLite.getWidth()-20, this.getHeight()-_backDark.getHeight()-10);
+			_backLite.setLocation(_backLoc);
+			_backDark.setLocation(_backLoc);
+			_backDark.setVisible(false);
+			
+			_goLite = new ImagePanel(Helper.resize(ImageIO.read(new File("images/GoLite.png")), 100, 50));
+			_goDark = new ImagePanel(Helper.resize(ImageIO.read(new File("images/GoDark.png")), 100, 50));
+			_goLoc= new Point(_whiteLoc.getLocation().x+_bottomPanel.getWidth()-_goLite.getWidth()-30, _whiteLoc.getLocation().y+_goDark.getHeight()-20);
+			_goLite.setLocation(_goLoc);
+			_goDark.setLocation(_goLoc);
+			_goDark.setVisible(false);
 			
 			
 			addMouseListener(new MyMouseListener());
 			
 			add(_createLite);
+			add(_backLite);
+			add(_backDark);
+			add(_goLite);
+			add(_goDark);
 			add(_bottomPanel);
 
 			
@@ -80,11 +101,16 @@ public class CreateGamePanel extends JPanel{
 		public void mousePressed(MouseEvent e) {
 			int xloc=e.getX();
 			int yloc=e.getY();
-			/*if(intersects(xloc,yloc,_createLite,_createLoc)) {
-				_createLite.setVisible(false);
+			if(intersects(xloc,yloc,_backLite,_backLoc)) {
+				_backLite.setVisible(false);
+				_backDark.setVisible(true);
 				repaint();
-			}*/
-			//TODO
+			}
+			else if(intersects(xloc,yloc,_goLite,_goLoc)) {
+				_goLite.setVisible(false);
+				_goDark.setVisible(true);
+				repaint();
+			}
 
 		}
 		
@@ -93,14 +119,25 @@ public class CreateGamePanel extends JPanel{
 
 			int xloc=e.getX();
 			int yloc=e.getY();
-			if(intersects(xloc,yloc,_createLite,_createLoc)) {
-				/*if(_createDark.isVisible()) {
-					System.out.println("Create");
+			if(intersects(xloc,yloc,_backLite,_backLoc)) {
+				if(_backDark.isVisible()) {
+					fixPanels();
+					_main.switchPanels("lobby");
 				}
 				else {
 					fixPanels();
-				}*/
-				//TODO
+				}
+
+			}
+			else if(intersects(xloc,yloc,_goLite,_goLoc)) {
+				if(_goDark.isVisible()) {
+					fixPanels();
+					//_main.switchPanels("lobby");
+				}
+				else {
+					fixPanels();
+				}
+
 			}
 			else {
 				fixPanels();
@@ -108,7 +145,10 @@ public class CreateGamePanel extends JPanel{
 		}
 		
 		private void fixPanels() {
-			_createLite.setVisible(true);
+			_backDark.setVisible(false);
+			_backLite.setVisible(true);
+			_goDark.setVisible(false);
+			_goLite.setVisible(true);
 			repaint();
 		}
 		private boolean intersects(int xloc, int yloc, JPanel img, Point loc) {

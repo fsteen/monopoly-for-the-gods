@@ -1,1 +1,1 @@
-make Player serializable - done
+- add timeouts so that shit doesn't fuck up if the client dies
