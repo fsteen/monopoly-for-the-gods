@@ -1,5 +1,8 @@
 package edu.brown.cs32.MFTG.tournament;
 
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -10,27 +13,36 @@ import java.util.concurrent.Future;
 
 import edu.brown.cs32.MFTG.monopoly.GameData;
 import edu.brown.cs32.MFTG.monopoly.Player;
+import edu.brown.cs32.MFTG.networking.ClientHandler;
 import edu.brown.cs32.MFTG.networking.PlayGamesCallable;
 import edu.brown.cs32.MFTG.networking.getPlayerCallable;
 import edu.brown.cs32.MFTG.networking.iClientHandler;
 
 public class Tournament implements Runnable{
+	private final int _numPlayers;
 	
 	private List<iClientHandler> _clients;
+	private ServerSocket _socket;
 	private Settings _settings;
 	private ExecutorService _executor; 
 	/**
 	 * Creates a tournament for the specified number of players and games
 	 * @param numPlayers
 	 * @param numGames
+	 * @throws IOException 
 	 */
-	public Tournament(List<iClientHandler> clients, Settings settings){
-		_clients = clients;
+	public Tournament(int numPlayers, Settings settings, int port) throws IOException{
+		if (port <= 1024){
+			throw new IllegalArgumentException("Ports under 1024 are reserved!");
+		}
+		
+		_numPlayers = numPlayers;
+		_socket = new ServerSocket(port);
+		_clients = new ArrayList<>();
 		_settings = settings;
-		_executor = Executors.newFixedThreadPool(_clients.size());
+		_executor = Executors.newFixedThreadPool(numPlayers);
 	}
 	
-	@Override
 	public void run() {
 		int gamesPerModule = (int)Math.ceil(_settings.getNumGamesPerRound()/_clients.size());
 		List<Player> players;
@@ -110,8 +122,7 @@ public class Tournament implements Runnable{
 		return gameData;
 	}
 
-	private void displayEndOfRoundData(GameData aggregatedData){
-		//TODO implement
+	private void displayEndOfRoundData(List<GameData> aggregatedData){
 		for(iClientHandler c : _clients){
 			c.setGameData(aggregatedData);
 		}
@@ -120,8 +131,21 @@ public class Tournament implements Runnable{
 	private void displayEndOfGameData(){
 		//TODO implement
 	}
-	
-	public void getPlayerConnections(){
-		//listen to connect with players
+
+	/**
+	 * Adds _numPlayers connections to the client handler list. This method does not return
+	 * until after numPlayers connections are made over the socket
+	 * @param numPlayers
+	 * @throws IOException
+	 */
+	public void getPlayerConnections() throws IOException{
+		int connectionsMade = 0;
+		
+		while(connectionsMade <= _numPlayers){
+			Socket clientConnection = _socket.accept();
+			iClientHandler cHandler = new ClientHandler(clientConnection);
+			_clients.add(cHandler);
+			connectionsMade++;
+		}
 	}
 }
