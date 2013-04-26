@@ -4,7 +4,6 @@ import java.util.List;
 
 import edu.brown.cs32.MFTG.monopoly.GameData;
 import edu.brown.cs32.MFTG.monopoly.Player;
-import edu.brown.cs32.MFTG.tournament.Settings;
 
 public interface iClientHandler {
 	

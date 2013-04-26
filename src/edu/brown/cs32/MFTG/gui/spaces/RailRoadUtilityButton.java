@@ -102,7 +102,7 @@ public class RailRoadUtilityButton extends JButton {
 		}
 		t = Helper.resize(t, (int) (Constants.WIDTH*(9./10)), (int) (Constants.HEIGHT/2));
 		//_train = t;
-		_icon = Helper.tranparent(t);
+		_icon = Helper.transparent(t);
 		
 		/* Set instance variables */
 		_railroad = railroad;
@@ -178,7 +178,7 @@ public class RailRoadUtilityButton extends JButton {
 		
 		/* Make the box outline */
 		_spaceOutline = new Rectangle();
-		_spaceOutline.setLocation(Constants.BORDER/2-1, Constants.BORDER/2);
+		_spaceOutline.setLocation(Constants.BORDER/2, Constants.BORDER/2);
 		_spaceOutline.setSize(Constants.WIDTH-Constants.BORDER, Constants.HEIGHT - Constants.BORDER);
 	}
 	

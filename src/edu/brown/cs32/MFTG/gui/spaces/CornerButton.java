@@ -42,7 +42,7 @@ public class CornerButton extends JButton {
 		
 		/* Make the box outline */
 		_spaceOutline = new Rectangle();
-		_spaceOutline.setLocation(Constants.BORDER/2-1, Constants.BORDER/2);
+		_spaceOutline.setLocation(Constants.BORDER/2, Constants.BORDER/2);
 		_spaceOutline.setSize(Constants.HEIGHT-Constants.BORDER, Constants.HEIGHT - Constants.BORDER);
 
 	}

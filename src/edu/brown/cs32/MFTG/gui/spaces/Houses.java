@@ -52,6 +52,9 @@ public class Houses {
 		g2.setColor(Constants.BACKGROUND_COLOR);
 		g2.fill(_cover);
 		
+		g2.setColor(Color.WHITE);
+		g2.fill(_colorCover);
+		
 		g2.setColor(_color);
 		g2.fill(_colorCover);
 	}

@@ -53,7 +53,7 @@ public class Helper {
 		return new BufferedImage(cm, raster, original.isAlphaPremultiplied(), null);
 	}
 	
-	public static Image tranparent (BufferedImage image) {
+	public static Image transparent (BufferedImage image) {
 		ImageFilter filter = new RGBImageFilter() {
 			
 			public final int filterRGB(int x, int y, int rgb) {

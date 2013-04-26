@@ -8,17 +8,14 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.brown.cs32.MFTG.monopoly.GameData;
 import edu.brown.cs32.MFTG.monopoly.Player;
 import edu.brown.cs32.MFTG.networking.ClientRequestContainer.Method;
-import edu.brown.cs32.MFTG.tournament.Settings;
 
 public class ClientHandler implements iClientHandler{
 	final Socket _client;
@@ -108,7 +105,18 @@ public class ClientHandler implements iClientHandler{
 		}
 	}
 
-	public void setGameData(GameData aggregatedData) {
-		// TODO Auto-generated method stub
+	//TODO alex : i think i realized this should be just 1 GameData not a list ... i let you change it though
+	public void setGameData(List<GameData> combinedData) {
+		try {
+			String dataList = _oMapper.writeValueAsString(combinedData);
+			
+			ClientRequestContainer request = new ClientRequestContainer(Method.DISPLAYGAMEDATA, Arrays.asList(dataList));
+			
+			// request that the client display the data
+			_oMapper.writeValue(_output, request);
+			
+		} catch (Exception e){
+			// TODO fix this
+		}
 	}
 }

@@ -7,11 +7,13 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -62,12 +64,22 @@ public class PlayerModule {
 
 	/***************Networking Methods *************************/
 
+	/**
+	 * Connects the PlayerModule to a socket
+	 * @throws IOException
+	 */
 	private void connect() throws IOException{
 		_server = new Socket(_host, _port);
 		_input = new BufferedReader(new InputStreamReader(_server.getInputStream()));
 		_output = new BufferedWriter(new OutputStreamWriter(_server.getOutputStream()));
 	}
 
+	/**
+	 * Responds to a request sent over the socket for player data, and sends the player information back in response
+	 * @throws JsonParseException
+	 * @throws JsonMappingException
+	 * @throws IOException
+	 */
 	private void respondToGetPlayer() throws JsonParseException, JsonMappingException, IOException{
 		ClientRequestContainer request = _oMapper.readValue(_input, ClientRequestContainer.class);
 
@@ -82,12 +94,71 @@ public class PlayerModule {
 		_oMapper.writeValue(_output, p);
 	}
 
-	private void respondToPlayGames(){
-
+	/**
+	 * Responds to a request sent over the socket to play games, and sends the game data back in response
+	 * @throws JsonParseException
+	 * @throws JsonMappingException
+	 * @throws IOException
+	 */
+	private void respondToPlayGames() throws JsonParseException, JsonMappingException, IOException{
+		ClientRequestContainer request = _oMapper.readValue(_input, ClientRequestContainer.class);
+		
+		if (request == null){
+			// throw error
+		} else if (request._method != Method.PLAYGAMES){
+			// throw different error
+		} 
+		
+		List<String> arguments = request._arguments;
+		
+		if (arguments == null){
+			// throw a different different error
+		} else if (arguments.size() < 2){
+			// you get the idea
+		}
+		
+		JavaType listOfPlayers = _oMapper.getTypeFactory().constructCollectionType(List.class, Player.class);
+		JavaType listOfSeeds = _oMapper.getTypeFactory().constructCollectionType(List.class, Long.class);
+		
+		List<Player> players = _oMapper.readValue(arguments.get(0), listOfPlayers);
+		List<Long> seeds = _oMapper.readValue(arguments.get(1), listOfSeeds);
+		
+		List<GameData> gameData = playGames(players, seeds);
+		String gameDataString = _oMapper.writeValueAsString(gameData);
+		
+		ClientRequestContainer response = new ClientRequestContainer(Method.SENDGAMEDATA, Arrays.asList(gameDataString));
+		
+		_oMapper.writeValue(_output, response);
 	}
 
-	private void respondToDisplayData(){
-
+	/**
+	 * Responds to a request sent over the server to display game data by displaying the data received
+	 * @throws JsonParseException
+	 * @throws JsonMappingException
+	 * @throws IOException
+	 */
+	private void respondToDisplayData() throws JsonParseException, JsonMappingException, IOException{
+		ClientRequestContainer request = _oMapper.readValue(_input, ClientRequestContainer.class);
+		
+		if (request == null){
+			// throw error
+		} else if (request._method != Method.DISPLAYGAMEDATA){
+			// throw different error
+		}
+		
+		List<String> arguments = request._arguments;
+		
+		if (arguments == null){
+			// error
+		} else if (arguments.size() < 1){
+			// error
+		}
+		
+		JavaType listOfGameData = _oMapper.getTypeFactory().constructCollectionType(List.class, GameData.class);
+		
+		List<GameData> gameData = _oMapper.readValue(arguments.get(0), listOfGameData);
+		
+		setGameData(gameData);
 	}
 
 	/*******************************************************/
