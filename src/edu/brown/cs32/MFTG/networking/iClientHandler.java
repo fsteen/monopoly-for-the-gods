@@ -30,6 +30,6 @@ public interface iClientHandler {
 	 * Gives GameData to the iClientHandler to deal with 
 	 * @param aggregatedData
 	 */
-	public void setGameData(GameData aggregatedData) throws ClientCommunicationException, ClientLostException;
+	public void setGameData(GameData aggregatedData) throws ClientCommunicationException;
 	
 }
