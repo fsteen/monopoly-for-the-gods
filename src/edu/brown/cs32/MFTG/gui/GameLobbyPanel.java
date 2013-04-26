@@ -29,7 +29,7 @@ import edu.brown.cs32.MFTG.mftg.Main;
 public class GameLobbyPanel extends JPanel{
 	private ImagePanel _createLite, _joinLite, _createDark, _joinDark,  _backLite, _backDark;
 	private BufferedImage _background;
-	private Point _createLoc, _joinLoc;
+	private Point _createLoc, _joinLoc,_backLoc;
 	private final int BUTTON_HEIGHT=Constants.FULL_HEIGHT/8;
 	private final int BUTTON_WIDTH=2*Constants.FULL_HEIGHT/3;
 	private final int START_HEIGHT=Constants.FULL_HEIGHT/3;
@@ -43,7 +43,7 @@ public class GameLobbyPanel extends JPanel{
 			this.setSize(size);
 			this.setBackground(Color.GRAY);
 			this.setLayout(null);
-			_background = ImageIO.read(new File("images/mountain.jpg"));
+			_background = Helper.resize(ImageIO.read(new File("images/mountain2.png")),this.getWidth(),this.getHeight());
 			
 			
 			_createLite = new ImagePanel(Helper.resize(ImageIO.read(new File("images/CreateGameLite.png")), BUTTON_WIDTH-40, BUTTON_HEIGHT));
@@ -60,6 +60,13 @@ public class GameLobbyPanel extends JPanel{
 			_joinDark.setLocation(_joinLoc);
 			_joinDark.setVisible(false);
 			
+			_backLite = new ImagePanel(Helper.resize(ImageIO.read(new File("images/BackLite.png")), 100, 50));
+			_backDark = new ImagePanel(Helper.resize(ImageIO.read(new File("images/BackDark.png")), 100, 50));
+			_backLoc= new Point(this.getWidth()-_backLite.getWidth()-20, this.getHeight()-_backDark.getHeight()-10);
+			_backLite.setLocation(_backLoc);
+			_backDark.setLocation(_backLoc);
+			_backDark.setVisible(false);
+			
 			
 			addMouseListener(new MyMouseListener());
 			
@@ -67,6 +74,8 @@ public class GameLobbyPanel extends JPanel{
 			add(_createDark);
 			add(_joinLite);
 			add(_joinDark);
+			add(_backLite);
+			add(_backDark);
 
 			
 		} catch (IOException e) {
@@ -103,6 +112,11 @@ public class GameLobbyPanel extends JPanel{
 				_joinLite.setVisible(false);
 				repaint();
 			}
+			else if(intersects(xloc,yloc,_backLite,_backLoc)) {
+				_backDark.setVisible(true);
+				_backLite.setVisible(false);
+				repaint();
+			}
 		}
 		
 		@Override
@@ -112,6 +126,7 @@ public class GameLobbyPanel extends JPanel{
 			int yloc=e.getY();
 			if(intersects(xloc,yloc,_createLite,_createLoc)) {
 				if(_createDark.isVisible()) {
+					fixPanels();
 					_main.switchPanels("create");
 				}
 				else {
@@ -120,7 +135,17 @@ public class GameLobbyPanel extends JPanel{
 			}
 			else if(intersects(xloc,yloc,_joinLite,_joinLoc)) {
 				if(_joinDark.isVisible()) {
-					//TODO
+					fixPanels();
+					//_main.switchPanels("create");
+				}
+				else {
+					fixPanels();
+				}
+			}
+			else if(intersects(xloc,yloc,_backLite,_backLoc)) {
+				if(_backDark.isVisible()) {
+					fixPanels();
+					_main.switchPanels("greet");
 				}
 				else {
 					fixPanels();
@@ -136,6 +161,8 @@ public class GameLobbyPanel extends JPanel{
 			_createLite.setVisible(true);
 			_joinDark.setVisible(false);
 			_joinLite.setVisible(true);
+			_backDark.setVisible(false);
+			_backLite.setVisible(true);
 			repaint();
 		}
 		private boolean intersects(int xloc, int yloc, JPanel img, Point loc) {

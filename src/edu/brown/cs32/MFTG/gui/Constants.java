@@ -18,6 +18,8 @@ public class Constants {
 
 	public final static int FULL_WIDTH=9*Constants.WIDTH + 2*Constants.HEIGHT;
 	public final static int FULL_HEIGHT=9*Constants.WIDTH + 2*Constants.HEIGHT;
+	
+	public static final Color CLEAR = new Color(0,0,0,0);
 
 	public enum Viewer {
 		ME(Color.BLACK), ALL(Color.WHITE);
