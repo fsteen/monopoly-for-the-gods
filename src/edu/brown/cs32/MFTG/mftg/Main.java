@@ -1,15 +1,15 @@
 package edu.brown.cs32.MFTG.mftg;
 
-import java.io.IOException;
 import java.util.HashMap;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.UIManager.LookAndFeelInfo;
+import javax.swing.UnsupportedLookAndFeelException;
 
 import edu.brown.cs32.MFTG.gui.Board;
+import edu.brown.cs32.MFTG.gui.ColorBoard;
 import edu.brown.cs32.MFTG.gui.Constants;
 import edu.brown.cs32.MFTG.gui.CreateGamePanel;
 import edu.brown.cs32.MFTG.gui.GameLobbyPanel;
@@ -37,6 +37,11 @@ public class Main extends JFrame{
 		
 		Board board = new Board();
 		this.add(board);
+		
+		
+		
+		//ColorBoard board = new ColorBoard();
+		//this.add(board);
 		
 		//_currentPanel=greet;
 		//this.add(_currentPanel);

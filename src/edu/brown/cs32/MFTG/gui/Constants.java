@@ -11,6 +11,7 @@ public class Constants {
 	
 	public static int ACTUAL_WIDTH = (int) WIDTH;
 	public static int ACTUAL_HEIGHT = (int) HEIGHT;
+	//public static Color BACKGROUND_COLOR = Color.WHITE;
 	public static Color BACKGROUND_COLOR = new Color(211, 211, 211);
 	
 	public static final int FONT_SIZE = 12;
@@ -18,6 +19,11 @@ public class Constants {
 
 	public final static int FULL_WIDTH=9*Constants.WIDTH + 2*Constants.HEIGHT;
 	public final static int FULL_HEIGHT=9*Constants.WIDTH + 2*Constants.HEIGHT;
+	
+	public static String t = "_two.jpg";
+	public static String m = "_monopoly.jpg";
+	public static String n = "_no_monopoly.jpg";
+	public static String f = "Deed_Cards/";
 
 	public enum Viewer {
 		ME(Color.BLACK), ALL(Color.WHITE);
@@ -52,6 +58,35 @@ public class Constants {
 			this.color = new Color(r,g,b);
 		}
 		public Color getColor() { return color; }
+	}
+	
+	public enum ColorInfo {
+		PURPLE(PropertyColor.PURPLE, Orientation.DOWN, f + "purple" + t, f + "purple" + m, f + "purple" + n),
+		LIGHT_BLUE(PropertyColor.LIGHT_BLUE, Orientation.DOWN,  f + "light_blue" + t, f + "light_blue" + m, f + "light_blue" + n),
+		PINK(PropertyColor.PINK, Orientation.LEFT,  f + "pink" + t, f + "pink" + m, f + "pink" + n),
+		ORANGE(PropertyColor.ORANGE, Orientation.LEFT,  f + "orange" + t, f + "orange" + m, f + "orange" + n), 
+		RED(PropertyColor.RED, Orientation.UP,  f + "red" + t, f + "red" + m, f + "red" + n),
+		YELLOW(PropertyColor.YELLOW, Orientation.UP,  f + "yellow" + t, f + "yellow" + m, f + "yellow" + n), 
+		GREEN(PropertyColor.GREEN, Orientation.RIGHT, f + "green" + t, f + "green" + m, f + "green" + n),
+		DARK_BLUE(PropertyColor.DARK_BLUE, Orientation.RIGHT,  f + "dark_blue" + t, f + "dark_blue" + m, f + "dark_blue" + n);
+		
+		private PropertyColor color;
+		private Orientation orientation;
+		private String two;
+		private String monopoly;
+		private String noMonopoly;
+		ColorInfo (PropertyColor color, Orientation orientation, String two, String monopoly, String noMonopoly) {
+			this.color = color;
+			this.orientation = orientation;
+			this.two = two;
+			this.monopoly = monopoly;
+			this.noMonopoly = noMonopoly;
+		}
+		public Color getColor() { return color.getColor(); }
+		public Orientation getOrientation() { return orientation; }
+		public String getTwo() { return two; }
+		public String getMonopoly() { return monopoly; }
+		public String getNoMonopoly() { return noMonopoly; }
 	}
 	
 	public enum RailRoadInfo {

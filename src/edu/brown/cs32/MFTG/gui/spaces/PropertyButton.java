@@ -63,8 +63,6 @@ public class PropertyButton extends JButton {
 	
 	/* Font sizes */
 	private int _valueFont = Constants.FONT_SIZE;
-	private int _profitFont = Constants.FONT_SIZE;
-	private FontRenderContext _fontRenderContext;
 	private boolean _checkFont = false;
 	
 	public PropertyButton(Property property, PropertyInfo propertyInfo, Viewer viewer, double timeOwned, double profit, double value, double houses) {
@@ -135,6 +133,9 @@ public class PropertyButton extends JButton {
 		g2.setColor(Constants.BACKGROUND_COLOR);
 		g2.fill(_spaceBackground);
 		
+		g2.setColor(Color.WHITE);
+		g2.fill(_profitBlock);
+		
 		Color c = new Color(_color.getRed(), _color.getGreen(), _color.getBlue(), (int) (255*_profit/10000.));
 		g2.setColor(c);
 		g2.fill(_profitBlock);
@@ -168,7 +169,7 @@ public class PropertyButton extends JButton {
 		
 		/* Make the box outline */
 		_spaceOutline = new Rectangle();
-		_spaceOutline.setLocation(Constants.BORDER/2-1, Constants.BORDER/2);
+		_spaceOutline.setLocation(Constants.BORDER/2, Constants.BORDER/2);
 		_spaceOutline.setSize(Constants.WIDTH-Constants.BORDER, Constants.HEIGHT - Constants.BORDER);
 	}
 	
