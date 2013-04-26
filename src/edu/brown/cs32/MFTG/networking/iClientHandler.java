@@ -4,7 +4,6 @@ import java.util.List;
 
 import edu.brown.cs32.MFTG.monopoly.GameData;
 import edu.brown.cs32.MFTG.monopoly.Player;
-import edu.brown.cs32.MFTG.tournament.Settings;
 
 public interface iClientHandler {
 	
@@ -20,7 +19,7 @@ public interface iClientHandler {
 	 * @param numGames
 	 * @return the GameData collected from playing the round of games
 	 */
-	public List<GameData> playGames(List<Player> players, Settings settings, int numGames);
+	public List<GameData> playGames(List<Player> players, List<Long> seeds);
 	
 //	/**
 //	 * Returns GameData to the requesting object
@@ -32,6 +31,6 @@ public interface iClientHandler {
 	 * Gives GameData to the iClientHandler to deal with 
 	 * @param combinedData
 	 */
-	public void setGameData(List<GameData> combinedData); //TODO figure out what this method should take
+	public void setGameData(List <GameData> combinedData); //TODO figure out what this method should take
 	
 }

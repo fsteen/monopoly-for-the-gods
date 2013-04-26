@@ -21,7 +21,7 @@ public class Game implements Runnable{
 	private int _numPlayers, _currentTurn,_freeParkingMoney, _defaultFP, _numHousesLeft, _numHotelsLeft, _maxNumTurns;
 	private Board _board;
 	private Dice _dice;
-	private static final int TURNS_PER_TIMESTAMP=20;
+	private int _turnsPerTimeStamp;
 	private boolean _playing, _doubleOnGo, _auctions;
 	private int _doublesInRow;
 	private CommunityChestDeck _comChest;
@@ -40,6 +40,7 @@ public class Game implements Runnable{
 		_maxNumTurns=maxNumTurns;
 		 Random rand= new Random(seed);
 		_players=new ArrayList<>(players.length);
+		_turnsPerTimeStamp=Math.max(2, _players.size());
 		for(Player p:players){
 			_numPlayers++;
 			_players.add(new GamePlayer(this,p));
@@ -71,6 +72,11 @@ public class Game implements Runnable{
 		_chance= new ChanceDeck(rand);
 
 		_gameData=new GameData(_numPlayers);
+		_gameData.addNewTime();
+		for(GamePlayer player: _players){
+			_gameData.setWealthAtTime(player.getPlayer().ID, player.getCash(), player.getTotalWealth());
+		}
+
 
 
 	}
@@ -178,7 +184,7 @@ public class Game implements Runnable{
 		if(_currentTurn==_maxNumTurns-1) {
 			tieGame();
 		}
-		if(_currentTurn%TURNS_PER_TIMESTAMP==0){
+		if(_currentTurn%_turnsPerTimeStamp==0){
 			_gameData.addNewTime();
 			for(GamePlayer player: _players){
 				_gameData.setWealthAtTime(player.getPlayer().ID, player.getCash(), player.getTotalWealth());

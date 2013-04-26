@@ -22,15 +22,16 @@ public class Main extends JFrame{
 		super("Monopoly for the GODS");
 
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		_panels = new HashMap<>(5);
-		//Board board = new Board();
-		//this.add(board);
+		_panels = new HashMap<>(7);
+
 		GreetingPanel greet = new GreetingPanel(this);
 		_panels.put("greet", greet);
 		GameLobbyPanel lobby = new GameLobbyPanel(this);
 		_panels.put("lobby", lobby);
-		CreateGamePanel create = new CreateGamePanel();
+		CreateGamePanel create = new CreateGamePanel(this);
 		_panels.put("create", create);
+		Board board = new Board();
+		_panels.put("board", board);
 		
 		this.setSize(9*Constants.WIDTH + 2*Constants.HEIGHT, 9*Constants.WIDTH + 2*Constants.HEIGHT);
 		this.setResizable(false);
@@ -45,6 +46,7 @@ public class Main extends JFrame{
 		
 		//_currentPanel=greet;
 		//this.add(_currentPanel);
+
 		this.pack();
 		this.setVisible(true);
 	}

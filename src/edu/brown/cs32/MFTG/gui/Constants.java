@@ -24,6 +24,7 @@ public class Constants {
 	public static String m = "_monopoly.jpg";
 	public static String n = "_no_monopoly.jpg";
 	public static String f = "Deed_Cards/";
+	public static final Color CLEAR = new Color(0,0,0,0);
 
 	public enum Viewer {
 		ME(Color.BLACK), ALL(Color.WHITE);

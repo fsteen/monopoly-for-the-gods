@@ -31,10 +31,10 @@ public class GreetingPanel extends JPanel{
 	private BufferedImage _background;
 	private Point _playLoc, _settingsLoc, _recordsLoc;
 	private Main _main;
-	private final int BUTTON_HEIGHT=Constants.FULL_HEIGHT/8;
-	private final int BUTTON_WIDTH=2*Constants.FULL_HEIGHT/3;
-	private final int START_HEIGHT=Constants.FULL_HEIGHT/3;
-	private final int START_WIDTH=Constants.FULL_WIDTH/6;
+	private final int BUTTON_HEIGHT=Constants.FULL_HEIGHT/10;
+	private final int BUTTON_WIDTH=3*Constants.FULL_HEIGHT/5;
+	private final int START_HEIGHT=3*Constants.FULL_HEIGHT/7;
+	private final int START_WIDTH=Constants.FULL_WIDTH/4;
 	public GreetingPanel(Main main) {
 		try {
 			_main=main;
@@ -44,7 +44,7 @@ public class GreetingPanel extends JPanel{
 			this.setSize(size);
 			this.setBackground(Color.BLACK);
 			this.setLayout(null);
-			_background = ImageIO.read(new File("images/MonopolyHome.png"));
+			_background = Helper.resize(ImageIO.read(new File("images/MonopolyHome2.png")),this.getWidth(),this.getHeight());
 			
 			
 			_playLite = new ImagePanel(Helper.resize(ImageIO.read(new File("images/PlayLite.png")), BUTTON_WIDTH-40, BUTTON_HEIGHT));
@@ -128,6 +128,7 @@ public class GreetingPanel extends JPanel{
 			int yloc=e.getY();
 			if(intersects(xloc,yloc,_playLite,_playLoc)) {
 				if(_playDark.isVisible()) {
+					fixPanels();
 					_main.switchPanels("lobby");
 				}
 				else {

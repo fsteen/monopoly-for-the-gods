@@ -1,23 +1,29 @@
 package edu.brown.cs32.MFTG.tournament;
 
 import edu.brown.cs32.MFTG.monopoly.Game;
+import edu.brown.cs32.MFTG.monopoly.Player;
 
 /**
  * GameRunnerFactory creates GameRunners from the template game
  * @author frances
  */
 public class GameRunnerFactory {
-	private Game _gameTemplate;
+	private int _maxNumTurns, _freeParking;
+	private boolean _doubleOnGo, _auctions;
+	private Player[] _players;
 	private PlayerModule _module;
 	
-	public GameRunnerFactory(Game gameTemplate, PlayerModule module){
-		_gameTemplate = gameTemplate;
+	public GameRunnerFactory(PlayerModule module, int maxNumTurns, int freeParking, boolean doubleOnGo, boolean auctions, Player...players){
 		_module = module;
+		_maxNumTurns = maxNumTurns;
+		_freeParking = freeParking;
+		_doubleOnGo = doubleOnGo;
+		_auctions = auctions;
+		_players = players;
 	}
 	
-	public GameRunner build(){
-		return new GameRunner(_gameTemplate.copy());
-		//TODO avoid resource conflicts
+	public GameRunner build(long seed){
+		return new GameRunner(new Game(seed,_maxNumTurns,_freeParking,_doubleOnGo,_auctions,_players));
 	}
 	
 	/**
