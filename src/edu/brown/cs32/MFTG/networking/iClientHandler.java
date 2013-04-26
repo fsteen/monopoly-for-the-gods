@@ -30,8 +30,8 @@ public interface iClientHandler {
 //	
 	/**
 	 * Gives GameData to the iClientHandler to deal with 
-	 * @param combinedData
+	 * @param aggregatedData
 	 */
-	public void setGameData(List <GameData> combinedData); //TODO figure out what this method should take
+	public void setGameData(GameData aggregatedData);
 	
 }

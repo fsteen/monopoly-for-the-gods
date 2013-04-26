@@ -16,6 +16,8 @@ import edu.brown.cs32.MFTG.networking.iClientHandler;
 
 public class Tournament implements Runnable{
 	
+	public static final double CONFIRMATION_PERCENTAGE = 0.1; //confirm 10% of games
+	public static final int NUM_DATA_POINTS = 50;
 	private List<iClientHandler> _clients;
 	private Settings _settings;
 	private ExecutorService _executor; 
@@ -39,15 +41,15 @@ public class Tournament implements Runnable{
 		
 		for(int i = 0; i < _settings.getNumRounds(); i++){
 			players = getNewPlayers();
-			confirmationIndices = DataProcessor.generateConfirmationIndices(gamesPerModule, .1);
+			confirmationIndices = DataProcessor.generateConfirmationIndices(gamesPerModule, CONFIRMATION_PERCENTAGE);
 			data = playRoundOfGames(players, DataProcessor.generateSeeds(gamesPerModule, players.size(), confirmationIndices));
 			
 			if(DataProcessor.isCorrupted(data, confirmationIndices)){
-				System.out.println("SOMEONE IS CHEATING!!!!!");
+				System.out.println("WOOHOO ... SOMEONE IS CHEATING!!!!!"); //TODO change this
 			}
-//			displayEndOfRoundData(data);
+			sendEndOfRoundData(DataProcessor.aggregate(data, NUM_DATA_POINTS));
 		}
-		displayEndOfGameData();
+		sendEndOfGameData();
 	}
 	
 	/**
@@ -110,18 +112,17 @@ public class Tournament implements Runnable{
 		return gameData;
 	}
 
-	private void displayEndOfRoundData(GameData aggregatedData){
-		//TODO implement
+	private void sendEndOfRoundData(GameData aggregatedData){
 		for(iClientHandler c : _clients){
 			c.setGameData(aggregatedData);
 		}
 	}
 	
-	private void displayEndOfGameData(){
+	private void sendEndOfGameData(){
 		//TODO implement
 	}
 	
 	public void getPlayerConnections(){
-		//listen to connect with players
+		//TODO listen to connect with players
 	}
 }
