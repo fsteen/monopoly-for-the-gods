@@ -32,14 +32,12 @@ public class PlayerModule {
 	private BufferedWriter _output;
 	final ObjectMapper _oMapper;
 
-
+	/* Module variables */
 	DummyGUI _gui;
 	private final int NUM_THREADS=10;
 	private final int DATA_PACKET_SIZE=10;
 	private int _nextDisplaySize;
 	private List<GameData> _data;
-
-
 
 	public PlayerModule(String host, int port){
 		_oMapper = new ObjectMapper();
@@ -92,7 +90,9 @@ public class PlayerModule {
 
 	}
 
-	/************************************************************/
+	/*******************************************************/
+
+	/***************Module Methods *************************/
 
 	/**
 	 * Gets the player associated with this object
@@ -137,6 +137,8 @@ public class PlayerModule {
 	public void setGameData(List<GameData> combinedData) {
 		// TODO Auto-generated method stub
 	}
+	
+	/*******************************************************/
 
 	public static void main (String[] args){
 		int port;

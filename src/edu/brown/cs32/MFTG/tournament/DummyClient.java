@@ -25,7 +25,7 @@ public class DummyClient implements iClientHandler{
 	}
 
 	@Override
-	public void setGameData(List<GameData> combinedData) {
-		_module.setGameData(combinedData);
+	public void setGameData(GameData aggregatedData) {
+		_module.setGameData(aggregatedData);
 	}
 }
