@@ -2,21 +2,32 @@ package edu.brown.cs32.MFTG.tournament;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import edu.brown.cs32.MFTG.monopoly.GameData;
 
 public class DataProcessor {
-
-	//TODO make this class a bit more useful than it currently is
-	
 	/**
-	 * Computes the composite value
+	 * 
 	 * @param data
+	 * @param numDataPoints should be less than # of timestamps
 	 * @return
 	 */
-	public GameData aggregate(List<List<GameData>> data){
+	public GameData aggregate(List<List<GameData>> data, int numDataPoints){
+		int numPlayers = data.get(0).size();
+		Map<Integer,Integer> playerWins = new HashMap<>();
+		
+		GameData totals = new GameData(numPlayers);
+		
+		
+		
+		
+		//each GameData has a different number of timestammps
+		
+		
 		return null;
 	}
 	
@@ -30,7 +41,6 @@ public class DataProcessor {
 	public static boolean isCorrupted(List<List<GameData>> data, List<Integer> confirmationIndices){
 		boolean corrupted = false;
 		List<GameData> setData;
-		
 		for(int i = 0; i < confirmationIndices.size(); i++){
 			setData = data.get(confirmationIndices.get(i));
 			for(int j = 1; j < setData.size(); j++){
@@ -39,7 +49,6 @@ public class DataProcessor {
 				}
 			}
 		}
-		
 		return corrupted;
 	}
 	
