@@ -52,7 +52,8 @@ public class TimeStamp{
 	 * A setter for the propertyData attribute
 	 * @param propertyData the value to set _propertyData to
 	 */
-	void setPropertyData(ArrayList<PropertyData> propertyData){
+	//TODO i changed this method to public, is that ok Judah?
+	public void setPropertyData(ArrayList<PropertyData> propertyData){
 		_propertyData = propertyData;
 	}
 	

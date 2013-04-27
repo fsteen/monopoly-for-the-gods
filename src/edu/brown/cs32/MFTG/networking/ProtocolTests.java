@@ -7,13 +7,10 @@ import java.util.HashMap;
 
 import org.junit.Test;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.brown.cs32.MFTG.monopoly.GameData;
-import edu.brown.cs32.MFTG.monopoly.GameData.TimeStamp;
 import edu.brown.cs32.MFTG.monopoly.Player;
-import edu.brown.cs32.MFTG.monopoly.Player.Aggression;
 import edu.brown.cs32.MFTG.monopoly.Player.Amount;
 import edu.brown.cs32.MFTG.monopoly.Player.Balance;
 import edu.brown.cs32.MFTG.monopoly.Player.Expense;
@@ -66,8 +63,8 @@ public class ProtocolTests {
 		Expense buildingChoice = p.getBuildingChoice();
 		p2.setBuildingChoice(buildingChoice);
 		
-		Aggression buyAggression = p.getBuyAggression();
-		p2.setBuyAggression(buyAggression);
+//		Aggression buyAggression = p.getBuyAggression();
+//		p2.setBuyAggression(buyAggression);
 		
 		int jailPoor = p.getJailPoor();
 		p2.setJailPoor(jailPoor);

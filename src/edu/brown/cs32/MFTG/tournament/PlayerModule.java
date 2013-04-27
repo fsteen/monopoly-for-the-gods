@@ -34,14 +34,12 @@ public class PlayerModule {
 	private BufferedWriter _output;
 	final ObjectMapper _oMapper;
 
-
+	/* Module variables */
 	DummyGUI _gui;
 	private final int NUM_THREADS=10;
 	private final int DATA_PACKET_SIZE=10;
 	private int _nextDisplaySize;
 	private List<GameData> _data;
-
-
 
 	public PlayerModule(String host, int port){
 		_oMapper = new ObjectMapper();
@@ -156,14 +154,16 @@ public class PlayerModule {
 			// error
 		}
 		
-		JavaType listOfGameData = _oMapper.getTypeFactory().constructCollectionType(List.class, GameData.class);
+//		JavaType listOfGameData = _oMapper.getTypeFactory().constructCollectionType(List.class, GameData.class);
 		
-		List<GameData> gameData = _oMapper.readValue(arguments.get(0), listOfGameData);
+		GameData gameData = _oMapper.readValue(arguments.get(0), GameData.class);
 		
 		setGameData(gameData);
 	}
 
-	/************************************************************/
+	/*******************************************************/
+
+	/***************Module Methods *************************/
 
 	/**
 	 * Gets the player associated with this object
@@ -205,9 +205,11 @@ public class PlayerModule {
 		return null;
 	}
 
-	public void setGameData(List<GameData> combinedData) {
+	public void setGameData(GameData combinedData) {
 		// TODO Auto-generated method stub
 	}
+	
+	/*******************************************************/
 
 	public static void main (String[] args){
 		int port;

@@ -4,20 +4,73 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
-
 import edu.brown.cs32.MFTG.monopoly.GameData;
+import edu.brown.cs32.MFTG.monopoly.PlayerWealthData;
+import edu.brown.cs32.MFTG.monopoly.PropertyData;
+import edu.brown.cs32.MFTG.monopoly.TimeStamp;
 
 public class DataProcessor {
-
-	//TODO make this class a bit more useful than it currently is
+	//TODO for security, should we be keeping the same Random throughout the tournament?
 	
 	/**
-	 * Computes the composite value
+	 * 
 	 * @param data
+	 * @param numDataPoints should be less than # of timestamps
 	 * @return
 	 */
-	public GameData aggregate(List<List<GameData>> data){
-		return null;
+	public static GameData aggregate(List<List<GameData>> data, int numDataPoints){
+		int numPlayers = data.get(0).get(0)._numPlayers;
+		GameDataAccumulator overall = new GameDataAccumulator(numDataPoints);
+		
+		for(int i = 0; i < data.size(); i++){
+			for(int j = 0; j < numPlayers; j++){
+				//TODO later ?? : for games that are repeats of each other, exclude all but one
+				combineGameData(overall, data.get(i).get(j));
+			}
+		}		
+		return overall.toGameData();
+	}
+	
+	/**
+	 * Go through the time stamps for a specific game
+	 * and combine them with the overall time stamps
+	 * @param overall the overall time stamps
+	 * @param specific the specific game time stamps
+	 */
+	private static void combineGameData(GameDataAccumulator overall, GameData specific){
+		int specificIndex = specific.getData().size();
+		int numDataPoints = overall.data.size();
+		int stepSize = (specificIndex - 1)/(numDataPoints - 1); //integer division
+		
+		if(stepSize < 1){
+			//TODO what to do in this case ... just collect data until you run out?
+			System.out.println("GAME TOO SHORT TO COLLECT DATA");
+			return;
+		}
+		
+		//we go backwards so that we ensure that we always get the last time stamp
+		//we don't care so much about getting the first stamp
+		for(int i = numDataPoints - 1; i >= 0; i--){
+			
+			combineData(overall.data.get(i), specific.getData().get(specificIndex));
+			specificIndex -= stepSize;
+		}
+		
+		overall.addPlayerWin(specific.getWinner());
+	}
+	
+	/**
+	 * For a given time stamp, add all of the property and wealth data to the running sum
+	 * @param overall the running sum of property and wealth data for a given time
+	 * @param specific the specific property and wealth data for a given time in a given game
+	 */
+	private static void combineData(TimeStampAccumulator overall, TimeStamp specific){	
+		for(PropertyData p : specific.getPropertyData()){
+			overall.putPropertyData(p);
+		}
+		for(PlayerWealthData w : specific.getWealthData()){
+			overall.putWealthData(w);
+		}
 	}
 	
 	/**
@@ -30,7 +83,6 @@ public class DataProcessor {
 	public static boolean isCorrupted(List<List<GameData>> data, List<Integer> confirmationIndices){
 		boolean corrupted = false;
 		List<GameData> setData;
-		
 		for(int i = 0; i < confirmationIndices.size(); i++){
 			setData = data.get(confirmationIndices.get(i));
 			for(int j = 1; j < setData.size(); j++){
@@ -39,7 +91,6 @@ public class DataProcessor {
 				}
 			}
 		}
-		
 		return corrupted;
 	}
 	

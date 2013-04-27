@@ -17,7 +17,7 @@ public class getPlayerCallable implements Callable<Player>{
 		_client = client;
 	}
 	
-	public Player call() throws Exception {
+	public Player call() throws Exception{
 		return _client.getPlayer();
 	}
 }

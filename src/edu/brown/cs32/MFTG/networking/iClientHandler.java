@@ -10,27 +10,26 @@ public interface iClientHandler {
 	/**
 	 * Gets the player associated with this object
 	 * @return
+	 * @throws ClientCommunicationException 
+	 * @throws ClientLostException 
+	 * @throws InvalidResponseException 
 	 */
-	public Player getPlayer();
+	public Player getPlayer() throws ClientCommunicationException, ClientLostException, InvalidResponseException;
 	
 	/**
 	 * Sends an encoding of the players to the client and a request to play numGame games
 	 * @param players
 	 * @param numGames
 	 * @return the GameData collected from playing the round of games
+	 * @throws InvalidResponseException 
 	 */
-	public List<GameData> playGames(List<Player> players, List<Long> seeds);
-	
-//	/**
-//	 * Returns GameData to the requesting object
-//	 * @return
-//	 */
-//	public List<GameData> getGameData();
-//	
+	public List<GameData> playGames(List<Player> players, List<Long> seeds) throws ClientCommunicationException,
+																				   ClientLostException, 
+																				   InvalidResponseException;
 	/**
 	 * Gives GameData to the iClientHandler to deal with 
-	 * @param combinedData
+	 * @param aggregatedData
 	 */
-	public void setGameData(List <GameData> combinedData); //TODO figure out what this method should take
+	public void setGameData(GameData aggregatedData) throws ClientCommunicationException;
 	
 }
