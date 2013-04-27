@@ -50,6 +50,20 @@ public class PropertyDataAccumulator{
 		return new ArrayList<PlayerPropertyData>(playerPropertyData.values());
 	}
 	
+	public List<PropertyDataReport> toPlayerPropertyDataReport(){
+		List<PropertyDataReport> playerData = new ArrayList<>();
+		
+		for(PlayerPropertyData p : playerPropertyData.values()){
+			playerData.add(p.toPropertyDataReport());
+		}
+		
+		playerData.add(new PropertyDataReport(propertyName, -1, accNumHouses/numDataPoints,
+				accTotalRevenueWithHouses/numDataPoints, accTotalRevenueWithoutHouses/numDataPoints,
+				accMortgaged/numDataPoints, numDataPoints));
+		
+		return playerData;
+	}
+	
 	public class PlayerPropertyData {
 		public final int playerOwnerID;
 		public int playerNumHouses;
@@ -75,29 +89,15 @@ public class PropertyDataAccumulator{
 			numDataPoints = 0;
 		}
 
-		public PropertyData toPropertyData(){
-			//TODO i cannot report mortgage info at the moment
-			return new PropertyData(
+		public PropertyDataReport toPropertyDataReport(){
+			//TODO i cannot report mortgage info at the moment			
+			return new PropertyDataReport(
 					propertyName,playerOwnerID,
 					Math.round(playerNumHouses/numDataPoints),
 					Math.round(playerPersonalRevenueWithHouses/numDataPoints),
 					Math.round(playerPersonalRevenueWithoutHouses/numDataPoints),
-					0,0,false);
+					Math.round(playerMortgaged/numDataPoints),
+					numDataPoints);
 		}
-	}
-	
-	public List<PropertyData> toPropertyData(){
-		//TODO i cannot report mortgage info at the moment
-		List<PropertyData> data = new ArrayList<>();
-		data.add(new PropertyData(propertyName,-1,
-				Math.round(accNumHouses/numDataPoints),0,0,
-				Math.round(accTotalRevenueWithHouses/numDataPoints),
-				Math.round(accTotalRevenueWithoutHouses/numDataPoints),false));
-		
-		for(PlayerPropertyData p : playerPropertyData.values()){
-			data.add(p.toPropertyData());
-		}
-		
-		return data;
 	}
 }

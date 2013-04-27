@@ -170,7 +170,7 @@ public class PlayerModule {
 		
 		GameData gameData = _oMapper.readValue(arguments.get(0), GameData.class);
 		
-		setGameData(gameData);
+		displayGameData(gameData);
 	}
 
 	/*******************************************************/
@@ -233,8 +233,8 @@ public class PlayerModule {
 	 * Set and display the combined GameData
 	 * @param combinedData
 	 */
-	public void setGameData(GameData combinedData) {
-		_gui.displayGameData(combinedData);
+	public void displayGameData(GameData combinedData) {
+		//TODO implement
 	}
 	
 	/*******************************************************/

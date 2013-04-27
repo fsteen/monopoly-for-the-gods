@@ -4,6 +4,7 @@ import java.util.List;
 
 import edu.brown.cs32.MFTG.monopoly.GameData;
 import edu.brown.cs32.MFTG.monopoly.Player;
+import edu.brown.cs32.MFTG.tournament.data.GameDataReport;
 
 public interface iClientHandler {
 	
@@ -30,6 +31,6 @@ public interface iClientHandler {
 	 * Gives GameData to the iClientHandler to deal with 
 	 * @param aggregatedData
 	 */
-	public void setGameData(GameData aggregatedData) throws ClientCommunicationException;
+	public void setGameData(GameDataReport aggregatedData) throws ClientCommunicationException;
 	
 }

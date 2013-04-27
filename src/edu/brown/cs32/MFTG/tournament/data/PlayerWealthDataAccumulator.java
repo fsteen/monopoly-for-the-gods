@@ -1,7 +1,5 @@
 package edu.brown.cs32.MFTG.tournament.data;
 
-import edu.brown.cs32.MFTG.monopoly.PlayerWealthData;
-
 public class PlayerWealthDataAccumulator{
 	public final int ownerID;
 	public int accCash;
@@ -15,11 +13,12 @@ public class PlayerWealthDataAccumulator{
 		numDataPoints = 0;
 	}
 	
-	public PlayerWealthData toPlayerWealthData(){
+	public PlayerWealthDataReport toPlayerWealthDataReport(){
 		//TODO must currently round the averages if i want to use PlayerWealthData class
-		return new PlayerWealthData(
+		return new PlayerWealthDataReport(
 				ownerID,
 				Math.round(accCash/numDataPoints),
-				Math.round(accTotalWealth/numDataPoints));
+				Math.round(accTotalWealth/numDataPoints),
+				numDataPoints);
 	}
 }

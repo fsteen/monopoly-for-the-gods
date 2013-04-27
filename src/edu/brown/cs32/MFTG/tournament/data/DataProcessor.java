@@ -18,7 +18,7 @@ public class DataProcessor {
 	 * @param numDataPoints should be less than # of timestamps
 	 * @return
 	 */
-	public static GameData aggregate(List<List<GameData>> data, int numDataPoints){
+	public static GameDataReport aggregate(List<List<GameData>> data, int numDataPoints){
 		int numPlayers = data.get(0).get(0)._numPlayers;
 		GameDataAccumulator overall = new GameDataAccumulator(numDataPoints);
 		
@@ -29,7 +29,7 @@ public class DataProcessor {
 				overall.gameFinished();
 			}
 		}		
-		return overall.toGameData();
+		return overall.toGameDataReport();
 	}
 	
 	/**
@@ -68,9 +68,6 @@ public class DataProcessor {
 	 * @param specific the specific property and wealth data for a given time in a given game
 	 */
 	private static void combineData(TimeStampAccumulator overall, TimeStamp specific){	
-		for(PropertyData p : specific.getPropertyData()){
-			overall.putPropertyData(p);
-		}
 		for(PlayerWealthData w : specific.getWealthData()){
 			overall.putWealthData(w);
 		}

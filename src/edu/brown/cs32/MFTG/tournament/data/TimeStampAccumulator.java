@@ -12,37 +12,37 @@ import edu.brown.cs32.MFTG.tournament.data.PropertyDataAccumulator.PlayerPropert
 
 public class TimeStampAccumulator {
 
-	private Map<String, PropertyDataAccumulator> _propertyData;
+//	private Map<String, PropertyDataAccumulator> _propertyData;
 	private Map<Integer, PlayerWealthDataAccumulator> _wealthData;
 	public final int _time;
 	
 	public TimeStampAccumulator(int time){
 		_time=time;
-		_propertyData = new HashMap<>();
+//		_propertyData = new HashMap<>();
 		_wealthData = new HashMap<>();
 	}
 	
-	public void putPropertyData(PropertyData data){
-		//add everything together so that in the end you can average it
-		PropertyDataAccumulator accData = _propertyData.get(data.propertyName);
-		if(accData == null){
-			accData = new PropertyDataAccumulator(data.propertyName);
-			_propertyData.put(data.propertyName, accData);
-		}
-		
-		accData.accMortgaged += data.mortgaged ? 1 : 0;
-		accData.accNumHouses += data.numHouses;
-		accData.accTotalRevenueWithHouses += data.totalRevenueWithHouses;
-		accData.accTotalRevenueWithoutHouses += data.totalRevenueWithoutHouses;
-		accData.numDataPoints += 1;
-		
-		PlayerPropertyData playerData = accData.get(data.ownerID);
-		playerData.playerMortgaged += data.mortgaged ? 1 : 0;
-		playerData.playerNumHouses += data.numHouses;
-		playerData.playerPersonalRevenueWithHouses += data.personalRevenueWithHouses;
-		playerData.playerPersonalRevenueWithoutHouses += data.personalRevenueWithoutHouses;
-		playerData.numDataPoints += 1;
-	}
+//	public void putPropertyData(PropertyData data){
+//		//add everything together so that in the end you can average it
+//		PropertyDataAccumulator accData = _propertyData.get(data.propertyName);
+//		if(accData == null){
+//			accData = new PropertyDataAccumulator(data.propertyName);
+//			_propertyData.put(data.propertyName, accData);
+//		}
+//		
+//		accData.accMortgaged += data.mortgaged ? 1 : 0;
+//		accData.accNumHouses += data.numHouses;
+//		accData.accTotalRevenueWithHouses += data.totalRevenueWithHouses;
+//		accData.accTotalRevenueWithoutHouses += data.totalRevenueWithoutHouses;
+//		accData.numDataPoints += 1;
+//		
+//		PlayerPropertyData playerData = accData.get(data.ownerID);
+//		playerData.playerMortgaged += data.mortgaged ? 1 : 0;
+//		playerData.playerNumHouses += data.numHouses;
+//		playerData.playerPersonalRevenueWithHouses += data.personalRevenueWithHouses;
+//		playerData.playerPersonalRevenueWithoutHouses += data.personalRevenueWithoutHouses;
+//		playerData.numDataPoints += 1;
+//	}
 	
 	public void putWealthData(PlayerWealthData data){
 		//add everything together so that in the end you can average it
@@ -57,9 +57,9 @@ public class TimeStampAccumulator {
 		accData.numDataPoints += 1;
 	}
 	
-	public List<PropertyDataAccumulator> getAllPropertyData(){
-		return new ArrayList<PropertyDataAccumulator>(_propertyData.values());
-	}
+//	public List<PropertyDataAccumulator> getAllPropertyData(){
+//		return new ArrayList<PropertyDataAccumulator>(_propertyData.values());
+//	}
 	
 	public List<PlayerWealthDataAccumulator> getAllPlayerWealthData(){
 		return new ArrayList<PlayerWealthDataAccumulator>(_wealthData.values());
@@ -69,23 +69,12 @@ public class TimeStampAccumulator {
 	 * Converts a TimeStampAccumulator to a TimeStamp
 	 * @return
 	 */
-	public TimeStamp toTimeStamp(){
-		TimeStamp t = new TimeStamp(_time);
-		
-		ArrayList<PropertyData> pData = new ArrayList<>();
-		ArrayList<PlayerWealthData> wData = new ArrayList<>();
-		
-		for(PropertyDataAccumulator p : _propertyData.values()){
-			pData.addAll(p.toPropertyData());
-		}
-		
+	public TimeStampReport toTimeStampReport(){		
+		Map<Integer,PlayerWealthDataReport> wData = new HashMap<>();
 		for(PlayerWealthDataAccumulator w : _wealthData.values()){
-			wData.add(w.toPlayerWealthData());
+			wData.put(w.ownerID, w.toPlayerWealthDataReport());
 		}
-		
-		t.setWealthData(wData);
-		t.setPropertyData(pData);
 
-		return t;
+		return new TimeStampReport(_time,wData);
 	}
 }

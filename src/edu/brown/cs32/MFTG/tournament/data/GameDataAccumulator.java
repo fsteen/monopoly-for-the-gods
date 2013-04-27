@@ -101,16 +101,13 @@ public class GameDataAccumulator {
 	 * Converts a GameDataAccumulator to a GameData
 	 * @return
 	 */
-	public GameData toGameData(){
-		GameData gameData = new GameData(_playerWins.keySet().size()); //infer the number of players
-		ArrayList<TimeStamp> times = new ArrayList<>();
+	public GameDataReport toGameDataReport(){
+		ArrayList<TimeStampReport> times = new ArrayList<>();
 		
 		for(TimeStampAccumulator t : data){
-			times.add(t.toTimeStamp());
+			times.add(t.toTimeStampReport());
 		}
 		
-		gameData.setData(times);
-		gameData.setWinner(getPlayerWithMostWins());
-		return gameData;
+		return new GameDataReport(times, getPlayerWithMostWins(), entireGameData);		
 	}
 }
