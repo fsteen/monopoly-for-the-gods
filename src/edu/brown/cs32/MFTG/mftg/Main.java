@@ -9,11 +9,11 @@ import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import edu.brown.cs32.MFTG.gui.Board;
-import edu.brown.cs32.MFTG.gui.ColorBoard;
 import edu.brown.cs32.MFTG.gui.Constants;
 import edu.brown.cs32.MFTG.gui.CreateGamePanel;
 import edu.brown.cs32.MFTG.gui.GameLobbyPanel;
 import edu.brown.cs32.MFTG.gui.GreetingPanel;
+import edu.brown.cs32.MFTG.gui.center.ProfitGraph;
 
 public class Main extends JFrame{
 	private JPanel _currentPanel;
@@ -36,10 +36,11 @@ public class Main extends JFrame{
 		this.setSize(9*Constants.WIDTH + 2*Constants.HEIGHT, 9*Constants.WIDTH + 2*Constants.HEIGHT);
 		this.setResizable(false);
 		
-		Board board = new Board();
-		this.add(board);
+		//Board board = new Board();
+		//this.add(board);
 		
-		
+		ProfitGraph graph = new ProfitGraph();
+		this.add(graph);
 		
 		//ColorBoard board = new ColorBoard();
 		//this.add(board);
