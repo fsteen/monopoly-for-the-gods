@@ -20,6 +20,8 @@ import edu.brown.cs32.MFTG.networking.InvalidResponseException;
 import edu.brown.cs32.MFTG.networking.PlayGamesCallable;
 import edu.brown.cs32.MFTG.networking.getPlayerCallable;
 import edu.brown.cs32.MFTG.networking.iClientHandler;
+import edu.brown.cs32.MFTG.tournament.data.DataProcessor;
+import edu.brown.cs32.MFTG.tournament.data.GameDataReport;
 
 public class Tournament implements Runnable{
 	private final int _numPlayers;
@@ -185,7 +187,7 @@ public class Tournament implements Runnable{
 		return gameData;
 	}
 
-	private void sendEndOfRoundData(GameData aggregatedData) throws ClientCommunicationException {
+	private void sendEndOfRoundData(GameDataReport aggregatedData) throws ClientCommunicationException {
 		for(iClientHandler c : _clients){
 			c.setGameData(aggregatedData);
 		}

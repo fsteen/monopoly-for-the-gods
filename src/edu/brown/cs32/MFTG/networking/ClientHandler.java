@@ -125,6 +125,7 @@ public class ClientHandler implements iClientHandler{
 		}
 	}
 
+	//TODO Alex : this should now take a GameDataReport
 	public void setGameData(GameData combinedData) throws ClientCommunicationException {
 		try {
 			String data = _oMapper.writeValueAsString(combinedData);

@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JavaType;
@@ -35,19 +36,30 @@ public class PlayerModule {
 	final ObjectMapper _oMapper;
 
 	/* Module variables */
-	DummyGUI _gui;
+	private DummyGUI _gui;
 	private final int NUM_THREADS=10;
 	private final int DATA_PACKET_SIZE=10;
 	private int _nextDisplaySize;
 	private List<GameData> _data;
+	private AtomicInteger _numThreadsDone;
+	private ExecutorService _pool;
+	
+	/* Temporary variables - replace later */
+	private final int MAX_NUM_TURNS=1000;
+	private final int FREE_PARKING=-1;
+	private final boolean DOUBLE_ON_GO=false;
+	private final boolean AUCTIONS=false;
 
 	public PlayerModule(String host, int port){
 		_oMapper = new ObjectMapper();
 		_host = host;
 		_port = port;
 
+		_pool = Executors.newFixedThreadPool(NUM_THREADS);
 		_data = new ArrayList<>();
+		_numThreadsDone = new AtomicInteger(0);
 		_gui = new DummyGUI();
+		
 	}
 
 	public void run(){
@@ -156,7 +168,7 @@ public class PlayerModule {
 		
 		GameData gameData = _oMapper.readValue(arguments.get(0), GameData.class);
 		
-		setGameData(gameData);
+		displayGameData(gameData);
 	}
 
 	/*******************************************************/
@@ -164,47 +176,63 @@ public class PlayerModule {
 	/***************Module Methods *************************/
 
 	/**
-	 * Gets the player associated with this object
-	 * @return
+	 * Play seeds.size games in separate threads
+	 * @param players the player heuristics
+	 * @param seeds the game seeds
+	 * @return the data collected from the games
 	 */
-	public Player getPlayer(){
-		//TODO calls method in the GUI to get player
-		return _gui.getPlayer();
-	}
-
-
 	public List<GameData> playGames(List<Player> players, List<Long> seeds){
 		_data.clear();
 		_nextDisplaySize = DATA_PACKET_SIZE;
-
-		//construct a game from the settings
-		GameRunnerFactory gameRunnerFactory = new GameRunnerFactory(this, 1000,-1,false,false,(Player[])players.toArray());
-
-		ExecutorService pool = Executors.newFixedThreadPool(NUM_THREADS);
-		for(int i = 0; i < seeds.size(); i++){ //execute games and record data
-			pool.execute(gameRunnerFactory.build(seeds.get(i)));
+		synchronized(this){ _numThreadsDone.set(0); }
+		
+		GameRunnerFactory gameRunnerFactory = new GameRunnerFactory(
+				_numThreadsDone, this, 
+				MAX_NUM_TURNS,FREE_PARKING,DOUBLE_ON_GO,
+				AUCTIONS,players.toArray(new Player[players.size()]));
+		
+		for(Long seed : seeds){
+			_pool.execute(gameRunnerFactory.build(seed)); //launch games
 		}
-
-		// Isn't this a pretty serious race condition? I think you'll always reach the return statement before
-		// _data has actually been updated
+		
+		synchronized (this){
+			while(_numThreadsDone.get() < seeds.size()){
+				try{
+					this.wait(); //wait for games to finish
+				} catch (InterruptedException e){}
+			}
+		}
+				
 		return _data;
 	}
 
+	/**
+	 * Called by the game runnables to update GameData info
+	 * when they finish playing
+	 * @param gameData
+	 */
 	public synchronized void addGameData(GameData gameData){
 		_data.add(gameData);
 		if(_data.size() >= _nextDisplaySize){
-			//display some data
+			//TODO display some data
 			_nextDisplaySize += DATA_PACKET_SIZE; //set next point at which to display
 		}
 	}
 
-	public List<GameData> getGameData(){
-		//TODO
-		return null;
+	/**
+	 * Gets the player associated with this object
+	 * @return
+	 */
+	public Player getPlayer(){
+		return _gui.getPlayer();
 	}
-
-	public void setGameData(GameData combinedData) {
-		// TODO Auto-generated method stub
+	
+	/**
+	 * Set and display the combined GameData
+	 * @param combinedData
+	 */
+	public void displayGameData(GameData combinedData) {
+		//TODO implement
 	}
 	
 	/*******************************************************/

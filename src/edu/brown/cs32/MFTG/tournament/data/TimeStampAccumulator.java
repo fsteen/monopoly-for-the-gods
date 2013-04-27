@@ -1,0 +1,80 @@
+package edu.brown.cs32.MFTG.tournament.data;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import edu.brown.cs32.MFTG.monopoly.PlayerWealthData;
+import edu.brown.cs32.MFTG.monopoly.PropertyData;
+import edu.brown.cs32.MFTG.monopoly.TimeStamp;
+import edu.brown.cs32.MFTG.tournament.data.PropertyDataAccumulator.PlayerPropertyData;
+
+public class TimeStampAccumulator {
+
+//	private Map<String, PropertyDataAccumulator> _propertyData;
+	private Map<Integer, PlayerWealthDataAccumulator> _wealthData;
+	public final int _time;
+	
+	public TimeStampAccumulator(int time){
+		_time=time;
+//		_propertyData = new HashMap<>();
+		_wealthData = new HashMap<>();
+	}
+	
+//	public void putPropertyData(PropertyData data){
+//		//add everything together so that in the end you can average it
+//		PropertyDataAccumulator accData = _propertyData.get(data.propertyName);
+//		if(accData == null){
+//			accData = new PropertyDataAccumulator(data.propertyName);
+//			_propertyData.put(data.propertyName, accData);
+//		}
+//		
+//		accData.accMortgaged += data.mortgaged ? 1 : 0;
+//		accData.accNumHouses += data.numHouses;
+//		accData.accTotalRevenueWithHouses += data.totalRevenueWithHouses;
+//		accData.accTotalRevenueWithoutHouses += data.totalRevenueWithoutHouses;
+//		accData.numDataPoints += 1;
+//		
+//		PlayerPropertyData playerData = accData.get(data.ownerID);
+//		playerData.playerMortgaged += data.mortgaged ? 1 : 0;
+//		playerData.playerNumHouses += data.numHouses;
+//		playerData.playerPersonalRevenueWithHouses += data.personalRevenueWithHouses;
+//		playerData.playerPersonalRevenueWithoutHouses += data.personalRevenueWithoutHouses;
+//		playerData.numDataPoints += 1;
+//	}
+	
+	public void putWealthData(PlayerWealthData data){
+		//add everything together so that in the end you can average it
+		PlayerWealthDataAccumulator accData = _wealthData.get(data.ownerID);
+		if(accData == null){
+			accData = new PlayerWealthDataAccumulator(data.ownerID);
+			_wealthData.put(data.ownerID, accData);
+		}
+		
+		accData.accCash += data.cash;
+		accData.accTotalWealth += data.totalWealth;
+		accData.numDataPoints += 1;
+	}
+	
+//	public List<PropertyDataAccumulator> getAllPropertyData(){
+//		return new ArrayList<PropertyDataAccumulator>(_propertyData.values());
+//	}
+	
+	public List<PlayerWealthDataAccumulator> getAllPlayerWealthData(){
+		return new ArrayList<PlayerWealthDataAccumulator>(_wealthData.values());
+	}
+	
+	/**
+	 * Converts a TimeStampAccumulator to a TimeStamp
+	 * @return
+	 */
+	public TimeStampReport toTimeStampReport(){		
+		Map<Integer,PlayerWealthDataReport> wData = new HashMap<>();
+		for(PlayerWealthDataAccumulator w : _wealthData.values()){
+			wData.put(w.ownerID, w.toPlayerWealthDataReport());
+		}
+
+		return new TimeStampReport(_time,wData);
+	}
+}
