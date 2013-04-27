@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JavaType;
@@ -40,6 +41,7 @@ public class PlayerModule {
 	private final int DATA_PACKET_SIZE=10;
 	private int _nextDisplaySize;
 	private List<GameData> _data;
+	private AtomicInteger _threadsDone;
 
 	public PlayerModule(String host, int port){
 		_oMapper = new ObjectMapper();
@@ -47,6 +49,7 @@ public class PlayerModule {
 		_port = port;
 
 		_data = new ArrayList<>();
+		_threadsDone = new AtomicInteger(0);
 		_gui = new DummyGUI();
 	}
 
@@ -170,7 +173,6 @@ public class PlayerModule {
 	 * @return
 	 */
 	public Player getPlayer(){
-		//TODO calls method in the GUI to get player
 		return _gui.getPlayer();
 	}
 
@@ -178,17 +180,27 @@ public class PlayerModule {
 	public List<GameData> playGames(List<Player> players, List<Long> seeds){
 		_data.clear();
 		_nextDisplaySize = DATA_PACKET_SIZE;
+		synchronized(this){ //synchronize on the playermodule
+			_threadsDone.set(0);
+		}
 
 		//construct a game from the settings
-		GameRunnerFactory gameRunnerFactory = new GameRunnerFactory(this, 1000,-1,false,false,(Player[])players.toArray());
+		GameRunnerFactory gameRunnerFactory = new GameRunnerFactory(_threadsDone, this, 1000,-1,false,false,players.toArray(new Player[players.size()]));
 
 		ExecutorService pool = Executors.newFixedThreadPool(NUM_THREADS);
 		for(int i = 0; i < seeds.size(); i++){ //execute games and record data
 			pool.execute(gameRunnerFactory.build(seeds.get(i)));
 		}
-
-		// Isn't this a pretty serious race condition? I think you'll always reach the return statement before
-		// _data has actually been updated
+		
+		//wait for all of the runnables to complete
+		synchronized (this){
+			while(_threadsDone.get() < seeds.size()){
+				try{
+					this.wait();
+				} catch (InterruptedException e){}
+			}
+		}
+				
 		return _data;
 	}
 

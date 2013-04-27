@@ -1,5 +1,7 @@
 package edu.brown.cs32.MFTG.tournament;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 import edu.brown.cs32.MFTG.monopoly.Game;
 import edu.brown.cs32.MFTG.monopoly.Player;
 
@@ -12,8 +14,10 @@ public class GameRunnerFactory {
 	private boolean _doubleOnGo, _auctions;
 	private Player[] _players;
 	private PlayerModule _module;
+	private AtomicInteger _threadsDone;
 	
-	public GameRunnerFactory(PlayerModule module, int maxNumTurns, int freeParking, boolean doubleOnGo, boolean auctions, Player...players){
+	public GameRunnerFactory(AtomicInteger threadsDone, PlayerModule module, int maxNumTurns, int freeParking, boolean doubleOnGo, boolean auctions, Player...players){
+		_threadsDone = threadsDone;
 		_module = module;
 		_maxNumTurns = maxNumTurns;
 		_freeParking = freeParking;
@@ -23,25 +27,12 @@ public class GameRunnerFactory {
 	}
 	
 	public GameRunner build(long seed){
-		return new GameRunner(new Game(seed,_maxNumTurns,_freeParking,_doubleOnGo,_auctions,_players));
-	}
-	
-	/**
-	 * GameRunners are games that update the data in the PlayerModule
-	 * once they finish running
-	 * @author frances
-	 */
-	private class GameRunner implements Runnable{
-		private Game _game;
+		return new GameRunner(
+				new Game(seed,_maxNumTurns,_freeParking,_doubleOnGo,_auctions,_players),
+				_threadsDone,
+				_module);
 		
-		public GameRunner(Game game){
-			_game = game;
-		}
-		
-		@Override
-		public void run() {
-			_game.run();
-			_module.addGameData(_game.getGameData());
-		}
+//		//for testing
+//		return new DummyGameRunner(null, _threadsDone, _module);
 	}
 }
