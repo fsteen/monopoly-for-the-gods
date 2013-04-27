@@ -22,6 +22,7 @@ import edu.brown.cs32.MFTG.monopoly.GameData;
 import edu.brown.cs32.MFTG.monopoly.Player;
 import edu.brown.cs32.MFTG.networking.ClientRequestContainer;
 import edu.brown.cs32.MFTG.networking.ClientRequestContainer.Method;
+import edu.brown.cs32.MFTG.tournament.data.GameDataReport;
 
 public class PlayerModule {
 
@@ -166,9 +167,9 @@ public class PlayerModule {
 			// error
 		}
 		
-		GameData gameData = _oMapper.readValue(arguments.get(0), GameData.class);
+		GameDataReport gameDataReport = _oMapper.readValue(arguments.get(0), GameDataReport.class);
 		
-		displayGameData(gameData);
+		displayGameData(gameDataReport);
 	}
 
 	/*******************************************************/
@@ -231,7 +232,7 @@ public class PlayerModule {
 	 * Set and display the combined GameData
 	 * @param combinedData
 	 */
-	public void displayGameData(GameData combinedData) {
+	public void displayGameData(GameDataReport combinedData) {
 		//TODO implement
 	}
 	

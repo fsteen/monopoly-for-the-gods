@@ -18,6 +18,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.brown.cs32.MFTG.monopoly.GameData;
 import edu.brown.cs32.MFTG.monopoly.Player;
 import edu.brown.cs32.MFTG.networking.ClientRequestContainer.Method;
+import edu.brown.cs32.MFTG.tournament.data.GameDataReport;
 
 public class ClientHandler implements iClientHandler{
 	
@@ -125,8 +126,7 @@ public class ClientHandler implements iClientHandler{
 		}
 	}
 
-	//TODO Alex : this should now take a GameDataReport
-	public void setGameData(GameData combinedData) throws ClientCommunicationException {
+	public void setGameData(GameDataReport combinedData) throws ClientCommunicationException {
 		try {
 			String data = _oMapper.writeValueAsString(combinedData);
 
