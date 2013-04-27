@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import edu.brown.cs32.MFTG.monopoly.PropertyData;
 
 public class PropertyDataAccumulator{
@@ -29,6 +26,17 @@ public class PropertyDataAccumulator{
 		playerPropertyData = new HashMap<>();
 	}
 	
+	public void reset(){
+		accNumHouses = 0;
+		accTotalRevenueWithHouses = 0;
+		accTotalRevenueWithoutHouses = 0;
+		accMortgaged = 0;
+		numDataPoints = 0;
+		for(PlayerPropertyData p : playerPropertyData.values()){
+			p.reset();
+		}
+	}
+	
 	public PlayerPropertyData get(int playerOwnerID){
 		PlayerPropertyData data = playerPropertyData.get(playerOwnerID);
 		if(data == null){
@@ -36,6 +44,10 @@ public class PropertyDataAccumulator{
 			playerPropertyData.put(playerOwnerID, data);
 		}
 		return data;
+	}
+	
+	public List<PlayerPropertyData> getAll(){
+		return new ArrayList<PlayerPropertyData>(playerPropertyData.values());
 	}
 	
 	public class PlayerPropertyData {
@@ -48,6 +60,14 @@ public class PropertyDataAccumulator{
 		
 		PlayerPropertyData(int playerOwnerID){
 			this.playerOwnerID = playerOwnerID;
+			playerNumHouses = 0;
+			playerPersonalRevenueWithHouses = 0;
+			playerPersonalRevenueWithoutHouses = 0;
+			playerMortgaged = 0;
+			numDataPoints = 0;
+		}
+		
+		public void reset(){
 			playerNumHouses = 0;
 			playerPersonalRevenueWithHouses = 0;
 			playerPersonalRevenueWithoutHouses = 0;

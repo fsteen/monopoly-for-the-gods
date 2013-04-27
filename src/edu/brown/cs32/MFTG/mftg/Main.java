@@ -46,7 +46,7 @@ public class Main extends JFrame{
 		
 		//_currentPanel=greet;
 		//this.add(_currentPanel);
-
+		
 		this.pack();
 		this.setVisible(true);
 	}

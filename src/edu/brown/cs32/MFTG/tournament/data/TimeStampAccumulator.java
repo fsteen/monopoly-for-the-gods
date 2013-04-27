@@ -22,19 +22,12 @@ public class TimeStampAccumulator {
 		_wealthData = new HashMap<>();
 	}
 	
-	public PropertyDataAccumulator getPropertyData(String propertyName){
-		return _propertyData.get(propertyName);
-	}
-	
-	public PlayerWealthDataAccumulator getPlayerWealthData(int playerID){
-		return _wealthData.get(playerID);	
-	}
-	
 	public void putPropertyData(PropertyData data){
 		//add everything together so that in the end you can average it
 		PropertyDataAccumulator accData = _propertyData.get(data.propertyName);
 		if(accData == null){
 			accData = new PropertyDataAccumulator(data.propertyName);
+			_propertyData.put(data.propertyName, accData);
 		}
 		
 		accData.accMortgaged += data.mortgaged ? 1 : 0;
@@ -56,6 +49,7 @@ public class TimeStampAccumulator {
 		PlayerWealthDataAccumulator accData = _wealthData.get(data.ownerID);
 		if(accData == null){
 			accData = new PlayerWealthDataAccumulator(data.ownerID);
+			_wealthData.put(data.ownerID, accData);
 		}
 		
 		accData.accCash += data.cash;

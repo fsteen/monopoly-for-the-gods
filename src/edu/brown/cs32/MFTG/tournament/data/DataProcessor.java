@@ -26,6 +26,7 @@ public class DataProcessor {
 			for(int j = 0; j < numPlayers; j++){
 				//TODO later ?? : for games that are repeats of each other, exclude all but one
 				combineGameData(overall, data.get(i).get(j));
+				overall.gameFinished();
 			}
 		}		
 		return overall.toGameData();
@@ -55,6 +56,8 @@ public class DataProcessor {
 			combineData(overall.data.get(i), specific.getData().get(specificIndex));
 			specificIndex -= stepSize;
 		}
+		
+		//TODO stuff with overall game data!!!!!!!!
 		
 		overall.addPlayerWin(specific.getWinner());
 	}
