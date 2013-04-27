@@ -42,15 +42,19 @@ public class PlayerModule {
 	private int _nextDisplaySize;
 	private List<GameData> _data;
 	private AtomicInteger _threadsDone;
+	private ExecutorService _pool;
+
 
 	public PlayerModule(String host, int port){
 		_oMapper = new ObjectMapper();
 		_host = host;
 		_port = port;
 
+		_pool = Executors.newFixedThreadPool(NUM_THREADS);
 		_data = new ArrayList<>();
 		_threadsDone = new AtomicInteger(0);
 		_gui = new DummyGUI();
+		
 	}
 
 	public void run(){
@@ -186,10 +190,8 @@ public class PlayerModule {
 
 		//construct a game from the settings
 		GameRunnerFactory gameRunnerFactory = new GameRunnerFactory(_threadsDone, this, 1000,-1,false,false,players.toArray(new Player[players.size()]));
-
-		ExecutorService pool = Executors.newFixedThreadPool(NUM_THREADS);
 		for(int i = 0; i < seeds.size(); i++){ //execute games and record data
-			pool.execute(gameRunnerFactory.build(seeds.get(i)));
+			_pool.execute(gameRunnerFactory.build(seeds.get(i)));
 		}
 		
 		//wait for all of the runnables to complete
