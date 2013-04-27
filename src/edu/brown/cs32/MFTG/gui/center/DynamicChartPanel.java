@@ -35,7 +35,6 @@ public class DynamicChartPanel extends ChartPanel {
 	}
 	
 	public void update (double change) {
-		System.out.println("draw height" + getMaximumDrawHeight());
 		XYPlot plot = (XYPlot) _chart.getPlot();
 		XYSeriesCollection seriesCollection = (XYSeriesCollection) plot.getDataset();
 		XYSeries series = seriesCollection.getSeries(_moving);
@@ -43,7 +42,7 @@ public class DynamicChartPanel extends ChartPanel {
 		
 		
 		double currValue = series.getMaxY();
-		currValue += (10*(-1)*change);
+		currValue += (50*(-1)*change);
 		
 		for(double x=0; x<100; x+=.1) {
 			series.update(x, currValue);

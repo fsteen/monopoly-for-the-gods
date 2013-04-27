@@ -1,6 +1,7 @@
 package edu.brown.cs32.MFTG.gui.center;
 
 import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.util.concurrent.TimeUnit;
 
@@ -73,7 +74,7 @@ public class ProfitGraph extends JPanel {
 	
 	public void createChart () {
 		
-		_chart = ChartFactory.createXYLineChart("Profit and Cash", "Time", "Money", _dataset, PlotOrientation.VERTICAL, true, true, false);
+		_chart = ChartFactory.createXYLineChart("Profit and Cash", "Time", "Money", _dataset, PlotOrientation.VERTICAL, false, true, false);
 		
 		_chart.setBackgroundPaint(Constants.BACKGROUND_COLOR);
 		
@@ -83,20 +84,25 @@ public class ProfitGraph extends JPanel {
 		_plot.setRangeGridlinesVisible(false);
 		
 		XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
-		renderer.setSeriesStroke(0, new BasicStroke(1));
+		renderer.setSeriesStroke(0, new BasicStroke(2));
+		renderer.setSeriesPaint(0, Color.BLACK);
 		renderer.setSeriesShapesVisible(0, false);
 		renderer.setSeriesVisible(0, true);
-		renderer.setSeriesStroke(1, new BasicStroke(1));
+		renderer.setSeriesStroke(1, new BasicStroke(2));
+		renderer.setSeriesPaint(1, Color.WHITE);
 		renderer.setSeriesShapesVisible(1, false);
 		renderer.setSeriesVisible(1, true);
 		renderer.setSeriesStroke(2, new BasicStroke(5));
+		renderer.setSeriesPaint(2, Color.BLUE);
 		renderer.setSeriesShapesVisible(2, false);
 		renderer.setSeriesVisible(2, true);
 		renderer.setSeriesStroke(3, new BasicStroke(5));
+		renderer.setSeriesPaint(3, Color.GREEN);
 		renderer.setSeriesShapesVisible(3, false);
 		renderer.setSeriesVisible(3, true);
 		renderer.setSeriesStroke(4, new BasicStroke(5));
 		renderer.setSeriesShapesVisible(4, false);
+		renderer.setSeriesPaint(4, Color.RED);
 		renderer.setSeriesVisible(4, true);
 		_plot.setRenderer(renderer);
 		
