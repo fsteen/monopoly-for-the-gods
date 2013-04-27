@@ -11,12 +11,12 @@ import edu.brown.cs32.MFTG.monopoly.Game;
  */
 class GameRunner implements Runnable{
 	private Game _game;
-	private AtomicInteger _threadsDone;
+	private AtomicInteger _numThreadsDone;
 	private PlayerModule _module;
 	
-	public GameRunner(Game game, AtomicInteger threadsDone, PlayerModule module){
+	public GameRunner(Game game, AtomicInteger numThreadsDone, PlayerModule module){
 		_game = game;
-		_threadsDone = threadsDone;
+		_numThreadsDone = numThreadsDone;
 		_module = module;
 	}
 	
@@ -26,7 +26,7 @@ class GameRunner implements Runnable{
 		_module.addGameData(_game.getGameData());
 				
 		synchronized(_module){
-			_threadsDone.incrementAndGet();
+			_numThreadsDone.incrementAndGet();
 			_module.notifyAll();
 		}
 	}

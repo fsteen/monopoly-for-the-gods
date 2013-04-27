@@ -1,4 +1,4 @@
-package edu.brown.cs32.MFTG.tournament;
+package edu.brown.cs32.MFTG.tournament.data;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,8 +20,6 @@ public class PropertyDataAccumulator{
 	private Map<Integer,PlayerPropertyData> playerPropertyData;
 
 	public PropertyDataAccumulator(String propertyName) {
-		//set owner id=-1 for the public PropertyData
-		//we won't use any of the other values
 		this.propertyName = propertyName;
 		accNumHouses = 0;
 		accTotalRevenueWithHouses = 0;

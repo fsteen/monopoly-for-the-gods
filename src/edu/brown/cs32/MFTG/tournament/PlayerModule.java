@@ -36,14 +36,19 @@ public class PlayerModule {
 	final ObjectMapper _oMapper;
 
 	/* Module variables */
-	DummyGUI _gui;
+	private DummyGUI _gui;
 	private final int NUM_THREADS=10;
 	private final int DATA_PACKET_SIZE=10;
 	private int _nextDisplaySize;
 	private List<GameData> _data;
-	private AtomicInteger _threadsDone;
+	private AtomicInteger _numThreadsDone;
 	private ExecutorService _pool;
-
+	
+	/* Temporary variables - replace later */
+	private final int MAX_NUM_TURNS=1000;
+	private final int FREE_PARKING=-1;
+	private final boolean DOUBLE_ON_GO=false;
+	private final boolean AUCTIONS=false;
 
 	public PlayerModule(String host, int port){
 		_oMapper = new ObjectMapper();
@@ -52,7 +57,7 @@ public class PlayerModule {
 
 		_pool = Executors.newFixedThreadPool(NUM_THREADS);
 		_data = new ArrayList<>();
-		_threadsDone = new AtomicInteger(0);
+		_numThreadsDone = new AtomicInteger(0);
 		_gui = new DummyGUI();
 		
 	}
@@ -173,32 +178,29 @@ public class PlayerModule {
 	/***************Module Methods *************************/
 
 	/**
-	 * Gets the player associated with this object
-	 * @return
+	 * Play seeds.size games in separate threads
+	 * @param players the player heuristics
+	 * @param seeds the game seeds
+	 * @return the data collected from the games
 	 */
-	public Player getPlayer(){
-		return _gui.getPlayer();
-	}
-
-
 	public List<GameData> playGames(List<Player> players, List<Long> seeds){
 		_data.clear();
 		_nextDisplaySize = DATA_PACKET_SIZE;
-		synchronized(this){ //synchronize on the playermodule
-			_threadsDone.set(0);
-		}
-
-		//construct a game from the settings
-		GameRunnerFactory gameRunnerFactory = new GameRunnerFactory(_threadsDone, this, 1000,-1,false,false,players.toArray(new Player[players.size()]));
-		for(int i = 0; i < seeds.size(); i++){ //execute games and record data
-			_pool.execute(gameRunnerFactory.build(seeds.get(i)));
+		synchronized(this){ _numThreadsDone.set(0); }
+		
+		GameRunnerFactory gameRunnerFactory = new GameRunnerFactory(
+				_numThreadsDone, this, 
+				MAX_NUM_TURNS,FREE_PARKING,DOUBLE_ON_GO,
+				AUCTIONS,players.toArray(new Player[players.size()]));
+		
+		for(Long seed : seeds){
+			_pool.execute(gameRunnerFactory.build(seed)); //launch games
 		}
 		
-		//wait for all of the runnables to complete
 		synchronized (this){
-			while(_threadsDone.get() < seeds.size()){
+			while(_numThreadsDone.get() < seeds.size()){
 				try{
-					this.wait();
+					this.wait(); //wait for games to finish
 				} catch (InterruptedException e){}
 			}
 		}
@@ -206,21 +208,33 @@ public class PlayerModule {
 		return _data;
 	}
 
+	/**
+	 * Called by the game runnables to update GameData info
+	 * when they finish playing
+	 * @param gameData
+	 */
 	public synchronized void addGameData(GameData gameData){
 		_data.add(gameData);
 		if(_data.size() >= _nextDisplaySize){
-			//display some data
+			//TODO display some data
 			_nextDisplaySize += DATA_PACKET_SIZE; //set next point at which to display
 		}
 	}
 
-	public List<GameData> getGameData(){
-		//TODO
-		return null;
+	/**
+	 * Gets the player associated with this object
+	 * @return
+	 */
+	public Player getPlayer(){
+		return _gui.getPlayer();
 	}
-
+	
+	/**
+	 * Set and display the combined GameData
+	 * @param combinedData
+	 */
 	public void setGameData(GameData combinedData) {
-		// TODO Auto-generated method stub
+		_gui.displayGameData(combinedData);
 	}
 	
 	/*******************************************************/

@@ -1,4 +1,4 @@
-package edu.brown.cs32.MFTG.tournament;
+package edu.brown.cs32.MFTG.tournament.data;
 
 import java.util.ArrayList;
 import java.util.Collections;

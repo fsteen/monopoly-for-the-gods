@@ -1,10 +1,11 @@
-package edu.brown.cs32.MFTG.tournament;
+package edu.brown.cs32.MFTG.tournament.data;
 
 import static org.junit.Assert.*;
 
 import java.util.List;
 
 import org.junit.Test;
+
 
 public class DataProcessorTests {
 

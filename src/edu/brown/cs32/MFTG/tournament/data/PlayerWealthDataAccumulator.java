@@ -1,4 +1,4 @@
-package edu.brown.cs32.MFTG.tournament;
+package edu.brown.cs32.MFTG.tournament.data;
 
 import edu.brown.cs32.MFTG.monopoly.PlayerWealthData;
 

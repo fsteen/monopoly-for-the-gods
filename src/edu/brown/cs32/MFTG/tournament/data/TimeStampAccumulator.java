@@ -1,4 +1,4 @@
-package edu.brown.cs32.MFTG.tournament;
+package edu.brown.cs32.MFTG.tournament.data;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,7 +8,7 @@ import java.util.Map;
 import edu.brown.cs32.MFTG.monopoly.PlayerWealthData;
 import edu.brown.cs32.MFTG.monopoly.PropertyData;
 import edu.brown.cs32.MFTG.monopoly.TimeStamp;
-import edu.brown.cs32.MFTG.tournament.PropertyDataAccumulator.PlayerPropertyData;
+import edu.brown.cs32.MFTG.tournament.data.PropertyDataAccumulator.PlayerPropertyData;
 
 public class TimeStampAccumulator {
 

@@ -1,5 +1,6 @@
 package edu.brown.cs32.MFTG.tournament;
 
+import edu.brown.cs32.MFTG.monopoly.GameData;
 import edu.brown.cs32.MFTG.monopoly.Player;
 
 public class DummyGUI {
@@ -8,6 +9,7 @@ public class DummyGUI {
 		return new Player(0);
 	}
 	
-	
-	
+	public void displayGameData(GameData data){
+		System.out.println(data);
+	}
 }

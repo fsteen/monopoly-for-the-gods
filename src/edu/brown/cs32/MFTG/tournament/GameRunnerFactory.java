@@ -14,10 +14,11 @@ public class GameRunnerFactory {
 	private boolean _doubleOnGo, _auctions;
 	private Player[] _players;
 	private PlayerModule _module;
-	private AtomicInteger _threadsDone;
+	private AtomicInteger _numThreadsDone;
 	
-	public GameRunnerFactory(AtomicInteger threadsDone, PlayerModule module, int maxNumTurns, int freeParking, boolean doubleOnGo, boolean auctions, Player...players){
-		_threadsDone = threadsDone;
+	public GameRunnerFactory(AtomicInteger numThreadsDone, PlayerModule module,
+			int maxNumTurns, int freeParking, boolean doubleOnGo, boolean auctions, Player...players){
+		_numThreadsDone = numThreadsDone;
 		_module = module;
 		_maxNumTurns = maxNumTurns;
 		_freeParking = freeParking;
@@ -29,7 +30,7 @@ public class GameRunnerFactory {
 	public GameRunner build(long seed){
 		return new GameRunner(
 				new Game(seed,_maxNumTurns,_freeParking,_doubleOnGo,_auctions,_players),
-				_threadsDone,
+				_numThreadsDone,
 				_module);
 		
 //		//for testing
