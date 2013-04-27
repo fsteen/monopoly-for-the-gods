@@ -154,8 +154,6 @@ public class PlayerModule {
 			// error
 		}
 		
-//		JavaType listOfGameData = _oMapper.getTypeFactory().constructCollectionType(List.class, GameData.class);
-		
 		GameData gameData = _oMapper.readValue(arguments.get(0), GameData.class);
 		
 		setGameData(gameData);
