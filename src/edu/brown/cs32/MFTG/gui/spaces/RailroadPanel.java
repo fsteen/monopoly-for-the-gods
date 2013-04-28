@@ -5,14 +5,11 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.font.FontRenderContext;
@@ -26,22 +23,18 @@ import java.text.ParseException;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
-import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import edu.brown.cs32.MFTG.gui.Constants;
 import edu.brown.cs32.MFTG.gui.Constants.Orientation;
-import edu.brown.cs32.MFTG.gui.Constants.PropertyInfo;
-import edu.brown.cs32.MFTG.gui.Constants.RailRoadInfo;
+import edu.brown.cs32.MFTG.gui.Constants.Railroads;
 import edu.brown.cs32.MFTG.gui.Constants.Viewer;
 import edu.brown.cs32.MFTG.gui.Helper;
 
-public class RailRoadUtilityButton extends JButton {
-
-	/* My board */
-	private RailRoadUtility _railroad;
+public class RailroadPanel extends JPanel {
 	
 	/* Game results and Heuristics */
 	private double _timeOwned;
@@ -52,7 +45,6 @@ public class RailRoadUtilityButton extends JButton {
 	
 	/* Space specific information */
 	private Viewer _viewer;
-	private RailRoadInfo _railRoadInfo;
 	private Orientation _orientation;
 	
 	/* Background and border rectangles */
@@ -71,16 +63,14 @@ public class RailRoadUtilityButton extends JButton {
 	/* Train */
 	private Image _icon;
 	
-	public RailRoadUtilityButton(RailRoadUtility railroad, RailRoadInfo railRoadInfo, Viewer viewer, double timeOwned, double profit, double value) throws IOException {
-		/* Initialize the button */
+	public RailroadPanel(Railroads myRailroad, Viewer viewer) throws IOException {
+		/* Initialize the panel */
 		super();
-		this.setFocusPainted(false);
-		this.setBorder(BorderFactory.createEmptyBorder());
 		this.setLayout(null);
 		this.addMouseListener(new ButtonMouseListener());
 		
-		this.setLocation(0, 0);
-		_orientation = railRoadInfo.getOrientation();
+		//this.setLocation(0, 0);
+		_orientation = myRailroad.getOrientation();
 		if(_orientation == Orientation.UP || _orientation == Orientation.DOWN) {
 			this.setPreferredSize(new Dimension(Constants.ACTUAL_WIDTH, Constants.ACTUAL_HEIGHT));
 			this.setMaximumSize(new Dimension(Constants.ACTUAL_WIDTH, Constants.ACTUAL_HEIGHT));
@@ -91,10 +81,10 @@ public class RailRoadUtilityButton extends JButton {
 		}
 		
 		BufferedImage t;
-		if(railRoadInfo == RailRoadInfo.WATER_WORKS) {
+		if(myRailroad == Railroads.WATER_WORKS) {
 			t = ImageIO.read(new File("Deed_Cards/faucet.jpg"));
 		}
-		else if (railRoadInfo == RailRoadInfo.ELECTRIC_COMPANY) {
+		else if (myRailroad == Railroads.ELECTRIC_COMPANY) {
 			t = ImageIO.read(new File("Deed_Cards/lightbulb.jpg"));
 		}
 		else {
@@ -105,12 +95,10 @@ public class RailRoadUtilityButton extends JButton {
 		_icon = Helper.transparent(t);
 		
 		/* Set instance variables */
-		_railroad = railroad;
-		_railRoadInfo = railRoadInfo;
 		_viewer = viewer;
-		_timeOwned = timeOwned;
-		_profit = profit;
-		_value = value;
+		_timeOwned = .90;
+		_profit = 1000;
+		_value = 100;
 		
 		/* Initialize Components */
 		initializeBackground();
@@ -123,6 +111,8 @@ public class RailRoadUtilityButton extends JButton {
 		
 		if(_viewer == Viewer.ME) this.add(_valueField);
 	}
+	
+	public void setInfo (double timeOwned, double profit, double value) {}
 	
 	public void paintComponent(Graphics g) {
 		/* Draw to a buffered image which will then be resized and rotated appropriately */
@@ -266,11 +256,11 @@ public class RailRoadUtilityButton extends JButton {
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			if(e.getButton() == MouseEvent.BUTTON1 && e.getClickCount()==2) {
-				if(_viewer == Viewer.ME) _railroad.changeViewer(Viewer.ALL);
-				else _railroad.changeViewer(Viewer.ME);
+				//if(_viewer == Viewer.ME) _railroad.changeViewer(Viewer.ALL);
+				//else _railroad.changeViewer(Viewer.ME);
 			}
 			if(e.getButton() == MouseEvent.BUTTON3) {
-				_railroad.popup();
+			//	_railroad.popup();
 			}
 		}
 

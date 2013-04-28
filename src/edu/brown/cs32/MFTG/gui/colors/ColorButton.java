@@ -11,20 +11,20 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 
 import edu.brown.cs32.MFTG.gui.Constants;
-import edu.brown.cs32.MFTG.gui.Constants.ColorInfo;
+import edu.brown.cs32.MFTG.gui.Constants.Colors;
 import edu.brown.cs32.MFTG.gui.Constants.Orientation;
 import edu.brown.cs32.MFTG.gui.spaces.House;
 
 public class ColorButton extends JButton {
 
-	private ColorInfo _colorInfo;
+	private Colors _colorInfo;
 	private Orientation _orientation;
 	private House _house;
 	private HousePrice _housePrice;
 	private MonopolyInformation _monopoly;
 	private Rectangle _spaceOutline;
 
-	public ColorButton(ColorInfo colorInfo) {
+	public ColorButton(Colors colorInfo) {
 		super();
 		this.setFocusPainted(false);
 		this.setBorder(BorderFactory.createEmptyBorder());

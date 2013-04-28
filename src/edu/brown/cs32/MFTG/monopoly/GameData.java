@@ -45,6 +45,14 @@ public class GameData {
 	}
 	
 	/**
+	 * Setter for the time attribute
+	 * @param time
+	 */
+	public void setTime(int time){
+		_time = time;
+	}
+	
+	/**
 	 * @return the _winner
 	 */
 	public int getWinner() {

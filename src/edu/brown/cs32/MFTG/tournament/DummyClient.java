@@ -4,7 +4,6 @@ import java.util.List;
 
 import edu.brown.cs32.MFTG.monopoly.GameData;
 import edu.brown.cs32.MFTG.monopoly.Player;
-import edu.brown.cs32.MFTG.networking.ClientCommunicationException;
 import edu.brown.cs32.MFTG.networking.iClientHandler;
 import edu.brown.cs32.MFTG.tournament.data.GameDataReport;
 
@@ -27,10 +26,8 @@ public class DummyClient implements iClientHandler{
 	}
 
 	@Override
-	public void setGameData(GameDataReport aggregatedData)
-			throws ClientCommunicationException {
-		// TODO Auto-generated method stub
-		
+	public void setGameData(GameDataReport aggregatedData) {
+		_module.displayGameData(aggregatedData);
 	}
 
 //	@Override

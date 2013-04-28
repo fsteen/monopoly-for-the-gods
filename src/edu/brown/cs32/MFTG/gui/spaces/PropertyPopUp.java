@@ -11,13 +11,13 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import edu.brown.cs32.MFTG.gui.Helper;
-import edu.brown.cs32.MFTG.gui.Constants.PropertyInfo;
+import edu.brown.cs32.MFTG.gui.Constants.ColorProperties;
 
 public class PropertyPopUp extends JFrame{
 
 	private BufferedImage _image;
 	
-	public PropertyPopUp(PropertyInfo propertyInfo) throws IOException {
+	public PropertyPopUp(ColorProperties propertyInfo) throws IOException {
 		super(propertyInfo.getName());
 		//this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		

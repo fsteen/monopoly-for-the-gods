@@ -158,7 +158,11 @@ public class Constants {
 		public Color getColor() { return color; }
 	}
 	
-	public enum ColorInfo {
+	public interface Properties {
+		public Orientation getOrientation();
+	}
+	
+	public enum Colors {
 		PURPLE(PropertyColor.PURPLE, Orientation.DOWN, f + "purple" + t, f + "purple" + m, f + "purple" + n),
 		LIGHT_BLUE(PropertyColor.LIGHT_BLUE, Orientation.DOWN,  f + "light_blue" + t, f + "light_blue" + m, f + "light_blue" + n),
 		PINK(PropertyColor.PINK, Orientation.LEFT,  f + "pink" + t, f + "pink" + m, f + "pink" + n),
@@ -173,7 +177,7 @@ public class Constants {
 		private String two;
 		private String monopoly;
 		private String noMonopoly;
-		ColorInfo (PropertyColor color, Orientation orientation, String two, String monopoly, String noMonopoly) {
+		Colors (PropertyColor color, Orientation orientation, String two, String monopoly, String noMonopoly) {
 			this.color = color;
 			this.orientation = orientation;
 			this.two = two;
@@ -187,18 +191,30 @@ public class Constants {
 		public String getNoMonopoly() { return noMonopoly; }
 	}
 	
-	public enum RailRoadInfo {
-		READING_RAILROAD(Orientation.DOWN, "Reading Railroad", "Deed_Cards/reading_railroad.jpg"),
-		PENNSYLVANIA_RAILROAD(Orientation.LEFT, "Pennsylvania Railroad", "Deed_Cards/pennsylvania_railroad.jpg"),
-		B_AND_O_RAILROAD(Orientation.UP, "B. and O. Railroad", "Deed_Cards/b_and_o_railroad.jpg"),
-		SHORT_LINE(Orientation.RIGHT, "Short Line", "Deed_Cards/short_line.jpg"),
+	public enum Corners {
+		GO_TO_JAIL (Orientation.RIGHT, "Deed_Cards/go_to_jail.jpg"),
+		FREE_PARKING (Orientation.UP, "Deed_Cards/free_parking.jpg"),
+		GO (Orientation.DOWN, "Deed_Cards/go.jpg"),
+		JAIL (Orientation.LEFT, "Deed_Cards/jail.jpg");
+		
+		private Orientation orientation;
+		private String file;
+		Corners (Orientation orientation, String file) {
+			this.orientation = orientation;
+			this.file = file;
+		}
+		public Orientation getOrientation() { return orientation; }
+		public String getFile() { return file; }
+	}
+	
+	public enum Utilities implements Properties{
 		ELECTRIC_COMPANY(Orientation.LEFT, "Electric Company", "Deed_Cards/electric_company.jpg"),
 		WATER_WORKS(Orientation.UP, "Water Works", "Deed_Cards/water_works.jpg");
 		
 		private Orientation orientation;
 		private String name;
 		private String file;
-		RailRoadInfo(Orientation orientation, String name, String file) {
+		Utilities(Orientation orientation, String name, String file) {
 			this.orientation = orientation;
 			this.name = name;
 			this.file = file;
@@ -208,7 +224,46 @@ public class Constants {
 		public String getFile() { return file; }
 	}
 	
-	public enum PropertyInfo {
+	public enum StaticProperties implements Properties {
+		COMMUNITY_CHEST_DOWN(Orientation.DOWN, "Deed_Cards/community_chest.jpg"),
+		INCOME_TAX(Orientation.DOWN, "Deed_Cards/income_tax.jpg"),
+		PINK_CHANCE(Orientation.DOWN, "Deed_Cards/pink_chance.jpg"),
+		COMMUNITY_CHEST_LEFT(Orientation.LEFT, "Deed_Cards/community_chest.jpg"),
+		BLUE_CHANCE(Orientation.UP, "Deed_Cards/blue_chance.jpg"),
+		COMMUNITY_CHEST_RIGHT(Orientation.RIGHT, "Deed_Cards/community_chest.jpg"),
+		RED_CHANCE(Orientation.RIGHT, "Deed_Cards/red_chance.jpg"),
+		LUXURY_TAX(Orientation.RIGHT, "Deed_Cards/luxury_tax.jpg");
+		
+		private Orientation orientation;
+		private String file;
+		StaticProperties(Orientation orientation, String file) {
+			this.orientation = orientation;
+			this.file = file;
+		}
+		public Orientation getOrientation() { return orientation; }
+		public String getFile() { return file; }
+	}
+	
+	public enum Railroads implements Properties {
+		READING_RAILROAD(Orientation.DOWN, "Reading Railroad", "Deed_Cards/reading_railroad.jpg"),
+		PENNSYLVANIA_RAILROAD(Orientation.LEFT, "Pennsylvania Railroad", "Deed_Cards/pennsylvania_railroad.jpg"),
+		B_AND_O_RAILROAD(Orientation.UP, "B. and O. Railroad", "Deed_Cards/b_and_o_railroad.jpg"),
+		SHORT_LINE(Orientation.RIGHT, "Short Line", "Deed_Cards/short_line.jpg");
+		
+		private Orientation orientation;
+		private String name;
+		private String file;
+		Railroads(Orientation orientation, String name, String file) {
+			this.orientation = orientation;
+			this.name = name;
+			this.file = file;
+		}
+		public Orientation getOrientation() { return orientation; }
+		public String getName() { return name; }
+		public String getFile() { return file; }
+	}
+	
+	public enum ColorProperties implements Properties {
 		MEDITERRANEAN_AVENUE(Orientation.DOWN, PropertyColor.PURPLE, "Mediterranean Avenue", "Deed_Cards/mediterranean_avenue.jpg"),
 		BALTIC_AVENUE(Orientation.DOWN, PropertyColor.PURPLE, "Baltic Avenue", "Deed_Cards/baltic_avenue.jpg"),
 		ORIENTAL_AVENUE(Orientation.DOWN, PropertyColor.LIGHT_BLUE, "Oriental Avenue", "Deed_Cards/oriental_avenue.jpg"),
@@ -236,7 +291,7 @@ public class Constants {
 		private PropertyColor color;
 		private String name;
 		private String file;
-		PropertyInfo(Orientation orientation, PropertyColor color, String name, String file) {
+		ColorProperties(Orientation orientation, PropertyColor color, String name, String file) {
 			this.orientation = orientation;
 			this.color = color;
 			this.name = name;
@@ -246,5 +301,9 @@ public class Constants {
 		public Color getColor() { return color.getColor(); }
 		public String getName() { return name; }
 		public String getFile() { return file; }
+	}
+	
+	public enum View {
+		ME, AGGREGATE, COLOR;
 	}
 }

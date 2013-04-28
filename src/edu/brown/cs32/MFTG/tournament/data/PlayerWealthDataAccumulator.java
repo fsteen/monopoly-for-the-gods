@@ -2,8 +2,8 @@ package edu.brown.cs32.MFTG.tournament.data;
 
 public class PlayerWealthDataAccumulator{
 	public final int ownerID;
-	public int accCash;
-	public int accTotalWealth;
+	public double accCash;
+	public double accTotalWealth;
 	public int numDataPoints;
 
 	public PlayerWealthDataAccumulator(int ownerID) {

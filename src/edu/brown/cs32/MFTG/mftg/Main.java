@@ -29,8 +29,9 @@ public class Main extends JFrame{
 		_panels.put("lobby", lobby);
 		CreateGamePanel create = new CreateGamePanel(this);
 		_panels.put("create", create);
-		Board board = new Board();
-		_panels.put("board", board);
+		/* DO NOT USE THE BOARD RIGHT NOW! */
+		//Board board = new Board();
+		//_panels.put("board", board);
 		
 		this.setSize(9*Constants.WIDTH + 2*Constants.HEIGHT, 9*Constants.WIDTH + 2*Constants.HEIGHT);
 		this.setResizable(false);
@@ -64,13 +65,13 @@ public class Main extends JFrame{
 	 */
 	public static void main(String[] args) {
 		try {
-			new Main();
 			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
 				if ("Nimbus".equals(info.getName())) {
 					UIManager.setLookAndFeel(info.getClassName());
 					break;
 				}
 			}
+			new Main();
 		} catch (UnsupportedLookAndFeelException|ClassNotFoundException|InstantiationException|IllegalAccessException e) {}
 
 

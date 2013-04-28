@@ -1,10 +1,14 @@
 package edu.brown.cs32.MFTG.networking;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,8 +18,39 @@ import edu.brown.cs32.MFTG.monopoly.Player;
 import edu.brown.cs32.MFTG.monopoly.Player.Amount;
 import edu.brown.cs32.MFTG.monopoly.Player.Balance;
 import edu.brown.cs32.MFTG.monopoly.Player.Expense;
+import edu.brown.cs32.MFTG.tournament.PlayerPropertyData;
+import edu.brown.cs32.MFTG.tournament.Profile;
+import edu.brown.cs32.MFTG.tournament.data.GameDataReport;
+import edu.brown.cs32.MFTG.tournament.data.PlayerWealthDataReport;
+import edu.brown.cs32.MFTG.tournament.data.PropertyDataAccumulator;
+import edu.brown.cs32.MFTG.tournament.data.PropertyDataReport;
+import edu.brown.cs32.MFTG.tournament.data.TimeStampReport;
 
 public class ProtocolTests {
+	PlayerWealthDataReport _playerWealthDataReport;
+	TimeStampReport _timeStampReport;
+	PlayerPropertyData _playerPropertyData;
+	PropertyDataAccumulator _propertyDataAccumulator;
+	
+	@Before
+	public void setUp(){
+		_playerWealthDataReport = new PlayerWealthDataReport(1, 10, 100, 50);
+		
+		Map<Integer, PlayerWealthDataReport> wealthData = new HashMap<>();
+		wealthData.put(1, _playerWealthDataReport);
+		
+		_timeStampReport = new TimeStampReport(1, wealthData);
+		
+		_playerPropertyData = new PlayerPropertyData("test", 1);
+		_playerPropertyData.setPlayerNumHouses(2);
+		_playerPropertyData.setPlayerPersonalRevenueWithHouses(3);
+		_playerPropertyData.setPlayerPersonalRevenueWithoutHouses(4);
+		_playerPropertyData.setPlayerMortgaged(5);
+		_playerPropertyData.setNumDataPoints(6);
+		
+		
+	}
+	
 
 	@Test
 	public void testPlayer() throws IOException {
@@ -89,5 +124,40 @@ public class ProtocolTests {
 		
 		assertEquals(gd, newGD);
 	}
-
+	
+	@Test
+	public void testProfile() throws IOException {
+		ObjectMapper oMapper = new ObjectMapper();
+		
+		Profile p = new Profile("test");
+		
+		String profileJson = oMapper.writeValueAsString(p);
+		Profile newP = oMapper.readValue(profileJson, Profile.class);
+		
+		assertEquals(p, newP);
+	}
+	
+	@Test
+	public void testGameDataReport() throws IOException {
+		List<TimeStampReport> timeStamps = new ArrayList<>();
+		Map<String, PropertyDataReport> entireGameData = new HashMap<>();
+		
+		Map<Integer, PlayerWealthDataReport> wealthData = new HashMap<>();
+		wealthData.put(1, new PlayerWealthDataReport(1, 2, 3, 4));
+		
+		TimeStampReport t = new TimeStampReport(100, wealthData);
+		timeStamps.add(t);
+		
+		PropertyDataReport p = new PropertyDataReport("hi!", 1, 2, 3, 4, 5, 6);
+		entireGameData.put("test", p);
+		
+		GameDataReport gdr = new GameDataReport(timeStamps, 1, entireGameData);
+		
+		ObjectMapper oMapper = new ObjectMapper();
+		
+		String gdrJson = oMapper.writeValueAsString(gdr);
+		GameDataReport newGDR = oMapper.readValue(gdrJson, GameDataReport.class);
+		
+		assertEquals(gdr, newGDR);
+	}
 }
