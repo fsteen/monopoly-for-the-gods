@@ -90,13 +90,16 @@ public class PropertyDataAccumulator{
 		}
 
 		public PropertyDataReport toPropertyDataReport(){
-			//TODO i cannot report mortgage info at the moment			
+			//TODO i cannot report mortgage info at the moment	
+			
+			//if there are no datapoints, everything will be 0, so divide by 1 makes no diff
+			int divideBy = numDataPoints == 0 ? 1 : numDataPoints;
 			return new PropertyDataReport(
 					propertyName,playerOwnerID,
-					Math.round(playerNumHouses/numDataPoints),
-					Math.round(playerPersonalRevenueWithHouses/numDataPoints),
-					Math.round(playerPersonalRevenueWithoutHouses/numDataPoints),
-					Math.round(playerMortgaged/numDataPoints),
+					playerNumHouses/divideBy,
+					playerPersonalRevenueWithHouses/divideBy,
+					playerPersonalRevenueWithoutHouses/divideBy,
+					playerMortgaged/divideBy,
 					numDataPoints);
 		}
 	}

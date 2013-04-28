@@ -10,4 +10,15 @@ public class TimeStampReport {
 		this.wealthData = wealthData;
 		this.time = time;
 	}
+	
+	@Override
+	public String toString(){
+		StringBuilder b = new StringBuilder();
+		b.append("-----TIME STAMPS-----\n");
+		for(PlayerWealthDataReport w : wealthData.values()){
+			b.append(w.toString() + "\n");
+		}
+		b.append("---------------------\n");
+		return b.toString();
+	}
 }

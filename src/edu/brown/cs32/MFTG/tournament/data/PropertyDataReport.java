@@ -4,15 +4,15 @@ public class PropertyDataReport {
 
 	public final String propertyName;
 	public final int ownerID;
-	public final int accNumHouses;
-	public final int accTotalRevenueWithHouses;
-	public final int accTotalRevenueWithoutHouses;
-	public final int accMortgaged;
+	public final double accNumHouses;
+	public final double accTotalRevenueWithHouses;
+	public final double accTotalRevenueWithoutHouses;
+	public final double accMortgaged;
 	public final int numDataPoints;
 	
-	public PropertyDataReport(String propertyName, int ownerID, int accNumHouses,
-			int accTotalRevenueWithHouses, int accTotalRevenueWithoutHouses,
-			int accMortgaged, int numDataPoints){
+	public PropertyDataReport(String propertyName, int ownerID, double accNumHouses,
+			double accTotalRevenueWithHouses, double accTotalRevenueWithoutHouses,
+			double accMortgaged, int numDataPoints){
 		
 		this.ownerID = ownerID;
 		this.propertyName = propertyName;
@@ -21,5 +21,12 @@ public class PropertyDataReport {
 		this.accTotalRevenueWithoutHouses = accTotalRevenueWithoutHouses;
 		this.accMortgaged = accMortgaged;
 		this.numDataPoints = numDataPoints;
+	}
+	
+	@Override
+	public String toString(){
+		return String.format("{%s, ID: %d, houses: %f, revW: %f, revWO: %f, mort: %f, #data: %d}",
+				propertyName,ownerID,accNumHouses,accTotalRevenueWithHouses,
+				accTotalRevenueWithoutHouses,accMortgaged,numDataPoints);
 	}
 }
