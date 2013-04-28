@@ -13,9 +13,13 @@ import java.awt.RenderingHints;
 import java.awt.TextField;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import javax.imageio.ImageIO;
@@ -26,20 +30,27 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.MouseInputAdapter;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
+
+import edu.brown.cs32.MFTG.monopoly.GamePlayer;
+import edu.brown.cs32.MFTG.monopoly.Player;
 
 public class CreateBottomPanel extends JPanel {
 	private BufferedImage _whiteBack;
 	private final int BOTTOM_HEIGHT=Constants.FULL_HEIGHT*3/5;
 	private final int BOTTOM_WIDTH=Constants.FULL_WIDTH*15/16;
+	private final int PLAYER_WIDTH=100;
 	private JPanel _extraPanel, _fpPanel;
 	private JTextField _port, _timeBegin, _timeBetween, _numSets, _numGames, _freeParkingJackpot;
 	private JLabel _portLabel,_winCondLabel, _timeBeginLabel, _timeBetweenLabel, _numSetsLabel, _numGamesLabel, _gameFlowLabel, _extraLabel, _fpLabel;
 	private JRadioButton _mostMoney, _mostSets, _lastMatch, _chooseTogether, _rotateChoosing;
 	private JCheckBox _freeParking, _auctions, _doubleOnGo;
 	private ButtonGroup _winCond, _gameFlow;
+	private ImagePanel _p1h,_p1c,_p2h,_p2c,_p3h,_p3c,_p3x,_p4h,_p4c,_p4x;
+	private Integer _p2Curr, _p3Curr, _p4Curr;
 	public CreateBottomPanel() {
 		super();
 		try {
@@ -165,31 +176,107 @@ public class CreateBottomPanel extends JPanel {
 			lowerPanel.add(gameFlowPanel);
 			lowerPanel.add(_extraPanel);
 			
+			
 			JPanel playerChoicePanel = new JPanel( new GridLayout(1,0));
 			playerChoicePanel.setBackground(Color.WHITE);
-			JPanel p1Panel = new JPanel(new GridLayout(0,1));
+			JPanel p1Panel = new JPanel();
+			p1Panel.setLayout(null);
 			p1Panel.setBackground(Color.WHITE);
 			JLabel player1 = new JLabel("Player 1");
-			
+			Dimension p1LabelSize = new Dimension(PLAYER_WIDTH, 15);
+			player1.setSize(p1LabelSize);
+			player1.setSize(p1LabelSize);
+			player1.setPreferredSize(p1LabelSize);
+			player1.setLocation(25,0);
+			_p1h = new ImagePanel(Helper.resize(ImageIO.read(new File("images/boy1.jpeg")), PLAYER_WIDTH, PLAYER_WIDTH));
+			_p1h.setLocation(0,20);
+			Dimension p1size = new Dimension(PLAYER_WIDTH, 30+PLAYER_WIDTH);
+
+			p1Panel.setSize(p1size);
+			p1Panel.setPreferredSize(p1size);
 			p1Panel.add(player1);
+			p1Panel.add(_p1h);
 			
-			JPanel p2Panel = new JPanel(new GridLayout(0,1));
+			JPanel p2Panel = new JPanel();
+			p2Panel.setLayout(null);
 			p2Panel.setBackground(Color.WHITE);
 			JLabel player2 = new JLabel("Player 2");
-			
+			Dimension p2LabelSize = new Dimension(PLAYER_WIDTH, 15);
+			player2.setSize(p2LabelSize);
+			player2.setSize(p2LabelSize);
+			player2.setPreferredSize(p2LabelSize);
+			player2.setLocation(25,0);
+			_p2h = new ImagePanel(Helper.resize(ImageIO.read(new File("images/girl1.jpeg")), PLAYER_WIDTH, PLAYER_WIDTH));
+			_p2h.setLocation(0,20);
+			_p2c = new ImagePanel(Helper.resize(ImageIO.read(new File("images/computer.jpg")), PLAYER_WIDTH, PLAYER_WIDTH));
+			_p2c.setLocation(0,30);
+			Dimension p2size = new Dimension(PLAYER_WIDTH, 30+PLAYER_WIDTH);
+
+			p2Panel.setSize(p2size);
+			p2Panel.setPreferredSize(p2size);
 			p2Panel.add(player2);
+			p2Panel.add(_p2h);
+			p2Panel.add(_p2c);
+			_p2Curr=0;
+			p2Panel.addMouseListener(new PlayerListener(_p2Curr, _p2h,_p2c));
+			_p2c.setVisible(false);
 			
-			JPanel p3Panel = new JPanel(new GridLayout(0,1));
+			JPanel p3Panel = new JPanel();
+			p3Panel.setLayout(null);
 			p3Panel.setBackground(Color.WHITE);
 			JLabel player3 = new JLabel("Player 3");
-			
+			Dimension p3LabelSize = new Dimension(PLAYER_WIDTH, 15);
+			player3.setSize(p3LabelSize);
+			player3.setSize(p3LabelSize);
+			player3.setPreferredSize(p3LabelSize);
+			player3.setLocation(25,0);
+			_p3h = new ImagePanel(Helper.resize(ImageIO.read(new File("images/boy2.jpeg")), PLAYER_WIDTH, PLAYER_WIDTH));
+			_p3h.setLocation(0,20);
+			_p3c = new ImagePanel(Helper.resize(ImageIO.read(new File("images/computer.jpg")), PLAYER_WIDTH, PLAYER_WIDTH));
+			_p3c.setLocation(0,30);
+			_p3x = new ImagePanel(Helper.resize(ImageIO.read(new File("images/back-x.jpg")), PLAYER_WIDTH, PLAYER_WIDTH));
+			_p3x.setLocation(0,30);
+			Dimension p3size = new Dimension(PLAYER_WIDTH, 30+PLAYER_WIDTH);
+
+			p3Panel.setSize(p3size);
+			p3Panel.setPreferredSize(p3size);
 			p3Panel.add(player3);
+			p3Panel.add(_p3h);
+			p3Panel.add(_p3c);
+			p3Panel.add(_p3x);
+			_p3Curr=0;
+			p3Panel.addMouseListener(new PlayerListener(_p3Curr, _p3h,_p3c, _p3x));
+			_p3c.setVisible(false);
+			_p3x.setVisible(false);
 			
-			JPanel p4Panel = new JPanel(new GridLayout(0,1));
+			JPanel p4Panel = new JPanel();
+			p4Panel.setLayout(null);
 			p4Panel.setBackground(Color.WHITE);
 			JLabel player4 = new JLabel("Player 4");
-			
+			Dimension p4LabelSize = new Dimension(PLAYER_WIDTH, 15);
+			player4.setSize(p4LabelSize);
+			player4.setSize(p4LabelSize);
+			player4.setPreferredSize(p4LabelSize);
+			player4.setLocation(25,0);
+			_p4h = new ImagePanel(Helper.resize(ImageIO.read(new File("images/girl2.jpeg")), PLAYER_WIDTH, PLAYER_WIDTH));
+			_p4h.setLocation(0,20);
+			_p4c = new ImagePanel(Helper.resize(ImageIO.read(new File("images/computer.jpg")), PLAYER_WIDTH, PLAYER_WIDTH));
+			_p4c.setLocation(0,30);
+			_p4x = new ImagePanel(Helper.resize(ImageIO.read(new File("images/back-x.jpg")), PLAYER_WIDTH, PLAYER_WIDTH));
+			_p4x.setLocation(0,30);
+			Dimension p4size = new Dimension(PLAYER_WIDTH, 30+PLAYER_WIDTH);
+
+			p4Panel.setSize(p4size);
+			p4Panel.setPreferredSize(p4size);
 			p4Panel.add(player4);
+			p4Panel.add(_p4h);
+			p4Panel.add(_p4c);
+			p4Panel.add(_p4x);
+			_p4Curr=0;
+			p4Panel.addMouseListener(new PlayerListener(_p4Curr, _p4h,_p4c, _p4x));
+			_p4c.setVisible(false);
+			_p4x.setVisible(false);
+			
 			
 			playerChoicePanel.add(p1Panel);
 			playerChoicePanel.add(p2Panel);
@@ -273,6 +360,25 @@ public class CreateBottomPanel extends JPanel {
 			}
 
 			
+		}
+		
+	}
+	
+	private class PlayerListener extends MouseInputAdapter{
+		List<ImagePanel> _imgs = new ArrayList<>();
+		Integer _curr;
+		public PlayerListener(Integer curr, ImagePanel ...imgs) {
+			super();
+			_imgs=Arrays.asList(imgs);
+			_curr=curr;
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			int newCurr=(_curr+1)%_imgs.size();
+			_imgs.get(newCurr).setVisible(true);
+			_imgs.get(_curr).setVisible(false);
+			_curr=newCurr;
 		}
 		
 	}

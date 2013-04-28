@@ -13,6 +13,7 @@ import edu.brown.cs32.MFTG.gui.Constants;
 import edu.brown.cs32.MFTG.gui.CreateGamePanel;
 import edu.brown.cs32.MFTG.gui.GameLobbyPanel;
 import edu.brown.cs32.MFTG.gui.GreetingPanel;
+import edu.brown.cs32.MFTG.gui.JoinGamePanel;
 
 public class Main extends JFrame{
 	private JPanel _currentPanel;
@@ -29,6 +30,8 @@ public class Main extends JFrame{
 		_panels.put("lobby", lobby);
 		CreateGamePanel create = new CreateGamePanel(this);
 		_panels.put("create", create);
+		JoinGamePanel join = new JoinGamePanel(this);
+		_panels.put("join", join);
 		/* DO NOT USE THE BOARD RIGHT NOW! */
 		//Board board = new Board();
 		//_panels.put("board", board);
@@ -42,7 +45,7 @@ public class Main extends JFrame{
 		//ColorBoard board = new ColorBoard();
 		//this.add(board);
 		
-		_currentPanel=create;
+		_currentPanel=greet;
 		this.add(_currentPanel);
 		
 		this.pack();
