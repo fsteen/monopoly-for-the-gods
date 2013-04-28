@@ -104,7 +104,7 @@ public class Property {
 	 * adds a house to the property
 	 * @throws Exception 
 	 */
-	public void buildHouse() throws Exception{
+	public void buildHouse(Game game) throws Exception{
 		if(_numHouses==5){
 			throw new Exception("Too many houses, cannot add more");
 		}
@@ -115,17 +115,35 @@ public class Property {
 			throw new Exception("Cannot build houses unevenly");
 		}
 		_numHouses+=1;
+		//add houses back to pile
+		if(_numHouses<5) {
+			game.decrementNumHousesLeft(1);
+		}
+		else {
+			game.decrementNumHotelsLeft(1);
+			game.incrementNumHousesLeft(4);
+		}
+		
 	}
 	
 	/**
 	 * 
 	 * @return if you can build another house
 	 */
-	public boolean canBuildHouse(){
-		if(_p1!=null&&_p1.getNumHouses()<_numHouses){
+	public boolean canBuildHouse(Game game){
+		if(_isMortgaged) {
 			return false;
 		}
-		if(_p2!=null&&_p2.getNumHouses()<_numHouses){
+		if(_p1!=null&&(_p1.getNumHouses()<_numHouses||_p1.getMortgagedState())){
+			return false;
+		}
+		if(_p2!=null&&(_p2.getNumHouses()<_numHouses||_p2.getMortgagedState())){
+			return false;
+		}
+		if(_numHouses<4 &&game.getNumHousesLeft()==0) {
+			return false;
+		}
+		if(_numHouses==4 &&game.getNumHotelsLeft()==0) {
 			return false;
 		}
 		return (_numHouses<5);
@@ -167,7 +185,7 @@ public class Property {
 	 * sells a house off the property
 	 * @return amount made
 	 */
-	public int sellHouse() throws Exception{
+	public int sellHouse(Game game) throws Exception{
 		if(_p1!=null&&_p1.getNumHouses()>_numHouses){
 			throw new Exception("Cannot sell houses unevenly");
 		}
@@ -176,6 +194,14 @@ public class Property {
 		}
 		else if(_numHouses==0){
 			throw new Exception("No houses to sell");
+		}
+		//add houses back to pile
+		if(_numHouses<5) {
+			game.incrementNumHousesLeft(1);
+		}
+		else {
+			game.incrementNumHotelsLeft(1);
+			game.decrementNumHousesLeft(4);
 		}
 		_numHouses--;
 		return CostPerHouse/2;

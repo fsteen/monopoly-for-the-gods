@@ -18,7 +18,7 @@ import edu.brown.cs32.MFTG.monopoly.GamePlayer.MortgageComparator;
 public class Game implements Runnable{
 	private ArrayList<GamePlayer> _players;
 	private GamePlayer _currentPlayer;
-	private int _numPlayers, _currentTurn,_freeParkingMoney, _defaultFP, _numHousesLeft, _numHotelsLeft, _maxNumTurns;
+	private int _currentTurn,_freeParkingMoney, _defaultFP, _numHousesLeft, _numHotelsLeft, _maxNumTurns;
 	private Board _board;
 	private Dice _dice;
 	private int _turnsPerTimeStamp;
@@ -42,7 +42,6 @@ public class Game implements Runnable{
 		_players=new ArrayList<>(players.length);
 		_turnsPerTimeStamp=Math.max(2, _players.size());
 		for(Player p:players){
-			_numPlayers++;
 			_players.add(new GamePlayer(this,p));
 		}
 		Collections.shuffle(_players, rand);
@@ -71,7 +70,7 @@ public class Game implements Runnable{
 		_comChest=new CommunityChestDeck(rand);
 		_chance= new ChanceDeck(rand);
 
-		_gameData=new GameData(_numPlayers);
+		_gameData=new GameData(_players.size());
 		_gameData.addNewTime();
 		for(GamePlayer player: _players){
 			_gameData.setWealthAtTime(player.getPlayer().ID, player.getCash(), player.getTotalWealth());
@@ -86,15 +85,18 @@ public class Game implements Runnable{
 		Thread.currentThread().setName("Monopoly Game: "+_seed);
 		try {
 			while(_playing){
-				System.out.println("	Turn: "+_currentTurn+", "+_currentPlayer+" cash: "+_currentPlayer.getCash()+ " wealth: "+_currentPlayer.getTotalWealth());
+				if(_players.contains(_currentPlayer)==false) {
+					endTurn();
+				}
+				//System.out.println("	Turn: "+_currentTurn+", "+_currentPlayer+" cash: "+_currentPlayer.getCash()+ " wealth: "+_currentPlayer.getTotalWealth());
 				if(_currentPlayer.isInJail()){
 					_currentPlayer.incrementTurnsInJail();
-					System.out.println(_currentPlayer.getTurnsInJail()+" Turn In Jail");
+					//System.out.println(_currentPlayer.getTurnsInJail()+" Turn In Jail");
 				}
 				int roll = _dice.rollDice();
 				boolean wasDoubles=_dice.wasDoubles();
 				if(wasDoubles){
-					System.out.println("wasDoubles");
+					//System.out.println("wasDoubles");
 					_doublesInRow++;
 					if(_currentPlayer.isInJail()){
 						_currentPlayer.getOutOfJail();
@@ -102,36 +104,42 @@ public class Game implements Runnable{
 					}
 				}
 				if(_doublesInRow==3){
-					System.out.println("out of jail");
+					//System.out.println("out of jail");
 					sendPlayerToJail(_currentPlayer);
 					endTurn();
 				}
 				else{
 					if(_currentPlayer.isInJail()){
-						System.out.println("In Jail");
+						//System.out.println("In Jail");
 						//System.out.println(_currentPlayer+" is in jail");
 						if(_currentPlayer.getTurnsInJail()==3){
-							System.out.println("Out of jail after 3 turns");
+							//System.out.println("Out of jail after 3 turns");
 							_currentPlayer.getOutOfJail();
 
 							transferMoney(_currentPlayer, null, 50);
 						}
 						else{
-							System.out.println("Trying to get out of jail");
+							//System.out.println("Trying to get out of jail");
 							tryGettingOutOfJail(_currentPlayer);
 						}
 					}
+					if(_currentPlayer.isBankrupt()) {
+						continue;
+					}
 					if(_currentPlayer.isInJail()==false){
 						Space s=movePlayer(_currentPlayer, roll);
-						System.out.println("Landed on "+s);
+						//System.out.println("Landed on "+s);
 						s.react(this, _currentPlayer);
+					}
+					if(_currentPlayer.isBankrupt()) {
+						continue;
 					}
 					tryUnmortgaging(_currentPlayer);
 					tryTrading(_currentPlayer);
 					tryBuilding(_currentPlayer);
 
 					if(!wasDoubles){
-						System.out.println("turn over");
+						//System.out.println("turn over");
 						endTurn();
 					}
 				}
@@ -195,7 +203,7 @@ public class Game implements Runnable{
 
 		}
 		_currentTurn++;
-		_currentPlayer = _players.get(_currentTurn%_numPlayers);
+		_currentPlayer = _players.get(_currentTurn%_players.size());
 		_doublesInRow=0;
 	}
 
@@ -241,7 +249,7 @@ public class Game implements Runnable{
 		int next =(curr+numSpaces)%40;
 		if(curr>next){
 			player.addMoney(200);
-			System.out.println(player+" collects $200 passing Go");
+			//System.out.println(player+" collects $200 passing Go");
 		}
 		player.setPosition(next);
 		return _board.get(player.getPosition());
@@ -259,7 +267,7 @@ public class Game implements Runnable{
 		//if we have to go around the board
 		if(spaceName.equals("jail")==false&&curr>next){
 			player.addMoney(200);
-			System.out.println(player+" collects $200 passing Go");
+			//System.out.println(player+" collects $200 passing Go");
 		}
 		player.setPosition(next);
 		return _board.get(spaceName);
@@ -290,7 +298,7 @@ public class Game implements Runnable{
 		} 
 		else if(receiver!=_banker) {
 			addFreeParkingMoney(actuallyPaid);
-			System.out.println(actuallyPaid +" was added to free parking");
+			//System.out.println(actuallyPaid +" was added to free parking");
 		}
 
 		if(actuallyPaid<amountOwed){
@@ -308,24 +316,33 @@ public class Game implements Runnable{
 	 * @throws Exception 
 	 */
 	void bankruptPlayer(GamePlayer bankruptPlayer, GamePlayer creditor) throws Exception{
-		System.out.println("BANKRUPT: "+bankruptPlayer +" by "+creditor);
+		//System.out.println("BANKRUPT: "+bankruptPlayer +" by "+creditor);
+		if(_players.remove(bankruptPlayer)==false){
+			return;
+		}
+		bankruptPlayer.makeBankrupt();
+		if(_players.size()==1) {
+			creditor=_players.get(0);
+		}
 		if(creditor!=null && creditor!=_banker){
 			for(Property p: bankruptPlayer.getProperties()){
 				creditor.gainProperty(p);
 			}
 		}
 		else{
-			for(Property p: bankruptPlayer.getProperties()){
+
+			for(Property p: bankruptPlayer.getProperties()) {
 				p.setOwner(null);
 				p.setMortgagedState(false);
 				p.setMonopolyState(false);
 				auction(p);
 			}
 		}
-		_players.remove(bankruptPlayer);
-		_numPlayers--;
-		if(_numPlayers==1){
+		if(_players.size()==1){
 			endGame();
+		}
+		else if(_currentPlayer==bankruptPlayer) {
+			endTurn();
 		}
 	}
 
@@ -363,7 +380,7 @@ public class Game implements Runnable{
 		double secondBid=0;
 		for(GamePlayer p: _players) {
 			double bid = p.getPropertyValue(property);
-			System.out.println(p +" bidded "+bid);
+			//System.out.println(p +" bidded "+bid);
 			if(bid>maxBid) {
 				secondBid=maxBid+1;
 				maxBid=bid;
@@ -379,7 +396,10 @@ public class Game implements Runnable{
 				maxPlayer=p;
 			}
 		}
-		System.out.println(maxPlayer + " paid "+secondBid);
+		if(maxPlayer==null) {
+			return;
+		}
+		//System.out.println(maxPlayer + " paid "+secondBid);
 		maxPlayer.payMoney((int)secondBid);
 		maxPlayer.gainProperty(property);
 	}
@@ -414,7 +434,7 @@ public class Game implements Runnable{
 	 */
 	void giveFreeParkingMoney(GamePlayer player){
 		if(_defaultFP>=0) {
-			System.out.println(player + " won jackpot of $"+_freeParkingMoney);
+			//System.out.println(player + " won jackpot of $"+_freeParkingMoney);
 			player.addMoney(_freeParkingMoney);
 			_freeParkingMoney=_defaultFP;
 		}
@@ -426,6 +446,54 @@ public class Game implements Runnable{
 	 */
 	boolean playWithDoubleOnGo(){
 		return _doubleOnGo;
+	}
+	
+	/**
+	 * 
+	 * @return number of houses left
+	 */
+	int getNumHousesLeft() {
+		return _numHousesLeft;
+	}
+	
+	/**
+	 * 
+	 * @return number of hotels left
+	 */
+	int getNumHotelsLeft() {
+		return _numHotelsLeft;
+	}
+	
+	/**
+	 * 
+	 * @param extraHouses
+	 */
+	void incrementNumHousesLeft(int extraHouses) {
+		_numHousesLeft+=extraHouses;
+	}
+	
+	/**
+	 * 
+	 * @param lostHouses
+	 */
+	void decrementNumHousesLeft(int lostHouses) {
+		_numHousesLeft-=lostHouses;
+	}
+	
+	/**
+	 * 
+	 * @param extraHotels
+	 */
+	void incrementNumHotelsLeft(int extraHotels) {
+		_numHotelsLeft+=extraHotels;
+	}
+	
+	/**
+	 * 
+	 * @param lostHotels
+	 */
+	void decrementNumHotelsLeft(int lostHotels) {
+		_numHotelsLeft-=lostHotels;
 	}
 
 	/**

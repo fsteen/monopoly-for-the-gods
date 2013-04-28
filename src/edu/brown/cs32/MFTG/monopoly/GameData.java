@@ -90,7 +90,7 @@ public class GameData {
 	 * @param revenue
 	 * @param mortgaged
 	 */
-	void setPropertyAtTime(String propertyName, int ownerID, int numHouses,  int personalRevenueWithHouses, int personalRevenueWithoutHouses,int totalRevenueWithHouses,int totalRevenueWithoutHouses, boolean mortgaged){
+	void setPropertyAtTime(String propertyName, int ownerID, double numHouses,  double personalRevenueWithHouses, double personalRevenueWithoutHouses,double totalRevenueWithHouses,double totalRevenueWithoutHouses, boolean mortgaged){
 		_data.get(_time).addPropertyData(propertyName,ownerID,numHouses,personalRevenueWithHouses, personalRevenueWithoutHouses, totalRevenueWithHouses, totalRevenueWithoutHouses,mortgaged);
 	}
 	
@@ -100,7 +100,7 @@ public class GameData {
 	 * @param cash
 	 * @param totalWealth
 	 */
-	void setWealthAtTime(int ownerID, int cash, int totalWealth){
+	void setWealthAtTime(int ownerID, double cash, double totalWealth){
 		_data.get(_time).addWealthData(ownerID,cash,totalWealth);
 	}
 	
@@ -108,13 +108,13 @@ public class GameData {
 		for(TimeStamp t: _data) {
 			System.out.println(t._time);
 			for(PropertyData prop: t.getPropertyData()) {
-				System.out.println(String.format("Property: %s OwnerID: %s numHouses: %d personalRevenueWithHouses: %d personalRevenueWithoutHouses: %d totalRevenueWithHouses: %d totalRevenueWithoutHouses: %d morgaged: %b", prop.propertyName, prop.ownerID, prop.numHouses, prop.personalRevenueWithHouses, prop.personalRevenueWithoutHouses, prop.totalRevenueWithHouses, prop.totalRevenueWithoutHouses, prop.mortgaged));
+				System.out.println(String.format("Property: %s OwnerID: %d numHouses: %f personalRevenueWithHouses: %f personalRevenueWithoutHouses: %f totalRevenueWithHouses: %f totalRevenueWithoutHouses: %f morgaged: %b", prop.propertyName, prop.ownerID, prop.numHouses, prop.personalRevenueWithHouses, prop.personalRevenueWithoutHouses, prop.totalRevenueWithHouses, prop.totalRevenueWithoutHouses, prop.mortgaged));
 			}
 		}
 		for(TimeStamp t: _data) {
 			System.out.println(t._time);
 			for(PlayerWealthData play: t.getWealthData()) {
-				System.out.println(String.format("OwnerID: %s Cash: %d TotalWealth: %d", play.ownerID, play.cash, play.totalWealth));
+				System.out.println(String.format("OwnerID: %d Cash: %f TotalWealth: %f", play.ownerID, play.cash, play.totalWealth));
 
 			}
 		}

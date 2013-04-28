@@ -17,6 +17,7 @@ public class GamePlayer {
 	private final Player _player;
 	private int _cash, _numGetOutOfJailFree, _position, _turnsInJail, _numRailroads, _numUtilities;
 	private Game _game;
+	private boolean _bankrupt;
 	private ArrayList<Property> _properties;
 
 
@@ -31,6 +32,21 @@ public class GamePlayer {
 		_properties= new ArrayList<>();
 		_game=game;
 
+	}
+	
+	/**
+	 * 
+	 * @return bankrupcy status
+	 */
+	public boolean isBankrupt() {
+		return _bankrupt;
+	}
+	
+	/**
+	 * makes player bankrupt
+	 */
+	public void makeBankrupt() {
+		_bankrupt=true;
 	}
 
 	/**
@@ -94,10 +110,10 @@ public class GamePlayer {
 		}
 		else{
 			if(getPropertyValue(property)<property.Price) {
-				System.out.println("not bought");
+				//System.out.println("not bought");
 				return false;
 			}
-			System.out.println("bought");
+			//System.out.println("bought");
 			
 			property.setOwner(this);
 			_properties.add(property);
@@ -172,8 +188,11 @@ public class GamePlayer {
 	 * @throws Exception 
 	 */
 	private int tryMortgagingOrSelling(int total) throws Exception{
-		if(_cash!=0) throw new Exception("Cash is not 0, ye trying to mortgage/sell");
+		if(_cash!=0) throw new Exception("Cash is not 0, yet trying to mortgage/sell");
 		int amountPaid=0;
+		if(_properties.size()==0) {
+			return 0;
+		}
 		List<Property> unhoused = new ArrayList<>();
 		PriorityQueue<Property> housed = new PriorityQueue<>(_properties.size(),new HouseSellingComparator());
 		//separate all properties into those with houses and those without
@@ -192,7 +211,7 @@ public class GamePlayer {
 		Collections.sort(unhoused,new MortgageComparator());
 		//mortgage all unhoused properties in order of preference
 		for(int i=0; i<unhoused.size();i++){
-			System.out.println("MORTGAGE: "+unhoused.get(i)+" for "+unhoused.get(i).MortgageValue);
+			//System.out.println("MORTGAGE: "+unhoused.get(i)+" for "+unhoused.get(i).MortgageValue);
 			unhoused.get(i).setMortgagedState(true);
 			amountPaid+=unhoused.get(i).MortgageValue;
 			if(amountPaid>=total){
@@ -204,25 +223,34 @@ public class GamePlayer {
 		}
 		//sell all houses and mortgage unhoused properties in order of preference
 		while(amountPaid<total){
-			//find a property that can sell a house and then add back in all of the ones taht couldn't
+			//find a property that can sell a house and then add back in all of the ones that couldn't
 			List<Property> temp = new ArrayList<>();
 			Property curr = housed.poll();
-			//if the queue is empty then we've sold all houses and mortgaged eveyrthing so we're bankrupt
+			//if the queue is empty then we've sold all houses and mortgaged everything so we're bankrupt
 			if(curr==null){
 				return amountPaid;
 			}
+			
+			//if(curr.getSibling1()!=null &&curr.getSibling2()!=null)System.out.println(curr+ " cansell "+curr.canSellHouse()+" numhouses: "+curr.getNumHouses()+" sibling: "+curr.getSibling1()+" cansell "+curr.getSibling1().canSellHouse()+" numhouses: "+curr.getSibling1().getNumHouses()+" sibling: "+curr.getSibling2()+" cansell "+curr.getSibling2().canSellHouse()+" numhouses: "+curr.getSibling2().getNumHouses());
+			//else if(curr.getSibling1()!=null)System.out.println(curr+ " cansell "+curr.canSellHouse()+" numhouses: "+curr.getNumHouses()+" sibling: "+curr.getSibling1()+" cansell "+curr.getSibling1().canSellHouse()+" numhouses: "+curr.getSibling1().getNumHouses());
+
 			while(curr.canSellHouse()==false){
 				temp.add(curr);
 				curr=housed.poll();
+				if(curr==null){
+					//System.out.println("BROKEN:" +housed);
+				}
 			}
 			housed.addAll(temp);
-			System.out.println("SELL HOUSE ON: " +curr+ " to leave a total of "+curr.getNumHouses()+ " houses");
 			//sell house on current property
 			curr.addRevenue(curr.CostPerHouse/2);
-			amountPaid+=curr.sellHouse();
+			amountPaid+=curr.sellHouse(_game);
+			
+			
+			//System.out.println("SELL HOUSE ON: " +curr+ " to leave a total of "+curr.getNumHouses()+ " houses");
 			//if we still need money and this property has no houses we mortgage in it
 			if(curr.getNumHouses()==0&&amountPaid<total){
-				System.out.println("MORTGAGE: "+curr+" for "+curr.MortgageValue);
+				//System.out.println("MORTGAGE: "+curr+" for "+curr.MortgageValue);
 				curr.setMortgagedState(true);
 				amountPaid+=curr.MortgageValue;
 			}
@@ -263,7 +291,7 @@ public class GamePlayer {
 					continue;
 				}
 			}
-			System.out.println("UNMORTGAGE: "+mortgaged.get(0));
+			//System.out.println("UNMORTGAGE: "+mortgaged.get(0));
 			unmortgageProperty(mortgaged.get(0));
 			mortgaged.remove(0);
 
@@ -287,7 +315,7 @@ public class GamePlayer {
 		if(monopolies.isEmpty()){
 			return;
 		}
-		System.out.println(monopolies);
+		//System.out.println(monopolies);
 		List<Property> temp = new ArrayList<>();
 		Property curr=monopolies.poll();
 		while(keepIterating(curr)){
@@ -301,9 +329,10 @@ public class GamePlayer {
 		temp.clear();
 		while(curr.CostPerHouse<=_cash-_player.getMinBuildCash()){
 			_cash-=curr.CostPerHouse;
-			curr.buildHouse();
+			curr.buildHouse(_game);
+			
 			curr.loseRevenue(curr.CostPerHouse);
-			System.out.println("BUILD: "+curr+" for a total of "+ curr.getNumHouses()+" houses.");
+			//System.out.println("BUILD: "+curr+" for a total of "+ curr.getNumHouses()+" houses.");
 			monopolies.add(curr);
 			//System.out.println(monopolies);
 			curr = monopolies.poll();
@@ -331,11 +360,11 @@ public class GamePlayer {
 	 * @return
 	 */
 	private boolean keepIterating(Property curr) {
-		if(curr.canBuildHouse()==false) {
+		if(curr.canBuildHouse(_game)==false) {
 			return true;
 		}
 		if(_player.getBuildAggression()==Aggression.AGGRESSIVE) {
-			if (curr.canBuildHouse()==true && curr.CostPerHouse>_cash-_player.getMinBuildCash() &&_player.getBuildingChoice()==Expense.EXPENSIVE) {
+			if (curr.canBuildHouse(_game)==true && curr.CostPerHouse>_cash-_player.getMinBuildCash() &&_player.getBuildingChoice()==Expense.EXPENSIVE) {
 				return true;
 			}
 		}
@@ -423,7 +452,7 @@ public class GamePlayer {
 							traded.add(mine);
 							
 							double money=myVal1-oppVal2;
-							System.out.println("TRADE: "+ mine + " for "+theres+" and $"+money);
+							//System.out.println("TRADE: "+ mine + " for "+theres+" and $"+money);
 							/*9System.out.println("oppValTheres "+oppVal1);
 							System.out.println("myValTheres "+myVal1);
 							System.out.println("oppValMine "+oppVal2);
@@ -497,7 +526,7 @@ public class GamePlayer {
 	 */
 	public void gainProperty(Property property) throws Exception{
 		if(property.getOwner()==this) {
-			throw new Exception("Property already owned");
+			throw new Exception("Property  " +property+" already owned");
 		}
 		property.setOwner(this);
 		_properties.add(property);
@@ -517,7 +546,7 @@ public class GamePlayer {
 	
 	public void loseProperty(Property property) throws Exception {
 		if(property.getOwner()!=this) {
-			throw new Exception("Property not already owned");
+			throw new Exception("Property "+property+"not already owned by "+this+", owned by "+property.getOwner());
 		}
 		_properties.remove(property);
 		//checks if the property now creates a monopoly

@@ -2,6 +2,8 @@ package edu.brown.cs32.MFTG.monopoly;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import org.junit.Test;
@@ -29,9 +31,31 @@ public class GameTest {
 		Player p1=new Player(1);
 		Player p2=new Player(2);
 		Player p3=new Player(3);
-		Game g1 = new Game(13,1000, 500,true, true, p0,p1,p2,p3);
+		long rand = new Random().nextLong();
+		Game g1 = new Game(rand,1000, 500,true, true, p0,p1,p2,p3);
 		g1.run();
 		
+	}
+	
+	@Test
+	public void thousandTest() {
+		List<Exception> exc = new ArrayList<>();
+		for (int i=0; i<100000; i++) {
+			try {
+				Player p0=new Player(0);
+				Player p1=new Player(1);
+				Player p2=new Player(2);
+				Player p3=new Player(3);
+				long rand = new Random().nextLong();
+				Game g1 = new Game(rand,1000, 500,true, true, p0,p1,p2,p3);
+				g1.run();
+			}catch(Exception e) {
+				exc.add(e);
+			}
+		}
+		for (Exception e: exc) {
+			System.out.println(e.getMessage());
+		}
 	}
 	
 	//@Test

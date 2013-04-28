@@ -1,0 +1,18 @@
+Things to do
+
+-some data that i could collect but don't
+	-for each property, % of the game for which each player owned said property, % of game for which it was unowned
+-player module data processing
+-testing
+-implementing different settings, i.e. the different win conditions
+
+
+Concerns
+
+-how do we decide how many data points to collect, what to do when a game doesn't have that many data points?
+-should i use the already available GameData, TimeStamp, PropertyData and PlayerWealthData ?
+-they are not entirely as i would like them to be:
+	-values are stored as integers, not conducive to averaging
+	-mortgaging is a boolean value, so i can't report back on the percentage of the time that something was mortgaged
+	-reporting back on individual player data for each property as well as combined data for each property is a bit hack-y
+	-there are some data fields that are absent : % of the games that a certain plater owned a property at a certain time	
