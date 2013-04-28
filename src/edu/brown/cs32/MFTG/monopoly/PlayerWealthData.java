@@ -10,12 +10,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class PlayerWealthData{
 	public final int ownerID;
-	public final int cash;
-	public final int totalWealth;
+	public final double cash;
+	public final double totalWealth;
 	
 	@JsonCreator
-	public PlayerWealthData(@JsonProperty("ownerID") int ownerID, @JsonProperty("cash") int cash, 
-							@JsonProperty("totalWealth") int totalWealth){
+	public PlayerWealthData(@JsonProperty("ownerID") int ownerID, @JsonProperty("cash") double cash, 
+							@JsonProperty("totalWealth") double totalWealth){
 		this.ownerID=ownerID;
 		this.cash=cash;
 		this.totalWealth=totalWealth;

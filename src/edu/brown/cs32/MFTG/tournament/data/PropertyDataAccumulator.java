@@ -11,37 +11,37 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import edu.brown.cs32.MFTG.tournament.PlayerPropertyData;
 
 public class PropertyDataAccumulator{
-	
+
 	public final String propertyName;
-	public int accNumHouses;
-	public int accTotalRevenueWithHouses;
-	public int accTotalRevenueWithoutHouses;
-	public int accMortgaged;
+	public double accNumHouses;
+	public double accTotalRevenueWithHouses;
+	public double accTotalRevenueWithoutHouses;
+	public double accMortgaged;
 	public int numDataPoints;
 	private Map<Integer,PlayerPropertyData> playerPropertyData;
 
 	@JsonCreator
 	public PropertyDataAccumulator(@JsonProperty("propertyName") String propertyName) {
 		this.propertyName = propertyName;
-		accNumHouses = 0;
-		accTotalRevenueWithHouses = 0;
-		accTotalRevenueWithoutHouses = 0;
-		accMortgaged = 0;
+		accNumHouses = 0.0;
+		accTotalRevenueWithHouses = 0.0;
+		accTotalRevenueWithoutHouses = 0.0;
+		accMortgaged = 0.0;
 		numDataPoints = 0;
 		playerPropertyData = new HashMap<>();
 	}
-	
+
 	public void reset(){
-		accNumHouses = 0;
-		accTotalRevenueWithHouses = 0;
-		accTotalRevenueWithoutHouses = 0;
-		accMortgaged = 0;
+		accNumHouses = 0.0;
+		accTotalRevenueWithHouses = 0.0;
+		accTotalRevenueWithoutHouses = 0.0;
+		accMortgaged = 0.0;
 		numDataPoints = 0;
 		for(PlayerPropertyData p : playerPropertyData.values()){
 			p.reset();
 		}
 	}
-	
+
 	public PlayerPropertyData get(int playerOwnerID){
 		PlayerPropertyData data = playerPropertyData.get(playerOwnerID);
 		if(data == null){
@@ -50,31 +50,31 @@ public class PropertyDataAccumulator{
 		}
 		return data;
 	}
-	
+
 	public List<PlayerPropertyData> getAll(){
 		return new ArrayList<PlayerPropertyData>(playerPropertyData.values());
 	}
-	
+
 	public List<PropertyDataReport> toPlayerPropertyDataReport(){
 		List<PropertyDataReport> playerData = new ArrayList<>();
-		
+
 		for(PlayerPropertyData p : playerPropertyData.values()){
 			playerData.add(p.toPropertyDataReport());
 		}
-		
+
 		playerData.add(new PropertyDataReport(propertyName, -1, accNumHouses/numDataPoints,
 				accTotalRevenueWithHouses/numDataPoints, accTotalRevenueWithoutHouses/numDataPoints,
 				accMortgaged/numDataPoints, numDataPoints));
-		
+
 		return playerData;
 	}
-	
+
 	// getters and setters for serialization
 	/**
 	 * 
 	 * @return this.accNumHouses
 	 */
-	public int getAccNumHouses() {
+	public double getAccNumHouses() {
 		return accNumHouses;
 	}
 
@@ -82,7 +82,7 @@ public class PropertyDataAccumulator{
 	 * Setter for accNumHouses
 	 * @param accNumHouses
 	 */
-	public void setAccNumHouses(int accNumHouses) {
+	public void setAccNumHouses(double accNumHouses) {
 		this.accNumHouses = accNumHouses;
 	}
 
@@ -90,7 +90,7 @@ public class PropertyDataAccumulator{
 	 * 
 	 * @return this.accTotalRevenueWithHouses
 	 */
-	public int getAccTotalRevenueWithHouses() {
+	public double getAccTotalRevenueWithHouses() {
 		return accTotalRevenueWithHouses;
 	}
 
@@ -98,7 +98,7 @@ public class PropertyDataAccumulator{
 	 * Setter for accTotalRevenueWithHouses
 	 * @param accTotalRevenueWithHouses
 	 */
-	public void setAccTotalRevenueWithHouses(int accTotalRevenueWithHouses) {
+	public void setAccTotalRevenueWithHouses(double accTotalRevenueWithHouses) {
 		this.accTotalRevenueWithHouses = accTotalRevenueWithHouses;
 	}
 
@@ -106,7 +106,7 @@ public class PropertyDataAccumulator{
 	 * 
 	 * @return this.accTotalRevenueWithoutHouses
 	 */
-	public int getAccTotalRevenueWithoutHouses() {
+	public double getAccTotalRevenueWithoutHouses() {
 		return accTotalRevenueWithoutHouses;
 	}
 
@@ -114,7 +114,7 @@ public class PropertyDataAccumulator{
 	 * Setter for accTotalRevenueWithoutHouses
 	 * @param accTotalRevenueWithoutHouses
 	 */
-	public void setAccTotalRevenueWithoutHouses(int accTotalRevenueWithoutHouses) {
+	public void setAccTotalRevenueWithoutHouses(double accTotalRevenueWithoutHouses) {
 		this.accTotalRevenueWithoutHouses = accTotalRevenueWithoutHouses;
 	}
 
@@ -122,7 +122,7 @@ public class PropertyDataAccumulator{
 	 * 
 	 * @return accMortgaged
 	 */
-	public int getAccMortgaged() {
+	public double getAccMortgaged() {
 		return accMortgaged;
 	}
 
@@ -130,7 +130,7 @@ public class PropertyDataAccumulator{
 	 * Setter for accMortgaged
 	 * @param accMortgaged
 	 */
-	public void setAccMortgaged(int accMortgaged) {
+	public void setAccMortgaged(double accMortgaged) {
 		this.accMortgaged = accMortgaged;
 	}
 

@@ -22,8 +22,11 @@ public class DataProcessor {
 		int numPlayers = data.get(0).get(0)._numPlayers;
 		GameDataAccumulator overall = new GameDataAccumulator(numDataPoints);
 		
+//		System.out.println("aggregate num games " + data.size());
+//		System.out.println();
+		
 		for(int i = 0; i < data.size(); i++){
-			for(int j = 0; j < numPlayers; j++){
+			for(int j = 0; j < data.get(0).size(); j++){
 				//TODO later ?? : for games that are repeats of each other, exclude all but one
 				combineGameData(overall, data.get(i).get(j));
 				overall.gameFinished();
@@ -39,26 +42,26 @@ public class DataProcessor {
 	 * @param specific the specific game time stamps
 	 */
 	private static void combineGameData(GameDataAccumulator overall, GameData specific){
-		int specificIndex = specific.getData().size();
+		int specificIndex = specific.getData().size() - 1;
 		int numDataPoints = overall.data.size();
-		int stepSize = (specificIndex - 1)/(numDataPoints - 1); //integer division
-		
-		if(stepSize < 1){
-			//TODO what to do in this case ... just collect data until you run out?
-			System.out.println("GAME TOO SHORT TO COLLECT DATA");
-			return;
-		}
+		int stepSize;
 		
 		//we go backwards so that we ensure that we always get the last time stamp
-		//we don't care so much about getting the first stamp
-		for(int i = numDataPoints - 1; i >= 0; i--){
-			
+		//we don't care so much about getting the first stamp		
+		for(int i = numDataPoints - 1; i >= 0; i--){	
 			combineData(overall.data.get(i), specific.getData().get(specificIndex));
-			specificIndex -= stepSize;
+			stepSize = (int)Math.round(((double)specificIndex)/i); //improve this
+			specificIndex -= stepSize;			
 		}
 		
-		//TODO stuff with overall game data!!!!!!!!
+		//overall game data
+		for(TimeStamp t : specific.getData()){
+			for(PropertyData p : t.getPropertyData()){
+				overall.putPropertyData(p);
+			}
+		}
 		
+		overall.gameFinished();	
 		overall.addPlayerWin(specific.getWinner());
 	}
 	

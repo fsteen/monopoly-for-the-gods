@@ -5,14 +5,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class PlayerWealthDataReport {
 	public final int ownerID;
-	public final int accCash;
-	public final int accTotalWealth;
+	public final double accCash;
+	public final double accTotalWealth;
 	public final int numDataPoints;
 	
 	@JsonCreator
 	public PlayerWealthDataReport(@JsonProperty("ownderID") int ownerID, 
-								  @JsonProperty("accCash") int accCash,
-								  @JsonProperty("accTotalWealth") int accTotalWealth,
+								  @JsonProperty("accCash") double accCash,
+								  @JsonProperty("accTotalWealth") double accTotalWealth,
 								  @JsonProperty("numDataPoints") int numDataPoints){
 		this.ownerID = ownerID;
 		this.accCash = accCash;
@@ -29,5 +29,11 @@ public class PlayerWealthDataReport {
 		
 		return (this.ownerID == that.ownerID) && (this.accCash == that.accCash) 
 				&& (this.accTotalWealth == that.accTotalWealth) && (this.numDataPoints == that.numDataPoints);
+	}
+	
+	@Override
+	public String toString(){
+		return String.format("{ID: %d, cash: %f, wealth: %f, #data: %d}", 
+				ownerID, accCash, accTotalWealth, numDataPoints);
 	}
 }

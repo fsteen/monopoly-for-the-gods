@@ -29,4 +29,9 @@ public class DummyClient implements iClientHandler{
 	public void setGameData(GameDataReport aggregatedData) {
 		_module.displayGameData(aggregatedData);
 	}
+
+//	@Override
+//	public void setGameData(GameData aggregatedData) {
+//		_module.setGameData(aggregatedData);
+//	}
 }

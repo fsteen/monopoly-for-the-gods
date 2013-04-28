@@ -9,10 +9,10 @@ import edu.brown.cs32.MFTG.tournament.data.PropertyDataReport;
 public class PlayerPropertyData {
 	public final String propertyName;
 	public final int playerOwnerID;
-	public int playerNumHouses;
-	public int playerPersonalRevenueWithHouses;
-	public int playerPersonalRevenueWithoutHouses;
-	public int playerMortgaged;
+	public double playerNumHouses;
+	public double playerPersonalRevenueWithHouses;
+	public double playerPersonalRevenueWithoutHouses;
+	public double playerMortgaged;
 	public int numDataPoints;
 	
 	@JsonCreator
@@ -65,7 +65,7 @@ public class PlayerPropertyData {
 	 * 
 	 * @return this.playerNumHouses
 	 */
-	public int getPlayerNumHouses() {
+	public double getPlayerNumHouses() {
 		return playerNumHouses;
 	}
 
@@ -81,7 +81,7 @@ public class PlayerPropertyData {
 	 * 
 	 * @return this.playerPersonRevenueWithHouses
 	 */
-	public int getPlayerPersonalRevenueWithHouses() {
+	public double getPlayerPersonalRevenueWithHouses() {
 		return playerPersonalRevenueWithHouses;
 	}
 
@@ -98,7 +98,7 @@ public class PlayerPropertyData {
 	 * 
 	 * @return this.playerPersonRevenueWithoutHouses
 	 */
-	public int getPlayerPersonalRevenueWithoutHouses() {
+	public double getPlayerPersonalRevenueWithoutHouses() {
 		return playerPersonalRevenueWithoutHouses;
 	}
 
@@ -115,7 +115,7 @@ public class PlayerPropertyData {
 	 * 
 	 * @return this.playerMortgaged
 	 */
-	public int getPlayerMortgaged() {
+	public double getPlayerMortgaged() {
 		return playerMortgaged;
 	}
 

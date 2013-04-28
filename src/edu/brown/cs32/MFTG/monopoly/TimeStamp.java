@@ -36,7 +36,7 @@ public class TimeStamp{
 	 * @param revenue
 	 * @param mortgaged
 	 */
-	void addPropertyData(String propertyName, int ownerID, int numHouses, int personalRevenueWithHouses, int personalRevenueWithoutHouses,int totalRevenueWithHouses,int totalRevenueWithoutHouses, boolean mortgaged){
+	void addPropertyData(String propertyName, int ownerID, double numHouses, double personalRevenueWithHouses, double personalRevenueWithoutHouses,double totalRevenueWithHouses,double totalRevenueWithoutHouses, boolean mortgaged){
 		_propertyData.add(new PropertyData(propertyName,ownerID,numHouses, personalRevenueWithHouses, personalRevenueWithoutHouses, totalRevenueWithHouses, totalRevenueWithoutHouses,mortgaged));
 	}
 	
@@ -63,7 +63,7 @@ public class TimeStamp{
 	 * @param cash
 	 * @param totalWealth
 	 */
-	void addWealthData(int ownerID, int cash, int totalWealth){
+	void addWealthData(int ownerID, double cash, double totalWealth){
 		_wealthData.add(new PlayerWealthData(ownerID,cash,totalWealth));
 	}
 	

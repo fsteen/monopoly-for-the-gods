@@ -11,21 +11,21 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class PropertyData{
 	public final String propertyName;
 	public final int ownerID;
-	public final int numHouses;
-	public final int personalRevenueWithHouses;
-	public final int personalRevenueWithoutHouses;
-	public final int totalRevenueWithHouses;
-	public final int totalRevenueWithoutHouses;
+	public final double numHouses;
+	public final double personalRevenueWithHouses;
+	public final double personalRevenueWithoutHouses;
+	public final double totalRevenueWithHouses;
+	public final double totalRevenueWithoutHouses;
 	public final boolean mortgaged;
 	
 	@JsonCreator
 	public PropertyData(@JsonProperty("propertyName") String propertyName, 
 						@JsonProperty("ownerID") int ownerID,
-						@JsonProperty("numHouses") int numHouses, 
-						@JsonProperty("personalRevenueWithHouses") int personalRevenueWithHouses, 
-						@JsonProperty("personalRevenueWIthoutHouses") int personalRevenueWithoutHouses,
-						@JsonProperty("totalRevenueWithHouses") int totalRevenueWithHouses,
-						@JsonProperty("totalRevenueWithoutHouses") int totalRevenueWithoutHouses,
+						@JsonProperty("numHouses") double numHouses, 
+						@JsonProperty("personalRevenueWithHouses") double personalRevenueWithHouses, 
+						@JsonProperty("personalRevenueWIthoutHouses") double personalRevenueWithoutHouses,
+						@JsonProperty("totalRevenueWithHouses") double totalRevenueWithHouses,
+						@JsonProperty("totalRevenueWithoutHouses") double totalRevenueWithoutHouses,
 						@JsonProperty("mortgaged") boolean mortgaged){
 		
 		this.propertyName=propertyName;

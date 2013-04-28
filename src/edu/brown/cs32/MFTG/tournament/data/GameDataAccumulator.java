@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import edu.brown.cs32.MFTG.monopoly.GameData;
+import com.google.common.collect.ArrayListMultimap;
+
 import edu.brown.cs32.MFTG.monopoly.PropertyData;
-import edu.brown.cs32.MFTG.monopoly.TimeStamp;
-import edu.brown.cs32.MFTG.tournament.data.PropertyDataAccumulator.PlayerPropertyData;
+import edu.brown.cs32.MFTG.tournament.PlayerPropertyData;
 
 public class GameDataAccumulator {
 
@@ -102,12 +102,17 @@ public class GameDataAccumulator {
 	 * @return
 	 */
 	public GameDataReport toGameDataReport(){
-		ArrayList<TimeStampReport> times = new ArrayList<>();
+		List<TimeStampReport> times = new ArrayList<>();
 		
 		for(TimeStampAccumulator t : data){
 			times.add(t.toTimeStampReport());
 		}
 		
-		return new GameDataReport(times, getPlayerWithMostWins(), entireGameData);		
+		ArrayListMultimap<String,PropertyDataReport> gameData = ArrayListMultimap.create();
+				for(PropertyDataAccumulator p : entireGameData.values()){
+			gameData.putAll(p.propertyName, p.toPlayerPropertyDataReport());
+		}
+		
+		return new GameDataReport(times, getPlayerWithMostWins(), gameData);		
 	}
 }

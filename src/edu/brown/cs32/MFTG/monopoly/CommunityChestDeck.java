@@ -35,7 +35,7 @@ public class CommunityChestDeck implements Deck{
 	 * 
 	 * @return card on top of the deck
 	 */
-	public Card drawCard(){
+	public Card drawCard() {
 		return _deck.poll();
 	}
 	

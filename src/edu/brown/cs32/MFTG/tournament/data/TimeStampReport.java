@@ -25,4 +25,14 @@ public class TimeStampReport {
 		
 		return this.time == that.time && Objects.equals(this.wealthData, that.wealthData);
 	}
+	
+	public String toString(){
+		StringBuilder b = new StringBuilder();
+		b.append("-----TIME STAMPS-----\n");
+		for(PlayerWealthDataReport w : wealthData.values()){
+			b.append(w.toString() + "\n");
+		}
+		b.append("---------------------\n");
+		return b.toString();
+	}
 }
