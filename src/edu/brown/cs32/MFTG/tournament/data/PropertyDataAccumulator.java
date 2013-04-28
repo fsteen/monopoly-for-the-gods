@@ -4,7 +4,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import edu.brown.cs32.MFTG.monopoly.PropertyData;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import edu.brown.cs32.MFTG.tournament.PlayerPropertyData;
 
 public class PropertyDataAccumulator{
 	
@@ -16,7 +20,8 @@ public class PropertyDataAccumulator{
 	public int numDataPoints;
 	private Map<Integer,PlayerPropertyData> playerPropertyData;
 
-	public PropertyDataAccumulator(String propertyName) {
+	@JsonCreator
+	public PropertyDataAccumulator(@JsonProperty("propertyName") String propertyName) {
 		this.propertyName = propertyName;
 		accNumHouses = 0;
 		accTotalRevenueWithHouses = 0;
@@ -40,7 +45,7 @@ public class PropertyDataAccumulator{
 	public PlayerPropertyData get(int playerOwnerID){
 		PlayerPropertyData data = playerPropertyData.get(playerOwnerID);
 		if(data == null){
-			data = new PlayerPropertyData(playerOwnerID);
+			data = new PlayerPropertyData(propertyName, playerOwnerID);
 			playerPropertyData.put(playerOwnerID, data);
 		}
 		return data;
@@ -64,40 +69,100 @@ public class PropertyDataAccumulator{
 		return playerData;
 	}
 	
-	public class PlayerPropertyData {
-		public final int playerOwnerID;
-		public int playerNumHouses;
-		public int playerPersonalRevenueWithHouses;
-		public int playerPersonalRevenueWithoutHouses;
-		public int playerMortgaged;
-		public int numDataPoints;
-		
-		PlayerPropertyData(int playerOwnerID){
-			this.playerOwnerID = playerOwnerID;
-			playerNumHouses = 0;
-			playerPersonalRevenueWithHouses = 0;
-			playerPersonalRevenueWithoutHouses = 0;
-			playerMortgaged = 0;
-			numDataPoints = 0;
-		}
-		
-		public void reset(){
-			playerNumHouses = 0;
-			playerPersonalRevenueWithHouses = 0;
-			playerPersonalRevenueWithoutHouses = 0;
-			playerMortgaged = 0;
-			numDataPoints = 0;
-		}
+	// getters and setters for serialization
+	/**
+	 * 
+	 * @return this.accNumHouses
+	 */
+	public int getAccNumHouses() {
+		return accNumHouses;
+	}
 
-		public PropertyDataReport toPropertyDataReport(){
-			//TODO i cannot report mortgage info at the moment			
-			return new PropertyDataReport(
-					propertyName,playerOwnerID,
-					Math.round(playerNumHouses/numDataPoints),
-					Math.round(playerPersonalRevenueWithHouses/numDataPoints),
-					Math.round(playerPersonalRevenueWithoutHouses/numDataPoints),
-					Math.round(playerMortgaged/numDataPoints),
-					numDataPoints);
-		}
+	/**
+	 * Setter for accNumHouses
+	 * @param accNumHouses
+	 */
+	public void setAccNumHouses(int accNumHouses) {
+		this.accNumHouses = accNumHouses;
+	}
+
+	/**
+	 * 
+	 * @return this.accTotalRevenueWithHouses
+	 */
+	public int getAccTotalRevenueWithHouses() {
+		return accTotalRevenueWithHouses;
+	}
+
+	/**
+	 * Setter for accTotalRevenueWithHouses
+	 * @param accTotalRevenueWithHouses
+	 */
+	public void setAccTotalRevenueWithHouses(int accTotalRevenueWithHouses) {
+		this.accTotalRevenueWithHouses = accTotalRevenueWithHouses;
+	}
+
+	/**
+	 * 
+	 * @return this.accTotalRevenueWithoutHouses
+	 */
+	public int getAccTotalRevenueWithoutHouses() {
+		return accTotalRevenueWithoutHouses;
+	}
+
+	/**
+	 * Setter for accTotalRevenueWithoutHouses
+	 * @param accTotalRevenueWithoutHouses
+	 */
+	public void setAccTotalRevenueWithoutHouses(int accTotalRevenueWithoutHouses) {
+		this.accTotalRevenueWithoutHouses = accTotalRevenueWithoutHouses;
+	}
+
+	/**
+	 * 
+	 * @return accMortgaged
+	 */
+	public int getAccMortgaged() {
+		return accMortgaged;
+	}
+
+	/**
+	 * Setter for accMortgaged
+	 * @param accMortgaged
+	 */
+	public void setAccMortgaged(int accMortgaged) {
+		this.accMortgaged = accMortgaged;
+	}
+
+	/**
+	 * 
+	 * @return this.numDataPoints
+	 */
+	public int getNumDataPoints() {
+		return numDataPoints;
+	}
+
+	/**
+	 * Setter for numDataPoints
+	 * @param numDataPoints
+	 */
+	public void setNumDataPoints(int numDataPoints) {
+		this.numDataPoints = numDataPoints;
+	}
+
+	/**
+	 * Getter for playerPropertyData
+	 * @return
+	 */
+	public Map<Integer, PlayerPropertyData> getPlayerPropertyData() {
+		return playerPropertyData;
+	}
+
+	/**
+	 * Setter for playerPropertyData
+	 * @param playerPropertyData
+	 */
+	public void setPlayerPropertyData(Map<Integer, PlayerPropertyData> playerPropertyData) {
+		this.playerPropertyData = playerPropertyData;
 	}
 }

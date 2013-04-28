@@ -1,10 +1,13 @@
 package edu.brown.cs32.MFTG.networking;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 
+import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,8 +17,37 @@ import edu.brown.cs32.MFTG.monopoly.Player;
 import edu.brown.cs32.MFTG.monopoly.Player.Amount;
 import edu.brown.cs32.MFTG.monopoly.Player.Balance;
 import edu.brown.cs32.MFTG.monopoly.Player.Expense;
+import edu.brown.cs32.MFTG.tournament.PlayerPropertyData;
+import edu.brown.cs32.MFTG.tournament.Profile;
+import edu.brown.cs32.MFTG.tournament.data.PlayerWealthDataReport;
+import edu.brown.cs32.MFTG.tournament.data.PropertyDataAccumulator;
+import edu.brown.cs32.MFTG.tournament.data.TimeStampReport;
 
 public class ProtocolTests {
+	PlayerWealthDataReport _playerWealthDataReport;
+	TimeStampReport _timeStampReport;
+	PlayerPropertyData _playerPropertyData;
+	PropertyDataAccumulator _propertyDataAccumulator;
+	
+	@Before
+	public void setUp(){
+		_playerWealthDataReport = new PlayerWealthDataReport(1, 10, 100, 50);
+		
+		Map<Integer, PlayerWealthDataReport> wealthData = new HashMap<>();
+		wealthData.put(1, _playerWealthDataReport);
+		
+		_timeStampReport = new TimeStampReport(1, wealthData);
+		
+		_playerPropertyData = new PlayerPropertyData("test", 1);
+		_playerPropertyData.setPlayerNumHouses(2);
+		_playerPropertyData.setPlayerPersonalRevenueWithHouses(3);
+		_playerPropertyData.setPlayerPersonalRevenueWithoutHouses(4);
+		_playerPropertyData.setPlayerMortgaged(5);
+		_playerPropertyData.setNumDataPoints(6);
+		
+		
+	}
+	
 
 	@Test
 	public void testPlayer() throws IOException {
@@ -88,6 +120,19 @@ public class ProtocolTests {
 		GameData newGD = oMapper.readValue(gdJson, GameData.class);
 		
 		assertEquals(gd, newGD);
+	}
+	
+	// TODO make sure this works
+	@Ignore
+	public void testProfile() throws IOException {
+		ObjectMapper oMapper = new ObjectMapper();
+		
+		Profile p = new Profile("test");
+		
+		String profileJson = oMapper.writeValueAsString(p);
+		Profile newP = oMapper.readValue(profileJson, Profile.class);
+		
+		assertEquals(p, newP);
 	}
 
 }
