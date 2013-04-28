@@ -3,11 +3,12 @@ package edu.brown.cs32.MFTG.networking;
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -19,8 +20,10 @@ import edu.brown.cs32.MFTG.monopoly.Player.Balance;
 import edu.brown.cs32.MFTG.monopoly.Player.Expense;
 import edu.brown.cs32.MFTG.tournament.PlayerPropertyData;
 import edu.brown.cs32.MFTG.tournament.Profile;
+import edu.brown.cs32.MFTG.tournament.data.GameDataReport;
 import edu.brown.cs32.MFTG.tournament.data.PlayerWealthDataReport;
 import edu.brown.cs32.MFTG.tournament.data.PropertyDataAccumulator;
+import edu.brown.cs32.MFTG.tournament.data.PropertyDataReport;
 import edu.brown.cs32.MFTG.tournament.data.TimeStampReport;
 
 public class ProtocolTests {
@@ -122,8 +125,7 @@ public class ProtocolTests {
 		assertEquals(gd, newGD);
 	}
 	
-	// TODO make sure this works
-	@Ignore
+	@Test
 	public void testProfile() throws IOException {
 		ObjectMapper oMapper = new ObjectMapper();
 		
@@ -134,5 +136,28 @@ public class ProtocolTests {
 		
 		assertEquals(p, newP);
 	}
-
+	
+	@Test
+	public void testGameDataReport() throws IOException {
+		List<TimeStampReport> timeStamps = new ArrayList<>();
+		Map<String, PropertyDataReport> entireGameData = new HashMap<>();
+		
+		Map<Integer, PlayerWealthDataReport> wealthData = new HashMap<>();
+		wealthData.put(1, new PlayerWealthDataReport(1, 2, 3, 4));
+		
+		TimeStampReport t = new TimeStampReport(100, wealthData);
+		timeStamps.add(t);
+		
+		PropertyDataReport p = new PropertyDataReport("hi!", 1, 2, 3, 4, 5, 6);
+		entireGameData.put("test", p);
+		
+		GameDataReport gdr = new GameDataReport(timeStamps, 1, entireGameData);
+		
+		ObjectMapper oMapper = new ObjectMapper();
+		
+		String gdrJson = oMapper.writeValueAsString(gdr);
+		GameDataReport newGDR = oMapper.readValue(gdrJson, GameDataReport.class);
+		
+		assertEquals(gdr, newGDR);
+	}
 }

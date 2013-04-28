@@ -1,21 +1,22 @@
 package edu.brown.cs32.MFTG.tournament.data;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.collect.Multimap;
 
 public class GameDataReport {
 
 	public final List<TimeStampReport> _timeStamps;
-	public final Multimap<String, PropertyDataReport> _entireGameData;
+	public final Map<String, PropertyDataReport> _entireGameData;
 	public final int _winner;
 	
 	@JsonCreator
 	public GameDataReport(@JsonProperty("timeStamps") List<TimeStampReport> timeStamps,
 						  @JsonProperty("winner") int winner, 
-						  @JsonProperty("entireGameData") Multimap<String, PropertyDataReport> entireGameData){
+						  @JsonProperty("entireGameData") Map<String, PropertyDataReport> entireGameData){
 		_timeStamps = timeStamps;
 		_winner = winner;
 		_entireGameData = entireGameData;
@@ -36,5 +37,16 @@ public class GameDataReport {
 		}
 		b.append("*********************\n\n\n\n");
 		return b.toString();
+	}
+	
+	@Override
+	public boolean equals(Object o){
+		if (o == null || !(o instanceof GameDataReport))
+			return false;
+		
+		GameDataReport that = (GameDataReport) o;
+		
+		return Objects.equals(_timeStamps, that._timeStamps) && Objects.equals(_entireGameData, that._entireGameData)
+				&& _winner == that._winner; 
 	}
 }
