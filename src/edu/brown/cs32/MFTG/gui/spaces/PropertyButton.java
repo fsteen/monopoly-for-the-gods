@@ -29,7 +29,7 @@ import javax.swing.JTextField;
 
 import edu.brown.cs32.MFTG.gui.Constants;
 import edu.brown.cs32.MFTG.gui.Constants.Orientation;
-import edu.brown.cs32.MFTG.gui.Constants.PropertyInfo;
+import edu.brown.cs32.MFTG.gui.Constants.ColorProperties;
 import edu.brown.cs32.MFTG.gui.Constants.Viewer;
 import edu.brown.cs32.MFTG.gui.Helper;
 
@@ -48,7 +48,7 @@ public class PropertyButton extends JButton {
 	
 	/* Space specific information */
 	private Viewer _viewer;
-	private PropertyInfo _propertyInfo;
+	private ColorProperties _propertyInfo;
 	private Color _color;
 	private Orientation _orientation;
 	
@@ -65,7 +65,7 @@ public class PropertyButton extends JButton {
 	private int _valueFont = Constants.FONT_SIZE;
 	private boolean _checkFont = false;
 	
-	public PropertyButton(Property property, PropertyInfo propertyInfo, Viewer viewer, double timeOwned, double profit, double value, double houses) {
+	public PropertyButton(Property property, ColorProperties propertyInfo, Viewer viewer, double timeOwned, double profit, double value, double houses) {
 		/* Initialize the button */
 		super();
 		this.setFocusPainted(false);

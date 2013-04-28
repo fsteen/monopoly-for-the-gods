@@ -8,9 +8,9 @@ import java.io.IOException;
 
 import javax.swing.JPanel;
 
-import edu.brown.cs32.MFTG.gui.Constants.ColorInfo;
+import edu.brown.cs32.MFTG.gui.Constants.Colors;
 import edu.brown.cs32.MFTG.gui.Constants.Orientation;
-import edu.brown.cs32.MFTG.gui.Constants.RailRoadInfo;
+import edu.brown.cs32.MFTG.gui.Constants.Railroads;
 import edu.brown.cs32.MFTG.gui.colors.ColorButton;
 import edu.brown.cs32.MFTG.gui.spaces.CornerButton;
 import edu.brown.cs32.MFTG.gui.spaces.EmptyButton;
@@ -50,7 +50,7 @@ public class ColorBoard extends JPanel {
 		this.add(panel, _c);
 		
 		panel = new JPanel (new GridLayout(1,1,0,0));
-		panel.add(new ColorButton(ColorInfo.PURPLE));
+		panel.add(new ColorButton(Colors.PURPLE));
 		_c.weightx = 2;
 		_c.weighty = 1;
 		_c.gridx = 3;
@@ -66,7 +66,7 @@ public class ColorBoard extends JPanel {
 		this.add(panel, _c);
 		
 		panel = new JPanel (new GridLayout(1,1,0,0));
-		panel.add(new ColorButton(ColorInfo.LIGHT_BLUE));
+		panel.add(new ColorButton(Colors.LIGHT_BLUE));
 		_c.weightx = 2;
 		_c.weighty = 1;
 		_c.gridx = 1;
@@ -82,7 +82,7 @@ public class ColorBoard extends JPanel {
 		this.add(panel, _c);
 		
 		panel = new JPanel (new GridLayout(1,1,0,0));
-		panel.add(new ColorButton(ColorInfo.PINK));
+		panel.add(new ColorButton(Colors.PINK));
 		_c.weightx = 1;
 		_c.weighty = 2;
 		_c.gridx = 0;
@@ -98,7 +98,7 @@ public class ColorBoard extends JPanel {
 		this.add(panel, _c);
 		
 		panel = new JPanel (new GridLayout(1,1,0,0));
-		panel.add(new ColorButton(ColorInfo.ORANGE));
+		panel.add(new ColorButton(Colors.ORANGE));
 		_c.weightx = 1;
 		_c.weighty = 2;
 		_c.gridx = 0;
@@ -114,7 +114,7 @@ public class ColorBoard extends JPanel {
 		this.add(panel, _c);
 		
 		panel = new JPanel (new GridLayout(1,1,0,0));
-		panel.add(new ColorButton(ColorInfo.RED));
+		panel.add(new ColorButton(Colors.RED));
 		_c.weightx = 2;
 		_c.weighty = 1;
 		_c.gridx = 1;
@@ -130,7 +130,7 @@ public class ColorBoard extends JPanel {
 		this.add(panel, _c);
 		
 		panel = new JPanel (new GridLayout(1,1,0,0));
-		panel.add(new ColorButton(ColorInfo.YELLOW));
+		panel.add(new ColorButton(Colors.YELLOW));
 		_c.weightx = 2;
 		_c.weighty = 1;
 		_c.gridx = 3;
@@ -146,7 +146,7 @@ public class ColorBoard extends JPanel {
 		this.add(panel, _c);
 		
 		panel = new JPanel (new GridLayout(1,1,0,0));
-		panel.add(new ColorButton(ColorInfo.GREEN));
+		panel.add(new ColorButton(Colors.GREEN));
 		_c.weightx = 1;
 		_c.weighty = 2;
 		_c.gridx = 4;
@@ -162,7 +162,7 @@ public class ColorBoard extends JPanel {
 		this.add(panel, _c);
 		
 		panel = new JPanel (new GridLayout(1,1,0,0));
-		panel.add(new ColorButton(ColorInfo.DARK_BLUE));
+		panel.add(new ColorButton(Colors.DARK_BLUE));
 		_c.weightx = 1;
 		_c.weighty = 2;
 		_c.gridx = 4;

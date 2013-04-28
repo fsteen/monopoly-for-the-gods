@@ -7,22 +7,22 @@ import javax.swing.JPanel;
 
 import edu.brown.cs32.MFTG.gui.Board;
 import edu.brown.cs32.MFTG.gui.Constants.Orientation;
-import edu.brown.cs32.MFTG.gui.Constants.PropertyInfo;
-import edu.brown.cs32.MFTG.gui.Constants.RailRoadInfo;
+import edu.brown.cs32.MFTG.gui.Constants.ColorProperties;
+import edu.brown.cs32.MFTG.gui.Constants.Railroads;
 import edu.brown.cs32.MFTG.gui.Constants.Viewer;
 
 public class RailRoadUtility  {
 
-	private RailRoadUtilityButton _myButton;
-	private RailRoadUtilityButton _generalButton;
+	private RailroadPanel _myButton;
+	private RailroadPanel _generalButton;
 	private Board _board;
-	private RailRoadInfo _railRoadInfo;
+	private Railroads _railRoadInfo;
 	
-	public RailRoadUtility (Board board, RailRoadInfo railRoadInfo) throws IOException {
+	public RailRoadUtility (Board board, Railroads railRoadInfo) throws IOException {
 		_board = board;
 		_railRoadInfo = railRoadInfo;
-		_myButton = new RailRoadUtilityButton(this, railRoadInfo, Viewer.ME, Math.random(), (int) (Math.random()*10000), (int) (Math.random() * 100000));
-		_generalButton = new RailRoadUtilityButton(this, railRoadInfo, Viewer.ALL, 1, (int) (Math.random() * 10000), (int) (Math.random() * 10000));
+		_myButton = new RailroadPanel(this, railRoadInfo, Viewer.ME, Math.random(), (int) (Math.random()*10000), (int) (Math.random() * 100000));
+		_generalButton = new RailroadPanel(this, railRoadInfo, Viewer.ALL, 1, (int) (Math.random() * 10000), (int) (Math.random() * 10000));
 	}
 	
 	public void changeViewer (Viewer viewer) {
@@ -34,7 +34,7 @@ public class RailRoadUtility  {
 		}
 	}
 	
-	public RailRoadUtilityButton getMe () {
+	public RailroadPanel getMe () {
 		return _myButton;
 	}
 	
