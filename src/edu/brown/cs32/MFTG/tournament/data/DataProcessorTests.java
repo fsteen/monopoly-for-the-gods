@@ -57,10 +57,8 @@ public class DataProcessorTests {
 		Game g = new Game(13,1000,500, false, false, p0, p1);
 		g.run();
 		
-		List<List<GameData>> data = new ArrayList<>();
-		List<GameData> temp = new ArrayList<>();
-		temp.add(g.getGameData());
-		data.add(temp);
+		List<GameData> data = new ArrayList<>();
+		data.add(g.getGameData());
 		
 		System.out.println(DataProcessor.aggregate(data, 500).toString());
 	}
@@ -71,18 +69,13 @@ public class DataProcessorTests {
 		Player p0=new Player(0);
 		Player p1=new Player(1);
 		
-		List<List<GameData>> data = new ArrayList<>();
-		List<GameData> temp;
+		List<GameData> data = new ArrayList<>();
 		Game g;
 		
-		for(int i = 0; i < 100; i++){ //play 400 games
-			temp = new ArrayList<>();
-			for(int j = 0; j < 4; j++){
-				g = new Game(rand.nextLong(),1000,500, false, false, p0, p1);
-				g.run();
-				temp.add(g.getGameData());
-			}
-			data.add(temp);
+		for(int i = 0; i < 400; i++){ //play 400 games
+			g = new Game(rand.nextLong(),1000,500, false, false, p0, p1);
+			g.run();
+			data.add(g.getGameData());
 		}
 		System.out.println(DataProcessor.aggregate(data, 50).toString());
 	}
@@ -95,19 +88,13 @@ public class DataProcessorTests {
 		Player p2=new Player(2);
 		Player p3=new Player(3);
 
-		
-		List<List<GameData>> data = new ArrayList<>();
-		List<GameData> temp;
+		List<GameData> data = new ArrayList<>();
 		Game g;
 		
-		for(int i = 0; i < 100; i++){ //play 400 games
-			temp = new ArrayList<>();
-			for(int j = 0; j < 4; j++){
-				g = new Game(rand.nextLong(),1000,500, false, false, p0, p1, p2, p3);
-				g.run();
-				temp.add(g.getGameData());
-			}
-			data.add(temp);
+		for(int i = 0; i < 400; i++){ //play 400 games
+			g = new Game(rand.nextLong(),1000,500, false, false, p0, p1, p2, p3);
+			g.run();
+			data.add(g.getGameData());
 		}
 		System.out.println(DataProcessor.aggregate(data, 50).toString());
 	}

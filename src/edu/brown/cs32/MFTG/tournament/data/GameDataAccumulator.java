@@ -108,11 +108,14 @@ public class GameDataAccumulator {
 			times.add(t.toTimeStampReport());
 		}
 		
-		ArrayListMultimap<String,PropertyDataReport> gameData = ArrayListMultimap.create();
-				for(PropertyDataAccumulator p : entireGameData.values()){
-			gameData.putAll(p.propertyName, p.toPlayerPropertyDataReport());
+		Map<String,List<PropertyDataReport>> overallPlayerPropertyData = new HashMap<>();
+		Map<String,PropertyDataReport> overallPropertyData = new HashMap<>();
+		for(PropertyDataAccumulator p : entireGameData.values()){
+			overallPlayerPropertyData.put(p.propertyName, p.toPlayerPropertyDataReport());
+			overallPropertyData.put(p.propertyName, p.toPropertyDataReport());
+
 		}
 		
-		return new GameDataReport(times, getPlayerWithMostWins(), gameData);		
+		return new GameDataReport(times, getPlayerWithMostWins(), overallPlayerPropertyData, overallPropertyData);		
 	}
 }
