@@ -44,10 +44,10 @@ public class CreateBottomPanel extends JPanel {
 			this.setPreferredSize(new Dimension(_whiteBack.getWidth(),_whiteBack.getHeight()));
 			this.setBorder(new EmptyBorder(20,20,20,20));
 			JPanel lowerPanel = new JPanel(new GridLayout(2,3));
-			lowerPanel.setBackground(Constants.CLEAR);
+			lowerPanel.setBackground(Color.WHITE);
 			
 			JPanel portPanel = new JPanel();
-			portPanel.setBackground(Constants.CLEAR);
+			portPanel.setBackground(Color.WHITE);
 			_port = new JTextField(4);
 			_port.setDocument(new MyDocument());
 			_port.setSize(200,30);
@@ -80,7 +80,7 @@ public class CreateBottomPanel extends JPanel {
 			
 			JPanel timePanel = new JPanel(new GridLayout(2,2));
 			timePanel.setAlignmentX(LEFT_ALIGNMENT);
-			timePanel.setBackground(Constants.CLEAR);
+			timePanel.setBackground(Color.WHITE);
 			_timeBeginLabel=new JLabel("Time At Beginning (min): ");
 			_timeBetweenLabel=new JLabel("Time At Beginning (min): ");
 			_timeBegin = new JTextField(4);
@@ -91,7 +91,7 @@ public class CreateBottomPanel extends JPanel {
 			timePanel.add(_timeBetween);
 			
 			JPanel gameLengthPanel = new JPanel(new GridLayout(2,2));
-			gameLengthPanel.setBackground(Constants.CLEAR);
+			gameLengthPanel.setBackground(Color.WHITE);
 			_numSetsLabel=new JLabel("Number of Sets: ");
 			_numGamesLabel=new JLabel("Games per Set: ");
 			_numSets = new JTextField(4);
@@ -103,6 +103,8 @@ public class CreateBottomPanel extends JPanel {
 			gameLengthPanel.add(_numGamesLabel);
 			gameLengthPanel.add(_numGames);
 			
+			
+			
 			lowerPanel.add(winCondPanel);
 			lowerPanel.add(timePanel);
 			lowerPanel.add(gameLengthPanel);
@@ -111,9 +113,9 @@ public class CreateBottomPanel extends JPanel {
 			add(lowerPanel);
 			
 			//breaks things
-			/*_mostMoney.setBackground(Constants.CLEAR);
-			_mostSets.setBackground(Constants.CLEAR);
-			_lastMatch.setBackground(Constants.CLEAR);*/
+			_mostMoney.setBackground(Color.WHITE);
+			_mostSets.setBackground(Color.WHITE);
+			_lastMatch.setBackground(Color.WHITE);
 			
 
 		} catch (IOException e) {

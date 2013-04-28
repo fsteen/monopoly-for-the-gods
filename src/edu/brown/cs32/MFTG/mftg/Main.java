@@ -35,17 +35,14 @@ public class Main extends JFrame{
 		this.setSize(9*Constants.WIDTH + 2*Constants.HEIGHT, 9*Constants.WIDTH + 2*Constants.HEIGHT);
 		this.setResizable(false);
 		
-		Board b = new Board();
-		this.add(b);
-		
 		//ProfitGraph graph = new ProfitGraph();
 		//this.add(graph);
 		
 		//ColorBoard board = new ColorBoard();
 		//this.add(board);
 		
-		//_currentPanel=greet;
-		//this.add(_currentPanel);
+		_currentPanel=create;
+		this.add(_currentPanel);
 		
 		this.pack();
 		this.setVisible(true);
