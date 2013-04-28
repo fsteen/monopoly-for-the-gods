@@ -11,7 +11,7 @@ public class UtilityProperty extends Property {
 	/**
 	 * Cannot build a house on utility
 	 */
-	public void buildHouse() throws Exception{
+	public void buildHouse(Game game) throws Exception{
 		throw new Exception ("Cannot add house to a utility");
 	}
 	
@@ -19,7 +19,7 @@ public class UtilityProperty extends Property {
 	/**
 	 * can never build on utility
 	 */
-	public boolean canBuildHouse(){
+	public boolean canBuildHouse(Game game){
 		return false;
 	}
 	
@@ -27,7 +27,7 @@ public class UtilityProperty extends Property {
 	/**
 	 * can never sell on utility
 	 */
-	public int sellHouse() throws Exception{
+	public int sellHouse(Game game) throws Exception{
 		throw new Exception("Cannot sell house on a utility");
 	}
 	

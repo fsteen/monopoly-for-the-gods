@@ -10,7 +10,7 @@ public class RailroadProperty extends Property {
 	/**
 	 * Cannot build a house on railroad
 	 */
-	public void buildHouse() throws Exception{
+	public void buildHouse(Game game) throws Exception{
 		throw new Exception ("Cannot add house to a railroad");
 	}
 	
@@ -18,7 +18,7 @@ public class RailroadProperty extends Property {
 	/**
 	 * can never build on railroad
 	 */
-	public boolean canBuildHouse(){
+	public boolean canBuildHouse(Game game){
 		return false;
 	}
 	
@@ -26,7 +26,7 @@ public class RailroadProperty extends Property {
 	/**
 	 * can never sell on railroad
 	 */
-	public int sellHouse() throws Exception{
+	public int sellHouse(Game game) throws Exception{
 		throw new Exception("Cannot sell house on a railroad");
 	}
 	
