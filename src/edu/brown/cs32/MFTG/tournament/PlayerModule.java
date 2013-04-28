@@ -44,13 +44,15 @@ public class PlayerModule {
 
 	/* Module variables */
 	private DummyGUI _gui;
-	private final int NUM_THREADS=10;
-	private final int DATA_PACKET_SIZE=10;
+	private final int NUM_THREADS=25;
+	private final int DATA_PACKET_SIZE=100;
+	private final int NUM_DATA_POINTS=50;
 	private int _nextDisplaySize;
 	private List<GameData> _data;
 	private AtomicInteger _numThreadsDone;
 	private ExecutorService _pool;
 	private int _id;
+	private Player _player;
 	
 	/* Temporary variables - replace later */
 	private final int MAX_NUM_TURNS=1000;
@@ -212,7 +214,8 @@ public class PlayerModule {
 				} catch (InterruptedException e){}
 			}
 		}
-				
+		
+		_player = null; //we will need a new player for next time
 		return _data;
 	}
 
@@ -225,7 +228,7 @@ public class PlayerModule {
 		_data.add(gameData);
 		if(_data.size() >= _nextDisplaySize){
 			//TODO display some data
-			GameDataReport r = DataProcessor.aggregate(_data, 50);
+			GameDataReport r = DataProcessor.aggregate(_data, NUM_DATA_POINTS);
 			_gui.setPlayerSpecificPropertyData(getPlayerPropertyData(r._overallPlayerPropertyData));
 			_gui.setPropertyData(r._overallPropertyData);
 			_gui.setWealthData(getPlayerWealthData(r._timeStamps));
@@ -269,7 +272,17 @@ public class PlayerModule {
 	 * @return
 	 */
 	public Player getPlayer(){
-		return _gui.getPlayer();
+		if(_player != null){
+			return _player;
+		} else {
+			//TODO what to do?
+		}
+		return _gui.getPlayer();		
+	}
+	
+	public void setPlayer(){
+		//TODO the gui will call this method ... add appropriate args
+		_player = new Player(0);
 	}
 	
 	/**
@@ -278,6 +291,10 @@ public class PlayerModule {
 	 */
 	public void displayGameData(GameDataReport combinedData) {
 		//TODO implement
+		_gui.setPlayerSpecificPropertyData(getPlayerPropertyData(combinedData._overallPlayerPropertyData));
+		_gui.setPropertyData(combinedData._overallPropertyData);
+		_gui.setWealthData(getPlayerWealthData(combinedData._timeStamps));
+		_gui.roundCompleted();	
 	}
 	
 	/*******************************************************/

@@ -1,10 +1,14 @@
 package edu.brown.cs32.MFTG.tournament;
 
+import static org.junit.Assert.*;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.junit.Test;
 
+import edu.brown.cs32.MFTG.monopoly.GameData;
 import edu.brown.cs32.MFTG.monopoly.Player;
 
 public class PlayerModuleTests {
@@ -25,7 +29,7 @@ public class PlayerModuleTests {
 		
 	}
 	
-//	@Test
+	@Test
 	public void playGamesTest(){
 		List<Player> players = new ArrayList<>();
 		players.add(new Player(0));
@@ -41,7 +45,32 @@ public class PlayerModuleTests {
 		seeds.add((long) 77733);
 		
 		PlayerModule p = new PlayerModule("fakehost", -1);
-		p.playGames(players, seeds);
+		List<GameData> data = p.playGames(players, seeds);
+		
+		assertTrue(data.size() == seeds.size());
+	}
+	
+	@Test
+	public void playManyGamesTest(){
+		int numGames = 1000;
+		//TODO get exception when numGames gets large
+		
+		List<Player> players = new ArrayList<>();
+		players.add(new Player(0));
+		players.add(new Player(1));
+		players.add(new Player(2));
+		players.add(new Player(3));
+		
+		Random rand = new Random();
+		List<Long> seeds = new ArrayList<>();
+		for(int i = 0; i < numGames; i++){
+			seeds.add(rand.nextLong());
+		}
+		
+		PlayerModule p = new PlayerModule("fakehost", -1);
+		List<GameData> data = p.playGames(players, seeds);
+		
+		assertTrue(data.size() == seeds.size());
 	}
 	
 }
