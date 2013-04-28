@@ -6,20 +6,25 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.brown.cs32.MFTG.monopoly.GameData;
 import edu.brown.cs32.MFTG.monopoly.Player;
 import edu.brown.cs32.MFTG.networking.ClientRequestContainer.Method;
+import edu.brown.cs32.MFTG.tournament.data.GameDataReport;
 
 public class ClientHandler implements iClientHandler{
+	
+	private final int GET_PLAYER_TIME = 180;
+	private final int PLAY_GAMES_TIME = 15;
+	
 	final Socket _client;
 	private BufferedReader _input;
 	private BufferedWriter _output;
@@ -40,8 +45,9 @@ public class ClientHandler implements iClientHandler{
 	 * Gets the player associated with this object's client
 	 * @return
 	 * @throws ClientCommunicationException 
+	 * @throws InvalidResponseException 
 	 */
-	public Player getPlayer() throws ClientCommunicationException{
+	public Player getPlayer() throws ClientCommunicationException, ClientLostException, InvalidResponseException{
 		ClientRequestContainer request = new ClientRequestContainer(Method.GETPLAYER, new ArrayList<String>());
 
 		// ask the client for gameData
@@ -51,17 +57,22 @@ public class ClientHandler implements iClientHandler{
 			// read in the response
 			ClientRequestContainer response = _oMapper.readValue(_input, ClientRequestContainer.class);
 
+			// check for bad responses
 			if (response._method != Method.SENDPLAYER){
-				// throw an exception or some shit
+				throw new InvalidResponseException(Method.SENDPLAYER, response._method);
+			} else if (response._arguments == null || response._arguments.size() < 1){
+				throw new InvalidResponseException("Not enough arguments");
 			}
-
-			if (response._arguments == null || response._arguments.size() < 1){
-				// throw an exception or some shit
+			
+			// set the timeout and attempt to read the response from the client
+			try {
+				_client.setSoTimeout(GET_PLAYER_TIME * 1000);
+				Player p = _oMapper.readValue(response._arguments.get(0), Player.class);
+				_client.setSoTimeout(0);
+				return p;
+			} catch (SocketTimeoutException | SocketException e){
+				throw new ClientLostException();
 			}
-
-			Player p = _oMapper.readValue(response._arguments.get(0), Player.class);
-
-			return p;
 
 		} catch (IOException e) {
 			throw new ClientCommunicationException();
@@ -73,8 +84,10 @@ public class ClientHandler implements iClientHandler{
 	 * @param players
 	 * @param numGames
 	 * @return the GameData collected from playing the round of games
+	 * @throws ClientLostException 
+	 * @throws InvalidResponseException 
 	 */
-	public List<GameData> playGames(List<Player> players, List<Long> seeds) throws ClientCommunicationException{
+	public List<GameData> playGames(List<Player> players, List<Long> seeds) throws ClientCommunicationException, ClientLostException, InvalidResponseException{
 		try {
 			String playerList = _oMapper.writeValueAsString(players);
 			String seedList = _oMapper.writeValueAsString(seeds);
@@ -88,26 +101,32 @@ public class ClientHandler implements iClientHandler{
 			// read in the response
 			ClientRequestContainer response = _oMapper.readValue(_input, ClientRequestContainer.class);
 
+			// check for bad response
 			if (response._method != Method.SENDGAMEDATA){
-				// do something
+				throw new InvalidResponseException(Method.SENDGAMEDATA, response._method);
+			} else if (response._arguments == null || response._arguments.size() < 1){
+				throw new InvalidResponseException("Not enough arguments");
 			}
 
-			if (response._arguments == null || response._arguments.size() < 1){
-				// shit fucked up, son!
-			}
-
+			// construct the JavaType that will be read in
 			JavaType listOfGameData = _oMapper.getTypeFactory().constructCollectionType(List.class, GameData.class);
-			List<GameData> gameData = _oMapper.readValue(response._arguments.get(0), listOfGameData);
 
-			return gameData;
+			// set the timeout and attempt to read the response from the client
+			try {
+				_client.setSoTimeout(PLAY_GAMES_TIME * 1000);
+				List<GameData> gameData = _oMapper.readValue(response._arguments.get(0), listOfGameData);
+				_client.setSoTimeout(0);
+				return gameData;
+			}  catch (SocketTimeoutException | SocketException e){
+				throw new ClientLostException();
+			}
 
 		} catch (IOException e){
 			throw new ClientCommunicationException();
 		}
 	}
 
-	//TODO alex : i think i realized this should be just 1 GameData not a list ... i let you change it though
-	public void setGameData(GameData combinedData) {
+	public void setGameData(GameDataReport combinedData) throws ClientCommunicationException {
 		try {
 			String data = _oMapper.writeValueAsString(combinedData);
 
@@ -116,8 +135,8 @@ public class ClientHandler implements iClientHandler{
 			// request that the client display the data
 			_oMapper.writeValue(_output, request);
 
-		} catch (Exception e){
-			// TODO fix this
+		} catch (IOException e){
+			throw new ClientCommunicationException();
 		}
 	}
 }

@@ -2,6 +2,12 @@ package edu.brown.cs32.MFTG.gui;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 
 public class Constants {
 	public final static int WIDTH = (int) 135/2;
@@ -26,6 +32,97 @@ public class Constants {
 	public static String f = "Deed_Cards/";
 	public static final Color CLEAR = new Color(0,0,0,0);
 
+	public static int BUTTON_DIMENSION = 100;
+	
+	public interface Toggle {
+		public ImageIcon getIcon();
+		public Toggle next();
+	}
+	
+	public enum Price implements Toggle {
+		CHEAP("Deed_Cards/cheap.jpg"), EXPENSIVE("Deed_Cards/expensive.jpg");
+		
+		private ImageIcon _icon;
+		private Price (String path) {
+			try {
+				BufferedImage i = ImageIO.read(new File(path));
+				i = Helper.resize(i, BUTTON_DIMENSION, BUTTON_DIMENSION);
+				_icon = new ImageIcon(i);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		public ImageIcon getIcon() { return _icon; }
+		public Toggle next() {
+			if(this == CHEAP) return EXPENSIVE;
+			return CHEAP;
+		}
+	}
+	
+	public enum Quantity implements Toggle {
+		FEWER("Deed_Cards/fewer.jpg"), MORE("Deed_Cards/more.jpg");
+		
+		private ImageIcon _icon;
+		private Quantity (String path) {
+			try {
+				BufferedImage i = ImageIO.read(new File(path));
+				i = Helper.resize(i, BUTTON_DIMENSION, BUTTON_DIMENSION);
+				_icon = new ImageIcon(i);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		public ImageIcon getIcon() { return _icon; }
+		public Toggle next() {
+			if(this == FEWER) return MORE;
+			return FEWER;
+		}
+	}
+	
+	public enum Aggression implements Toggle {
+		PASSIVE("Deed_Cards/passive.jpg"), AGGRESSIVE("Deed_Cards/aggressive.jpg");
+		
+		private ImageIcon _icon;
+		private Aggression (String path) {
+			try {
+				BufferedImage i = ImageIO.read(new File(path));
+				i = Helper.resize(i, BUTTON_DIMENSION, BUTTON_DIMENSION);
+				_icon = new ImageIcon(i);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		public ImageIcon getIcon() { return _icon; }
+		public Toggle next() {
+			if(this == PASSIVE) return AGGRESSIVE;
+			return PASSIVE;
+		}
+	}
+	
+	public enum Balance implements Toggle {
+		EVEN("Deed_Cards/balanced.jpg"), UNEVEN("Deed_Cards/uneven.jpg");
+		
+		private ImageIcon _icon;
+		private Balance (String path) {
+			try {
+				BufferedImage i = ImageIO.read(new File(path));
+				i = Helper.resize(i, BUTTON_DIMENSION, BUTTON_DIMENSION);
+				_icon = new ImageIcon(i);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		public ImageIcon getIcon() { return _icon; }
+		public Toggle next() {
+			if(this == EVEN) return UNEVEN;
+			return EVEN;
+		}
+	}
+	
 	public enum Viewer {
 		ME(Color.BLACK), ALL(Color.WHITE);
 		private final Color color;

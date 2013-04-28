@@ -24,7 +24,7 @@ public class GameTest {
 		
 	}
 	
-	//@Test
+	@Test
 	//tests two players with no freeparking, double on go, or auctions.
 	public void fourplayertest() {
 		Player p0=new Player(0);
