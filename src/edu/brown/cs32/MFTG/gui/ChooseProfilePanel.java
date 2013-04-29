@@ -1,6 +1,7 @@
 package edu.brown.cs32.MFTG.gui;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -30,19 +31,22 @@ import edu.brown.cs32.MFTG.tournament.Profile;
 @SuppressWarnings("serial")
 public class ChooseProfilePanel extends JPanel{
 
-	private ImagePanel _chooseLite, _backLite, _backDark, _selectLite, _selectDark;
+	private ImagePanel _chooseLite, _backLite, _backDark, _selectLite, _selectDark, _selectGrey;
 	private BufferedImage _background;
-	private Point _chooseLoc, _listLoc, _backLoc, _selectLoc;
+	private Point _chooseLoc,  _backLoc, _selectLoc;
 	private MonopolyGui _main;
 
 	private ProfileManager _profileManager;
 	private JList<String> _profileList;
 	private DefaultListModel<String> _listModel;
+	private boolean _selectActivated;
 
 	private final int BUTTON_HEIGHT=Constants.FULL_HEIGHT/8;
 	private final int BUTTON_WIDTH=2*Constants.FULL_HEIGHT/3;
 	private final int START_HEIGHT=Constants.FULL_HEIGHT/8;
 	private final int START_WIDTH=Constants.FULL_WIDTH/6;
+	private final int BOTTOM_HEIGHT=Constants.FULL_HEIGHT*3/5;
+	private final int BOTTOM_WIDTH=Constants.FULL_WIDTH*15/16;
 
 	public ChooseProfilePanel(MonopolyGui main) {
 		try {
@@ -54,11 +58,9 @@ public class ChooseProfilePanel extends JPanel{
 			this.setLayout(null);
 			_background = Helper.resize(ImageIO.read(new File("images/mountain2.png")),this.getWidth(),this.getHeight());
 
-			_chooseLite = new ImagePanel(Helper.resize(ImageIO.read(new File("images/JoinGameLite.png")), BUTTON_WIDTH-40, BUTTON_HEIGHT));
+			_chooseLite = new ImagePanel(Helper.resize(ImageIO.read(new File("images/ChooseProfile.png")), BUTTON_WIDTH-40, BUTTON_HEIGHT));
 			_chooseLoc= new Point(START_WIDTH, START_HEIGHT);
 			_chooseLite.setLocation(_chooseLoc);
-
-			_listLoc= new Point(Constants.FULL_WIDTH/32, START_HEIGHT+BUTTON_HEIGHT*6/5);
 
 			_backLite = new ImagePanel(Helper.resize(ImageIO.read(new File("images/BackLite.png")), 100, 50));
 			_backDark = new ImagePanel(Helper.resize(ImageIO.read(new File("images/BackDark.png")), 100, 50));
@@ -67,13 +69,17 @@ public class ChooseProfilePanel extends JPanel{
 			_backDark.setLocation(_backLoc);
 			_backDark.setVisible(false);
 
-			_selectLite = new ImagePanel(Helper.resize(ImageIO.read(new File("images/GoLite.png")), 100, 50));
-			_selectDark = new ImagePanel(Helper.resize(ImageIO.read(new File("images/GoDark.png")), 100, 50));
+			_selectLite = new ImagePanel(Helper.resize(ImageIO.read(new File("images/SelectLite.png")), 100, 50));
+			_selectDark = new ImagePanel(Helper.resize(ImageIO.read(new File("images/SelectDark.png")), 100, 50));
+			_selectGrey = new ImagePanel(Helper.resize(ImageIO.read(new File("images/SelectGrey.png")), 100, 50));
 			_selectLoc= new Point(this.getWidth()-_selectLite.getWidth()-30, this.getHeight()-_selectLite.getHeight()-20);
 			_selectLite.setLocation(_selectLoc);
 			_selectDark.setLocation(_selectLoc);
+			_selectGrey.setLocation(_selectLoc);
 			_selectDark.setVisible(false);
-
+			_selectLite.setVisible(false);
+			
+			_selectActivated=false;
 
 			addMouseListener(new MyMouseListener());
 
@@ -82,6 +88,7 @@ public class ChooseProfilePanel extends JPanel{
 			add(_backDark);
 			add(_selectLite);
 			add(_selectDark);
+			add(_selectGrey);
 
 			addProfileList();
 		} catch (IOException e) {
@@ -91,6 +98,28 @@ public class ChooseProfilePanel extends JPanel{
 
 	}
 
+	/**
+	 * makes select button activated
+	 */
+	private void activateSelect() {
+		_selectActivated = true;
+		_selectDark.setVisible(false);
+		_selectLite.setVisible(true);
+		_selectGrey.setVisible(false);
+		repaint();
+	}
+	
+	/**
+	 * makes select button deactivated
+	 */
+	private void deactivateSelect() {
+		_selectActivated = false;
+		_selectDark.setVisible(false);
+		_selectLite.setVisible(false);
+		_selectGrey.setVisible(true);
+		repaint();
+	}
+	
 	private void addProfileList(){
 		_profileManager = new ProfileManager();
 		_listModel = new DefaultListModel<String>();
@@ -103,7 +132,11 @@ public class ChooseProfilePanel extends JPanel{
 		JScrollPane listScrollPane = new JScrollPane(_profileList);
 		
 		// TODO figure out how the FUCK to add shit
-		listScrollPane.setLocation(0, 0);
+		listScrollPane.setLocation(Constants.FULL_WIDTH/32, START_HEIGHT+BUTTON_HEIGHT*6/5);
+		Dimension listSize = new Dimension(BOTTOM_WIDTH, BOTTOM_HEIGHT);
+		listScrollPane.setSize(listSize);
+		listScrollPane.setPreferredSize(listSize);
+		add(listScrollPane);
 
 		_profileList.getInputMap().put( KeyStroke.getKeyStroke( "ENTER" ), "completeAction" );
 		_profileList.getActionMap().put( "completeAction", new CompleteAction());
@@ -115,14 +148,14 @@ public class ChooseProfilePanel extends JPanel{
 		_profileList.getActionMap().put( "doDownAction", new DownAction());
 	}
 
-//	@Override
-//	public void paintComponent(Graphics g) {
-//		super.paintComponent(g);
-//		Graphics2D brush = (Graphics2D) g;
-//		brush.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-//		brush.drawImage(_background, 0, 0, null);
-//
-//	}
+	@Override
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		Graphics2D brush = (Graphics2D) g;
+		brush.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		brush.drawImage(_background, 0, 0, null);
+
+	}
 
 	private class MyMouseListener extends MouseInputAdapter{
 		public MyMouseListener() {
@@ -139,6 +172,9 @@ public class ChooseProfilePanel extends JPanel{
 				repaint();
 			}
 			else if(intersects(xloc,yloc,_selectLite,_selectLoc)) {
+				if(_selectActivated==false) {
+					return;
+				}
 				_selectLite.setVisible(false);
 				_selectDark.setVisible(true);
 				repaint();
@@ -162,6 +198,9 @@ public class ChooseProfilePanel extends JPanel{
 
 			}
 			else if(intersects(xloc,yloc,_selectLite,_selectLoc)) {
+				if(_selectActivated==false) {
+					return;
+				}
 				if(_selectDark.isVisible()) {
 					fixPanels();
 					_main.switchPanels("lobby");

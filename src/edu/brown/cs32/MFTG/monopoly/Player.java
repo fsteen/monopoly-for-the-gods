@@ -83,13 +83,6 @@ public class Player {
 	}
 	
 	/**
-	 * does nothing for human player, called however everytime to see if it wants to set its own heuristics
-	 */
-	public void setHeuristics() {
-		
-	}
-	
-	/**
 	 * @return _propertyValues
 	 */
 	public HashMap<String, Integer> getPropertyValues(){
