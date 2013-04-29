@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -84,10 +85,10 @@ public class ProfileManager {
 	}
 	
 	/**
-	 * Getter for the profiles attribute
-	 * @return _profiles
+	 * Returns a set of the names of all the profiles
+	 * @return a set of the names of all the profiles
 	 */
-	public Map<String, Profile> getProfiles(){
-		return _profiles;
+	public Set<String> getProfileNames(){
+		return _profiles.keySet();
 	}
 }
