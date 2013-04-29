@@ -210,7 +210,7 @@ public class PlayerModule {
 	 * @throws JsonMappingException
 	 * @throws IOException
 	 */
-	private void respondToDisplayData(ClientRequestContainer request) throws JsonParseException, JsonMappingException, IOException{
+	protected void respondToDisplayData(ClientRequestContainer request) throws JsonParseException, JsonMappingException, IOException{
 		List<String> arguments = request._arguments;
 		
 		if (arguments == null){
