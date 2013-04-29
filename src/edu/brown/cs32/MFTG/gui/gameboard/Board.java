@@ -53,6 +53,7 @@ public class Board extends JPanel {
 	private JMenuBar _menu;
 	private Center _center;
 	private int _id;
+	private Player _player = null;
 	
 	public Board (JMenuBar menu, int id) throws IOException {
 		super();
@@ -374,7 +375,7 @@ public class Board extends JPanel {
 	}
 	
 	public Player setHeuristics () {
-		Player player = new Player(_id);
+		_player = new Player(_id);
 	
 		
 		HashMap<String, Integer> propertyValues = new HashMap<>();
@@ -383,32 +384,37 @@ public class Board extends JPanel {
 			HashMap<String, Integer> properties = c.getPropertyValues();
 			Double[] colors = c.getColorValues();
 		}
-		player.setPropertyValues(propertyValues);
-		player.setColorValues(colorValues);
+		_player.setPropertyValues(propertyValues);
+		_player.setColorValues(colorValues);
 		
 		//TODO: set values
 		List<Double> sliders = _center.getSliderInfo();
-		player.setLiquidity(sliders.get(0));
-		player.setTimeChange(sliders.get(1));
-		player.setTradingFear(sliders.get(2));
+		_player.setLiquidity(sliders.get(0));
+		_player.setTimeChange(sliders.get(1));
+		_player.setTradingFear(sliders.get(2));
 		
 		//TODO: minimum cash amounts
 		List<Integer> minCash = _center.getMinCash();
-		player.setMinBuyCash(minCash.get(0));
-		player.setMinBuildCash(minCash.get(1));
-		player.setMinUnmortgageCash(minCash.get(2));
+		_player.setMinBuyCash(minCash.get(0));
+		_player.setMinBuildCash(minCash.get(1));
+		_player.setMinUnmortgageCash(minCash.get(2));
 		
 		//TODO: jail information
 		List<Integer> waits = _jail.getWait();
-		player.setJailWait(waits.get(0));
-		player.setJailPoor(waits.get(1));
-		player.setJailRich(waits.get(2));
+		_player.setJailWait(waits.get(0));
+		_player.setJailPoor(waits.get(1));
+		_player.setJailRich(waits.get(2));
 		
 		//TODO: get information from the buttons
-		_center.setButtonChoices(player);		
+		_center.setButtonChoices(_player);		
 		
 		
-		return player;
+		return _player;
+	}
+	
+	public Player getPlayer () {
+		if(_player != null) return _player;
+		return setHeuristics();
 	}
 	
 	public void setPlayerSpecificPropertyData(Map<String, PropertyDataAccumulator> data) {
