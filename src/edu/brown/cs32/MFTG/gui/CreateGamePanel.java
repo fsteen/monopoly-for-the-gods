@@ -21,6 +21,7 @@ import javax.swing.event.MouseInputAdapter;
 
 import edu.brown.cs32.MFTG.mftg.Main;
 import edu.brown.cs32.MFTG.tournament.Settings;
+import edu.brown.cs32.MFTG.tournament.Tournament;
 
 
 public class CreateGamePanel extends JPanel{
@@ -133,10 +134,18 @@ public class CreateGamePanel extends JPanel{
 			else if(intersects(xloc,yloc,_goLite,_goLoc)) {
 				if(_goDark.isVisible()) {
 					fixPanels();
+					
+					System.out.println("launching tournament");
 					Settings settings = _bottomPanel.getSettings();
 					Integer[] players = _bottomPanel.getPlayers();
+					int numPlayers = 4; //TODO change later
 					int port = _bottomPanel.getPort();
 					//client.launchTournament(settings, numPlayers, port);
+					try{
+						(new Tournament(numPlayers, settings, port)).run();
+					} catch (IOException f){
+						//TODO handle
+					}
 				}
 				else {
 					fixPanels();
