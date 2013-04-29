@@ -80,7 +80,7 @@ public class DataProcessorTests {
 		System.out.println(DataProcessor.aggregate(data, 50).toString());
 	}
 	
-	@Test
+//	@Test
 	public void generateGameDataReportMany4Player(){
 		Random rand = new Random();
 		Player p0=new Player(0);

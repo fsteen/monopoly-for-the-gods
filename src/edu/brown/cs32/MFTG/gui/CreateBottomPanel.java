@@ -11,6 +11,8 @@ import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.TextField;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
@@ -35,8 +37,13 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import edu.brown.cs32.MFTG.monopoly.GamePlayer;
 import edu.brown.cs32.MFTG.monopoly.Player;
+import edu.brown.cs32.MFTG.tournament.Settings;
+import edu.brown.cs32.MFTG.tournament.Settings.Turns;
+import edu.brown.cs32.MFTG.tournament.Settings.WinningCondition;
 
 public class CreateBottomPanel extends JPanel {
 	private BufferedImage _whiteBack;
@@ -108,8 +115,8 @@ public class CreateBottomPanel extends JPanel {
 			JPanel timePanel = new JPanel(null);
 			timePanel.setAlignmentX(LEFT_ALIGNMENT);
 			timePanel.setBackground(Color.WHITE);
-			_timeBeginLabel=new JLabel("Time At Beginning(min): ");
-			_timeBetweenLabel=new JLabel("Time Between Sets(min): ");
+			_timeBeginLabel=new JLabel("Time At Beginning(sec): ");
+			_timeBetweenLabel=new JLabel("Time Between Sets(sec): ");
 			_timeBeginLabel.setFont(_sideFont);
 			_timeBetweenLabel.setFont(_sideFont);
 			_timeBegin = new JTextField(1);
@@ -131,8 +138,8 @@ public class CreateBottomPanel extends JPanel {
 			_timeBetween.setLocation(180,35);
 			_timeBetweenLabel.setLocation(0,42);
 			
-			_timeBegin.setDocument(new NumDocument(1));
-			_timeBetween.setDocument(new NumDocument(1));
+			_timeBegin.setDocument(new NumDocument(4));
+			_timeBetween.setDocument(new NumDocument(4));
 			
 			timePanel.add(_timeBeginLabel);
 			timePanel.add(_timeBegin);
@@ -337,6 +344,47 @@ public class CreateBottomPanel extends JPanel {
 			System.exit(1);
 		}
 	}
+	
+	public Settings getSettings(){
+		WinningCondition winCond;
+		if(_mostMoney.isSelected()){
+			winCond = WinningCondition.MOST_MONEY_MIDWAY;
+		} else if(_mostSets.isSelected()) {
+			winCond = WinningCondition.MOST_SETS_WON;
+		} else {
+			winCond = WinningCondition.LAST_SET_WON;
+		}
+		
+		Turns turnFlow;
+		if(_chooseTogether.isSelected()){
+			turnFlow = Turns.BUNCHED;
+		} else {
+			turnFlow = Turns.STAGGERED;
+		}
+		
+		int beginningTimeout = _timeBegin.getText().equals("") ? 60 : Integer.parseInt(_timeBegin.getText());
+		int betweenTimeout = _timeBetween.getText().equals("") ? 60 : Integer.parseInt(_timeBetween.getText());
+		int numSets = _numSets.getText().equals("") ? 25 : Integer.parseInt(_numSets.getText());
+		int gamesPerRound = _numGames.getText().equals("") ? 1000 : Integer.parseInt(_numGames.getText());
+		int freeParking = _freeParkingJackpot.getText().equals("") ? -1 : Integer.parseInt(_freeParkingJackpot.getText());
+		boolean doubleOnGo = _doubleOnGo.isSelected();
+		boolean auctions = _auctions.isSelected();
+		
+		return new Settings(
+				gamesPerRound,numSets, doubleOnGo, freeParking, auctions,
+				turnFlow, winCond, beginningTimeout, betweenTimeout);
+	}
+	
+	public int getPort(){
+		return _port.getText().equals("") ? 3232 : Integer.parseInt(_port.getText());
+	}
+	
+	public int getNumPlayers(){
+		
+		
+		return 0;
+	}
+	
 	//@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -426,5 +474,4 @@ public class CreateBottomPanel extends JPanel {
 		}
 		
 	}
-
 }
