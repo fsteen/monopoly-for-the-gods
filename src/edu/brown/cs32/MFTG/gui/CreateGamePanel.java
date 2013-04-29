@@ -134,7 +134,7 @@ public class CreateGamePanel extends JPanel{
 				if(_goDark.isVisible()) {
 					fixPanels();
 					Settings settings = _bottomPanel.getSettings();
-					int numPlayers = _bottomPanel.getNumPlayers();
+					Integer[] players = _bottomPanel.getPlayers();
 					int port = _bottomPanel.getPort();
 					//client.launchTournament(settings, numPlayers, port);
 				}

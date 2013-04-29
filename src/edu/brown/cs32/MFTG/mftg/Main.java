@@ -60,7 +60,7 @@ public class Main extends JFrame{
 		//ColorBoard board = new ColorBoard();
 		//this.add(board);
 		
-		_currentPanel=choose;
+		_currentPanel=create;
 		this.add(_currentPanel);
 		
 		this.pack();
