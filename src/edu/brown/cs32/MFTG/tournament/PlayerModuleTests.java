@@ -53,10 +53,22 @@ public class PlayerModuleTests {
 	public static void playManyGamesTest(){
 		int numGames = 1000;
 		//TODO get exception when numGames gets large
+		PlayerModule p = new PlayerModule("fakehost", -1);
+
+		System.out.println("Starting to wait");
+		try {
+			Thread.sleep(30000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println("Hope you set your heuristics ...");
+		
+		Player player = p.getPlayer();
 		
 		List<Player> players = new ArrayList<>();
 		players.add(new Player(0));
-		players.add(new Player(1));
+		players.add(player);
 		players.add(new Player(2));
 		players.add(new Player(3));
 		
@@ -66,7 +78,6 @@ public class PlayerModuleTests {
 			seeds.add(rand.nextLong());
 		}
 		
-		PlayerModule p = new PlayerModule("fakehost", -1);
 		List<GameData> data = p.playGames(players, seeds);
 		
 		assertTrue(data.size() == seeds.size());

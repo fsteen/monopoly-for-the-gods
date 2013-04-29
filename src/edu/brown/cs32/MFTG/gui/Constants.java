@@ -164,24 +164,26 @@ public class Constants {
 	}
 	
 	public enum Colors {
-		PURPLE(PropertyColor.PURPLE, Orientation.DOWN, f + "purple" + t, f + "purple" + m, f + "purple" + n),
-		LIGHT_BLUE(PropertyColor.LIGHT_BLUE, Orientation.DOWN,  f + "light_blue" + t, f + "light_blue" + m, f + "light_blue" + n),
-		PINK(PropertyColor.PINK, Orientation.LEFT,  f + "pink" + t, f + "pink" + m, f + "pink" + n),
-		ORANGE(PropertyColor.ORANGE, Orientation.LEFT,  f + "orange" + t, f + "orange" + m, f + "orange" + n), 
-		RED(PropertyColor.RED, Orientation.UP,  f + "red" + t, f + "red" + m, f + "red" + n),
-		YELLOW(PropertyColor.YELLOW, Orientation.UP,  f + "yellow" + t, f + "yellow" + m, f + "yellow" + n), 
-		GREEN(PropertyColor.GREEN, Orientation.RIGHT, f + "green" + t, f + "green" + m, f + "green" + n),
-		DARK_BLUE(PropertyColor.DARK_BLUE, Orientation.RIGHT,  f + "dark_blue" + t, f + "dark_blue" + m, f + "dark_blue" + n);
+		PURPLE(PropertyColor.PURPLE, Orientation.DOWN, f + "purple" + t, f + "purple" + m, f + "purple" + n, "purple"),
+		LIGHT_BLUE(PropertyColor.LIGHT_BLUE, Orientation.DOWN,  f + "light_blue" + t, f + "light_blue" + m, f + "light_blue" + n, "light blue"),
+		PINK(PropertyColor.PINK, Orientation.LEFT,  f + "pink" + t, f + "pink" + m, f + "pink" + n, "pink"),
+		ORANGE(PropertyColor.ORANGE, Orientation.LEFT,  f + "orange" + t, f + "orange" + m, f + "orange" + n, "orange"), 
+		RED(PropertyColor.RED, Orientation.UP,  f + "red" + t, f + "red" + m, f + "red" + n, "red"),
+		YELLOW(PropertyColor.YELLOW, Orientation.UP,  f + "yellow" + t, f + "yellow" + m, f + "yellow" + n, "yellow"), 
+		GREEN(PropertyColor.GREEN, Orientation.RIGHT, f + "green" + t, f + "green" + m, f + "green" + n, "green"),
+		DARK_BLUE(PropertyColor.DARK_BLUE, Orientation.RIGHT,  f + "dark_blue" + t, f + "dark_blue" + m, f + "dark_blue" + n, "dark blue");
 		
 		private PropertyColor color;
 		private Orientation orientation;
 		private String two;
 		private String monopoly;
 		private String noMonopoly;
-		Colors (PropertyColor color, Orientation orientation, String two, String monopoly, String noMonopoly) {
+		private String name;
+		Colors (PropertyColor color, Orientation orientation, String two, String monopoly, String noMonopoly, String name) {
 			this.color = color;
 			this.orientation = orientation;
 			this.two = two;
+			this.name = name;
 			this.monopoly = monopoly;
 			this.noMonopoly = noMonopoly;
 		}
@@ -190,6 +192,7 @@ public class Constants {
 		public String getTwo() { return two; }
 		public String getMonopoly() { return monopoly; }
 		public String getNoMonopoly() { return noMonopoly; }
+		public String getName() { return name; }
 	}
 	
 	public enum Corners {

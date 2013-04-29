@@ -67,6 +67,10 @@ public class Railroad extends JPanel {
 		_aggregateProperty.setData(propertyDataReport);
 	}
 	
+	public int getValue() {
+		return _myProperty.getValue();
+	}
+	
 	public void update () {
 		this.removeAll();
 		if(_view == View.ME){

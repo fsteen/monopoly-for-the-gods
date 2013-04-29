@@ -58,7 +58,7 @@ public class PlayerModule {
 	private List<GameData> _data;
 	private AtomicInteger _numThreadsDone;
 	private ExecutorService _pool;
-	private int _id;
+	protected int _id;
 	private Player _player;
 	
 	/* Temporary variables - replace later */
@@ -339,11 +339,6 @@ public class PlayerModule {
 	 * @return
 	 */
 	public Player getPlayer(){
-		if(_player != null){
-			return _player;
-		} else {
-			//TODO what to do?
-		}
 		return _gui.getBoard().getPlayer();		
 	}
 	
