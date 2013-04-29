@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import edu.brown.cs32.MFTG.gui.MonopolyGui;
 import edu.brown.cs32.MFTG.gui.gameboard.Board;
 import edu.brown.cs32.MFTG.gui.gameboard.GameBoardFrame;
 import edu.brown.cs32.MFTG.monopoly.GameData;
@@ -47,11 +48,12 @@ public class PlayerModule {
 	private Method _lastRequest;
 
 	/* Module variables */
-	private Board _board;
-	private DummyGUI _gui;
+	private MonopolyGui _gui;
+	private DummyGUI _dummyGui;
 	private final int NUM_THREADS=25;
 	private final int DATA_PACKET_SIZE=100;
-	private final int NUM_DATA_POINTS=100;
+	private final int NUM_DATA_POINTS=100;	
+	private final int MAX_NUM_TURNS=1000;
 	private int _nextDisplaySize;
 	private List<GameData> _data;
 	private AtomicInteger _numThreadsDone;
@@ -60,7 +62,6 @@ public class PlayerModule {
 	private Player _player;
 	
 	/* Temporary variables - replace later */
-	private final int MAX_NUM_TURNS=1000;
 	private final int FREE_PARKING=-1;
 	private final boolean DOUBLE_ON_GO=false;
 	private final boolean AUCTIONS=false;
@@ -74,13 +75,11 @@ public class PlayerModule {
 		_pool = Executors.newFixedThreadPool(NUM_THREADS);
 		_data = new ArrayList<>();
 		_numThreadsDone = new AtomicInteger(0);
-		
-		
-		_board = (new GameBoardFrame())._board;
-		_gui = new DummyGUI();
-		
 		_id = 0; //TODO client needs to know its ID!!!!!!!
+
 		
+		_gui = new MonopolyGui(this);
+		_dummyGui = new DummyGUI();
 	}
 
 	public void run(){
@@ -94,7 +93,8 @@ public class PlayerModule {
 	}
 
 	/***************Networking Methods 
-	 * @throws IOException 
+	 * @throws IOException 	private final int MAX_NUM_TURNS=1000;
+
 	 * @throws JsonMappingException 
 	 * @throws JsonParseException *************************/
 	
@@ -143,6 +143,13 @@ public class PlayerModule {
 		_server = new Socket(_host, _port);
 		_input = new BufferedReader(new InputStreamReader(_server.getInputStream()));
 		_output = new BufferedWriter(new OutputStreamWriter(_server.getOutputStream()));
+		_id = getIdOnConnection();
+		_gui.createBoard(_id);
+	}
+	
+	private int getIdOnConnection(){
+		//TODO implement this!!!!!!!!!!!
+		return 1;
 	}
 	
 	/**
@@ -223,6 +230,22 @@ public class PlayerModule {
 		
 		displayGameData(gameDataReport);
 	}
+	
+	public void launchTournament(int numPlayers, Settings settings, int port){
+		try {
+			_pool.execute((new Tournament(numPlayers, settings, port)));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		try {
+			this.connect();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
 	/*******************************************************/
 
@@ -270,12 +293,12 @@ public class PlayerModule {
 		if(_data.size() >= _nextDisplaySize){
 			//TODO display some data
 			GameDataReport r = DataProcessor.aggregate(_data, NUM_DATA_POINTS);
-			_gui.setPlayerSpecificPropertyData(getPlayerPropertyData(r._overallPlayerPropertyData));
-			_gui.setPropertyData(r._overallPropertyData);
-			_gui.setWealthData(getPlayerWealthData(r._timeStamps));
-			_board.setPlayerSpecificPropertyData(getPlayerPropertyData(r._overallPlayerPropertyData));
-			_board.setPropertyData(r._overallPropertyData);
-			_board.setWealthData(getPlayerWealthData(r._timeStamps));
+			_dummyGui.setPlayerSpecificPropertyData(getPlayerPropertyData(r._overallPlayerPropertyData));
+			_dummyGui.setPropertyData(r._overallPropertyData);
+			_dummyGui.setWealthData(getPlayerWealthData(r._timeStamps));
+			_gui.getBoard().setPlayerSpecificPropertyData(getPlayerPropertyData(r._overallPlayerPropertyData));
+			_gui.getBoard().setPropertyData(r._overallPropertyData);
+			_gui.getBoard().setWealthData(getPlayerWealthData(r._timeStamps));
 			_nextDisplaySize += DATA_PACKET_SIZE; //set next point at which to display
 		}
 	}
@@ -321,7 +344,7 @@ public class PlayerModule {
 		} else {
 			//TODO what to do?
 		}
-		return _board.getPlayer();		
+		return _gui.getBoard().getPlayer();		
 	}
 	
 	public void setPlayer(){
@@ -335,13 +358,13 @@ public class PlayerModule {
 	 */
 	public void displayGameData(GameDataReport combinedData) {
 		//TODO implement
-		_board.setPlayerSpecificPropertyData(getPlayerPropertyData(combinedData._overallPlayerPropertyData));
-		_board.setPropertyData(combinedData._overallPropertyData);
-		_board.setWealthData(getPlayerWealthData(combinedData._timeStamps));
-		_gui.setPlayerSpecificPropertyData(getPlayerPropertyData(combinedData._overallPlayerPropertyData));
-		_gui.setPropertyData(combinedData._overallPropertyData);
-		_gui.setWealthData(getPlayerWealthData(combinedData._timeStamps));
-		_board.roundCompleted();	
+		_gui.getBoard().setPlayerSpecificPropertyData(getPlayerPropertyData(combinedData._overallPlayerPropertyData));
+		_gui.getBoard().setPropertyData(combinedData._overallPropertyData);
+		_gui.getBoard().setWealthData(getPlayerWealthData(combinedData._timeStamps));
+		_dummyGui.setPlayerSpecificPropertyData(getPlayerPropertyData(combinedData._overallPlayerPropertyData));
+		_dummyGui.setPropertyData(combinedData._overallPropertyData);
+		_dummyGui.setWealthData(getPlayerWealthData(combinedData._timeStamps));
+		_gui.getBoard().roundCompleted();	
 	}
 	
 	/**

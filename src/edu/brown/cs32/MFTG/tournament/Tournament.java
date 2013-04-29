@@ -226,6 +226,11 @@ public class Tournament implements Runnable{
 			connectionsMade++;
 			iClientHandler cHandler = new ClientHandler(clientConnection, connectionsMade);
 			_clients.add(cHandler);
+			sendIdOnConnection(cHandler, connectionsMade);
 		}
+	}
+	
+	public void sendIdOnConnection(iClientHandler cHandler, int id){
+		//TODO implement!!!!!!!!!!!!!!!
 	}
 }
