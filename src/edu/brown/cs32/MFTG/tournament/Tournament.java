@@ -145,7 +145,7 @@ public class Tournament implements Runnable{
 			try {
 				players.add(f.get());
 			} catch (InterruptedException e) {
-				// TODO handle this
+				throw new ClientCommunicationException();
 			} catch (ExecutionException e) {
 				rethrowExecutionException(e.getCause());
 			}
@@ -182,12 +182,11 @@ public class Tournament implements Runnable{
 			try {
 				gameData.add(f.get());
 			} catch (InterruptedException e) {
-				// TODO handle this
+				throw new ClientCommunicationException();
 			} catch (ExecutionException e) {
 				rethrowExecutionException(e.getCause());
 			}
 		}
-		
 		return gameData;
 	}
 

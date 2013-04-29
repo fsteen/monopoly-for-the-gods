@@ -46,7 +46,7 @@ public class Profile {
 	private void buildSettingsMap(){
 		Map<String, Settings> settings = new HashMap<>();
 		
-		Settings defaultSettings = new Settings(10, 100, 1000, false, false, false, Turns.BUNCHED, WinningCondition.MOST_SETS_WON, null);
+		Settings defaultSettings = new Settings(10000, 10, false, -1, false, Turns.BUNCHED, WinningCondition.MOST_SETS_WON, 300, 180);
 		
 		settings.put("default", defaultSettings);
 		

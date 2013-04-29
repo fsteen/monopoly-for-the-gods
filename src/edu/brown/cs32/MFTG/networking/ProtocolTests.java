@@ -155,7 +155,7 @@ public class ProtocolTests {
 		assertEquals(gdr, newGDR);
 	}
 	
-	@Ignore
+	@Test
 	public void testProfile() throws IOException {
 		ObjectMapper oMapper = new ObjectMapper();
 		
