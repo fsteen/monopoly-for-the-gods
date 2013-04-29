@@ -10,7 +10,7 @@ import javax.imageio.ImageIO;
 
 import edu.brown.cs32.MFTG.gui.Constants.Orientation;
 import edu.brown.cs32.MFTG.gui.Constants.Railroads;
-import edu.brown.cs32.MFTG.tournament.data.PropertyDataAccumulator;
+import edu.brown.cs32.MFTG.tournament.data.PropertyDataReport;
 
 public class AggregateRailroadProperty extends NonstaticProperty {
 
@@ -42,8 +42,8 @@ public class AggregateRailroadProperty extends NonstaticProperty {
 	}
 
 	@Override
-	public void setData(PropertyDataAccumulator data) {
-		updateProfit(data.getAccTotalRevenueWithHouses());
+	public void setData(PropertyDataReport data) {
+		updateProfit(data.accTotalRevenueWithHouses);
 	}
 	
 	public int getValue() {

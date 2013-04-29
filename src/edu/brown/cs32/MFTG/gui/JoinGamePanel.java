@@ -19,7 +19,6 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.event.MouseInputAdapter;
 
-import edu.brown.cs32.MFTG.mftg.Main;
 
 
 public class JoinGamePanel extends JPanel{
@@ -27,14 +26,14 @@ public class JoinGamePanel extends JPanel{
 	private BufferedImage _background;
 	private Point _createLoc, _whiteLoc, _backLoc, _goLoc;
 	private JoinBottomPanel _bottomPanel;
-	private Main _main;
+	private MonopolyGui _main;
 	
 	private final int BUTTON_HEIGHT=Constants.FULL_HEIGHT/8;
 	private final int BUTTON_WIDTH=2*Constants.FULL_HEIGHT/3;
 	private final int START_HEIGHT=Constants.FULL_HEIGHT/8;
 	private final int START_WIDTH=Constants.FULL_WIDTH/6;
 
-	public JoinGamePanel(Main main) {
+	public JoinGamePanel(MonopolyGui main) {
 		try {
 			_main=main;
 			java.awt.Dimension size = new java.awt.Dimension(Constants.FULL_WIDTH,Constants.FULL_HEIGHT);

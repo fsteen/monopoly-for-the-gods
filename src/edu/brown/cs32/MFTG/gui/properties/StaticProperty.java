@@ -12,6 +12,7 @@ import edu.brown.cs32.MFTG.gui.Constants;
 import edu.brown.cs32.MFTG.gui.Helper;
 import edu.brown.cs32.MFTG.gui.Constants.StaticProperties;
 import edu.brown.cs32.MFTG.tournament.data.PropertyDataAccumulator;
+import edu.brown.cs32.MFTG.tournament.data.PropertyDataReport;
 
 public class StaticProperty extends PropertyPanel {
 
@@ -34,7 +35,7 @@ public class StaticProperty extends PropertyPanel {
 	}
 
 	@Override
-	public void setData(PropertyDataAccumulator data) {}
+	public void setData(PropertyDataReport data) {}
 	
 	public int getValue() {
 		throw new NullPointerException("Static Properties do not have values");

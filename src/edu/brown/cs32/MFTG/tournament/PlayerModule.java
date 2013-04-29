@@ -20,6 +20,8 @@ import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import edu.brown.cs32.MFTG.gui.gameboard.Board;
+import edu.brown.cs32.MFTG.gui.gameboard.GameBoardFrame;
 import edu.brown.cs32.MFTG.monopoly.GameData;
 import edu.brown.cs32.MFTG.monopoly.Player;
 import edu.brown.cs32.MFTG.networking.ClientRequestContainer;
@@ -45,10 +47,11 @@ public class PlayerModule {
 	private Method _lastRequest;
 
 	/* Module variables */
+	private Board _board;
 	private DummyGUI _gui;
 	private final int NUM_THREADS=25;
 	private final int DATA_PACKET_SIZE=100;
-	private final int NUM_DATA_POINTS=50;
+	private final int NUM_DATA_POINTS=100;
 	private int _nextDisplaySize;
 	private List<GameData> _data;
 	private AtomicInteger _numThreadsDone;
@@ -71,6 +74,9 @@ public class PlayerModule {
 		_pool = Executors.newFixedThreadPool(NUM_THREADS);
 		_data = new ArrayList<>();
 		_numThreadsDone = new AtomicInteger(0);
+		
+		
+		_board = (new GameBoardFrame())._board;
 		_gui = new DummyGUI();
 		
 		_id = 0; //TODO client needs to know its ID!!!!!!!
@@ -267,6 +273,9 @@ public class PlayerModule {
 			_gui.setPlayerSpecificPropertyData(getPlayerPropertyData(r._overallPlayerPropertyData));
 			_gui.setPropertyData(r._overallPropertyData);
 			_gui.setWealthData(getPlayerWealthData(r._timeStamps));
+			_board.setPlayerSpecificPropertyData(getPlayerPropertyData(r._overallPlayerPropertyData));
+			_board.setPropertyData(r._overallPropertyData);
+			_board.setWealthData(getPlayerWealthData(r._timeStamps));
 			_nextDisplaySize += DATA_PACKET_SIZE; //set next point at which to display
 		}
 	}
@@ -312,7 +321,7 @@ public class PlayerModule {
 		} else {
 			//TODO what to do?
 		}
-		return _gui.getPlayer();		
+		return _board.getPlayer();		
 	}
 	
 	public void setPlayer(){
@@ -326,10 +335,13 @@ public class PlayerModule {
 	 */
 	public void displayGameData(GameDataReport combinedData) {
 		//TODO implement
+		_board.setPlayerSpecificPropertyData(getPlayerPropertyData(combinedData._overallPlayerPropertyData));
+		_board.setPropertyData(combinedData._overallPropertyData);
+		_board.setWealthData(getPlayerWealthData(combinedData._timeStamps));
 		_gui.setPlayerSpecificPropertyData(getPlayerPropertyData(combinedData._overallPlayerPropertyData));
 		_gui.setPropertyData(combinedData._overallPropertyData);
 		_gui.setWealthData(getPlayerWealthData(combinedData._timeStamps));
-		_gui.roundCompleted();	
+		_board.roundCompleted();	
 	}
 	
 	/**

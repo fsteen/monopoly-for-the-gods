@@ -18,7 +18,6 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.event.MouseInputAdapter;
 
-import edu.brown.cs32.MFTG.mftg.Main;
 
 /**
  * This is the opening panel for when the game starts
@@ -34,8 +33,8 @@ public class GameLobbyPanel extends JPanel{
 	private final int BUTTON_WIDTH=2*Constants.FULL_HEIGHT/3;
 	private final int START_HEIGHT=Constants.FULL_HEIGHT/3;
 	private final int START_WIDTH=Constants.FULL_WIDTH/6;
-	private Main _main;
-	public GameLobbyPanel(Main main) {
+	private MonopolyGui _main;
+	public GameLobbyPanel(MonopolyGui main) {
 		try {
 			_main=main;
 			java.awt.Dimension size = new java.awt.Dimension(Constants.FULL_WIDTH,Constants.FULL_HEIGHT);

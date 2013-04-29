@@ -27,6 +27,7 @@ import edu.brown.cs32.MFTG.gui.properties.AggregateColorProperty;
 import edu.brown.cs32.MFTG.gui.properties.MyColorPropertyPanel;
 import edu.brown.cs32.MFTG.gui.properties.PropertyPanel;
 import edu.brown.cs32.MFTG.tournament.data.PropertyDataAccumulator;
+import edu.brown.cs32.MFTG.tournament.data.PropertyDataReport;
 
 public class ColorGroup extends JPanel {
 	
@@ -139,7 +140,7 @@ public class ColorGroup extends JPanel {
 		return names;
 	}
 	
-	public void setAggregateData (String name, PropertyDataAccumulator data) {
+	public void setAggregateData (String name, PropertyDataReport data) {
 		Set<Properties> properties = _aggregatePropertyName.keySet();
 		for(Properties p: properties) {
 			if(p.getLowercaseName().equals(name)) {
@@ -148,11 +149,11 @@ public class ColorGroup extends JPanel {
 		}
 	}
 	
-	public void setMyData (String name, PropertyDataAccumulator data) {
+	public void setMyData (String name, PropertyDataReport propertyDataReport) {
 		Set<Properties> properties = _myPropertyName.keySet();
 		for(Properties p: properties) {
 			if(p.getLowercaseName().equals(name)) {
-				_myPropertyName.get(p).setData(data);
+				_myPropertyName.get(p).setData(propertyDataReport);
 			}
 		}
 	}
@@ -204,7 +205,7 @@ public class ColorGroup extends JPanel {
  * ----------------------------------------------------------------------------
  */
 	
-	public static void main (String[] args) {
+	/*public static void main (String[] args) {
 		JFrame frame = new JFrame();
 		frame.setPreferredSize(new Dimension(Constants.FULL_WIDTH, Constants.FULL_HEIGHT));
 		JMenuBar menu = new JMenuBar();
@@ -244,7 +245,7 @@ public class ColorGroup extends JPanel {
 		frame.setJMenuBar(menu);
 		frame.pack();
 		frame.setVisible(true);
-	}
+	}*/
 
 	public HashMap<String, Integer> getPropertyValues() {
 		HashMap<String, Integer> propertyValues = new HashMap<>();

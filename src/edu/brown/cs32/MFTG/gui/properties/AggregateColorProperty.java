@@ -2,13 +2,10 @@ package edu.brown.cs32.MFTG.gui.properties;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Rectangle;
 
 import edu.brown.cs32.MFTG.gui.Constants.ColorProperties;
-import edu.brown.cs32.MFTG.gui.Constants.Colors;
 import edu.brown.cs32.MFTG.gui.Houses;
-import edu.brown.cs32.MFTG.monopoly.PropertyData;
-import edu.brown.cs32.MFTG.tournament.data.PropertyDataAccumulator;
+import edu.brown.cs32.MFTG.tournament.data.PropertyDataReport;
 
 public class AggregateColorProperty extends NonstaticProperty {
 
@@ -40,8 +37,8 @@ public class AggregateColorProperty extends NonstaticProperty {
 	}
 
 	@Override
-	public void setData(PropertyDataAccumulator data) {
-		this.updateProfit(data.getAccTotalRevenueWithHouses());
+	public void setData(PropertyDataReport data) {
+		this.updateProfit(data.accTotalRevenueWithHouses);
 		_houseRow.setNumHouses(data.accNumHouses);
 	}
 	

@@ -18,6 +18,7 @@ import edu.brown.cs32.MFTG.gui.properties.AggregateRailroadProperty;
 import edu.brown.cs32.MFTG.gui.properties.MyRailroadProperty;
 import edu.brown.cs32.MFTG.gui.properties.PropertyPanel;
 import edu.brown.cs32.MFTG.tournament.data.PropertyDataAccumulator;
+import edu.brown.cs32.MFTG.tournament.data.PropertyDataReport;
 
 public class Railroad extends JPanel {
 
@@ -58,12 +59,12 @@ public class Railroad extends JPanel {
 		return _railroad.getLowercaseName();
 	}
 	
-	public void setAggregateData (PropertyDataAccumulator data) {
+	public void setAggregateData (PropertyDataReport data) {
 		_myProperty.setData(data);
 	}
 	
-	public void setMyData (PropertyDataAccumulator data) {
-		_aggregateProperty.setData(data);
+	public void setMyData (PropertyDataReport propertyDataReport) {
+		_aggregateProperty.setData(propertyDataReport);
 	}
 	
 	public void update () {

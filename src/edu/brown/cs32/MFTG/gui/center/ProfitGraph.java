@@ -21,6 +21,7 @@ import org.jfree.data.xy.XYSeriesCollection;
 
 import edu.brown.cs32.MFTG.gui.Constants;
 import edu.brown.cs32.MFTG.monopoly.PlayerWealthData;
+import edu.brown.cs32.MFTG.tournament.data.PlayerWealthDataReport;
 
 public class ProfitGraph extends JPanel {
 
@@ -29,7 +30,7 @@ public class ProfitGraph extends JPanel {
 	private XYPlot _plot;
 	private ChartPanel _chartPanel;
 	
-	private List<PlayerWealthData> _currData = null;
+	private List<PlayerWealthDataReport> _currData = null;
 	
 	private int _minBuyCash = 0;
 	private int _minBuildCash = 0;
@@ -73,7 +74,7 @@ public class ProfitGraph extends JPanel {
 	}
 	*/
 	
-	public void setWealthData(List<PlayerWealthData> data) {
+	public void setWealthData(List<PlayerWealthDataReport> data) {
 		_currData = data;
 		update();
 	}
@@ -99,9 +100,9 @@ public class ProfitGraph extends JPanel {
 			XYSeries cash = new XYSeries("Cash");
 			XYSeries totalWealth = new XYSeries("Total Wealth");
 			for(int x=0; x<_currData.size(); x++) {
-				PlayerWealthData d = _currData.get(x);
-				cash.add(x, d.cash);
-				totalWealth.add(x, d.totalWealth);
+				PlayerWealthDataReport d = _currData.get(x);
+				cash.add(x, d.accCash);
+				totalWealth.add(x, d.accTotalWealth);
 			}
 			_dataset.addSeries(cash);
 			_dataset.addSeries(totalWealth);

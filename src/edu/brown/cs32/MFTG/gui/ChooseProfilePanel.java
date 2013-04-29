@@ -23,7 +23,6 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.MouseInputAdapter;
 
-import edu.brown.cs32.MFTG.mftg.Main;
 import edu.brown.cs32.MFTG.networking.ProfileManager;
 import edu.brown.cs32.MFTG.tournament.Profile;
 
@@ -34,7 +33,7 @@ public class ChooseProfilePanel extends JPanel{
 	private ImagePanel _chooseLite, _backLite, _backDark, _selectLite, _selectDark;
 	private BufferedImage _background;
 	private Point _chooseLoc, _listLoc, _backLoc, _selectLoc;
-	private Main _main;
+	private MonopolyGui _main;
 
 	private ProfileManager _profileManager;
 	private JList<String> _profileList;
@@ -45,7 +44,7 @@ public class ChooseProfilePanel extends JPanel{
 	private final int START_HEIGHT=Constants.FULL_HEIGHT/8;
 	private final int START_WIDTH=Constants.FULL_WIDTH/6;
 
-	public ChooseProfilePanel(Main main) {
+	public ChooseProfilePanel(MonopolyGui main) {
 		try {
 			_main=main;
 			java.awt.Dimension size = new java.awt.Dimension(Constants.FULL_WIDTH,Constants.FULL_HEIGHT);

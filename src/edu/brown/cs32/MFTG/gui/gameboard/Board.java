@@ -23,15 +23,12 @@ import javax.swing.JPanel;
 import edu.brown.cs32.MFTG.gui.Constants;
 import edu.brown.cs32.MFTG.gui.Constants.ColorProperties;
 import edu.brown.cs32.MFTG.gui.Constants.Colors;
-import edu.brown.cs32.MFTG.gui.Constants.Corners;
 import edu.brown.cs32.MFTG.gui.Constants.Orientation;
 import edu.brown.cs32.MFTG.gui.Constants.Properties;
 import edu.brown.cs32.MFTG.gui.Constants.Railroads;
 import edu.brown.cs32.MFTG.gui.Constants.StaticProperties;
 import edu.brown.cs32.MFTG.gui.Constants.Utilities;
-import edu.brown.cs32.MFTG.gui.Constants.View;
 import edu.brown.cs32.MFTG.gui.center.Center;
-import edu.brown.cs32.MFTG.gui.colors.ColorPanel;
 import edu.brown.cs32.MFTG.gui.properties.AggregateColorProperty;
 import edu.brown.cs32.MFTG.gui.properties.AggregateUtilityProperty;
 import edu.brown.cs32.MFTG.gui.properties.CornerProperty;
@@ -42,8 +39,9 @@ import edu.brown.cs32.MFTG.gui.properties.PropertyPanel;
 import edu.brown.cs32.MFTG.gui.properties.StaticProperty;
 import edu.brown.cs32.MFTG.monopoly.Player;
 import edu.brown.cs32.MFTG.monopoly.PlayerWealthData;
-import edu.brown.cs32.MFTG.monopoly.PropertyData;
+import edu.brown.cs32.MFTG.tournament.data.PlayerWealthDataReport;
 import edu.brown.cs32.MFTG.tournament.data.PropertyDataAccumulator;
+import edu.brown.cs32.MFTG.tournament.data.PropertyDataReport;
 
 public class Board extends JPanel {
 	
@@ -55,9 +53,9 @@ public class Board extends JPanel {
 	private int _id;
 	private Player _player = null;
 	
-	public Board (JMenuBar menu, int id) throws IOException {
+	public Board (int id) throws IOException {
 		super();
-		_menu = menu;
+		//_menu = menu;
 		_id = id;
 		
 		/* Set the dimension */
@@ -76,7 +74,7 @@ public class Board extends JPanel {
 		initializeRight();
 		initializeCenter();
 	
-		initializeMenu();
+		//initializeMenu();
 		
 		this.setVisible(true);
 	}
@@ -374,6 +372,10 @@ public class Board extends JPanel {
 		this.add(_center, BorderLayout.CENTER);
 	}
 	
+	public void roundCompleted() {
+		_player = null;
+	}
+	
 	public Player setHeuristics () {
 		_player = new Player(_id);
 	
@@ -417,7 +419,8 @@ public class Board extends JPanel {
 		return setHeuristics();
 	}
 	
-	public void setPlayerSpecificPropertyData(Map<String, PropertyDataAccumulator> data) {
+	public void setPlayerSpecificPropertyData(Map<String, PropertyDataReport> data) {
+		System.out.println("set player specific data");
 		for(ColorGroup colorGroup: _colorGroups) {
 			Set<String> names = colorGroup.getNames();
 			for(String name: names) {
@@ -444,7 +447,8 @@ public class Board extends JPanel {
 		this.repaint();
 	}
 	
-	public void setPropertyData(Map<String, PropertyDataAccumulator> data) {
+	public void setPropertyData(Map<String, PropertyDataReport> data) {
+		System.out.println("set property data");
 		for(ColorGroup colorGroup: _colorGroups) {
 			Set<String> names = colorGroup.getNames();
 			for(String name: names) {
@@ -472,7 +476,8 @@ public class Board extends JPanel {
 	}
 
 	
-	public void setWealthData(List<PlayerWealthData> data) {
+	public void setWealthData(List<PlayerWealthDataReport> data) {
+		System.out.println("set wealth data");
 		_center.setWealthData(data);
 	}
 	
@@ -481,12 +486,12 @@ public class Board extends JPanel {
 		frame.setPreferredSize(new Dimension(Constants.FULL_WIDTH, Constants.FULL_HEIGHT));
 		try {
 			JMenuBar menu = new JMenuBar();
-			Board board = new Board(menu, 1);
+			Board board = new Board(1);
 			frame.add(board);
 			
-			List<PlayerWealthData> wealthData = new ArrayList<>();
+			List<PlayerWealthDataReport> wealthData = new ArrayList<>();
 			for(int i=0; i<100; i++) {
-				PlayerWealthData d = new PlayerWealthData(1, Math.random()*1000, Math.random()*250);
+				PlayerWealthDataReport d = new PlayerWealthDataReport(1, Math.random()*1000, Math.random()*250, 1);
 				wealthData.add(d);
 			}
 			
@@ -494,55 +499,45 @@ public class Board extends JPanel {
 			
 			frame.setJMenuBar(menu);
 			
-			Map<String, PropertyDataAccumulator> data = new HashMap<>();
+			Map<String, PropertyDataReport> data = new HashMap<>();
+			
+			int id = 0;
 			
 			for(ColorProperties color: ColorProperties.values()) {
-				PropertyDataAccumulator d = new PropertyDataAccumulator(color.getLowercaseName());
-				d.accNumHouses = Math.random() * 5;
-				d.accTotalRevenueWithHouses = Math.random() * 10000;
-				d.accTotalRevenueWithoutHouses = 0;
+				PropertyDataReport d = new PropertyDataReport(color.getLowercaseName(), id, 
+						Math.random() * 5, Math.random() * 10000, 0, 1, 100);
 				data.put(color.getLowercaseName(), d);
 			}
 			
 			for(Utilities utilities: Utilities.values()) {
-				PropertyDataAccumulator d = new PropertyDataAccumulator(utilities.getLowercaseName());
-				d.accNumHouses = Math.random() * 5;
-				d.accTotalRevenueWithHouses = Math.random() * 10000;
-				d.accTotalRevenueWithoutHouses = 0;
+				PropertyDataReport d = new PropertyDataReport(utilities.getLowercaseName(), id, 
+						Math.random() * 5, Math.random() * 10000, 0, 1, 100);
 				data.put(utilities.getLowercaseName(), d);
 			}
 			
 			for(Railroads rr: Railroads.values()) {
-				PropertyDataAccumulator d = new PropertyDataAccumulator(rr.getLowercaseName());
-				d.accNumHouses = Math.random() * 5;
-				d.accTotalRevenueWithHouses = Math.random() * 10000;
-				d.accTotalRevenueWithoutHouses = 0;
+				PropertyDataReport d = new PropertyDataReport(rr.getLowercaseName(), id, 
+						Math.random() * 5, Math.random() * 10000, 0, 1, 100);
 				data.put(rr.getLowercaseName(), d);
 			}
 			
 			board.setPropertyData(data);
 			
 			for(ColorProperties color: ColorProperties.values()) {
-				PropertyDataAccumulator d = new PropertyDataAccumulator(color.getLowercaseName());
-				d.accNumHouses = Math.random() * 5;
-				d.accTotalRevenueWithHouses = Math.random() * 10000;
-				d.accTotalRevenueWithoutHouses = 0;
+				PropertyDataReport d = new PropertyDataReport(color.getLowercaseName(), id, 
+						Math.random() * 5, Math.random() * 10000, 0, 1, 100);
 				data.put(color.getLowercaseName(), d);
 			}
 			
 			for(Utilities utilities: Utilities.values()) {
-				PropertyDataAccumulator d = new PropertyDataAccumulator(utilities.getLowercaseName());
-				d.accNumHouses = Math.random() * 5;
-				d.accTotalRevenueWithHouses = Math.random() * 10000;
-				d.accTotalRevenueWithoutHouses = 0;
+				PropertyDataReport d = new PropertyDataReport(utilities.getLowercaseName(), id, 
+						Math.random() * 5, Math.random() * 10000, 0, 1, 100);
 				data.put(utilities.getLowercaseName(), d);
 			}
 			
 			for(Railroads rr: Railroads.values()) {
-				PropertyDataAccumulator d = new PropertyDataAccumulator(rr.getLowercaseName());
-				d.accNumHouses = Math.random() * 5;
-				d.accTotalRevenueWithHouses = Math.random() * 10000;
-				d.accTotalRevenueWithoutHouses = 0;
+				PropertyDataReport d = new PropertyDataReport(rr.getLowercaseName(), id, 
+						Math.random() * 5, Math.random() * 10000, 0, 1, 100);
 				data.put(rr.getLowercaseName(), d);
 			}
 			

@@ -23,6 +23,7 @@ import edu.brown.cs32.MFTG.gui.Constants.Orientation;
 import edu.brown.cs32.MFTG.gui.Constants.Properties;
 import edu.brown.cs32.MFTG.gui.Helper;
 import edu.brown.cs32.MFTG.tournament.data.PropertyDataAccumulator;
+import edu.brown.cs32.MFTG.tournament.data.PropertyDataReport;
 
 public abstract class PropertyPanel extends JPanel {
 
@@ -72,7 +73,7 @@ public abstract class PropertyPanel extends JPanel {
 
 	public abstract void paintComponent(Graphics g);
 	
-	public abstract void setData (PropertyDataAccumulator data);
+	public abstract void setData (PropertyDataReport propertyDataReport);
 
 	
 }

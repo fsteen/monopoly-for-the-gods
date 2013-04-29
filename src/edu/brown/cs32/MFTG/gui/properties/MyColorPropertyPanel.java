@@ -8,6 +8,7 @@ import edu.brown.cs32.MFTG.gui.Constants.Colors;
 import edu.brown.cs32.MFTG.gui.Constants.Properties;
 import edu.brown.cs32.MFTG.gui.Houses;
 import edu.brown.cs32.MFTG.tournament.data.PropertyDataAccumulator;
+import edu.brown.cs32.MFTG.tournament.data.PropertyDataReport;
 
 public class MyColorPropertyPanel extends MyPropertyPanel {
 
@@ -32,7 +33,7 @@ public class MyColorPropertyPanel extends MyPropertyPanel {
 	}
 
 	@Override
-	public void setData(PropertyDataAccumulator data) {
+	public void setData(PropertyDataReport data) {
 		updateProfit(data.accTotalRevenueWithHouses);
 		_houseRow.setNumHouses(data.accNumHouses);
 	}

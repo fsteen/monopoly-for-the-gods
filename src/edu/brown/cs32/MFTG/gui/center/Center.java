@@ -13,6 +13,7 @@ import edu.brown.cs32.MFTG.gui.Constants;
 import edu.brown.cs32.MFTG.gui.gameboard.Board;
 import edu.brown.cs32.MFTG.monopoly.Player;
 import edu.brown.cs32.MFTG.monopoly.PlayerWealthData;
+import edu.brown.cs32.MFTG.tournament.data.PlayerWealthDataReport;
 
 public class Center extends JPanel {
 
@@ -40,7 +41,7 @@ public class Center extends JPanel {
 	}
 	
 	
-	public void setWealthData(List<PlayerWealthData> data) {
+	public void setWealthData(List<PlayerWealthDataReport> data) {
 		_profitGraph.setWealthData(data);
 	}
 	

@@ -24,14 +24,13 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.event.MouseInputAdapter;
 
-import edu.brown.cs32.MFTG.mftg.Main;
 
 
 public class EndGamePanel extends JPanel{
 	private ImagePanel  _backLite, _backDark;
 	private BufferedImage _winner, _loser, _foreground;
 	private Point _backLoc, _goLoc;
-	private Main _main;
+	private MonopolyGui _main;
 	private List<String> _names;
 	private boolean _winning;
 	private JLabel _name1, _name2, _name3, _name4;
@@ -41,7 +40,7 @@ public class EndGamePanel extends JPanel{
 	private final int START_WIDTH=Constants.FULL_WIDTH/6;
 	private Font _nameFont;
 	
-	public EndGamePanel(Main main) {
+	public EndGamePanel(MonopolyGui main) {
 		try {
 			_main=main;
 			java.awt.Dimension size = new java.awt.Dimension(Constants.FULL_WIDTH,Constants.FULL_HEIGHT);

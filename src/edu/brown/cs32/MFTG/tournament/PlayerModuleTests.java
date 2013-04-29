@@ -50,8 +50,7 @@ public class PlayerModuleTests {
 		assertTrue(data.size() == seeds.size());
 	}
 	
-	@Test
-	public void playManyGamesTest(){
+	public static void playManyGamesTest(){
 		int numGames = 1000;
 		//TODO get exception when numGames gets large
 		
@@ -71,6 +70,11 @@ public class PlayerModuleTests {
 		List<GameData> data = p.playGames(players, seeds);
 		
 		assertTrue(data.size() == seeds.size());
+	}
+	
+	public static void main (String[] args) {
+		playManyGamesTest();
+		System.out.println("IM DONE!");
 	}
 	
 }

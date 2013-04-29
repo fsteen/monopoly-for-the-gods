@@ -10,7 +10,7 @@ import javax.imageio.ImageIO;
 
 import edu.brown.cs32.MFTG.gui.Constants.Orientation;
 import edu.brown.cs32.MFTG.gui.Constants.Railroads;
-import edu.brown.cs32.MFTG.tournament.data.PropertyDataAccumulator;
+import edu.brown.cs32.MFTG.tournament.data.PropertyDataReport;
 
 public class MyRailroadProperty extends MyPropertyPanel {
 
@@ -45,7 +45,7 @@ public class MyRailroadProperty extends MyPropertyPanel {
 	}
 
 	@Override
-	public void setData(PropertyDataAccumulator data) {
+	public void setData(PropertyDataReport data) {
 		updateProfit(data.accTotalRevenueWithHouses);
 	}
 

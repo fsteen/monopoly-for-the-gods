@@ -26,6 +26,7 @@ public abstract class NonstaticProperty extends PropertyPanel {
 	private double _timeOwned;
 	private JLabel _profitField;
 	private double _profit;
+	private double _profitFactor = 200.;
 	
 	/* Percentage owned and profit rectangle */
 	protected Rectangle _profitBlock;
@@ -118,7 +119,10 @@ public abstract class NonstaticProperty extends PropertyPanel {
 		g2.setColor(Color.WHITE);
 		g2.fill(_profitBlock);
 		
-		Color c = new Color(color.getRed(), color.getGreen(), color.getBlue(), (int) (255*_profit/10000.));
+		int alpha = (int) (255*_profit/_profitFactor);
+		if(alpha < 0) alpha = 0;
+		if(alpha > 255) alpha = 255;
+		Color c = new Color(color.getRed(), color.getGreen(), color.getBlue(), alpha);
 		g2.setColor(c);
 		g2.fill(_profitBlock);
 
@@ -154,7 +158,10 @@ public abstract class NonstaticProperty extends PropertyPanel {
 		g2.setColor(Color.WHITE);
 		g2.fill(_profitBlock);
 		
-		Color c = new Color(color.getRed(), color.getGreen(), color.getBlue(), (int) (255*_profit/10000.));
+		int alpha = (int) (255*_profit/_profitFactor);
+		if(alpha < 0) alpha = 0;
+		if(alpha > 255) alpha = 255;
+		Color c = new Color(color.getRed(), color.getGreen(), color.getBlue(), alpha);
 		g2.setColor(c);
 		g2.fill(_profitBlock);
 		
