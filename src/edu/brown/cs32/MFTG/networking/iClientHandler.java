@@ -38,5 +38,5 @@ public interface iClientHandler {
 	 * @param errorMessage the message to display
 	 * @throws ClientCommunicationException
 	 */
-	public void sendErrorMessage(String errorMessage);
+	public void sendErrorMessage(String errorMessage) throws ClientCommunicationException;
 }

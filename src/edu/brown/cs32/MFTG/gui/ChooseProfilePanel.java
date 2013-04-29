@@ -121,31 +121,17 @@ public class ChooseProfilePanel extends JPanel{
 	}
 	
 	private void addProfileList(){
-		_profileManager = new ProfileManager();
-		_listModel = new DefaultListModel<String>();
-		_profileList = new JList<String>(_listModel);
-		_profileList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-
-		_profileList.setSelectedIndex(0);
-		_profileList.addListSelectionListener(new ListListener());
-		_profileList.setVisibleRowCount(_profileManager.numProfiles());
-		JScrollPane listScrollPane = new JScrollPane(_profileList);
+		_listModel = new DefaultListModel<>();
+		_profileList = new JList<>(_listModel);
 		
-		// TODO figure out how the FUCK to add shit
-		listScrollPane.setLocation(Constants.FULL_WIDTH/32, START_HEIGHT+BUTTON_HEIGHT*6/5);
+		ProfileScrollPane profileScrollPane = new ProfileScrollPane(_profileList, _listModel);
+		profileScrollPane.setup();
+		
+		profileScrollPane.setLocation(Constants.FULL_WIDTH/32, START_HEIGHT+BUTTON_HEIGHT*6/5);
 		Dimension listSize = new Dimension(BOTTOM_WIDTH, BOTTOM_HEIGHT);
-		listScrollPane.setSize(listSize);
-		listScrollPane.setPreferredSize(listSize);
-		add(listScrollPane);
-
-		_profileList.getInputMap().put( KeyStroke.getKeyStroke( "ENTER" ), "completeAction" );
-		_profileList.getActionMap().put( "completeAction", new CompleteAction());
-
-		_profileList.getInputMap().put( KeyStroke.getKeyStroke( "DOWN" ), "doUpAction" );
-		_profileList.getActionMap().put( "doUpAction", new UpAction());
-
-		_profileList.getInputMap().put( KeyStroke.getKeyStroke( "UP" ), "doDownAction" );
-		_profileList.getActionMap().put( "doDownAction", new DownAction());
+		profileScrollPane.setSize(listSize);
+		profileScrollPane.setPreferredSize(listSize);
+		add(profileScrollPane);
 	}
 
 	@Override
@@ -177,6 +163,7 @@ public class ChooseProfilePanel extends JPanel{
 				}
 				_selectLite.setVisible(false);
 				_selectDark.setVisible(true);
+				_selectGrey.setVisible(false);
 				repaint();
 			}
 
@@ -219,7 +206,8 @@ public class ChooseProfilePanel extends JPanel{
 			_backDark.setVisible(false);
 			_backLite.setVisible(true);
 			_selectDark.setVisible(false);
-			_selectLite.setVisible(true);
+			_selectLite.setVisible(false);
+			_selectGrey.setVisible(true);
 			repaint();
 		}
 		private boolean intersects(int xloc, int yloc, JPanel img, Point loc) {
@@ -230,76 +218,5 @@ public class ChooseProfilePanel extends JPanel{
 		}
 
 	}
-	/**********************Private inner classes*************************************/
-	public class ListListener implements ListSelectionListener{
-		public void valueChanged(ListSelectionEvent e) {
-			if (e.getValueIsAdjusting() == false) {
-
-			}
-		}
-	}
-
-	/**
-	 * CompeteAction
-	 * Used to map the enter key in the list to complete the
-	 * current last word with the word selected in the list of suggestions
-	 */
-	class CompleteAction extends AbstractAction {
-		private static final long serialVersionUID = 1L;
-
-		@Override
-		public void actionPerformed(ActionEvent arg0) {
-
-			if (_listModel.size() < 1) {
-				return;
-			}
-
-			int index = _profileList.getSelectedIndex();
-
-			String profileName;
-
-			if (index < 0) {
-				profileName = _listModel.firstElement().toString();
-			} else {
-				profileName = _listModel.elementAt(index).toString();
-			}
-
-			Profile p = _profileManager.getProfile(profileName);
-
-			// TODO use this mofo
-		}
-	}
-
-	/**
-	 * UpAction
-	 * Used to map the up key in the list to move the index of
-	 * the list up by one.
-	 */
-	class UpAction extends AbstractAction {
-		private static final long serialVersionUID = 1L;
-
-		@Override
-		public void actionPerformed(ActionEvent arg0) {
-			int index = _profileList.getSelectedIndex() + 1;
-			index = index > _listModel.getSize() ? _listModel.getSize() : index;
-			_profileList.setSelectedIndex(index);
-		}
-	}
-
-	/**
-	 * DownAction
-	 * Used to map the down key in the list to move the index of
-	 * the list down by one.
-	 */
-	class DownAction extends AbstractAction {
-		private static final long serialVersionUID = 1L;
-
-		@Override
-		public void actionPerformed(ActionEvent arg0) {
-			int index = _profileList.getSelectedIndex() - 1;
-			index = index > 0 ? index : 0;
-			_profileList.setSelectedIndex(index);
-		}
-	}	
 }
 
