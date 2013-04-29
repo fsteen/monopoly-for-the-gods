@@ -51,6 +51,7 @@ public class CreateBottomPanel extends JPanel {
 	private ButtonGroup _winCond, _gameFlow;
 	private ImagePanel _p1h,_p1c,_p2h,_p2c,_p3h,_p3c,_p3x,_p4h,_p4c,_p4x;
 	private Integer _p2Curr, _p3Curr, _p4Curr;
+	private Font _headerFont, _sideFont;
 	public CreateBottomPanel() {
 		super();
 		try {
@@ -79,13 +80,17 @@ public class CreateBottomPanel extends JPanel {
 			portPanel.add(_portLabel);
 			portPanel.add(_port);
 			
+			_headerFont = new Font("sansserif", Font.BOLD, 14);
+			_sideFont = new Font("sansserif", Font.PLAIN, 14);
+			
 			JPanel winCondPanel = new JPanel(new GridLayout(0,1));
 			winCondPanel.setAlignmentX(LEFT_ALIGNMENT);
 			winCondPanel.setBackground(Color.WHITE);
 			_winCondLabel = new JLabel("Win Condition:");
+			_winCondLabel.setFont(_headerFont);
 			_mostMoney=new JRadioButton("Most Cummulative Wealth");
 			_mostSets=new JRadioButton("Most Sets Won", true);
-			_lastMatch=new JRadioButton("Win Last Match");
+			_lastMatch=new JRadioButton("Win Last Set");
 			_mostMoney.setBackground(Color.WHITE);
 			_mostSets.setBackground(Color.WHITE);
 			_lastMatch.setBackground(Color.WHITE);
@@ -100,30 +105,67 @@ public class CreateBottomPanel extends JPanel {
 			winCondPanel.add(_mostSets);
 			winCondPanel.add(_lastMatch);
 			
-			JPanel timePanel = new JPanel(new GridLayout(0,1));
+			JPanel timePanel = new JPanel(null);
 			timePanel.setAlignmentX(LEFT_ALIGNMENT);
 			timePanel.setBackground(Color.WHITE);
-			_timeBeginLabel=new JLabel("Time At Beginning (min): ");
-			_timeBetweenLabel=new JLabel("Time At Beginning (min): ");
-			_timeBegin = new JTextField(4);
-			_timeBetween= new JTextField(4);
+			_timeBeginLabel=new JLabel("Time At Beginning(min): ");
+			_timeBetweenLabel=new JLabel("Time Between Sets(min): ");
+			_timeBeginLabel.setFont(_sideFont);
+			_timeBetweenLabel.setFont(_sideFont);
+			_timeBegin = new JTextField(1);
+			_timeBetween= new JTextField(1);
+			
+			Dimension timeSize = new Dimension(40,30);
+			Dimension timeLabelSize = new Dimension(200,15);
+			_timeBeginLabel.setSize(timeLabelSize);
+			_timeBeginLabel.setPreferredSize(timeLabelSize);
+			_timeBegin.setSize(timeSize);
+			_timeBegin.setPreferredSize(timeSize);
+			_timeBegin.setLocation(180,0);
+			_timeBeginLabel.setLocation(0,8);
+			
+			_timeBetweenLabel.setSize(timeLabelSize);
+			_timeBetweenLabel.setPreferredSize(timeLabelSize);
+			_timeBetween.setSize(timeSize);
+			_timeBetween.setPreferredSize(timeSize);
+			_timeBetween.setLocation(180,35);
+			_timeBetweenLabel.setLocation(0,42);
+			
 			_timeBegin.setDocument(new NumDocument(1));
 			_timeBetween.setDocument(new NumDocument(1));
-			//_timeBegin.setFont(new Font("myFont",Font.PLAIN,20));
-			//_timeBetween.setFont(new Font("myFont",Font.PLAIN,20));
+			
 			timePanel.add(_timeBeginLabel);
 			timePanel.add(_timeBegin);
 			timePanel.add(_timeBetweenLabel);
 			timePanel.add(_timeBetween);
 			
-			JPanel gameLengthPanel = new JPanel(new GridLayout(0,1));
+			JPanel gameLengthPanel = new JPanel(null);
 			gameLengthPanel.setBackground(Color.WHITE);
 			_numSetsLabel=new JLabel("Number of Sets: ");
 			_numGamesLabel=new JLabel("Games per Set: ");
+			_numSetsLabel.setFont(_sideFont);
+			_numGamesLabel.setFont(_sideFont);
 			_numSets = new JTextField(4);
 			_numGames= new JTextField(4);
 			_numSets.setDocument(new NumDocument(3));
 			_numGames.setDocument(new NumDocument(5));
+			
+			Dimension numSize = new Dimension(60,30);
+			Dimension numLabelSize = new Dimension(200,15);
+			_numSetsLabel.setSize(numLabelSize);
+			_numSetsLabel.setPreferredSize(numLabelSize);
+			_numSets.setSize(numSize);
+			_numSets.setPreferredSize(numSize);
+			_numSets.setLocation(115,0);
+			_numSetsLabel.setLocation(0,8);
+			
+			_numGamesLabel.setSize(numLabelSize);
+			_numGamesLabel.setPreferredSize(numLabelSize);
+			_numGames.setSize(numSize);
+			_numGames.setPreferredSize(numSize);
+			_numGames.setLocation(115,35);
+			_numGamesLabel.setLocation(0,42);
+			
 			gameLengthPanel.add(_numSetsLabel);
 			gameLengthPanel.add(_numSets);
 			gameLengthPanel.add(_numGamesLabel);
@@ -133,6 +175,7 @@ public class CreateBottomPanel extends JPanel {
 			gameFlowPanel.setAlignmentX(LEFT_ALIGNMENT);
 			gameFlowPanel.setBackground(Color.WHITE);
 			_gameFlowLabel = new JLabel("Game Flow:");
+			_gameFlowLabel.setFont(_headerFont);
 			_chooseTogether=new JRadioButton("Choose Heuristics Together", true);
 			_rotateChoosing=new JRadioButton("Rotate Choosing Heuristics");
 			_chooseTogether.setBackground(Color.WHITE);
@@ -149,6 +192,7 @@ public class CreateBottomPanel extends JPanel {
 			_extraPanel = new JPanel(new GridLayout(0,1));
 			_extraPanel.setBackground(Color.WHITE);
 			_extraLabel = new JLabel("In-Game Rules:");
+			_extraLabel.setFont(_headerFont);
 			_extraLabel.setBackground(Color.WHITE);
 			_fpPanel = new JPanel(new GridLayout(1,0));
 			_fpPanel.setBackground(Color.WHITE);
