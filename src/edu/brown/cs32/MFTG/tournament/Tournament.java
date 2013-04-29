@@ -51,7 +51,7 @@ public class Tournament implements Runnable{
 	}
 	
 	public void run() {
-		int gamesPerModule = (int)Math.ceil(_settings.getNumGamesPerRound()/_clients.size());
+		int gamesPerModule = (int)Math.ceil(_settings.getNumGamesPerRound()/_numPlayers);
 		List<Player> players = null;
 		List<List<GameData>> data;
 		List<Integer> confirmationIndices;
