@@ -138,6 +138,7 @@ public class GreetingPanel extends JPanel{
 			else if(intersects(xloc,yloc,_settingsLite,_settingsLoc)) {
 				
 				if(_settingsDark.isVisible()) {
+					fixPanels();
 					//TODO
 				}
 				else {
@@ -146,6 +147,7 @@ public class GreetingPanel extends JPanel{
 			}
 			else if(intersects(xloc,yloc,_recordsLite,_recordsLoc)) {
 				if(_recordsDark.isVisible()) {
+					fixPanels();
 					//TODO
 				}
 				else {
