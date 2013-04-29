@@ -56,7 +56,7 @@ public class PlayerModule {
 	private List<GameData> _data;
 	private AtomicInteger _numThreadsDone;
 	private ExecutorService _pool;
-	private int _id;
+	protected int _id;
 	private Player _player;
 	
 	/* Temporary variables - replace later */
