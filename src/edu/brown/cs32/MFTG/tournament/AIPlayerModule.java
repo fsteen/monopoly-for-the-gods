@@ -13,7 +13,7 @@ import edu.brown.cs32.MFTG.tournament.data.PlayerWealthDataReport;
 import edu.brown.cs32.MFTG.tournament.data.PropertyDataReport;
 import edu.brown.cs32.MFTG.tournament.data.TimeStampReport;
 
-public class AIPlayerModule extends PlayerModule{
+public class AIPlayerModule extends Client{
 	// data from previous set
 	GameDataReport _currentGameData;
 	GameDataReport _previousGameData;

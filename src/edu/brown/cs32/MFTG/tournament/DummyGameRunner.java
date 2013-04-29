@@ -6,9 +6,9 @@ import edu.brown.cs32.MFTG.monopoly.Game;
 
 public class DummyGameRunner extends GameRunner{
 	private AtomicInteger _numThreadsDone;
-	private PlayerModule _module;
+	private Client _module;
 	
-	public DummyGameRunner(Game game, AtomicInteger numThreadsDone, PlayerModule module) {
+	public DummyGameRunner(Game game, AtomicInteger numThreadsDone, Client module) {
 		super(game, numThreadsDone, module);
 		_numThreadsDone = numThreadsDone;
 		_module = module;

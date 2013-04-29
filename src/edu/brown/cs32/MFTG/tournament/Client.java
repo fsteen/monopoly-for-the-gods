@@ -35,7 +35,7 @@ import edu.brown.cs32.MFTG.tournament.data.PlayerWealthDataReport;
 import edu.brown.cs32.MFTG.tournament.data.PropertyDataReport;
 import edu.brown.cs32.MFTG.tournament.data.TimeStampReport;
 
-public class PlayerModule {
+public class Client {
 
 	private static final int DEFAULT_PORT = 8080;
 
@@ -67,7 +67,7 @@ public class PlayerModule {
 	private final boolean DOUBLE_ON_GO=false;
 	private final boolean AUCTIONS=false;
 
-	public PlayerModule(String host, int port){
+	public Client(String host, int port){
 		_oMapper = new ObjectMapper();
 		_host = host;
 		_port = port;
@@ -127,7 +127,7 @@ public class PlayerModule {
 	}
 
 	/**
-	 * Connects the PlayerModule to a socket
+	 * Connects the Client to a socket
 	 * @throws IOException
 	 */
 	public void connectAndRun(){
@@ -390,7 +390,7 @@ public class PlayerModule {
 			return;
 		}
 
-		PlayerModule pm = new PlayerModule(args[0], port);
+		Client pm = new Client(args[0], port);
 
 		pm.connectAndRun();
 	}

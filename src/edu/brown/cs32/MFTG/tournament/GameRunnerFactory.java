@@ -13,10 +13,10 @@ public class GameRunnerFactory {
 	private int _maxNumTurns, _freeParking;
 	private boolean _doubleOnGo, _auctions;
 	private Player[] _players;
-	private PlayerModule _module;
+	private Client _module;
 	private AtomicInteger _numThreadsDone;
 	
-	public GameRunnerFactory(AtomicInteger numThreadsDone, PlayerModule module,
+	public GameRunnerFactory(AtomicInteger numThreadsDone, Client module,
 			int maxNumTurns, int freeParking, boolean doubleOnGo, boolean auctions, Player...players){
 		_numThreadsDone = numThreadsDone;
 		_module = module;

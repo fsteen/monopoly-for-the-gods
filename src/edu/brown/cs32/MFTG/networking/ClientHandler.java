@@ -146,14 +146,14 @@ public class ClientHandler implements iClientHandler{
 		}
 	}
 	
-	public void sendErrorMessage(String errorMessage) throws ClientCommunicationException{
+	public void sendErrorMessage(String errorMessage) {
 		ClientRequestContainer request = new ClientRequestContainer(Method.DISPLAYERROR, Arrays.asList(errorMessage));
 		
 		// request that the client display the error message
 		try {
 			_oMapper.writeValue(_output, request);
 		} catch (IOException e) {
-			throw new ClientCommunicationException(_id);
+			// do nothing -- you are already fucked
 		}
 	}
 }

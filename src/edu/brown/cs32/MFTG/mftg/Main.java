@@ -1,6 +1,6 @@
 package edu.brown.cs32.MFTG.mftg;
 
-import edu.brown.cs32.MFTG.tournament.PlayerModule;
+import edu.brown.cs32.MFTG.tournament.Client;
 
 //import javax.swing.UIManager;
 //import javax.swing.UnsupportedLookAndFeelException;
@@ -24,7 +24,7 @@ public class Main {
 //			new MonopolyGui();
 //		} catch (UnsupportedLookAndFeelException|ClassNotFoundException|InstantiationException|IllegalAccessException e) {}
 
-		PlayerModule pm = new PlayerModule("localhost", 3232);
+		Client pm = new Client("localhost", 3232);
 
 	}
 

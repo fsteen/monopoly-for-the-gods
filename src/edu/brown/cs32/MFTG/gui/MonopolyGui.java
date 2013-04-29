@@ -13,7 +13,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 import edu.brown.cs32.MFTG.gui.gameboard.Board;
 import edu.brown.cs32.MFTG.networking.ProfileManager;
-import edu.brown.cs32.MFTG.tournament.PlayerModule;
+import edu.brown.cs32.MFTG.tournament.Client;
 import edu.brown.cs32.MFTG.tournament.Profile;
 
 public class MonopolyGui extends JFrame{
@@ -22,9 +22,9 @@ public class MonopolyGui extends JFrame{
 	private EndGamePanel _end;
 	private Profile _currentProfile;
 	private ProfileManager _profileManager;
-	private PlayerModule _module;
+	private Client _module;
 	
-	public MonopolyGui(PlayerModule module) {
+	public MonopolyGui(Client module) {
 		super("Monopoly for the GODS");
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		_panels = new HashMap<>(7);
@@ -107,7 +107,7 @@ public class MonopolyGui extends JFrame{
 		}
 	}
 	
-	public PlayerModule getModule(){
+	public Client getModule(){
 		return _module;
 	}
 }
