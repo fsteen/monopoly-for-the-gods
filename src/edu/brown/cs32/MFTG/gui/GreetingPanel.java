@@ -129,7 +129,7 @@ public class GreetingPanel extends JPanel{
 			if(intersects(xloc,yloc,_playLite,_playLoc)) {
 				if(_playDark.isVisible()) {
 					fixPanels();
-					_main.switchPanels("lobby");
+					_main.switchPanels("choose");
 				}
 				else {
 					fixPanels();
@@ -138,6 +138,7 @@ public class GreetingPanel extends JPanel{
 			else if(intersects(xloc,yloc,_settingsLite,_settingsLoc)) {
 				
 				if(_settingsDark.isVisible()) {
+					fixPanels();
 					//TODO
 				}
 				else {
@@ -146,6 +147,7 @@ public class GreetingPanel extends JPanel{
 			}
 			else if(intersects(xloc,yloc,_recordsLite,_recordsLoc)) {
 				if(_recordsDark.isVisible()) {
+					fixPanels();
 					//TODO
 				}
 				else {

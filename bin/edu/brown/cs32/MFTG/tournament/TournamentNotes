@@ -1,6 +1,6 @@
 Things to do
 
--some data that i could collect but don't
+-/some data that i could collect but don't
 	-for each property, % of the game for which each player owned said property, % of game for which it was owned
 -player module data processing
 -testing
@@ -28,13 +28,4 @@ Concerns
 	but it makes me nervous and should probably be changed
 	
 	
-	
-_________________
-public void setWealthData(List<PlayerWealthData> data);
-
-public void setPropertyData(Map<String, PropertyData> data); //this is the cumulative property data
-
-public void setPlayerSpecificPropertyData(Map<String, PropertyData> data); 
-
-public void roundCompleted();
-
+	-for player properties % time you owned it

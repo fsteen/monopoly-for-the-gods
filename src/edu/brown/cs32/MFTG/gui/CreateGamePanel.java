@@ -20,6 +20,7 @@ import javax.swing.JRadioButton;
 import javax.swing.event.MouseInputAdapter;
 
 import edu.brown.cs32.MFTG.mftg.Main;
+import edu.brown.cs32.MFTG.tournament.Settings;
 
 
 public class CreateGamePanel extends JPanel{
@@ -54,7 +55,7 @@ public class CreateGamePanel extends JPanel{
 			
 			_backLite = new ImagePanel(Helper.resize(ImageIO.read(new File("images/BackLite.png")), 100, 50));
 			_backDark = new ImagePanel(Helper.resize(ImageIO.read(new File("images/BackDark.png")), 100, 50));
-			_backLoc= new Point(this.getWidth()-_backLite.getWidth()-20, this.getHeight()-_backDark.getHeight()-10);
+			_backLoc= new Point(20, this.getHeight()-_backDark.getHeight()-10);
 			_backLite.setLocation(_backLoc);
 			_backDark.setLocation(_backLoc);
 			_backDark.setVisible(false);
@@ -122,7 +123,7 @@ public class CreateGamePanel extends JPanel{
 			if(intersects(xloc,yloc,_backLite,_backLoc)) {
 				if(_backDark.isVisible()) {
 					fixPanels();
-					_main.switchPanels("lobby");
+					_main.switchPanels("lobby");	
 				}
 				else {
 					fixPanels();
@@ -132,7 +133,10 @@ public class CreateGamePanel extends JPanel{
 			else if(intersects(xloc,yloc,_goLite,_goLoc)) {
 				if(_goDark.isVisible()) {
 					fixPanels();
-					//_main.switchPanels("lobby");
+					Settings settings = _bottomPanel.getSettings();
+					int numPlayers = _bottomPanel.getNumPlayers();
+					int port = _bottomPanel.getPort();
+					//client.launchTournament(settings, numPlayers, port);
 				}
 				else {
 					fixPanels();

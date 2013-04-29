@@ -10,18 +10,35 @@ public class Settings {
 		STAGGERED, BUNCHED
 	}
 	public enum WinningCondition {
-		MOST_GAMES_WON
+		MOST_SETS_WON, LAST_SET_WON, MOST_MONEY_MIDWAY
 	}
 	
-	public final int NUM_GAMES_PER_ROUND;
-	public final int NUM_ROUNDS;
+	public final int gamesPerRound, numRounds,beginningTimeout, duringTimeout, freeParking;
+	public final boolean doubleOnGo, auctions;
+	public final Turns turnFlow;
+	public final WinningCondition winType;
 	
 	@JsonCreator
-	public Settings(@JsonProperty("numGamesPerRound") int numGamesPerRound, @JsonProperty("numRounds") int numRounds){
-		NUM_GAMES_PER_ROUND = numGamesPerRound;
-		NUM_ROUNDS = numRounds;
+	public Settings(@JsonProperty("numGamesPerRound") int gamesPerRound,
+					@JsonProperty("numRounds") int numRounds,
+					@JsonProperty("doubleOnGo") boolean doubleOnGo,
+					@JsonProperty("freeParking") int freeParking,
+					@JsonProperty("auctions") boolean auctions,
+					@JsonProperty("turnFlow") Turns turnFlow, 
+					@JsonProperty("winType") WinningCondition winType, 
+					@JsonProperty("beginningTimeout") int beginningTimeout, 
+					@JsonProperty("duringTimeout") int duringTimeout){
+		
+		this.gamesPerRound = gamesPerRound;
+		this.numRounds = numRounds;
+		this.turnFlow = turnFlow;
+		this.winType = winType;
+		this.beginningTimeout = beginningTimeout;
+		this.duringTimeout = duringTimeout;
+		this.doubleOnGo = doubleOnGo;
+		this.freeParking = freeParking;
+		this.auctions = auctions;
 	}
-
 	
 	/**
 	 * Returns the number of games to be played per round
@@ -30,7 +47,7 @@ public class Settings {
 	 */
 	@JsonIgnore
 	public int getNumGamesPerRound(){
-		return NUM_GAMES_PER_ROUND;
+		return this.gamesPerRound;
 	}
 	
 	/**
@@ -39,7 +56,7 @@ public class Settings {
 	 */
 	@JsonIgnore
 	public int getNumRounds(){
-		return NUM_ROUNDS;
+		return this.numRounds;
 	}
 	
 	@Override
@@ -49,6 +66,14 @@ public class Settings {
 		
 		Settings that = (Settings) o;
 		
-		return (this.NUM_GAMES_PER_ROUND == that.getNumGamesPerRound() && this.NUM_ROUNDS == that.getNumRounds());
+		return (this.gamesPerRound == that.gamesPerRound)
+			&& (this.numRounds == that.numRounds)
+			&& (this.turnFlow == that.turnFlow)
+			&& (this.winType == that.winType)
+			&& (this.beginningTimeout == that.beginningTimeout)
+			&& (this.duringTimeout == that.duringTimeout)
+			&& (this.doubleOnGo == that.doubleOnGo)
+			&& (this.freeParking == that.freeParking)
+			&& (this.auctions == that.auctions);
 	}
 }

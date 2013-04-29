@@ -21,10 +21,12 @@ import edu.brown.cs32.MFTG.networking.ClientRequestContainer.Method;
 import edu.brown.cs32.MFTG.tournament.data.GameDataReport;
 
 public class ClientHandler implements iClientHandler{
-	
+
 	private final int GET_PLAYER_TIME = 180;
 	private final int PLAY_GAMES_TIME = 15;
 	
+	public final int _id;
+
 	final Socket _client;
 	private BufferedReader _input;
 	private BufferedWriter _output;
@@ -32,7 +34,9 @@ public class ClientHandler implements iClientHandler{
 
 	JavaType _listOfPlayers;
 
-	public ClientHandler(Socket client) throws IOException{
+	public ClientHandler(Socket client, int id) throws IOException{
+		_id = id;
+		
 		_client = client;
 		_input = new BufferedReader(new InputStreamReader(_client.getInputStream()));
 		_output = new BufferedWriter(new OutputStreamWriter(_client.getOutputStream()));
@@ -63,7 +67,7 @@ public class ClientHandler implements iClientHandler{
 			} else if (response._arguments == null || response._arguments.size() < 1){
 				throw new InvalidResponseException("Not enough arguments");
 			}
-			
+
 			// set the timeout and attempt to read the response from the client
 			try {
 				_client.setSoTimeout(GET_PLAYER_TIME * 1000);
@@ -71,11 +75,11 @@ public class ClientHandler implements iClientHandler{
 				_client.setSoTimeout(0);
 				return p;
 			} catch (SocketTimeoutException | SocketException e){
-				throw new ClientLostException();
+				throw new ClientLostException(_id);
 			}
 
 		} catch (IOException e) {
-			throw new ClientCommunicationException();
+			throw new ClientCommunicationException(_id);
 		}
 	}
 
@@ -99,7 +103,15 @@ public class ClientHandler implements iClientHandler{
 
 
 			// read in the response
-			ClientRequestContainer response = _oMapper.readValue(_input, ClientRequestContainer.class);
+			ClientRequestContainer response;
+			
+			try {
+				_client.setSoTimeout(PLAY_GAMES_TIME * 1000);
+				response = _oMapper.readValue(_input, ClientRequestContainer.class);
+				_client.setSoTimeout(0);
+			} catch (SocketTimeoutException | SocketException e){
+				throw new ClientLostException(_id);
+			}
 
 			// check for bad response
 			if (response._method != Method.SENDGAMEDATA){
@@ -112,17 +124,11 @@ public class ClientHandler implements iClientHandler{
 			JavaType listOfGameData = _oMapper.getTypeFactory().constructCollectionType(List.class, GameData.class);
 
 			// set the timeout and attempt to read the response from the client
-			try {
-				_client.setSoTimeout(PLAY_GAMES_TIME * 1000);
-				List<GameData> gameData = _oMapper.readValue(response._arguments.get(0), listOfGameData);
-				_client.setSoTimeout(0);
-				return gameData;
-			}  catch (SocketTimeoutException | SocketException e){
-				throw new ClientLostException();
-			}
+			List<GameData> gameData = _oMapper.readValue(response._arguments.get(0), listOfGameData);
+			return gameData;
 
 		} catch (IOException e){
-			throw new ClientCommunicationException();
+			throw new ClientCommunicationException(_id);
 		}
 	}
 
@@ -136,7 +142,18 @@ public class ClientHandler implements iClientHandler{
 			_oMapper.writeValue(_output, request);
 
 		} catch (IOException e){
-			throw new ClientCommunicationException();
+			throw new ClientCommunicationException(_id);
+		}
+	}
+	
+	public void sendErrorMessage(String errorMessage) throws ClientCommunicationException{
+		ClientRequestContainer request = new ClientRequestContainer(Method.DISPLAYERROR, Arrays.asList(errorMessage));
+		
+		// request that the client display the error message
+		try {
+			_oMapper.writeValue(_output, request);
+		} catch (IOException e) {
+			throw new ClientCommunicationException(_id);
 		}
 	}
 }

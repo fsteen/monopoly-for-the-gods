@@ -61,12 +61,14 @@ public class PropertyDataAccumulator{
 		for(PlayerPropertyData p : playerPropertyData.values()){
 			playerData.add(p.toPropertyDataReport());
 		}
-
-		playerData.add(new PropertyDataReport(propertyName, -1, accNumHouses/numDataPoints,
-				accTotalRevenueWithHouses/numDataPoints, accTotalRevenueWithoutHouses/numDataPoints,
-				accMortgaged/numDataPoints, numDataPoints));
-
 		return playerData;
+	}
+	
+	public PropertyDataReport toPropertyDataReport(){
+		//TODO deal with divide by 0 possibility
+		return new PropertyDataReport(propertyName, -1, accNumHouses/numDataPoints,
+				accTotalRevenueWithHouses/numDataPoints, accTotalRevenueWithoutHouses/numDataPoints,
+				accMortgaged/numDataPoints, numDataPoints);
 	}
 
 	// getters and setters for serialization

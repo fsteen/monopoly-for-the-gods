@@ -18,20 +18,13 @@ public class DataProcessor {
 	 * @param numDataPoints should be less than # of timestamps
 	 * @return
 	 */
-	public static GameDataReport aggregate(List<List<GameData>> data, int numDataPoints){
-		int numPlayers = data.get(0).get(0)._numPlayers;
+	public static GameDataReport aggregate(List<GameData> data, int numDataPoints){
 		GameDataAccumulator overall = new GameDataAccumulator(numDataPoints);
-		
-//		System.out.println("aggregate num games " + data.size());
-//		System.out.println();
-		
-		for(int i = 0; i < data.size(); i++){
-			for(int j = 0; j < data.get(0).size(); j++){
-				//TODO later ?? : for games that are repeats of each other, exclude all but one
-				combineGameData(overall, data.get(i).get(j));
-				overall.gameFinished();
-			}
-		}		
+		for(GameData d : data){
+			//TODO later ?? : for games that are repeats of each other, exclude all but one
+			combineGameData(overall, d);
+			overall.gameFinished();
+		}
 		return overall.toGameDataReport();
 	}
 	
