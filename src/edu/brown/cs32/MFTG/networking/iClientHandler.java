@@ -33,4 +33,10 @@ public interface iClientHandler {
 	 */
 	public void setGameData(GameDataReport aggregatedData) throws ClientCommunicationException;
 	
+	/**
+	 * Requests that an error message is displayed
+	 * @param errorMessage the message to display
+	 * @throws ClientCommunicationException
+	 */
+	public void sendErrorMessage(String errorMessage);
 }

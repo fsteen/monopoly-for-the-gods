@@ -91,4 +91,12 @@ public class ProfileManager {
 	public Set<String> getProfileNames(){
 		return _profiles.keySet();
 	}
+	
+	/**
+	 * Returns the number of profiles
+	 * @return the number of profiles
+	 */
+	public int numProfiles(){
+		return _profiles.size();
+	}
 }

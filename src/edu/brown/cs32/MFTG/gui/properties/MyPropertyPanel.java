@@ -19,10 +19,10 @@ import edu.brown.cs32.MFTG.gui.Constants.Orientation;
 import edu.brown.cs32.MFTG.gui.Constants.Properties;
 import edu.brown.cs32.MFTG.gui.Constants.Viewer;
 
-public abstract class MyPropertyPanel extends PropertyPanel{
+public abstract class MyPropertyPanel extends NonstaticProperty{
 
 	private JFormattedTextField _valueField;
-	private double _value;
+	private int _value;
 	
 	/* Font sizes */
 	private int _valueFont = Constants.FONT_SIZE;
@@ -35,27 +35,30 @@ public abstract class MyPropertyPanel extends PropertyPanel{
 		initializeValueField();
 	}
 	
+	protected void moveValueField (double x, double y) {
+		_valueField.setLocation((int) x, (int) y);
+	}
+	
 	public void initializeValueField () {
 		_valueField = new JFormattedTextField(NumberFormat.getInstance());
-		_valueField.setValue(new Double(_value));
+		_valueField.setValue(new Integer(_value));
 		_valueField.setFont(Constants.FONT);
 		_valueField.setForeground(Color.RED);
-		_valueField.addPropertyChangeListener(new ValueChangeListener());
 		
 		_valueField.setBorder(BorderFactory.createLineBorder(Color.WHITE, 0));
 		_valueField.setOpaque(false);
 		_valueField.setHorizontalAlignment(JTextField.CENTER);
 		
 		
-		if(_orientation == Orientation.UP) {
+		if(_orientation == Orientation.DOWN) {
 			_valueField.setSize(_orientation.getWidth(), 40);
 			_valueField.setLocation(0, _orientation.getHeight()/2 + 10);
 		}
-		else if(_orientation == Orientation.DOWN) {
+		else if(_orientation == Orientation.UP) {
 			_valueField.setSize(_orientation.getWidth(), 40);
 			_valueField.setLocation(0, _orientation.getHeight()/2 - 30);
 		}
-		else if (_orientation == Orientation.RIGHT){
+		else if (_orientation == Orientation.LEFT){
 			_valueField.setSize((int) (_orientation.getWidth()/2), 40);
 			_valueField.setLocation(_orientation.getWidth()/16, _orientation.getHeight()/2 - 10);
 		}
@@ -101,9 +104,8 @@ public abstract class MyPropertyPanel extends PropertyPanel{
 		super.paintComponent(g, picture, color, Color.BLACK);
 	}
 	
-	public void paintComponent (Graphics g, Color color) {
-		checkFont(g);
-		super.paintComponent(g, color, Color.BLACK);
+	public int getValue() {
+		return _value;
 	}
 
 }

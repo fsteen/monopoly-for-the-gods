@@ -51,59 +51,40 @@ public class Tournament implements Runnable{
 	}
 	
 	public void run() {
-		int gamesPerModule = (int)Math.ceil(_settings.getNumGamesPerRound()/_clients.size());
-		List<Player> players;
+		int gamesPerModule = (int)Math.ceil(_settings.getNumGamesPerRound()/_numPlayers);
+		List<Player> players = null;
 		List<List<GameData>> data;
 		List<Integer> confirmationIndices;
 		
 		for(int i = 0; i < _settings.getNumRounds(); i++){
 			
 			// request a Player from each client
-			try {
-				players = getNewPlayers();
-			} catch (InvalidResponseException e1) {
-				// TODO handle
-				return;
-			} catch (ClientLostException e1) {
-				// TODO handle
-				return;
-			} catch (ClientCommunicationException e1) {
-				// TODO handle
-				return;
-			}
+			List<Player> newPlayers = getNewPlayers();
+			if (newPlayers != null)
+				players = newPlayers;
+			
+			// if an error was caught before the players could originally be chosen, re-enter the loop
+			if(players == null)
+				continue;
 			
 			// generate which seeds will be used for integrity validation
 			confirmationIndices = DataProcessor.generateConfirmationIndices(gamesPerModule, CONFIRMATION_PERCENTAGE);
 			
 			// play a round of games
-			try {
-				data = playRoundOfGames(players, DataProcessor.generateSeeds(gamesPerModule, players.size(), confirmationIndices));
-			} catch (ClientLostException e1) {
-				// TODO handle
-				return;
-			} catch (InvalidResponseException e1) {
-				// TODO handle
-				return;
-			} catch (ClientCommunicationException e1) {
-				// TODO handle
-				return;
-			}
+			data = playRoundOfGames(players, DataProcessor.generateSeeds(gamesPerModule, players.size(), confirmationIndices));
 			
 			// make sure nobody cheated
 			if(DataProcessor.isCorrupted(data, confirmationIndices)){
 				System.out.println("WOOHOO ... SOMEONE IS CHEATING!!!!!"); //TODO change this
 			}
 			
-			// attempt to send the data about the game to the clients
-			try {
-				List<GameData> dataToSend = new ArrayList<>();
-				for(List<GameData> d : data){
-					dataToSend.addAll(d);
-				}
-				sendEndOfRoundData(DataProcessor.aggregate(dataToSend, NUM_DATA_POINTS));
-			} catch (ClientCommunicationException e) {
-				// TODO figure out how this will be handled
+			List<GameData> dataToSend = new ArrayList<>();
+			for(List<GameData> d : data){
+				dataToSend.addAll(d);
 			}
+			
+			// send the data to all the clients
+			sendEndOfRoundData(DataProcessor.aggregate(dataToSend, NUM_DATA_POINTS));
 		}
 		sendEndOfGameData();
 	}
@@ -115,13 +96,17 @@ public class Tournament implements Runnable{
 	 * @throws InvalidResponseException
 	 * @throws ClientCommunicationException
 	 */
-	private void rethrowExecutionException(Throwable cause) throws ClientLostException, InvalidResponseException, ClientCommunicationException{
+	private List<Player> handlePlayerExecutionException(Throwable cause, int culprit){
 		if (cause instanceof ClientLostException){
-			throw new ClientLostException();
-		} else if (cause instanceof InvalidResponseException){
-			throw (InvalidResponseException) cause;
+			_clients.remove(culprit);
+			sendErrorMessage("Lost connection to client " + culprit +". Ejecting client from game and " +
+							 " requesting new heuristic information");
+			return getNewPlayers();
+		} else if (cause instanceof InvalidResponseException || cause instanceof ClientCommunicationException){
+			sendErrorMessage("Unable to retrieve heuristic information from client. Reusing old heuristics");
+			return null;
 		} else {
-			throw new ClientCommunicationException();
+			return null;
 		}
 	}
 	
@@ -131,7 +116,7 @@ public class Tournament implements Runnable{
 	 * @throws ClientLostException 
 	 * @throws ClientCommunicationException 
 	 */
-	private List<Player> getNewPlayers() throws InvalidResponseException, ClientLostException, ClientCommunicationException{
+	private List<Player> getNewPlayers(){
 		List<Future<Player>> playerFutures = new ArrayList<>();
 		List<Player> players = new ArrayList<>();
 		
@@ -141,17 +126,28 @@ public class Tournament implements Runnable{
 			playerFutures.add(future);
 		}
 		
-		for (Future<Player> f : playerFutures){
+		for (int i = 0; i < playerFutures.size(); i++){
 			try {
-				players.add(f.get());
+				players.add(playerFutures.get(i).get());
 			} catch (InterruptedException e) {
-				throw new ClientCommunicationException();
+				sendErrorMessage("Unable to retrieve heuristic information from client " + i + 
+						 ". Reusing old heuristics");
+				return null;
 			} catch (ExecutionException e) {
-				rethrowExecutionException(e.getCause());
+				return handlePlayerExecutionException(e.getCause(), i);
 			}
 		}
 		
 		return players;
+	}
+	
+	private void handlePlayGamesException (Throwable cause, int culprit){
+		if (cause instanceof ClientLostException){
+			_clients.remove(culprit);
+			sendErrorMessage("Lost connection to client " + culprit +". Ejecting client from game");
+		} else if (cause instanceof InvalidResponseException || cause instanceof ClientCommunicationException){
+			sendErrorMessage("Unable to retrieve game data from client " + culprit + ". Reusing old heuristics");
+		}
 	}
 	
 	/**
@@ -164,7 +160,7 @@ public class Tournament implements Runnable{
 	 * @throws InvalidResponseException 
 	 * @throws ClientLostException 
 	 */
-	private List<List<GameData>> playRoundOfGames(List<Player> players, List<List<Long>> seeds) throws ClientLostException, InvalidResponseException, ClientCommunicationException{
+	private List<List<GameData>> playRoundOfGames(List<Player> players, List<List<Long>> seeds) {
 		List<Future<List<GameData>>> gameDataFutures = new ArrayList<>();
 		List<List<GameData>> gameData = new ArrayList<>();
 		
@@ -178,21 +174,37 @@ public class Tournament implements Runnable{
 			gameDataFutures.add(future);
 		}
 		
-		for (Future<List<GameData>> f : gameDataFutures){
+		int numFails = 0;
+		
+		for (int i = 0; i < gameDataFutures.size(); i++){
 			try {
-				gameData.add(f.get());
+				gameData.add(gameDataFutures.get(i).get());
 			} catch (InterruptedException e) {
-				throw new ClientCommunicationException();
+				numFails++;
 			} catch (ExecutionException e) {
-				rethrowExecutionException(e.getCause());
+				numFails++;
 			}
 		}
+		
+		if (numFails > 0)
+			sendErrorMessage("Unable to use game data from " + numFails + " of the " + _clients.size() + " clients");
+		
 		return gameData;
 	}
 
-	private void sendEndOfRoundData(GameDataReport aggregatedData) throws ClientCommunicationException {
+	private void sendEndOfRoundData(GameDataReport aggregatedData) {
 		for(iClientHandler c : _clients){
-			c.setGameData(aggregatedData);
+			try {
+				c.setGameData(aggregatedData);
+			} catch (ClientCommunicationException e) {
+				c.sendErrorMessage("Unable to display game data");
+			}
+		}
+	}
+	
+	private void sendErrorMessage(String errorMessage){
+		for (iClientHandler c : _clients){
+			c.sendErrorMessage(errorMessage);
 		}
 	}
 	
@@ -211,9 +223,9 @@ public class Tournament implements Runnable{
 		
 		while(connectionsMade <= _numPlayers){
 			Socket clientConnection = _socket.accept();
-			iClientHandler cHandler = new ClientHandler(clientConnection);
-			_clients.add(cHandler);
 			connectionsMade++;
+			iClientHandler cHandler = new ClientHandler(clientConnection, connectionsMade);
+			_clients.add(cHandler);
 		}
 	}
 }

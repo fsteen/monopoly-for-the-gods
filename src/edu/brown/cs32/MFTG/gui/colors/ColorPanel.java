@@ -2,6 +2,7 @@ package edu.brown.cs32.MFTG.gui.colors;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -21,10 +22,10 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import edu.brown.cs32.MFTG.gui.Constants;
-import edu.brown.cs32.MFTG.gui.Helper;
 import edu.brown.cs32.MFTG.gui.Constants.Colors;
 import edu.brown.cs32.MFTG.gui.Constants.Orientation;
-import edu.brown.cs32.MFTG.gui.spaces.House;
+import edu.brown.cs32.MFTG.gui.Helper;
+import edu.brown.cs32.MFTG.gui.old.House;
 
 public class ColorPanel extends JPanel{
 
@@ -63,11 +64,16 @@ public class ColorPanel extends JPanel{
 		_colorInfo = color;
 		
 		if(_orientation == Orientation.UP || _orientation == Orientation.DOWN) {
-			this.setSize(4*Constants.WIDTH, Constants.HEIGHT);
+			Dimension dimension = new Dimension(4*Constants.WIDTH, Constants.HEIGHT);
+			this.setPreferredSize(dimension);
+			this.setMaximumSize(dimension);
+			this.setMinimumSize(dimension);
 		} else {
-			this.setSize(Constants.HEIGHT, 4*Constants.WIDTH);
+			Dimension dimension = new Dimension(Constants.HEIGHT, 4*Constants.WIDTH);
+			this.setPreferredSize(dimension);
+			this.setMaximumSize(dimension);
+			this.setMinimumSize(dimension);
 		}
-		this.setLocation(0, 0);
 		
 		initializeImages();
 		initializeInputFields();

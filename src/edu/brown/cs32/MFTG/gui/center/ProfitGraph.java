@@ -3,7 +3,8 @@ package edu.brown.cs32.MFTG.gui.center;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.util.concurrent.TimeUnit;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -19,6 +20,7 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
 import edu.brown.cs32.MFTG.gui.Constants;
+import edu.brown.cs32.MFTG.monopoly.PlayerWealthData;
 
 public class ProfitGraph extends JPanel {
 
@@ -27,24 +29,22 @@ public class ProfitGraph extends JPanel {
 	private XYPlot _plot;
 	private ChartPanel _chartPanel;
 	
-	private int _minBuyCash = 1000;
-	private int _minBuildCash = 800;
-	private int _minMortgageCash = 1500;
+	private List<PlayerWealthData> _currData = null;
+	
+	private int _minBuyCash = 0;
+	private int _minBuildCash = 0;
+	private int _minMortgageCash = 0;
 	
 	public ProfitGraph() {
-		createDataset();
 		createChart();
+		update();
 		
 		_chartPanel = new DynamicChartPanel(_chart);
 		_chartPanel.setPreferredSize(new Dimension(500, 270));
 		this.add(_chartPanel);
 	}
-	
-	public void update () {
-		createDataset();
-		_chart.fireChartChanged();
-	}
-	
+
+/*	
 	public void createDataset() {
 		XYSeries netWorth = new XYSeries("Net Worth");
 		XYSeries cash = new XYSeries("Cash");
@@ -71,6 +71,44 @@ public class ProfitGraph extends JPanel {
 		_dataset.addSeries(minBuy);
 		_dataset.addSeries(minMortgage);
 	}
+	*/
+	
+	public void setWealthData(List<PlayerWealthData> data) {
+		_currData = data;
+		update();
+	}
+	
+	public void update() {
+		_dataset.removeAllSeries();
+
+		XYSeries minBuild = new XYSeries("Minimum Build Cash");
+		XYSeries minBuy = new XYSeries("Minimum Buy Cash");
+		XYSeries minMortgage = new XYSeries("Minimum Mortgage Cash");
+		
+		for(double x=0; x<100; x+=.1) {
+			minBuild.add(x, _minBuildCash);
+			minBuy.add(x, _minBuyCash);
+			minMortgage.add(x, _minMortgageCash);
+		}
+		
+		_dataset.addSeries(minBuild);
+		_dataset.addSeries(minBuy);
+		_dataset.addSeries(minMortgage);
+		
+		if (_currData != null) {
+			XYSeries cash = new XYSeries("Cash");
+			XYSeries totalWealth = new XYSeries("Total Wealth");
+			for(int x=0; x<_currData.size(); x++) {
+				PlayerWealthData d = _currData.get(x);
+				cash.add(x, d.cash);
+				totalWealth.add(x, d.totalWealth);
+			}
+			_dataset.addSeries(cash);
+			_dataset.addSeries(totalWealth);
+		}
+		
+		_chart.fireChartChanged();
+	}
 	
 	public void createChart () {
 		
@@ -84,25 +122,25 @@ public class ProfitGraph extends JPanel {
 		_plot.setRangeGridlinesVisible(false);
 		
 		XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
-		renderer.setSeriesStroke(0, new BasicStroke(2));
-		renderer.setSeriesPaint(0, Color.BLACK);
+		renderer.setSeriesStroke(0, new BasicStroke(5));
+		renderer.setSeriesPaint(0, Color.BLUE);
 		renderer.setSeriesShapesVisible(0, false);
 		renderer.setSeriesVisible(0, true);
-		renderer.setSeriesStroke(1, new BasicStroke(2));
-		renderer.setSeriesPaint(1, Color.WHITE);
+		renderer.setSeriesStroke(1, new BasicStroke(5));
+		renderer.setSeriesPaint(1, Color.GREEN);
 		renderer.setSeriesShapesVisible(1, false);
 		renderer.setSeriesVisible(1, true);
 		renderer.setSeriesStroke(2, new BasicStroke(5));
-		renderer.setSeriesPaint(2, Color.BLUE);
 		renderer.setSeriesShapesVisible(2, false);
+		renderer.setSeriesPaint(2, Color.RED);
 		renderer.setSeriesVisible(2, true);
-		renderer.setSeriesStroke(3, new BasicStroke(5));
-		renderer.setSeriesPaint(3, Color.GREEN);
+		renderer.setSeriesStroke(3, new BasicStroke(2));
+		renderer.setSeriesPaint(3, Color.BLACK);
 		renderer.setSeriesShapesVisible(3, false);
 		renderer.setSeriesVisible(3, true);
-		renderer.setSeriesStroke(4, new BasicStroke(5));
+		renderer.setSeriesStroke(4, new BasicStroke(2));
+		renderer.setSeriesPaint(4, Color.WHITE);
 		renderer.setSeriesShapesVisible(4, false);
-		renderer.setSeriesPaint(4, Color.RED);
 		renderer.setSeriesVisible(4, true);
 		_plot.setRenderer(renderer);
 		
@@ -134,6 +172,14 @@ public class ProfitGraph extends JPanel {
 			graph.update();
 		//}
 		
+	}
+
+	public List<Integer> getMinCash() {
+		List<Integer> minCash = new ArrayList<>();
+		minCash.add(_minBuyCash);
+		minCash.add(_minBuildCash);
+		minCash.add(_minMortgageCash);
+		return minCash;
 	}
 
 }

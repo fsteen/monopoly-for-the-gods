@@ -26,3 +26,10 @@ Concerns
 -in player module i return data without synchronizing on it,
 	this should be fine since all threads should be done messing with it
 	but it makes me nervous and should probably be changed
+	
+	
+	
+------------------------
+TODO
+-for player properties % time you owned it
+-finish creating settings object
