@@ -22,8 +22,6 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.brown.cs32.MFTG.gui.MonopolyGui;
-import edu.brown.cs32.MFTG.gui.gameboard.Board;
-import edu.brown.cs32.MFTG.gui.gameboard.GameBoardFrame;
 import edu.brown.cs32.MFTG.monopoly.GameData;
 import edu.brown.cs32.MFTG.monopoly.Player;
 import edu.brown.cs32.MFTG.networking.ClientRequestContainer;
@@ -60,8 +58,7 @@ public class Client {
 	private AtomicInteger _numThreadsDone;
 	private ExecutorService _pool;
 	protected int _id;
-	private Player _player;
-	
+
 	/* Temporary variables - replace later */
 	private final int FREE_PARKING=-1;
 	private final boolean DOUBLE_ON_GO=false;
@@ -78,25 +75,26 @@ public class Client {
 		_numThreadsDone = new AtomicInteger(0);
 		_id = 0; //TODO client needs to know its ID!!!!!!!
 
-		
+
 		_gui = new MonopolyGui(this);
 		_dummyGui = new DummyGUI();
 	}
 
-	/***************Networking Methods 
-	 * @throws IOException 	private final int MAX_NUM_TURNS=1000;
+	/***************Networking Methods*************************/
 
+	/**
+	 * @throws IOException
 	 * @throws JsonMappingException 
-	 * @throws JsonParseException *************************/
-	
+	 * @throws JsonParseException 
+	 */
 	private void handleRequest() throws InvalidRequestException, IOException{
 		ClientRequestContainer request = _oMapper.readValue(_input, ClientRequestContainer.class);
-		
+
 		Method method = request._method;
-		
+
 		if (method == null)
 			throw new InvalidRequestException();
-		
+
 		if (method == Method.GETPLAYER){
 			if (_lastRequest == Method.DISPLAYGAMEDATA){ 
 				respondToGetPlayer(request);
@@ -104,7 +102,7 @@ public class Client {
 			} else {
 				throw new InvalidRequestException();
 			}
-			
+
 		} else if (method == Method.PLAYGAMES){
 			if (_lastRequest == Method.GETPLAYER){
 				respondToPlayGames(request);
@@ -112,7 +110,7 @@ public class Client {
 			} else {
 				throw new InvalidRequestException();
 			}
-		
+
 		} else if (method == Method.DISPLAYGAMEDATA){
 			if (_lastRequest == Method.PLAYGAMES){
 				respondToDisplayData(request);
@@ -120,7 +118,7 @@ public class Client {
 			} else {
 				throw new InvalidRequestException();
 			}
-		
+
 		} else if (method == Method.DISPLAYERROR){
 			respondToDisplayError(request);
 		}
@@ -142,9 +140,14 @@ public class Client {
 			displayError("Unable to connect to server :(");
 			return;
 		}
-		_id = getIdOnConnection();
+		try {
+			_id = respondToSendID();
+		} catch (IOException | InvalidRequestException e1) {
+			displayError("Unable to retrieve a unique ID from the server :(");
+			return;
+		}
 		_gui.createBoard(_id);
-		
+
 		while(true){
 			try {
 				handleRequest();
@@ -153,25 +156,41 @@ public class Client {
 			}
 		}
 	}
-	
-	private int getIdOnConnection(){
-		//TODO implement this!!!!!!!!!!!
-		return 1;
+
+	private int respondToSendID() throws IOException, InvalidRequestException{
+		ClientRequestContainer request = _oMapper.readValue(_input, ClientRequestContainer.class);
+
+		if (request == null || request._method != Method.SENDID)
+			throw new InvalidRequestException();
+
+		List<String> arguments = request._arguments;
+
+		if (arguments == null){
+			// throw an error
+		} else if (arguments.size() < 1){
+			// throw a different error
+		}
+
+		try {
+			return Integer.parseInt(arguments.get(0));
+		} catch (NumberFormatException e){
+			throw new InvalidRequestException();
+		}
 	}
-	
+
 	/**
 	 * 
 	 * @param the request which is being responded to
 	 */
 	private void respondToDisplayError(ClientRequestContainer request){
 		List<String> arguments = request._arguments;
-		
+
 		if (arguments == null){
 			// throw an error
 		} else if (arguments.size() < 1){
 			// throw a different error
 		}
-		
+
 		displayError(arguments.get(0));
 	}
 
@@ -196,24 +215,24 @@ public class Client {
 	 */
 	private void respondToPlayGames(ClientRequestContainer request) throws JsonParseException, JsonMappingException, IOException{
 		List<String> arguments = request._arguments;
-		
+
 		if (arguments == null){
 			// throw a different different error
 		} else if (arguments.size() < 2){
 			// you get the idea
 		}
-		
+
 		JavaType listOfPlayers = _oMapper.getTypeFactory().constructCollectionType(List.class, Player.class);
 		JavaType listOfSeeds = _oMapper.getTypeFactory().constructCollectionType(List.class, Long.class);
-		
+
 		List<Player> players = _oMapper.readValue(arguments.get(0), listOfPlayers);
 		List<Long> seeds = _oMapper.readValue(arguments.get(1), listOfSeeds);
-		
+
 		List<GameData> gameData = playGames(players, seeds);
 		String gameDataString = _oMapper.writeValueAsString(gameData);
-		
+
 		ClientRequestContainer response = new ClientRequestContainer(Method.SENDGAMEDATA, Arrays.asList(gameDataString));
-		
+
 		_oMapper.writeValue(_output, response);
 	}
 
@@ -226,18 +245,18 @@ public class Client {
 	 */
 	protected void respondToDisplayData(ClientRequestContainer request) throws JsonParseException, JsonMappingException, IOException{
 		List<String> arguments = request._arguments;
-		
+
 		if (arguments == null){
 			// error
 		} else if (arguments.size() < 1){
 			// error
 		}
-		
+
 		GameDataReport gameDataReport = _oMapper.readValue(arguments.get(0), GameDataReport.class);
-		
+
 		displayGameData(gameDataReport);
 	}
-	
+
 	public void launchTournament(int numPlayers, Settings settings, int port){
 		try {
 			_pool.execute((new Tournament(numPlayers, settings, port)));
@@ -261,16 +280,16 @@ public class Client {
 		_data.clear();
 		_nextDisplaySize = DATA_PACKET_SIZE;
 		synchronized(this){ _numThreadsDone.set(0); }
-		
+
 		GameRunnerFactory gameRunnerFactory = new GameRunnerFactory(
 				_numThreadsDone, this, 
 				MAX_NUM_TURNS,FREE_PARKING,DOUBLE_ON_GO,
 				AUCTIONS,players.toArray(new Player[players.size()]));
-		
+
 		for(Long seed : seeds){
 			_pool.execute(gameRunnerFactory.build(seed)); //launch games
 		}
-		
+
 		synchronized (this){
 			while(_numThreadsDone.get() < seeds.size()){
 				try{
@@ -278,8 +297,7 @@ public class Client {
 				} catch (InterruptedException e){}
 			}
 		}
-		
-		_player = null; //we will need a new player for next time
+
 		return _data;
 	}
 
@@ -302,7 +320,7 @@ public class Client {
 			_nextDisplaySize += DATA_PACKET_SIZE; //set next point at which to display
 		}
 	}
-	
+
 	/**
 	 * Find the player property data specific to this player
 	 * @param allPlayerPropertyData
@@ -320,7 +338,7 @@ public class Client {
 		}
 		return playerPropertyData;
 	}
-	
+
 	/**
 	 * Find the player wealth data specific to this player
 	 * @param timeStamps
@@ -341,12 +359,7 @@ public class Client {
 	public Player getPlayer(){
 		return _gui.getBoard().getPlayer();		
 	}
-	
-	public void setPlayer(){
-		//TODO the gui will call this method ... add appropriate args
-		_player = new Player(0);
-	}
-	
+
 	/**
 	 * Set and display the combined GameData
 	 * @param combinedData
@@ -361,7 +374,7 @@ public class Client {
 		_dummyGui.setWealthData(getPlayerWealthData(combinedData._timeStamps));
 		_gui.getBoard().roundCompleted();	
 	}
-	
+
 	/**
 	 * Displays an error message in the gui
 	 * @param errorMessage the error message to be displayed
@@ -369,7 +382,7 @@ public class Client {
 	private void displayError(String errorMessage){
 		// TODO implement
 	}
-	
+
 	/*******************************************************/
 
 	public static void main (String[] args){

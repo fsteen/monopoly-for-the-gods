@@ -156,4 +156,16 @@ public class ClientHandler implements iClientHandler{
 			// do nothing -- you are already fucked
 		}
 	}
+	
+	public void sendID() throws ClientCommunicationException {
+		String stringID = String.valueOf(_id);
+		ClientRequestContainer request = new ClientRequestContainer(Method.SENDID, Arrays.asList(stringID));
+		
+		// request that the client display the error message
+		try {
+			_oMapper.writeValue(_output, request);
+		} catch (IOException e) {
+			throw new ClientCommunicationException(_id);
+		}
+	}
 }

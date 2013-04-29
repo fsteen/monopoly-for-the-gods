@@ -39,4 +39,9 @@ public interface iClientHandler {
 	 * @throws ClientCommunicationException
 	 */
 	public void sendErrorMessage(String errorMessage);
+	
+	/**
+	 * Sends the id to the client
+	 */
+	public void sendID() throws ClientCommunicationException;
 }
