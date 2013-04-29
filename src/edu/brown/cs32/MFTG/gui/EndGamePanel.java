@@ -1,7 +1,9 @@
 package edu.brown.cs32.MFTG.gui;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -11,6 +13,9 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.ButtonGroup;
@@ -27,13 +32,15 @@ public class EndGamePanel extends JPanel{
 	private BufferedImage _winner, _loser, _foreground;
 	private Point _backLoc, _goLoc;
 	private Main _main;
+	private List<String> _names;
 	private boolean _winning;
-	
+	private JLabel _name1, _name2, _name3, _name4;
 	private final int BUTTON_HEIGHT=Constants.FULL_HEIGHT/8;
 	private final int BUTTON_WIDTH=2*Constants.FULL_HEIGHT/3;
 	private final int START_HEIGHT=Constants.FULL_HEIGHT/8;
 	private final int START_WIDTH=Constants.FULL_WIDTH/6;
-
+	private Font _nameFont;
+	
 	public EndGamePanel(Main main) {
 		try {
 			_main=main;
@@ -46,9 +53,9 @@ public class EndGamePanel extends JPanel{
 			_loser = Helper.resize(ImageIO.read(new File("images/Loser.png")),this.getWidth(),this.getHeight());
 			_foreground = Helper.resize(ImageIO.read(new File("images/WinnerColumns.png")),this.getWidth(),this.getHeight());
 								
-			_backLite = new ImagePanel(Helper.resize(ImageIO.read(new File("images/MainMenuLite.png")), 100, 50));
-			_backDark = new ImagePanel(Helper.resize(ImageIO.read(new File("images/MainMenuDark.png")), 100, 50));
-			_backLoc= new Point(this.getWidth()-_backLite.getWidth()-20, this.getHeight()-_backDark.getHeight()-10);
+			_backLite = new ImagePanel(Helper.resize(ImageIO.read(new File("images/MainMenuLite.png")), 120, 50));
+			_backDark = new ImagePanel(Helper.resize(ImageIO.read(new File("images/MainMenuDark.png")), 120, 50));
+			_backLoc= new Point(this.getWidth()-_backLite.getWidth()-50, this.getHeight()-_backDark.getHeight()-20);
 			_backLite.setLocation(_backLoc);
 			_backDark.setLocation(_backLoc);
 			_backDark.setVisible(false);
@@ -56,8 +63,40 @@ public class EndGamePanel extends JPanel{
 			_winning=false;
 			addMouseListener(new MyMouseListener());
 			
+			_nameFont = new Font("nameFont", Font.BOLD, 16);
+
+			_names = new ArrayList<>();
+			_name1 = new JLabel("<html>First Place</html>");
+			_name2 = new JLabel("<html>Second Place</html>");
+			_name3 = new JLabel("<html>Third Place</html>");
+			_name4 = new JLabel("<html>Last Place</html>");
+			
+			Dimension nameSize = new Dimension(120,50);
+			_name1.setSize(nameSize);
+			_name1.setPreferredSize(nameSize);
+			_name2.setSize(nameSize);
+			_name2.setPreferredSize(nameSize);
+			_name3.setSize(nameSize);
+			_name3.setPreferredSize(nameSize);
+			_name4.setSize(nameSize);
+			_name4.setPreferredSize(nameSize);
+			
+			_name1.setLocation(10,245);
+			_name2.setLocation(133,380);
+			_name3.setLocation(260,560);
+			_name4.setLocation(390,770);
+			
+			_name1.setFont(_nameFont);
+			_name2.setFont(_nameFont);
+			_name3.setFont(_nameFont);
+			_name4.setFont(_nameFont);
+			
 			add(_backLite);
 			add(_backDark);
+			add(_name1);
+			add(_name2);
+			add(_name3);
+			add(_name4);
 
 			
 		} catch (IOException e) {
@@ -71,8 +110,12 @@ public class EndGamePanel extends JPanel{
 	 * sets if player won
 	 * @param didWin
 	 */
-	public void setWinner(boolean didWin) {
+	public void setWinner(boolean didWin, String[] names) {
 		_winning=didWin;
+		if(names.length>0)_name1.setText("<html>"+names[0]+"</html>");
+		if(names.length>1)_name2.setText("<html>"+names[1]+"</html>");
+		if(names.length>2)_name3.setText("<html>"+names[2]+"</html>");
+		if(names.length>3)_name4.setText("<html>"+names[3]+"</html>");
 	}
 	
 	@Override
@@ -99,11 +142,6 @@ public class EndGamePanel extends JPanel{
 				_backDark.setVisible(true);
 				repaint();
 			}
-			else if(intersects(xloc,yloc,_goLite,_goLoc)) {
-				_goLite.setVisible(false);
-				_goDark.setVisible(true);
-				repaint();
-			}
 
 		}
 		
@@ -115,17 +153,7 @@ public class EndGamePanel extends JPanel{
 			if(intersects(xloc,yloc,_backLite,_backLoc)) {
 				if(_backDark.isVisible()) {
 					fixPanels();
-					_main.switchPanels("lobby");
-				}
-				else {
-					fixPanels();
-				}
-
-			}
-			else if(intersects(xloc,yloc,_goLite,_goLoc)) {
-				if(_goDark.isVisible()) {
-					fixPanels();
-					//_main.switchPanels("lobby");
+					_main.switchPanels("greet");
 				}
 				else {
 					fixPanels();
@@ -140,8 +168,6 @@ public class EndGamePanel extends JPanel{
 		private void fixPanels() {
 			_backDark.setVisible(false);
 			_backLite.setVisible(true);
-			_goDark.setVisible(false);
-			_goLite.setVisible(true);
 			repaint();
 		}
 		private boolean intersects(int xloc, int yloc, JPanel img, Point loc) {
