@@ -24,6 +24,8 @@ public class ClientHandler implements iClientHandler{
 
 	private final int GET_PLAYER_TIME = 180;
 	private final int PLAY_GAMES_TIME = 15;
+	
+	public final int _id;
 
 	final Socket _client;
 	private BufferedReader _input;
@@ -32,7 +34,9 @@ public class ClientHandler implements iClientHandler{
 
 	JavaType _listOfPlayers;
 
-	public ClientHandler(Socket client) throws IOException{
+	public ClientHandler(Socket client, int id) throws IOException{
+		_id = id;
+		
 		_client = client;
 		_input = new BufferedReader(new InputStreamReader(_client.getInputStream()));
 		_output = new BufferedWriter(new OutputStreamWriter(_client.getOutputStream()));
@@ -71,11 +75,11 @@ public class ClientHandler implements iClientHandler{
 				_client.setSoTimeout(0);
 				return p;
 			} catch (SocketTimeoutException | SocketException e){
-				throw new ClientLostException();
+				throw new ClientLostException(_id);
 			}
 
 		} catch (IOException e) {
-			throw new ClientCommunicationException();
+			throw new ClientCommunicationException(_id);
 		}
 	}
 
@@ -106,7 +110,7 @@ public class ClientHandler implements iClientHandler{
 				response = _oMapper.readValue(_input, ClientRequestContainer.class);
 				_client.setSoTimeout(0);
 			} catch (SocketTimeoutException | SocketException e){
-				throw new ClientLostException();
+				throw new ClientLostException(_id);
 			}
 
 			// check for bad response
@@ -124,7 +128,7 @@ public class ClientHandler implements iClientHandler{
 			return gameData;
 
 		} catch (IOException e){
-			throw new ClientCommunicationException();
+			throw new ClientCommunicationException(_id);
 		}
 	}
 
@@ -138,7 +142,18 @@ public class ClientHandler implements iClientHandler{
 			_oMapper.writeValue(_output, request);
 
 		} catch (IOException e){
-			throw new ClientCommunicationException();
+			throw new ClientCommunicationException(_id);
+		}
+	}
+	
+	public void sendErrorMessage(String errorMessage) throws ClientCommunicationException{
+		ClientRequestContainer request = new ClientRequestContainer(Method.DISPLAYERROR, Arrays.asList(errorMessage));
+		
+		// request that the client display the error message
+		try {
+			_oMapper.writeValue(_output, request);
+		} catch (IOException e) {
+			throw new ClientCommunicationException(_id);
 		}
 	}
 }
