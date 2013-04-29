@@ -73,8 +73,8 @@ public class GreetingPanel extends JPanel{
 			add(_playDark);
 			add(_settingsLite);
 			add(_settingsDark);
-			add(_recordsLite);
-			add(_recordsDark);
+			//add(_recordsLite);
+			//add(_recordsDark);
 			
 			
 		} catch (IOException e) {

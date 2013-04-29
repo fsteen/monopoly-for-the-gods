@@ -46,7 +46,7 @@ public class MonopolyGui extends JFrame{
 		this.setSize(9*Constants.WIDTH + 2*Constants.HEIGHT, 9*Constants.WIDTH + 2*Constants.HEIGHT);
 		this.setResizable(false);
 		
-		_currentPanel=create;
+		_currentPanel=lobby;
 		this.add(_currentPanel);
 		
 		this.pack();

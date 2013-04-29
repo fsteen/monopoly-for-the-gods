@@ -56,7 +56,7 @@ public class PlayerModule {
 	private List<GameData> _data;
 	private AtomicInteger _numThreadsDone;
 	private ExecutorService _pool;
-	private int _id;
+	protected int _id;
 	private Player _player;
 	
 	/* Temporary variables - replace later */
@@ -210,7 +210,7 @@ public class PlayerModule {
 	 * @throws JsonMappingException
 	 * @throws IOException
 	 */
-	private void respondToDisplayData(ClientRequestContainer request) throws JsonParseException, JsonMappingException, IOException{
+	protected void respondToDisplayData(ClientRequestContainer request) throws JsonParseException, JsonMappingException, IOException{
 		List<String> arguments = request._arguments;
 		
 		if (arguments == null){
