@@ -99,7 +99,7 @@ public class DynamicChartPanel extends ChartPanel {
 			XYItemEntity xyItem = (XYItemEntity) entity;
 			
 			_location = xyItem.getSeriesIndex();
-			if(_location == 0 || _location ==1 ) _location = -1;
+			if(_location == 3 || _location == 4 ) _location = -1;
 		}
 		
 	}

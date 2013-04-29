@@ -1,16 +1,11 @@
-package edu.brown.cs32.MFTG.gui;
+package edu.brown.cs32.MFTG.gui.old;
 
+import edu.brown.cs32.MFTG.gui.Constants;
 import edu.brown.cs32.MFTG.gui.Constants.Orientation;
 import edu.brown.cs32.MFTG.gui.Constants.PropertyColor;
 import edu.brown.cs32.MFTG.gui.Constants.ColorProperties;
 import edu.brown.cs32.MFTG.gui.Constants.Railroads;
 import edu.brown.cs32.MFTG.gui.Constants.Viewer;
-import edu.brown.cs32.MFTG.gui.spaces.CornerButton;
-import edu.brown.cs32.MFTG.gui.spaces.EmptyButton;
-import edu.brown.cs32.MFTG.gui.spaces.Property;
-import edu.brown.cs32.MFTG.gui.spaces.PropertyButton;
-import edu.brown.cs32.MFTG.gui.spaces.RailRoadUtility;
-import edu.brown.cs32.MFTG.gui.spaces.RailroadPanel;
 
 import java.awt.Color;
 import java.awt.GridBagConstraints;

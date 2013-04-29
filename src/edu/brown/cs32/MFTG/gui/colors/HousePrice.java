@@ -18,7 +18,7 @@ import javax.swing.JTextField;
 
 import edu.brown.cs32.MFTG.gui.Constants;
 import edu.brown.cs32.MFTG.gui.Constants.Orientation;
-import edu.brown.cs32.MFTG.gui.spaces.House;
+import edu.brown.cs32.MFTG.gui.old.House;
 
 public class HousePrice extends JPanel {
 

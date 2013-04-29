@@ -11,6 +11,7 @@ import edu.brown.cs32.MFTG.gui.Constants.Balance;
 import edu.brown.cs32.MFTG.gui.Constants.Price;
 import edu.brown.cs32.MFTG.gui.Constants.Quantity;
 import edu.brown.cs32.MFTG.gui.Constants.Toggle;
+import edu.brown.cs32.MFTG.monopoly.Player.Expense;
 
 public class ToggleButton extends JButton {
 	
@@ -48,6 +49,10 @@ public class ToggleButton extends JButton {
 		frame.add(new ToggleButton(Balance.EVEN));
 		frame.pack();
 		frame.setVisible(true);
+	}
+	
+	public Toggle getValue() {
+		return _toggle;
 	}
 
 }

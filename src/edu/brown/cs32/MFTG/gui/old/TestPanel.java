@@ -1,4 +1,4 @@
-package edu.brown.cs32.MFTG.gui.spaces;
+package edu.brown.cs32.MFTG.gui.old;
 
 import java.awt.Color;
 import java.awt.Dimension;

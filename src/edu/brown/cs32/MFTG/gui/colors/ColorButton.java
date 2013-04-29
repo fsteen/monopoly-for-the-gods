@@ -13,7 +13,7 @@ import javax.swing.JFrame;
 import edu.brown.cs32.MFTG.gui.Constants;
 import edu.brown.cs32.MFTG.gui.Constants.Colors;
 import edu.brown.cs32.MFTG.gui.Constants.Orientation;
-import edu.brown.cs32.MFTG.gui.spaces.House;
+import edu.brown.cs32.MFTG.gui.old.House;
 
 public class ColorButton extends JButton {
 

@@ -8,11 +8,11 @@ import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import edu.brown.cs32.MFTG.gui.Board;
 import edu.brown.cs32.MFTG.gui.Constants;
 import edu.brown.cs32.MFTG.gui.CreateGamePanel;
 import edu.brown.cs32.MFTG.gui.GameLobbyPanel;
 import edu.brown.cs32.MFTG.gui.GreetingPanel;
+import edu.brown.cs32.MFTG.gui.old.Board;
 
 public class Main extends JFrame{
 	private JPanel _currentPanel;

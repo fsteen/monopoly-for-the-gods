@@ -4,13 +4,14 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.swing.JFrame;
@@ -24,30 +25,44 @@ import edu.brown.cs32.MFTG.gui.Constants.ColorProperties;
 import edu.brown.cs32.MFTG.gui.Constants.Colors;
 import edu.brown.cs32.MFTG.gui.Constants.Corners;
 import edu.brown.cs32.MFTG.gui.Constants.Orientation;
+import edu.brown.cs32.MFTG.gui.Constants.Properties;
 import edu.brown.cs32.MFTG.gui.Constants.Railroads;
 import edu.brown.cs32.MFTG.gui.Constants.StaticProperties;
 import edu.brown.cs32.MFTG.gui.Constants.Utilities;
+import edu.brown.cs32.MFTG.gui.Constants.View;
 import edu.brown.cs32.MFTG.gui.center.Center;
+import edu.brown.cs32.MFTG.gui.colors.ColorPanel;
 import edu.brown.cs32.MFTG.gui.properties.AggregateColorProperty;
 import edu.brown.cs32.MFTG.gui.properties.AggregateUtilityProperty;
+import edu.brown.cs32.MFTG.gui.properties.CornerProperty;
+import edu.brown.cs32.MFTG.gui.properties.Jail;
 import edu.brown.cs32.MFTG.gui.properties.MyColorPropertyPanel;
 import edu.brown.cs32.MFTG.gui.properties.MyUtilityProperty;
 import edu.brown.cs32.MFTG.gui.properties.PropertyPanel;
 import edu.brown.cs32.MFTG.gui.properties.StaticProperty;
+import edu.brown.cs32.MFTG.monopoly.Player;
+import edu.brown.cs32.MFTG.monopoly.PlayerWealthData;
+import edu.brown.cs32.MFTG.monopoly.PropertyData;
+import edu.brown.cs32.MFTG.tournament.data.PropertyDataAccumulator;
 
 public class Board extends JPanel {
 	
 	private Set<ColorGroup> _colorGroups = new HashSet<>();
 	private Set<Railroad> _railroads = new HashSet<>();
+	private Jail _jail;
 	private JMenuBar _menu;
+	private Center _center;
+	private int _id;
 	
-	public Board (JMenuBar menu) throws IOException {
+	public Board (JMenuBar menu, int id) throws IOException {
 		super();
 		_menu = menu;
+		_id = id;
 		
 		/* Set the dimension */
 		Dimension dimension = new Dimension(Constants.FULL_WIDTH, Constants.FULL_HEIGHT);
-		this.setSize(dimension);
+		this.setMaximumSize(dimension);
+		this.setMinimumSize(dimension);
 		this.setPreferredSize(dimension);
 		
 		/* Set up the layout */
@@ -88,7 +103,6 @@ public class Board extends JPanel {
 		Dimension dimension = new Dimension(Constants.FULL_WIDTH, Constants.HEIGHT);
 		top.setSize(dimension);
 		top.setPreferredSize(dimension);
-		
 		top.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 		
@@ -97,21 +111,26 @@ public class Board extends JPanel {
 		c.ipady = 0;
 		c.gridx = 0;
 		c.weightx = Constants.HEIGHT;
-		top.add(new Corner(Corners.FREE_PARKING));
+		top.add(new CornerProperty(StaticProperties.FREE_PARKING));
 		
 		c.gridx = 1;
 		c.weightx = 4*Constants.WIDTH;
 		List<PropertyPanel> myProperties = new ArrayList<>();
 		List<PropertyPanel> aggregateProperties = new ArrayList<>();
+		List<Properties> properties = new ArrayList<>();
 		myProperties.add(new MyColorPropertyPanel(ColorProperties.KENTUCKY_AVENUE));
-		aggregateProperties.add(new StaticProperty(StaticProperties.BLUE_CHANCE));
-		myProperties.add(new StaticProperty(StaticProperties.BLUE_CHANCE));
 		aggregateProperties.add(new AggregateColorProperty(ColorProperties.KENTUCKY_AVENUE));
+		properties.add(ColorProperties.KENTUCKY_AVENUE);
+		myProperties.add(new StaticProperty(StaticProperties.BLUE_CHANCE));
+		aggregateProperties.add(new StaticProperty(StaticProperties.BLUE_CHANCE));
+		properties.add(StaticProperties.BLUE_CHANCE);
 		myProperties.add(new MyColorPropertyPanel(ColorProperties.INDIANA_AVENUE));
 		aggregateProperties.add(new AggregateColorProperty(ColorProperties.INDIANA_AVENUE));
+		properties.add(ColorProperties.INDIANA_AVENUE);
 		myProperties.add(new MyColorPropertyPanel(ColorProperties.ILLINOIS_AVENUE));
 		aggregateProperties.add(new AggregateColorProperty(ColorProperties.ILLINOIS_AVENUE));
-		ColorGroup red = new ColorGroup(Orientation.UP, myProperties, aggregateProperties);
+		properties.add(ColorProperties.ILLINOIS_AVENUE);
+		ColorGroup red = new ColorGroup(Orientation.UP, properties, myProperties, aggregateProperties, new ColorBlock(Colors.RED));
 		top.add(red, c);
 		_colorGroups.add(red);
 		
@@ -125,21 +144,26 @@ public class Board extends JPanel {
 		c.weightx = 4*Constants.WIDTH;
 		myProperties = new ArrayList<>();
 		aggregateProperties = new ArrayList<>();
+		properties = new ArrayList<>();
 		myProperties.add(new MyColorPropertyPanel(ColorProperties.ATLANTIC_AVENUE));
 		aggregateProperties.add(new AggregateColorProperty(ColorProperties.ATLANTIC_AVENUE));
+		properties.add(ColorProperties.ATLANTIC_AVENUE);
 		myProperties.add(new MyColorPropertyPanel(ColorProperties.VENTNOR_AVENUE));
 		aggregateProperties.add(new AggregateColorProperty(ColorProperties.VENTNOR_AVENUE));
+		properties.add(ColorProperties.VENTNOR_AVENUE);
 		myProperties.add(new MyUtilityProperty(Utilities.WATER_WORKS));
 		aggregateProperties.add(new AggregateUtilityProperty(Utilities.WATER_WORKS));
+		properties.add(Utilities.WATER_WORKS);
 		myProperties.add(new MyColorPropertyPanel(ColorProperties.MARVIN_GARDENS));
 		aggregateProperties.add(new AggregateColorProperty(ColorProperties.MARVIN_GARDENS));
-		ColorGroup yellow = new ColorGroup(Orientation.UP, myProperties, aggregateProperties);
+		properties.add(ColorProperties.MARVIN_GARDENS);
+		ColorGroup yellow = new ColorGroup(Orientation.UP, properties, myProperties, aggregateProperties, new ColorBlock(Colors.YELLOW));
 		top.add(yellow);
 		_colorGroups.add(yellow);
 		
 		c.gridx = 4;
 		c.weightx = Constants.HEIGHT;
-		top.add(new Corner(Corners.GO_TO_JAIL), c);
+		top.add(new CornerProperty(StaticProperties.GO_TO_JAIL), c);
 		
 		this.add(top, BorderLayout.NORTH);
 	}
@@ -158,21 +182,27 @@ public class Board extends JPanel {
 		c.ipady = 0;
 		c.gridx = 0;
 		c.weightx = Constants.HEIGHT;
-		bottom.add(new Corner(Corners.JAIL), c);
+		_jail = new Jail();
+		bottom.add(_jail, c);
 		
 		c.gridx = 1;
 		c.weightx = 4*Constants.WIDTH;
 		List<PropertyPanel> myProperties = new ArrayList<>();
 		List<PropertyPanel> aggregateProperties = new ArrayList<>();
+		List<Properties> properties = new ArrayList<>();
 		myProperties.add(new MyColorPropertyPanel(ColorProperties.CONNECTICUT_AVENUE));
 		aggregateProperties.add(new AggregateColorProperty(ColorProperties.CONNECTICUT_AVENUE));
+		properties.add(ColorProperties.CONNECTICUT_AVENUE);
 		myProperties.add(new MyColorPropertyPanel(ColorProperties.VERMONT_AVENUE));
 		aggregateProperties.add(new AggregateColorProperty(ColorProperties.VERMONT_AVENUE));
-		myProperties.add(new MyUtilityProperty(Utilities.WATER_WORKS));
-		aggregateProperties.add(new AggregateUtilityProperty(Utilities.WATER_WORKS));
+		properties.add(ColorProperties.VERMONT_AVENUE);
+		myProperties.add(new StaticProperty(StaticProperties.PINK_CHANCE));
+		aggregateProperties.add(new StaticProperty(StaticProperties.PINK_CHANCE));
+		properties.add(StaticProperties.PINK_CHANCE);
 		myProperties.add(new MyColorPropertyPanel(ColorProperties.ORIENTAL_AVENUE));
 		aggregateProperties.add(new AggregateColorProperty(ColorProperties.ORIENTAL_AVENUE));
-		ColorGroup blue = new ColorGroup(Orientation.DOWN, myProperties, aggregateProperties);
+		properties.add(ColorProperties.ORIENTAL_AVENUE);
+		ColorGroup blue = new ColorGroup(Orientation.DOWN, properties, myProperties, aggregateProperties, new ColorBlock(Colors.LIGHT_BLUE));
 		bottom.add(blue, c);
 		_colorGroups.add(blue);
 		
@@ -186,28 +216,33 @@ public class Board extends JPanel {
 		c.weightx = 4*Constants.WIDTH;
 		myProperties = new ArrayList<>();
 		aggregateProperties = new ArrayList<>();
-		myProperties.add(new MyColorPropertyPanel(ColorProperties.ATLANTIC_AVENUE));
-		aggregateProperties.add(new AggregateColorProperty(ColorProperties.ATLANTIC_AVENUE));
+		properties = new ArrayList<>();
+		myProperties.add(new StaticProperty(StaticProperties.INCOME_TAX));
+		aggregateProperties.add(new StaticProperty(StaticProperties.INCOME_TAX));
+		properties.add(StaticProperties.INCOME_TAX);
 		myProperties.add(new MyColorPropertyPanel(ColorProperties.BALTIC_AVENUE));
 		aggregateProperties.add(new AggregateColorProperty(ColorProperties.BALTIC_AVENUE));
-		myProperties.add(new MyUtilityProperty(Utilities.WATER_WORKS));
-		aggregateProperties.add(new AggregateUtilityProperty(Utilities.WATER_WORKS));
+		properties.add(ColorProperties.BALTIC_AVENUE);
+		myProperties.add(new StaticProperty(StaticProperties.COMMUNITY_CHEST_DOWN));
+		aggregateProperties.add(new StaticProperty(StaticProperties.COMMUNITY_CHEST_DOWN));
+		properties.add(StaticProperties.COMMUNITY_CHEST_DOWN);
 		myProperties.add(new MyColorPropertyPanel(ColorProperties.MEDITERRANEAN_AVENUE));
 		aggregateProperties.add(new AggregateColorProperty(ColorProperties.MEDITERRANEAN_AVENUE));
-		ColorGroup purple = new ColorGroup(Orientation.UP, myProperties, aggregateProperties);
+		properties.add(ColorProperties.MEDITERRANEAN_AVENUE);
+		ColorGroup purple = new ColorGroup(Orientation.UP, properties, myProperties, aggregateProperties, new ColorBlock(Colors.PURPLE));
 		bottom.add(purple, c);
 		_colorGroups.add(purple);
 		
 		c.gridx = 4;
 		c.weightx = Constants.HEIGHT;
-		bottom.add(new Corner(Corners.GO), c);
+		bottom.add(new CornerProperty(StaticProperties.GO), c);
 		
 		this.add(bottom, BorderLayout.SOUTH);
 	}
 	
 	public void initializeLeft () throws IOException {
 		JPanel left = new JPanel();
-		Dimension dimension = new Dimension(Constants.HEIGHT, 9*Constants.HEIGHT);
+		Dimension dimension = new Dimension(Constants.HEIGHT, 9*Constants.WIDTH);
 		left.setPreferredSize(dimension);
 		left.setSize(dimension);
 		
@@ -222,15 +257,20 @@ public class Board extends JPanel {
 		c.weighty = 4*Constants.WIDTH;
 		List<PropertyPanel> myProperties = new ArrayList<>();
 		List<PropertyPanel> aggregateProperties = new ArrayList<>();
+		List<Properties> properties = new ArrayList<>();
 		myProperties.add(new MyColorPropertyPanel(ColorProperties.NEW_YORK_AVENUE));
 		aggregateProperties.add(new AggregateColorProperty(ColorProperties.NEW_YORK_AVENUE));
+		properties.add(ColorProperties.NEW_YORK_AVENUE);
 		myProperties.add(new MyColorPropertyPanel(ColorProperties.TENNESSEE_AVENUE));
 		aggregateProperties.add(new AggregateColorProperty(ColorProperties.TENNESSEE_AVENUE));
-		myProperties.add(new MyUtilityProperty(Utilities.WATER_WORKS));
-		aggregateProperties.add(new AggregateUtilityProperty(Utilities.WATER_WORKS));
+		properties.add(ColorProperties.TENNESSEE_AVENUE);
+		myProperties.add(new StaticProperty(StaticProperties.COMMUNITY_CHEST_LEFT));
+		aggregateProperties.add(new StaticProperty(StaticProperties.COMMUNITY_CHEST_LEFT));
+		properties.add(StaticProperties.COMMUNITY_CHEST_LEFT);
 		myProperties.add(new MyColorPropertyPanel(ColorProperties.ST_JAMES_PLACE));
 		aggregateProperties.add(new AggregateColorProperty(ColorProperties.ST_JAMES_PLACE));
-		ColorGroup orange = new ColorGroup(Orientation.LEFT, myProperties, aggregateProperties);
+		properties.add(ColorProperties.ST_JAMES_PLACE);
+		ColorGroup orange = new ColorGroup(Orientation.LEFT, properties, myProperties, aggregateProperties, new ColorBlock(Colors.ORANGE));
 		left.add(orange, c);
 		_colorGroups.add(orange);
 		
@@ -244,15 +284,20 @@ public class Board extends JPanel {
 		c.weighty = 4*Constants.WIDTH;
 		myProperties = new ArrayList<>();
 		aggregateProperties = new ArrayList<>();
+		properties = new ArrayList<>();
 		myProperties.add(new MyColorPropertyPanel(ColorProperties.VIRGINIA_AVENUE));
 		aggregateProperties.add(new AggregateColorProperty(ColorProperties.VIRGINIA_AVENUE));
+		properties.add(ColorProperties.VIRGINIA_AVENUE);
 		myProperties.add(new MyColorPropertyPanel(ColorProperties.STATES_AVENUE));
 		aggregateProperties.add(new AggregateColorProperty(ColorProperties.STATES_AVENUE));
+		properties.add(ColorProperties.STATES_AVENUE);
 		myProperties.add(new MyUtilityProperty(Utilities.ELECTRIC_COMPANY));
 		aggregateProperties.add(new AggregateUtilityProperty(Utilities.ELECTRIC_COMPANY));
+		properties.add(Utilities.ELECTRIC_COMPANY);
 		myProperties.add(new MyColorPropertyPanel(ColorProperties.ST_CHARLES_PLACE));
 		aggregateProperties.add(new AggregateColorProperty(ColorProperties.ST_CHARLES_PLACE));
-		ColorGroup pink = new ColorGroup(Orientation.LEFT, myProperties, aggregateProperties);
+		properties.add(ColorProperties.ST_CHARLES_PLACE);
+		ColorGroup pink = new ColorGroup(Orientation.LEFT, properties, myProperties, aggregateProperties, new ColorBlock(Colors.PINK));
 		left.add(pink, c);
 		_colorGroups.add(pink);
 		
@@ -261,7 +306,7 @@ public class Board extends JPanel {
 	
 	public void initializeRight () throws IOException {
 		JPanel right = new JPanel();
-		Dimension dimension = new Dimension(Constants.HEIGHT, 9*Constants.HEIGHT);
+		Dimension dimension = new Dimension(Constants.HEIGHT, 9*Constants.WIDTH);
 		right.setPreferredSize(dimension);
 		right.setSize(dimension);
 		
@@ -276,15 +321,20 @@ public class Board extends JPanel {
 		c.weighty = 4*Constants.WIDTH;
 		List<PropertyPanel> myProperties = new ArrayList<>();
 		List<PropertyPanel> aggregateProperties = new ArrayList<>();
+		List<Properties> properties = new ArrayList<>();
 		myProperties.add(new MyColorPropertyPanel(ColorProperties.PACIFIC_GARDEN));
 		aggregateProperties.add(new AggregateColorProperty(ColorProperties.PACIFIC_GARDEN));
+		properties.add(ColorProperties.PACIFIC_GARDEN);
 		myProperties.add(new MyColorPropertyPanel(ColorProperties.NORTH_CAROLINA_AVENUE));
 		aggregateProperties.add(new AggregateColorProperty(ColorProperties.NORTH_CAROLINA_AVENUE));
-		myProperties.add(new MyUtilityProperty(Utilities.WATER_WORKS));
-		aggregateProperties.add(new AggregateUtilityProperty(Utilities.WATER_WORKS));
+		properties.add(ColorProperties.NORTH_CAROLINA_AVENUE);
+		myProperties.add(new StaticProperty(StaticProperties.COMMUNITY_CHEST_RIGHT));
+		aggregateProperties.add(new StaticProperty(StaticProperties.COMMUNITY_CHEST_RIGHT));
+		properties.add(StaticProperties.COMMUNITY_CHEST_RIGHT);
 		myProperties.add(new MyColorPropertyPanel(ColorProperties.PENNSYLVANIA_AVENUE));
 		aggregateProperties.add(new AggregateColorProperty(ColorProperties.PENNSYLVANIA_AVENUE));
-		ColorGroup green = new ColorGroup(Orientation.RIGHT, myProperties, aggregateProperties);
+		properties.add(ColorProperties.PENNSYLVANIA_AVENUE);
+		ColorGroup green = new ColorGroup(Orientation.RIGHT, properties, myProperties, aggregateProperties, new ColorBlock(Colors.GREEN));
 		right.add(green, c);
 		_colorGroups.add(green);
 		
@@ -298,15 +348,20 @@ public class Board extends JPanel {
 		c.weighty = 4*Constants.WIDTH;
 		myProperties = new ArrayList<>();
 		aggregateProperties = new ArrayList<>();
-		myProperties.add(new MyColorPropertyPanel(ColorProperties.ATLANTIC_AVENUE));
-		aggregateProperties.add(new AggregateColorProperty(ColorProperties.ATLANTIC_AVENUE));
+		properties = new ArrayList<>();
+		myProperties.add(new StaticProperty(StaticProperties.RED_CHANCE));
+		aggregateProperties.add(new StaticProperty(StaticProperties.RED_CHANCE));
+		properties.add(StaticProperties.RED_CHANCE);
 		myProperties.add(new MyColorPropertyPanel(ColorProperties.PARK_PLACE));
 		aggregateProperties.add(new AggregateColorProperty(ColorProperties.PARK_PLACE));
-		myProperties.add(new MyUtilityProperty(Utilities.WATER_WORKS));
-		aggregateProperties.add(new AggregateUtilityProperty(Utilities.WATER_WORKS));
+		properties.add(ColorProperties.PARK_PLACE);
+		myProperties.add(new StaticProperty(StaticProperties.LUXURY_TAX));
+		aggregateProperties.add(new StaticProperty(StaticProperties.LUXURY_TAX));
+		properties.add(StaticProperties.LUXURY_TAX);
 		myProperties.add(new MyColorPropertyPanel(ColorProperties.BOARDWALK));
 		aggregateProperties.add(new AggregateColorProperty(ColorProperties.BOARDWALK));
-		ColorGroup blue = new ColorGroup(Orientation.RIGHT, myProperties, aggregateProperties);
+		properties.add(ColorProperties.BOARDWALK);
+		ColorGroup blue = new ColorGroup(Orientation.RIGHT, properties, myProperties, aggregateProperties, new ColorBlock(Colors.DARK_BLUE));
 		right.add(blue, c);
 		_colorGroups.add(blue);
 		
@@ -314,8 +369,105 @@ public class Board extends JPanel {
 	}
 	
 	public void initializeCenter() {
-		JPanel center = new Center();
-		this.add(center, BorderLayout.CENTER);
+		_center = new Center(this);
+		this.add(_center, BorderLayout.CENTER);
+	}
+	
+	public Player setHeuristics () {
+		Player player = new Player(_id);
+	
+		
+		HashMap<String, Integer> propertyValues = new HashMap<>();
+		HashMap<String, Double[]> colorValues = new HashMap<>();
+		for(ColorGroup c: _colorGroups) {
+			HashMap<String, Integer> properties = c.getPropertyValues();
+			Double[] colors = c.getColorValues();
+		}
+		player.setPropertyValues(propertyValues);
+		player.setColorValues(colorValues);
+		
+		//TODO: set values
+		List<Double> sliders = _center.getSliderInfo();
+		player.setLiquidity(sliders.get(0));
+		player.setTimeChange(sliders.get(1));
+		player.setTradingFear(sliders.get(2));
+		
+		//TODO: minimum cash amounts
+		List<Integer> minCash = _center.getMinCash();
+		player.setMinBuyCash(minCash.get(0));
+		player.setMinBuildCash(minCash.get(1));
+		player.setMinUnmortgageCash(minCash.get(2));
+		
+		//TODO: jail information
+		List<Integer> waits = _jail.getWait();
+		player.setJailWait(waits.get(0));
+		player.setJailPoor(waits.get(1));
+		player.setJailRich(waits.get(2));
+		
+		//TODO: get information from the buttons
+		_center.setButtonChoices(player);		
+		
+		
+		return player;
+	}
+	
+	public void setPlayerSpecificPropertyData(Map<String, PropertyDataAccumulator> data) {
+		for(ColorGroup colorGroup: _colorGroups) {
+			Set<String> names = colorGroup.getNames();
+			for(String name: names) {
+				if(data.containsKey(name)) {
+					colorGroup.setMyData(name, data.get(name));
+				}
+				else {
+					System.out.println("not correct: " + name);
+				}
+			}
+		}
+		
+		for(Railroad railroad: _railroads) {
+			String name = railroad.getName();
+			if(data.containsKey(name)) {
+				railroad.setMyData(data.get(name));
+			}
+			else {
+				System.out.println("not correct: " + name);
+			}
+		}
+		this.validate();
+		this.updateUI();
+		this.repaint();
+	}
+	
+	public void setPropertyData(Map<String, PropertyDataAccumulator> data) {
+		for(ColorGroup colorGroup: _colorGroups) {
+			Set<String> names = colorGroup.getNames();
+			for(String name: names) {
+				if(data.containsKey(name)) {
+					colorGroup.setAggregateData(name, data.get(name));
+				}
+				else {
+					System.out.println("not correct: " + name);
+				}
+			}
+		}
+		
+		for(Railroad railroad: _railroads) {
+			String name = railroad.getName();
+			if(data.containsKey(name)) {
+				railroad.setAggregateData(data.get(name));
+			}
+			else {
+				System.out.println("not correct: " + name);
+			}
+		}
+		this.validate();
+		this.updateUI();
+		this.repaint();
+	}
+
+	
+	public void setWealthData(List<PlayerWealthData> data) {
+		_center.setWealthData(data);
 	}
 	
 	public static void main (String[] args) {
@@ -323,8 +475,74 @@ public class Board extends JPanel {
 		frame.setPreferredSize(new Dimension(Constants.FULL_WIDTH, Constants.FULL_HEIGHT));
 		try {
 			JMenuBar menu = new JMenuBar();
-			frame.add(new Board(menu));
+			Board board = new Board(menu, 1);
+			frame.add(board);
+			
+			List<PlayerWealthData> wealthData = new ArrayList<>();
+			for(int i=0; i<100; i++) {
+				PlayerWealthData d = new PlayerWealthData(1, Math.random()*1000, Math.random()*250);
+				wealthData.add(d);
+			}
+			
+			board.setWealthData(wealthData);
+			
 			frame.setJMenuBar(menu);
+			
+			Map<String, PropertyDataAccumulator> data = new HashMap<>();
+			
+			for(ColorProperties color: ColorProperties.values()) {
+				PropertyDataAccumulator d = new PropertyDataAccumulator(color.getLowercaseName());
+				d.accNumHouses = Math.random() * 5;
+				d.accTotalRevenueWithHouses = Math.random() * 10000;
+				d.accTotalRevenueWithoutHouses = 0;
+				data.put(color.getLowercaseName(), d);
+			}
+			
+			for(Utilities utilities: Utilities.values()) {
+				PropertyDataAccumulator d = new PropertyDataAccumulator(utilities.getLowercaseName());
+				d.accNumHouses = Math.random() * 5;
+				d.accTotalRevenueWithHouses = Math.random() * 10000;
+				d.accTotalRevenueWithoutHouses = 0;
+				data.put(utilities.getLowercaseName(), d);
+			}
+			
+			for(Railroads rr: Railroads.values()) {
+				PropertyDataAccumulator d = new PropertyDataAccumulator(rr.getLowercaseName());
+				d.accNumHouses = Math.random() * 5;
+				d.accTotalRevenueWithHouses = Math.random() * 10000;
+				d.accTotalRevenueWithoutHouses = 0;
+				data.put(rr.getLowercaseName(), d);
+			}
+			
+			board.setPropertyData(data);
+			
+			for(ColorProperties color: ColorProperties.values()) {
+				PropertyDataAccumulator d = new PropertyDataAccumulator(color.getLowercaseName());
+				d.accNumHouses = Math.random() * 5;
+				d.accTotalRevenueWithHouses = Math.random() * 10000;
+				d.accTotalRevenueWithoutHouses = 0;
+				data.put(color.getLowercaseName(), d);
+			}
+			
+			for(Utilities utilities: Utilities.values()) {
+				PropertyDataAccumulator d = new PropertyDataAccumulator(utilities.getLowercaseName());
+				d.accNumHouses = Math.random() * 5;
+				d.accTotalRevenueWithHouses = Math.random() * 10000;
+				d.accTotalRevenueWithoutHouses = 0;
+				data.put(utilities.getLowercaseName(), d);
+			}
+			
+			for(Railroads rr: Railroads.values()) {
+				PropertyDataAccumulator d = new PropertyDataAccumulator(rr.getLowercaseName());
+				d.accNumHouses = Math.random() * 5;
+				d.accTotalRevenueWithHouses = Math.random() * 10000;
+				d.accTotalRevenueWithoutHouses = 0;
+				data.put(rr.getLowercaseName(), d);
+			}
+			
+			board.setPlayerSpecificPropertyData(data);
+			
+			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -341,7 +559,7 @@ public class Board extends JPanel {
 	private class MyPropertyListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			for(ColorGroup c: _colorGroups) {
-				c.viewMyProperty();
+				
 			}
 		}
 	}
@@ -349,7 +567,7 @@ public class Board extends JPanel {
 	private class AggregatePropertyListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			for(ColorGroup c: _colorGroups) {
-				c.viewAggregateProperty();
+				
 			}
 		}
 	}
@@ -357,7 +575,7 @@ public class Board extends JPanel {
 	private class ColorListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			for(ColorGroup c: _colorGroups) {
-				c.viewColor();
+
 			}
 		}
 	}

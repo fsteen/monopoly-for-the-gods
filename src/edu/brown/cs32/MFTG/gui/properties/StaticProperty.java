@@ -11,6 +11,7 @@ import javax.imageio.ImageIO;
 import edu.brown.cs32.MFTG.gui.Constants;
 import edu.brown.cs32.MFTG.gui.Helper;
 import edu.brown.cs32.MFTG.gui.Constants.StaticProperties;
+import edu.brown.cs32.MFTG.tournament.data.PropertyDataAccumulator;
 
 public class StaticProperty extends PropertyPanel {
 
@@ -19,12 +20,24 @@ public class StaticProperty extends PropertyPanel {
 	public StaticProperty(StaticProperties properties) throws IOException {
 		super(properties);
 		_picture = ImageIO.read(new File(properties.getFile()));
+		_picture = Helper.resize(_picture, Constants.WIDTH, Constants.HEIGHT);
+		_picture = Helper.rotate(_picture, properties.getOrientation());
+	}
+	
+	protected void resizePicture(int width, int height) {
+		_picture = Helper.resize(_picture, width, height);
 	}
 	
 	@Override
 	public void paintComponent(Graphics g) {
-		_picture = Helper.resize(_picture, this.getWidth(), this.getHeight());
 		g.drawImage(_picture, 0, 0, null);
+	}
+
+	@Override
+	public void setData(PropertyDataAccumulator data) {}
+	
+	public int getValue() {
+		throw new NullPointerException("Static Properties do not have values");
 	}
 
 }

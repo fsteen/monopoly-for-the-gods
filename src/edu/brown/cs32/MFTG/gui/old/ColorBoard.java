@@ -1,4 +1,4 @@
-package edu.brown.cs32.MFTG.gui;
+package edu.brown.cs32.MFTG.gui.old;
 
 import java.awt.Color;
 import java.awt.GridBagConstraints;
@@ -8,13 +8,11 @@ import java.io.IOException;
 
 import javax.swing.JPanel;
 
+import edu.brown.cs32.MFTG.gui.Constants;
 import edu.brown.cs32.MFTG.gui.Constants.Colors;
 import edu.brown.cs32.MFTG.gui.Constants.Orientation;
 import edu.brown.cs32.MFTG.gui.Constants.Railroads;
 import edu.brown.cs32.MFTG.gui.colors.ColorButton;
-import edu.brown.cs32.MFTG.gui.spaces.CornerButton;
-import edu.brown.cs32.MFTG.gui.spaces.EmptyButton;
-import edu.brown.cs32.MFTG.gui.spaces.RailRoadUtility;
 
 public class ColorBoard extends JPanel {
 	private GridBagConstraints _c;

@@ -1,13 +1,17 @@
 package edu.brown.cs32.MFTG.gui.gameboard;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
@@ -17,20 +21,25 @@ import edu.brown.cs32.MFTG.gui.Constants;
 import edu.brown.cs32.MFTG.gui.Constants.ColorProperties;
 import edu.brown.cs32.MFTG.gui.Constants.Colors;
 import edu.brown.cs32.MFTG.gui.Constants.Orientation;
+import edu.brown.cs32.MFTG.gui.Constants.Properties;
 import edu.brown.cs32.MFTG.gui.Constants.View;
 import edu.brown.cs32.MFTG.gui.properties.AggregateColorProperty;
 import edu.brown.cs32.MFTG.gui.properties.MyColorPropertyPanel;
 import edu.brown.cs32.MFTG.gui.properties.PropertyPanel;
+import edu.brown.cs32.MFTG.tournament.data.PropertyDataAccumulator;
 
 public class ColorGroup extends JPanel {
 	
-	private List<PropertyPanel> _myProperties = new ArrayList<>();
-	private List<PropertyPanel> _aggregateProperties = new ArrayList<>();
+	private Map<Properties, PropertyPanel> _myPropertyName = new HashMap<>();
+	private Map<Properties, PropertyPanel> _aggregatePropertyName = new HashMap<>();
+	private List<PropertyPanel> _myProperties;
+	private List<PropertyPanel> _aggregateProperties;
+	private ColorBlock _colorBlock;
 	private View _view = View.ME;
 	private Orientation _orientation;
 	private GridBagConstraints _c = new GridBagConstraints();
 	
-	public ColorGroup (Orientation orientation, List<PropertyPanel> myPanel, List<PropertyPanel> aggregatePanel) {
+	public ColorGroup (Orientation orientation, List<Properties> properties, List<PropertyPanel> myPanel, List<PropertyPanel> aggregatePanel, ColorBlock colorBlock) {
 		super();
 		_orientation = orientation;
 		
@@ -50,26 +59,52 @@ public class ColorGroup extends JPanel {
 			this.setMaximumSize(dimension);
 		}
 		
+		this.addMouseListener(new ButtonMouseListener());
+		
+		for(int i=0; i<properties.size(); i++) {
+			_myPropertyName.put(properties.get(i), myPanel.get(i));
+			_aggregatePropertyName.put(properties.get(i), aggregatePanel.get(i));
+		}
 		_myProperties = myPanel;
 		_aggregateProperties = aggregatePanel;
+		_colorBlock = colorBlock;
+		update();
+		// TODO Auto-generated method stub
+		
+		_view = View.AGGREGATE;
+		update();
+		
+		_view = View.ME;
 		update();
 	}
 	
 	public void update () {
-		this.removeAll();
-		switch (_view) {
-		case ME:
+		if(_view == View.ME){
 			this.putObjects(_myProperties);
-			break;
-		case AGGREGATE:
+		}
+		else if(_view == View.AGGREGATE) {
 			this.putObjects(_aggregateProperties);
-			break;
+		}
+		else if(_view == View.COLOR){
+			this.putObjects(_colorBlock);
 		}
 	}
 	
+	public void putObjects (ColorBlock colorBlock) {
+		this.removeAll();
+		_c.ipadx = 0; _c.ipady = 0;
+		_c.gridx = 0;
+		_c.gridy = 0;
+		this.add(_colorBlock, _c);
+		this.updateUI();
+		this.repaint();
+	}
+	
 	public void putObjects (List<PropertyPanel> panel) {
+		this.removeAll();
 		_c.ipadx = 0; _c.ipady = 0;
 		if(_orientation == Orientation.UP || _orientation == Orientation.DOWN) {
+			
 			_c.gridy = 0;
 			_c.gridx = 0;
 			this.add(panel.get(0), _c);
@@ -91,36 +126,83 @@ public class ColorGroup extends JPanel {
 			_c.gridy = 3;
 			this.add(panel.get(3), _c);
 		}
+		this.updateUI();
+		this.repaint();
 	}
 	
-	public void initialize(Colors color) {
-		this.setLayout(new GridBagLayout());
-		GridBagConstraints c = new GridBagConstraints();
-
-		List<ColorProperties> colors = new ArrayList<>();
-		for(ColorProperties p: ColorProperties.values()) {
-			if(p.getColor().equals(color.getColor())) {
-				colors.add(p);
+	public Set<String> getNames() {
+		Set<Properties> properties = _myPropertyName.keySet();
+		Set<String> names = new HashSet<>();
+		for(Properties p: properties) {
+			names.add(p.getLowercaseName());
+		}
+		return names;
+	}
+	
+	public void setAggregateData (String name, PropertyDataAccumulator data) {
+		Set<Properties> properties = _aggregatePropertyName.keySet();
+		for(Properties p: properties) {
+			if(p.getLowercaseName().equals(name)) {
+				_aggregatePropertyName.get(p).setData(data);
 			}
 		}
-		//System.out.println()
+	}
+	
+	public void setMyData (String name, PropertyDataAccumulator data) {
+		Set<Properties> properties = _myPropertyName.keySet();
+		for(Properties p: properties) {
+			if(p.getLowercaseName().equals(name)) {
+				_myPropertyName.get(p).setData(data);
+			}
+		}
+	}
+	
+	private class ButtonMouseListener implements MouseListener {
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			if(e.getButton() == MouseEvent.BUTTON1 && e.getClickCount()==2) {
+				if(_view == View.ME) {
+					_view = View.AGGREGATE;
+				}
+				else if(_view == View.AGGREGATE) {
+					_view = View.COLOR;
+				}
+				else if(_view == View.COLOR) {
+					_view = View.ME;
+				}
+				update();
+			}
+			if(e.getButton() == MouseEvent.BUTTON3) {
+
+			}
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			// TODO Auto-generated method stub
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			// TODO Auto-generated method stub
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			// TODO Auto-generated method stub
+		}
+		
+		@Override
+		public void mouseExited(MouseEvent e) {
+			// TODO Auto-generated method stub
+		}
 	}
 	
 /* ----------------------------------------------------------------------------
  * ----------------------------- CHANGE VIEW ----------------------------------
  * ----------------------------------------------------------------------------
  */
-	public void viewMyProperty() {
-		
-	}
-	
-	public void viewAggregateProperty () {
-		
-	}
-	
-	public void viewColor () {
-		
-	}
 	
 	public static void main (String[] args) {
 		JFrame frame = new JFrame();
@@ -129,20 +211,55 @@ public class ColorGroup extends JPanel {
 		
 		List<PropertyPanel> myProperties = new ArrayList<>();
 		List<PropertyPanel> aggregateProperties = new ArrayList<>();
+		List<Properties> properties = new ArrayList<>();
 		myProperties.add(new MyColorPropertyPanel(ColorProperties.KENTUCKY_AVENUE));
 		aggregateProperties.add(new AggregateColorProperty(ColorProperties.KENTUCKY_AVENUE));
+		properties.add(ColorProperties.KENTUCKY_AVENUE);
 		myProperties.add(new MyColorPropertyPanel(ColorProperties.KENTUCKY_AVENUE));
 		aggregateProperties.add(new AggregateColorProperty(ColorProperties.KENTUCKY_AVENUE));
+		properties.add(ColorProperties.KENTUCKY_AVENUE);
 		myProperties.add(new MyColorPropertyPanel(ColorProperties.INDIANA_AVENUE));
 		aggregateProperties.add(new AggregateColorProperty(ColorProperties.INDIANA_AVENUE));
+		properties.add(ColorProperties.INDIANA_AVENUE);
 		myProperties.add(new MyColorPropertyPanel(ColorProperties.ILLINOIS_AVENUE));
 		aggregateProperties.add(new AggregateColorProperty(ColorProperties.ILLINOIS_AVENUE));
-		ColorGroup red = new ColorGroup(Orientation.UP, myProperties, aggregateProperties);
-		
-		
-		frame.add(red);
+		properties.add(ColorProperties.ILLINOIS_AVENUE);
+		ColorGroup red;
+		try {
+			red = new ColorGroup(Orientation.UP, properties, myProperties, aggregateProperties, new ColorBlock(Colors.RED));
+			frame.add(red);
+			
+			
+			PropertyDataAccumulator d = new PropertyDataAccumulator("hi");
+			d.accNumHouses = 2.5;
+			d.accTotalRevenueWithHouses = 100;
+			d.accTotalRevenueWithoutHouses= 50;
+			
+			red.setAggregateData("indiana avenue", d);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 		frame.setJMenuBar(menu);
 		frame.pack();
 		frame.setVisible(true);
+	}
+
+	public HashMap<String, Integer> getPropertyValues() {
+		HashMap<String, Integer> propertyValues = new HashMap<>();
+		for(Properties p: _myPropertyName.keySet()) {
+			String name = p.getLowercaseName();
+			if(! name.equals("static property")) {
+				PropertyPanel property = _myPropertyName.get(p);
+				int i = property.getValue();
+				propertyValues.put(name, i);
+			}
+		}
+		return propertyValues;
+	}
+
+	public Double[] getColorValues() {
+		return _colorBlock.getColorValues();
 	}
 }

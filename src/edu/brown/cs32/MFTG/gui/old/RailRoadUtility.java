@@ -1,11 +1,10 @@
-package edu.brown.cs32.MFTG.gui.spaces;
+package edu.brown.cs32.MFTG.gui.old;
 
 import java.awt.Color;
 import java.io.IOException;
 
 import javax.swing.JPanel;
 
-import edu.brown.cs32.MFTG.gui.Board;
 import edu.brown.cs32.MFTG.gui.Constants.Orientation;
 import edu.brown.cs32.MFTG.gui.Constants.ColorProperties;
 import edu.brown.cs32.MFTG.gui.Constants.Railroads;

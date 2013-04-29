@@ -1,4 +1,4 @@
-package edu.brown.cs32.MFTG.gui.spaces;
+package edu.brown.cs32.MFTG.gui.old;
 
 
 import java.awt.Color;
@@ -21,6 +21,7 @@ public class Houses {
 	
 	private double _timeOwned;
 	private double _profit;
+	private double _numHouses;
 		
 	private int HOUSE_WIDTH = (int) (Constants.WIDTH/5) - 4;
 	private int HOUSE_HEIGHT = (int) HOUSE_WIDTH*8/9;
@@ -35,13 +36,33 @@ public class Houses {
 		
 		_timeOwned = timeOwned;
 		_profit = profit;
+		_numHouses = numHouses;
+		_color = color;
 		
-		double percentHouses = numHouses/NUM_HOUSES;
+		recompute();
+	}
+	
+	public void recompute () {
+		double percentHouses = _numHouses/NUM_HOUSES;
 		int xLoc = (int) (Constants.WIDTH*percentHouses);
 		int width = (int) (Constants.WIDTH*(1-percentHouses));
 		_cover = new Rectangle (xLoc, 0, width, Constants.HEIGHT);
-		_colorCover = new Rectangle(xLoc, 0, width, (int) (timeOwned*Constants.HEIGHT));
-		_color = new Color(color.getRed(), color.getGreen(), color.getBlue(), (int) (255*profit/10000.));
+		_colorCover = new Rectangle(xLoc, 0, width, (int) (_timeOwned*Constants.HEIGHT));
+	}
+	
+	public void setTimeOwned(double timeOwned) {
+		_timeOwned = timeOwned;
+		recompute();
+	}
+	
+	public void setProfit(double profit) {
+		_profit = profit;
+		recompute();
+	}
+	
+	public void setNumHouses (double houses) {
+		_numHouses = houses;
+		recompute();
 	}
 	
 	public void paint (Graphics2D g2) {
@@ -55,8 +76,8 @@ public class Houses {
 		g2.setColor(Color.WHITE);
 		g2.fill(_colorCover);
 		
-		g2.setColor(_color);
+		Color c = new Color(_color.getRed(), _color.getGreen(), _color.getBlue(), (int) (255*_profit/10000.));
+		g2.setColor(c);
 		g2.fill(_colorCover);
 	}
-
 }

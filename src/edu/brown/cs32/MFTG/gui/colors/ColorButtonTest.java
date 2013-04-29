@@ -14,7 +14,7 @@ import javax.swing.JFrame;
 import edu.brown.cs32.MFTG.gui.Constants;
 import edu.brown.cs32.MFTG.gui.Constants.Colors;
 import edu.brown.cs32.MFTG.gui.Constants.Orientation;
-import edu.brown.cs32.MFTG.gui.spaces.TestPanel;
+import edu.brown.cs32.MFTG.gui.old.TestPanel;
 
 public class ColorButtonTest extends JButton {
 	
