@@ -129,7 +129,7 @@ public class GreetingPanel extends JPanel{
 			if(intersects(xloc,yloc,_playLite,_playLoc)) {
 				if(_playDark.isVisible()) {
 					fixPanels();
-					_main.switchPanels("lobby");
+					_main.switchPanels("choose");
 				}
 				else {
 					fixPanels();

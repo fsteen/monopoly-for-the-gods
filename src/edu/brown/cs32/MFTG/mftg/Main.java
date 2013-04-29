@@ -11,6 +11,7 @@ import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import edu.brown.cs32.MFTG.gui.Board;
+import edu.brown.cs32.MFTG.gui.ChooseProfilePanel;
 import edu.brown.cs32.MFTG.gui.Constants;
 import edu.brown.cs32.MFTG.gui.CreateGamePanel;
 import edu.brown.cs32.MFTG.gui.EndGamePanel;
@@ -38,6 +39,8 @@ public class Main extends JFrame{
 		_panels.put("greet", greet);
 		GameLobbyPanel lobby = new GameLobbyPanel(this);
 		_panels.put("lobby", lobby);
+		ChooseProfilePanel choose = new ChooseProfilePanel(this);
+		_panels.put("choose", choose);
 		CreateGamePanel create = new CreateGamePanel(this);
 		_panels.put("create", create);
 		JoinGamePanel join = new JoinGamePanel(this);
@@ -57,7 +60,7 @@ public class Main extends JFrame{
 		//ColorBoard board = new ColorBoard();
 		//this.add(board);
 		
-		_currentPanel=_end;
+		_currentPanel=choose;
 		this.add(_currentPanel);
 		
 		this.pack();

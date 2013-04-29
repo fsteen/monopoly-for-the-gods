@@ -15,6 +15,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.ButtonGroup;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.event.MouseInputAdapter;
@@ -25,9 +26,9 @@ import edu.brown.cs32.MFTG.mftg.Main;
 public class ChooseProfilePanel extends JPanel{
 	private ImagePanel _chooseLite, _backLite, _backDark, _selectLite, _selectDark;
 	private BufferedImage _background;
-	private Point _chooseLoc, _whiteLoc, _backLoc, _selectLoc;
-	private JoinBottomPanel _bottomPanel;
+	private Point _chooseLoc, _listLoc, _backLoc, _selectLoc;
 	private Main _main;
+	private JList _profiles;
 	
 	private final int BUTTON_HEIGHT=Constants.FULL_HEIGHT/8;
 	private final int BUTTON_WIDTH=2*Constants.FULL_HEIGHT/3;
@@ -48,20 +49,18 @@ public class ChooseProfilePanel extends JPanel{
 			_chooseLoc= new Point(START_WIDTH, START_HEIGHT);
 			_chooseLite.setLocation(_chooseLoc);
 					
-			_whiteLoc= new Point(Constants.FULL_WIDTH/32, START_HEIGHT+BUTTON_HEIGHT*6/5);
-			_bottomPanel=new JoinBottomPanel();
-			_bottomPanel.setLocation(_whiteLoc);
+			_listLoc= new Point(Constants.FULL_WIDTH/32, START_HEIGHT+BUTTON_HEIGHT*6/5);
 			
 			_backLite = new ImagePanel(Helper.resize(ImageIO.read(new File("images/BackLite.png")), 100, 50));
 			_backDark = new ImagePanel(Helper.resize(ImageIO.read(new File("images/BackDark.png")), 100, 50));
-			_backLoc= new Point(this.getWidth()-_backLite.getWidth()-20, this.getHeight()-_backDark.getHeight()-10);
+			_backLoc= new Point(20, this.getHeight()-_backDark.getHeight()-10);
 			_backLite.setLocation(_backLoc);
 			_backDark.setLocation(_backLoc);
 			_backDark.setVisible(false);
 			
 			_selectLite = new ImagePanel(Helper.resize(ImageIO.read(new File("images/GoLite.png")), 100, 50));
 			_selectDark = new ImagePanel(Helper.resize(ImageIO.read(new File("images/GoDark.png")), 100, 50));
-			_selectLoc= new Point(_whiteLoc.getLocation().x+_bottomPanel.getWidth()-_selectLite.getWidth()-30, _whiteLoc.getLocation().y+_selectDark.getHeight()-20);
+			_selectLoc= new Point(this.getWidth()-_selectLite.getWidth()-30, this.getHeight()-_selectLite.getHeight()-20);
 			_selectLite.setLocation(_selectLoc);
 			_selectDark.setLocation(_selectLoc);
 			_selectDark.setVisible(false);
@@ -74,7 +73,6 @@ public class ChooseProfilePanel extends JPanel{
 			add(_backDark);
 			add(_selectLite);
 			add(_selectDark);
-			add(_bottomPanel);
 
 			
 		} catch (IOException e) {
@@ -122,7 +120,7 @@ public class ChooseProfilePanel extends JPanel{
 			if(intersects(xloc,yloc,_backLite,_backLoc)) {
 				if(_backDark.isVisible()) {
 					fixPanels();
-					_main.switchPanels("lobby");
+					_main.switchPanels("greet");
 				}
 				else {
 					fixPanels();
@@ -132,7 +130,7 @@ public class ChooseProfilePanel extends JPanel{
 			else if(intersects(xloc,yloc,_selectLite,_selectLoc)) {
 				if(_selectDark.isVisible()) {
 					fixPanels();
-					//_main.switchPanels("lobby");
+					_main.switchPanels("lobby");
 				}
 				else {
 					fixPanels();
