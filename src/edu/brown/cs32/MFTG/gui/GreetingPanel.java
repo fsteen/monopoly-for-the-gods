@@ -138,7 +138,8 @@ public class GreetingPanel extends JPanel{
 				
 				if(_settingsDark.isVisible()) {
 					fixPanels();
-					//TODO
+					_main.switchPanels("settings");
+
 				}
 				else {
 					fixPanels();

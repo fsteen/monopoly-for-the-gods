@@ -133,17 +133,11 @@ public class CreateGamePanel extends JPanel{
 			}
 			else if(intersects(xloc,yloc,_goLite,_goLoc)) {
 				if(_goDark.isVisible()) {
-					fixPanels();
-					
-					System.out.println("launching tournament");
+					fixPanels();					
 					Settings settings = _bottomPanel.getSettings();
 					int numPlayers = 4; //TODO change later
-					int port = _bottomPanel.getPort();
-					try{
-						(new Tournament(numPlayers, settings, port)).run();
-					} catch (IOException f){
-						//TODO handle
-					}
+					int port = _bottomPanel.getPort();					
+					_main.getModule().launchTournament(numPlayers, settings,port);
 				}
 				else {
 					fixPanels();

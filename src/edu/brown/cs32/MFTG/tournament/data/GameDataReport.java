@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class GameDataReport {
 
 	public final List<TimeStampReport> _timeStamps;
-	public final Map<String, List<PropertyDataReport>> _overallPlayerPropertyData;
+	public final Map<String, List<PropertyDataReport>> _overallPlayerPropertyData; //TODO make list in order of player id
 	public final Map<String, PropertyDataReport> _overallPropertyData;
 	public final int _winner;
 	
