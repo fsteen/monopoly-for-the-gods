@@ -82,4 +82,12 @@ public class ProfileManager {
 	public Profile getProfile(String profileName){
 		return _profiles.get(profileName);
 	}
+	
+	/**
+	 * Getter for the profiles attribute
+	 * @return _profiles
+	 */
+	public Map<String, Profile> getProfiles(){
+		return _profiles;
+	}
 }
