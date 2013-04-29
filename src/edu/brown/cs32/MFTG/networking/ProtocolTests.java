@@ -15,6 +15,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.brown.cs32.MFTG.monopoly.GameData;
 import edu.brown.cs32.MFTG.monopoly.Player;
+import edu.brown.cs32.MFTG.monopoly.Player.Aggression;
 import edu.brown.cs32.MFTG.monopoly.Player.Amount;
 import edu.brown.cs32.MFTG.monopoly.Player.Balance;
 import edu.brown.cs32.MFTG.monopoly.Player.Expense;
@@ -98,8 +99,8 @@ public class ProtocolTests {
 		Expense buildingChoice = p.getBuildingChoice();
 		p2.setBuildingChoice(buildingChoice);
 		
-//		Aggression buyAggression = p.getBuyAggression();
-//		p2.setBuyAggression(buyAggression);
+		Aggression buyAggression = p.getBuildAggression();
+		p2.setBuildAggression(buyAggression);
 		
 		int jailPoor = p.getJailPoor();
 		p2.setJailPoor(jailPoor);
@@ -126,18 +127,6 @@ public class ProtocolTests {
 	}
 	
 	@Test
-	public void testProfile() throws IOException {
-		ObjectMapper oMapper = new ObjectMapper();
-		
-		Profile p = new Profile("test");
-		
-		String profileJson = oMapper.writeValueAsString(p);
-		Profile newP = oMapper.readValue(profileJson, Profile.class);
-		
-		assertEquals(p, newP);
-	}
-	
-	@Test
 	public void testGameDataReport() throws IOException {
 		List<TimeStampReport> timeStamps = new ArrayList<>();
 		Map<String, PropertyDataReport> entireGameData = new HashMap<>();
@@ -159,5 +148,17 @@ public class ProtocolTests {
 		GameDataReport newGDR = oMapper.readValue(gdrJson, GameDataReport.class);
 		
 		assertEquals(gdr, newGDR);
+	}
+	
+	@Test
+	public void testProfile() throws IOException {
+		ObjectMapper oMapper = new ObjectMapper();
+		
+		Profile p = new Profile("test");
+		
+		String profileJson = oMapper.writeValueAsString(p);
+		Profile newP = oMapper.readValue(profileJson, Profile.class);
+		
+		assertEquals(p, newP);
 	}
 }
