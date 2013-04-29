@@ -18,7 +18,7 @@ import edu.brown.cs32.MFTG.gui.Constants;
 import edu.brown.cs32.MFTG.gui.Constants.Orientation;
 import edu.brown.cs32.MFTG.gui.Constants.Properties;
 import edu.brown.cs32.MFTG.gui.Helper;
-import edu.brown.cs32.MFTG.gui.old.Houses;
+import edu.brown.cs32.MFTG.gui.Houses;
 
 public abstract class NonstaticProperty extends PropertyPanel {
 

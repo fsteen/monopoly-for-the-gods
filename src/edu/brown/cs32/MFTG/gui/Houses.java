@@ -1,4 +1,4 @@
-package edu.brown.cs32.MFTG.gui.old;
+package edu.brown.cs32.MFTG.gui;
 
 
 import java.awt.Color;

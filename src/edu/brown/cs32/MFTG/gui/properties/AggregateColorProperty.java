@@ -6,7 +6,7 @@ import java.awt.Rectangle;
 
 import edu.brown.cs32.MFTG.gui.Constants.ColorProperties;
 import edu.brown.cs32.MFTG.gui.Constants.Colors;
-import edu.brown.cs32.MFTG.gui.old.Houses;
+import edu.brown.cs32.MFTG.gui.Houses;
 import edu.brown.cs32.MFTG.monopoly.PropertyData;
 import edu.brown.cs32.MFTG.tournament.data.PropertyDataAccumulator;
 

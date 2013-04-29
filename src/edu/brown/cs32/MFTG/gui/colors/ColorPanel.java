@@ -25,7 +25,7 @@ import edu.brown.cs32.MFTG.gui.Constants;
 import edu.brown.cs32.MFTG.gui.Constants.Colors;
 import edu.brown.cs32.MFTG.gui.Constants.Orientation;
 import edu.brown.cs32.MFTG.gui.Helper;
-import edu.brown.cs32.MFTG.gui.old.House;
+import edu.brown.cs32.MFTG.gui.House;
 
 public class ColorPanel extends JPanel{
 

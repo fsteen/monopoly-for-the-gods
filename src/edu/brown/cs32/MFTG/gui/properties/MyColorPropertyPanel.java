@@ -6,7 +6,7 @@ import java.awt.Graphics;
 import edu.brown.cs32.MFTG.gui.Constants.ColorProperties;
 import edu.brown.cs32.MFTG.gui.Constants.Colors;
 import edu.brown.cs32.MFTG.gui.Constants.Properties;
-import edu.brown.cs32.MFTG.gui.old.Houses;
+import edu.brown.cs32.MFTG.gui.Houses;
 import edu.brown.cs32.MFTG.tournament.data.PropertyDataAccumulator;
 
 public class MyColorPropertyPanel extends MyPropertyPanel {

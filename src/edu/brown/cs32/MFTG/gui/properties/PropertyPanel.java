@@ -21,7 +21,6 @@ import javax.swing.JTextField;
 import edu.brown.cs32.MFTG.gui.Constants;
 import edu.brown.cs32.MFTG.gui.Constants.Orientation;
 import edu.brown.cs32.MFTG.gui.Constants.Properties;
-import edu.brown.cs32.MFTG.gui.old.PropertyContainer;
 import edu.brown.cs32.MFTG.gui.Helper;
 import edu.brown.cs32.MFTG.tournament.data.PropertyDataAccumulator;
 
