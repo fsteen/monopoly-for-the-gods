@@ -15,37 +15,30 @@ public class Settings {
 		MOST_SETS_WON, LAST_SET_WON, MOST_MONEY_MIDWAY
 	}
 	
-	public final int NUM_GAMES_PER_ROUND;
-	public final int NUM_ROUNDS;
+	public final int NUM_GAMES_PER_ROUND,NUM_ROUNDS,BEGINNING_TIMEOUT,DURING_TIMEOUT,FREE_PARKING;
+	public final boolean DOUBLE_ON_GO, AUCTIONS;
 	public final Turns TURN_FLOW;
 	public final WinningCondition WIN_TYPE;
-	public final Timer TIMING; //not sure if this is best
-	public final int MAX_NUM_TURNS;
-	public final boolean DOUBLE_ON_GO;
-	public final boolean FREE_PARKING;
-	public final boolean AUCTIONS;
 	
 	//TODO no longer Json compatible ... ...
 	
 	@JsonCreator
 	public Settings(@JsonProperty("numGamesPerRound") int numGamesPerRound,
 			@JsonProperty("numRounds") int numRounds,
-			int maxNumTurns,
 			boolean doubleOnGo,
-			boolean freeParking,
+			int freeParking,
 			boolean auctions,
-			Turns turnFlow, WinningCondition winType, Timer timing){
+			Turns turnFlow, WinningCondition winType, int beginningTimeout, int duringTimeout){
 		NUM_GAMES_PER_ROUND = numGamesPerRound;
 		NUM_ROUNDS = numRounds;
 		TURN_FLOW = turnFlow;
 		WIN_TYPE = winType;
-		TIMING = timing;
-		MAX_NUM_TURNS = maxNumTurns;
+		BEGINNING_TIMEOUT = beginningTimeout;
+		DURING_TIMEOUT = duringTimeout;
 		DOUBLE_ON_GO = doubleOnGo;
 		FREE_PARKING = freeParking;
 		AUCTIONS = auctions;
 	}
-
 	
 	/**
 	 * Returns the number of games to be played per round
