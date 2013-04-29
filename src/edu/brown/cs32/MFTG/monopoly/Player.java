@@ -263,7 +263,7 @@ public class Player {
 	 * @return value of same color
 	 */
 	@JsonIgnore
-	public void setSameColorEffectValue(String color, double newVal){
+	public void setSameColorEffect(String color, double newVal){
 		_colorValues.get(color)[3]=newVal;
 	}
 	
