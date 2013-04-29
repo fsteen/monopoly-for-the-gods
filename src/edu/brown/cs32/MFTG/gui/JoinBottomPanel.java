@@ -2,6 +2,7 @@ package edu.brown.cs32.MFTG.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -17,6 +18,8 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -39,7 +42,7 @@ import edu.brown.cs32.MFTG.monopoly.GamePlayer;
 import edu.brown.cs32.MFTG.monopoly.Player;
 
 public class JoinBottomPanel extends JPanel {
-	private BufferedImage _whiteBack;
+	private BufferedImage _whiteBack, _foodler;
 	private final int BOTTOM_HEIGHT=Constants.FULL_HEIGHT*3/5;
 	private final int BOTTOM_WIDTH=Constants.FULL_WIDTH*15/16;
 	private JPanel _fpPanel;
@@ -49,6 +52,7 @@ public class JoinBottomPanel extends JPanel {
 		super();
 		try {
 			_whiteBack = Helper.resize(ImageIO.read(new File("images/WhiteBack.png")), BOTTOM_WIDTH, BOTTOM_HEIGHT);
+			_foodler = Helper.resize(ImageIO.read(new File("images/foodler.png")), BOTTOM_WIDTH-240, BOTTOM_HEIGHT-160);
 			this.setLayout(new BorderLayout());
 			setBackground(Constants.CLEAR);
 			this.setSize(new Dimension(_whiteBack.getWidth(),_whiteBack.getHeight()));
@@ -74,6 +78,8 @@ public class JoinBottomPanel extends JPanel {
 			portPanel.add(_port);
 			
 			add(portPanel, BorderLayout.NORTH);
+			
+			addMouseListener(new FoodlerListener());
 
 
 		} catch (IOException e) {
@@ -87,6 +93,7 @@ public class JoinBottomPanel extends JPanel {
 		Graphics2D brush = (Graphics2D) g;
 		brush.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		brush.drawImage(_whiteBack, 0, 0, null);
+		brush.drawImage(_foodler, 20, 120, null);
 
 	}
 
@@ -135,42 +142,23 @@ public class JoinBottomPanel extends JPanel {
 		}
 	}
 	
-	/**
-	 * class that gets called when the checkbox changes
-	 * @author jschvime
-	 *
-	 */
-	private class FreeParkingListener implements ItemListener{
 
-		@Override
-		public void itemStateChanged(ItemEvent e) {
-			if(e.getStateChange()==ItemEvent.SELECTED) {
-				_fpPanel.setVisible(true);
-			}
-			else {
-				_fpPanel.setVisible(false);
-			}
-
-			
-		}
-		
-	}
 	
-	private class PlayerListener extends MouseInputAdapter{
-		List<ImagePanel> _imgs = new ArrayList<>();
-		Integer _curr;
-		public PlayerListener(Integer curr, ImagePanel ...imgs) {
-			super();
-			_imgs=Arrays.asList(imgs);
-			_curr=curr;
-		}
+	private class FoodlerListener extends MouseInputAdapter{
 
 		@Override
 		public void mousePressed(MouseEvent e) {
-			int newCurr=(_curr+1)%_imgs.size();
-			_imgs.get(newCurr).setVisible(true);
-			_imgs.get(_curr).setVisible(false);
-			_curr=newCurr;
+			if(e.getX()>243 &&e.getX()<481&&e.getY()>353 &&e.getY()<411) {
+				String url = "https://itunes.apple.com/us/app/foodler/id615802139?mt=8"; // path to your new file
+
+				// open the default web browser for the HTML page
+				try {
+					Desktop.getDesktop().browse(new URI(url));
+				} catch (IOException e1) {
+				} catch (URISyntaxException e1) {
+				}
+
+			}
 		}
 		
 	}
