@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -82,16 +83,6 @@ public class PlayerModule {
 		_dummyGui = new DummyGUI();
 	}
 
-	public void run(){
-		while(true){
-			try {
-				handleRequest();
-			} catch (Exception e){
-				// TODO handle this
-			}
-		}
-	}
-
 	/***************Networking Methods 
 	 * @throws IOException 	private final int MAX_NUM_TURNS=1000;
 
@@ -139,12 +130,28 @@ public class PlayerModule {
 	 * Connects the PlayerModule to a socket
 	 * @throws IOException
 	 */
-	private void connect() throws IOException{
-		_server = new Socket(_host, _port);
-		_input = new BufferedReader(new InputStreamReader(_server.getInputStream()));
-		_output = new BufferedWriter(new OutputStreamWriter(_server.getOutputStream()));
+	public void connectAndRun(){
+		try {
+			_server = new Socket(_host, _port);
+			_input = new BufferedReader(new InputStreamReader(_server.getInputStream()));
+			_output = new BufferedWriter(new OutputStreamWriter(_server.getOutputStream()));
+		} catch (UnknownHostException e) {
+			displayError("Unknown host. Unable to connect to server :( WHAT THE FUCK, MAN!!!");
+			return;
+		} catch (IOException e) {
+			displayError("Unable to connect to server :(");
+			return;
+		}
 		_id = getIdOnConnection();
 		_gui.createBoard(_id);
+		
+		while(true){
+			try {
+				handleRequest();
+			} catch (Exception e){
+				// TODO handle this
+			}
+		}
 	}
 	
 	private int getIdOnConnection(){
@@ -234,13 +241,6 @@ public class PlayerModule {
 	public void launchTournament(int numPlayers, Settings settings, int port){
 		try {
 			_pool.execute((new Tournament(numPlayers, settings, port)));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		try {
-			this.connect();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -392,12 +392,6 @@ public class PlayerModule {
 
 		PlayerModule pm = new PlayerModule(args[0], port);
 
-		try {
-			pm.connect();
-		} catch (IOException e){
-			System.out.println("Unable to connect to the server. Program will not exit.");
-		}
-
-		pm.run();
+		pm.connectAndRun();
 	}
 }

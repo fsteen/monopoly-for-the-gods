@@ -138,6 +138,7 @@ public class CreateGamePanel extends JPanel{
 					int numPlayers = 4; //TODO change later
 					int port = _bottomPanel.getPort();					
 					_main.getModule().launchTournament(numPlayers, settings,port);
+					_main.getModule().connectAndRun();
 				}
 				else {
 					fixPanels();
