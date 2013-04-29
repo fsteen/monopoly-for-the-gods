@@ -50,7 +50,7 @@ public class Board extends JPanel {
 	private Jail _jail;
 	private JMenuBar _menu;
 	private Center _center;
-	private int _id;
+	private int _id = 1;
 	private Player _player = null;
 	
 	public Board (int id) throws IOException {
@@ -377,41 +377,46 @@ public class Board extends JPanel {
 	}
 	
 	public Player setHeuristics () {
-		_player = new Player(_id);
-	
+		Player player = new Player(1);
 		
 		HashMap<String, Integer> propertyValues = new HashMap<>();
 		HashMap<String, Double[]> colorValues = new HashMap<>();
 		for(ColorGroup c: _colorGroups) {
 			HashMap<String, Integer> properties = c.getPropertyValues();
 			Double[] colors = c.getColorValues();
+			System.out.println(c.getName());
+			colorValues.put(c.getName(), colors);
+			propertyValues.putAll(properties);
 		}
-		_player.setPropertyValues(propertyValues);
-		_player.setColorValues(colorValues);
+		for(Railroad r: _railroads) {
+			propertyValues.put(r.getName(), r.getValue());
+		}
+		player.setPropertyValues(propertyValues);
+		player.setColorValues(colorValues);
 		
 		//TODO: set values
 		List<Double> sliders = _center.getSliderInfo();
-		_player.setLiquidity(sliders.get(0));
-		_player.setTimeChange(sliders.get(1));
-		_player.setTradingFear(sliders.get(2));
+		player.setLiquidity(sliders.get(0));
+		player.setTimeChange(sliders.get(1));
+		player.setTradingFear(sliders.get(2));
 		
 		//TODO: minimum cash amounts
 		List<Integer> minCash = _center.getMinCash();
-		_player.setMinBuyCash(minCash.get(0));
-		_player.setMinBuildCash(minCash.get(1));
-		_player.setMinUnmortgageCash(minCash.get(2));
+		player.setMinBuyCash(minCash.get(0));
+		player.setMinBuildCash(minCash.get(1));
+		player.setMinUnmortgageCash(minCash.get(2));
 		
 		//TODO: jail information
 		List<Integer> waits = _jail.getWait();
-		_player.setJailWait(waits.get(0));
-		_player.setJailPoor(waits.get(1));
-		_player.setJailRich(waits.get(2));
+		player.setJailWait(waits.get(0));
+		player.setJailPoor(waits.get(1));
+		player.setJailRich(waits.get(2));
 		
 		//TODO: get information from the buttons
-		_center.setButtonChoices(_player);		
+		_center.setButtonChoices(player);		
 		
-		
-		return _player;
+		System.out.println("returning player");
+		return player;
 	}
 	
 	public Player getPlayer () {
@@ -420,15 +425,11 @@ public class Board extends JPanel {
 	}
 	
 	public void setPlayerSpecificPropertyData(Map<String, PropertyDataReport> data) {
-		System.out.println("set player specific data");
 		for(ColorGroup colorGroup: _colorGroups) {
 			Set<String> names = colorGroup.getNames();
 			for(String name: names) {
 				if(data.containsKey(name)) {
 					colorGroup.setMyData(name, data.get(name));
-				}
-				else {
-					System.out.println("not correct: " + name);
 				}
 			}
 		}
@@ -437,9 +438,6 @@ public class Board extends JPanel {
 			String name = railroad.getName();
 			if(data.containsKey(name)) {
 				railroad.setMyData(data.get(name));
-			}
-			else {
-				System.out.println("not correct: " + name);
 			}
 		}
 		this.validate();
@@ -455,9 +453,6 @@ public class Board extends JPanel {
 				if(data.containsKey(name)) {
 					colorGroup.setAggregateData(name, data.get(name));
 				}
-				else {
-					System.out.println("not correct: " + name);
-				}
 			}
 		}
 		
@@ -465,9 +460,6 @@ public class Board extends JPanel {
 			String name = railroad.getName();
 			if(data.containsKey(name)) {
 				railroad.setAggregateData(data.get(name));
-			}
-			else {
-				System.out.println("not correct: " + name);
 			}
 		}
 		this.validate();
@@ -477,7 +469,6 @@ public class Board extends JPanel {
 
 	
 	public void setWealthData(List<PlayerWealthDataReport> data) {
-		System.out.println("set wealth data");
 		_center.setWealthData(data);
 	}
 	

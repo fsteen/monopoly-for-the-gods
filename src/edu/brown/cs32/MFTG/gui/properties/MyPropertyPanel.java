@@ -22,7 +22,7 @@ import edu.brown.cs32.MFTG.gui.Constants.Viewer;
 public abstract class MyPropertyPanel extends NonstaticProperty{
 
 	private JFormattedTextField _valueField;
-	private int _value;
+	private int _value = 100;
 	
 	/* Font sizes */
 	private int _valueFont = Constants.FONT_SIZE;
