@@ -18,7 +18,7 @@ public class GameDataReport {
 	public GameDataReport(@JsonProperty("timeStamps") List<TimeStampReport> timeStamps,
 						  @JsonProperty("winner") int winner, 
 						  @JsonProperty("entireGameData") Map<String, List<PropertyDataReport>> entireGameData,
-						  Map<String, PropertyDataReport> overallPropertyData){
+						  @JsonProperty("overallPropertyData") Map<String, PropertyDataReport> overallPropertyData){
 		_timeStamps = timeStamps;
 		_winner = winner;
 		_overallPlayerPropertyData = entireGameData;
