@@ -31,6 +31,8 @@ public class MonopolyGui extends JFrame{
 
 		GreetingPanel greet = new GreetingPanel(this);
 		_panels.put("greet", greet);
+		SettingsPanel settings = new SettingsPanel(this);
+		_panels.put("settings", settings);
 		GameLobbyPanel lobby = new GameLobbyPanel(this);
 		_panels.put("lobby", lobby);
 		ChooseProfilePanel choose = new ChooseProfilePanel(this);
@@ -46,7 +48,7 @@ public class MonopolyGui extends JFrame{
 		this.setSize(9*Constants.WIDTH + 2*Constants.HEIGHT, 9*Constants.WIDTH + 2*Constants.HEIGHT);
 		this.setResizable(false);
 		
-		_currentPanel=lobby;
+		_currentPanel=greet;
 		this.add(_currentPanel);
 		
 		this.pack();
