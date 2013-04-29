@@ -83,7 +83,8 @@ public class CreateGamePanel extends JPanel{
 			System.exit(1);
 		}
 
-	}
+	}//					Integer[] players = _bottomPanel.getPlayers();
+
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -136,7 +137,7 @@ public class CreateGamePanel extends JPanel{
 					
 					System.out.println("launching tournament");
 					Settings settings = _bottomPanel.getSettings();
-					Integer[] players = _bottomPanel.getPlayers();
+//					Integer[] players = _bottomPanel.getPlayers();
 					int numPlayers = 4; //TODO change later
 					int port = _bottomPanel.getPort();
 					//client.launchTournament(settings, numPlayers, port);
