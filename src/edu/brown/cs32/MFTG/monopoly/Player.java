@@ -143,7 +143,10 @@ public class Player {
 	 */
 	@JsonIgnore
 	public int getPropertyValue(String property){
-		return _propertyValues.get(property);
+		if(_propertyValues.containsKey(property))
+				return _propertyValues.get(property);
+		System.out.println("Property Values doesn't contain: " + property);
+		return 0;
 	}
 	
 	/**
@@ -224,7 +227,14 @@ public class Player {
 	 */
 	@JsonIgnore
 	public double getBreakingOpponentMonopolyValue(String color){
-		return _colorValues.get(color)[2];
+		if(_colorValues.containsKey(color) && _colorValues.get(color).length > 2) {
+			if(_colorValues.get(color).length > 2) {
+				return _colorValues.get(color)[2];
+			}
+			else System.out.println("Color values length incorrect");
+		}
+		else System.out.println("Breaking opponent monopoly not set: " + color);
+		return 1;
 	}
 	
 	/**

@@ -316,11 +316,7 @@ public class PlayerModule {
 	 * @return
 	 */
 	public Player getPlayer(){
-		if(_player != null){
-			return _player;
-		} else {
-			//TODO what to do?
-		}
+		System.out.println("Get the board from the player");
 		return _board.getPlayer();		
 	}
 	
