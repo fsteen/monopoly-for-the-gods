@@ -18,13 +18,4 @@ public class Center extends JPanel {
 		this.add(new ProfitGraph(), BorderLayout.CENTER);
 		this.add(new SliderPanel(), BorderLayout.SOUTH);
 	}
-	
-	public static void main (String[] args) {
-		JFrame frame = new JFrame("Testing");
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.add(new Center());
-		frame.pack();
-		frame.setVisible(true);
-	}
-
 }

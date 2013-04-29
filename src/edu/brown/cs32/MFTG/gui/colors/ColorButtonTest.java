@@ -12,17 +12,17 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 
 import edu.brown.cs32.MFTG.gui.Constants;
-import edu.brown.cs32.MFTG.gui.Constants.ColorInfo;
+import edu.brown.cs32.MFTG.gui.Constants.Colors;
 import edu.brown.cs32.MFTG.gui.Constants.Orientation;
 import edu.brown.cs32.MFTG.gui.spaces.TestPanel;
 
 public class ColorButtonTest extends JButton {
 	
-	private ColorInfo _colorInfo;
+	private Colors _colorInfo;
 	private Orientation _orientation;
 	private List<Rectangle> _houses = new ArrayList<>();
 
-	public ColorButtonTest(ColorInfo colorInfo) {
+	public ColorButtonTest(Colors colorInfo) {
 		super();
 		this.setFocusPainted(false);
 		this.setBorder(BorderFactory.createEmptyBorder());
@@ -45,7 +45,7 @@ public class ColorButtonTest extends JButton {
 	
 	public void setupHouses() {
 		for(int i=0; i<3; i++) {
-			if(i != 3 || ( _colorInfo != ColorInfo.PURPLE && _colorInfo != ColorInfo.DARK_BLUE)) {
+			if(i != 3 || ( _colorInfo != Colors.PURPLE && _colorInfo != Colors.DARK_BLUE)) {
 				Rectangle rec = new Rectangle(0, 0, 0, 0);
 				changeHouse(rec, Constants.ACTUAL_WIDTH/2 - 10, 0, 20, 40 + i*Constants.ACTUAL_WIDTH/2);
 				_houses.add(rec);
@@ -85,7 +85,7 @@ public class ColorButtonTest extends JButton {
 		JFrame frame = new JFrame("Testing");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setPreferredSize(new Dimension(Constants.ACTUAL_WIDTH*4, 4*Constants.ACTUAL_HEIGHT));
-		frame.add(new ColorButtonTest(ColorInfo.RED));
+		frame.add(new ColorButtonTest(Colors.RED));
 		frame.pack();
 		frame.setVisible(true);
 	}

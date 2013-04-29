@@ -8,7 +8,9 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -22,7 +24,11 @@ import edu.brown.cs32.MFTG.monopoly.GameData;
 import edu.brown.cs32.MFTG.monopoly.Player;
 import edu.brown.cs32.MFTG.networking.ClientRequestContainer;
 import edu.brown.cs32.MFTG.networking.ClientRequestContainer.Method;
+import edu.brown.cs32.MFTG.tournament.data.DataProcessor;
 import edu.brown.cs32.MFTG.tournament.data.GameDataReport;
+import edu.brown.cs32.MFTG.tournament.data.PlayerWealthDataReport;
+import edu.brown.cs32.MFTG.tournament.data.PropertyDataReport;
+import edu.brown.cs32.MFTG.tournament.data.TimeStampReport;
 
 public class PlayerModule {
 
@@ -38,12 +44,15 @@ public class PlayerModule {
 
 	/* Module variables */
 	private DummyGUI _gui;
-	private final int NUM_THREADS=10;
-	private final int DATA_PACKET_SIZE=10;
+	private final int NUM_THREADS=25;
+	private final int DATA_PACKET_SIZE=100;
+	private final int NUM_DATA_POINTS=50;
 	private int _nextDisplaySize;
 	private List<GameData> _data;
 	private AtomicInteger _numThreadsDone;
 	private ExecutorService _pool;
+	private int _id;
+	private Player _player;
 	
 	/* Temporary variables - replace later */
 	private final int MAX_NUM_TURNS=1000;
@@ -60,6 +69,8 @@ public class PlayerModule {
 		_data = new ArrayList<>();
 		_numThreadsDone = new AtomicInteger(0);
 		_gui = new DummyGUI();
+		
+		_id = 0; //TODO client needs to know its ID!!!!!!!
 		
 	}
 
@@ -203,7 +214,8 @@ public class PlayerModule {
 				} catch (InterruptedException e){}
 			}
 		}
-				
+		
+		_player = null; //we will need a new player for next time
 		return _data;
 	}
 
@@ -216,8 +228,43 @@ public class PlayerModule {
 		_data.add(gameData);
 		if(_data.size() >= _nextDisplaySize){
 			//TODO display some data
+			GameDataReport r = DataProcessor.aggregate(_data, NUM_DATA_POINTS);
+			_gui.setPlayerSpecificPropertyData(getPlayerPropertyData(r._overallPlayerPropertyData));
+			_gui.setPropertyData(r._overallPropertyData);
+			_gui.setWealthData(getPlayerWealthData(r._timeStamps));
 			_nextDisplaySize += DATA_PACKET_SIZE; //set next point at which to display
 		}
+	}
+	
+	/**
+	 * Find the player property data specific to this player
+	 * @param allPlayerPropertyData
+	 * @return
+	 */
+	private Map<String, PropertyDataReport> getPlayerPropertyData(Map<String,List<PropertyDataReport>> allPlayerPropertyData){
+		Map<String, PropertyDataReport> playerPropertyData = new HashMap<>();
+		for(List<PropertyDataReport> l : allPlayerPropertyData.values()){
+			for(PropertyDataReport d : l){
+				if(d.ownerID == _id){
+					playerPropertyData.put(d.propertyName, d);
+					break;
+				}
+			}
+		}
+		return playerPropertyData;
+	}
+	
+	/**
+	 * Find the player wealth data specific to this player
+	 * @param timeStamps
+	 * @return
+	 */
+	private List<PlayerWealthDataReport> getPlayerWealthData(List<TimeStampReport> timeStamps){
+		List<PlayerWealthDataReport> playerWealthData = new ArrayList<>();
+		for(TimeStampReport t : timeStamps){
+			playerWealthData.add(t.wealthData.get(_id));
+		}
+		return playerWealthData;
 	}
 
 	/**
@@ -225,7 +272,17 @@ public class PlayerModule {
 	 * @return
 	 */
 	public Player getPlayer(){
-		return _gui.getPlayer();
+		if(_player != null){
+			return _player;
+		} else {
+			//TODO what to do?
+		}
+		return _gui.getPlayer();		
+	}
+	
+	public void setPlayer(){
+		//TODO the gui will call this method ... add appropriate args
+		_player = new Player(0);
 	}
 	
 	/**
@@ -234,6 +291,10 @@ public class PlayerModule {
 	 */
 	public void displayGameData(GameDataReport combinedData) {
 		//TODO implement
+		_gui.setPlayerSpecificPropertyData(getPlayerPropertyData(combinedData._overallPlayerPropertyData));
+		_gui.setPropertyData(combinedData._overallPropertyData);
+		_gui.setWealthData(getPlayerWealthData(combinedData._timeStamps));
+		_gui.roundCompleted();	
 	}
 	
 	/*******************************************************/

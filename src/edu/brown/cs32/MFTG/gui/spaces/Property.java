@@ -7,7 +7,7 @@ import javax.swing.JPanel;
 
 import edu.brown.cs32.MFTG.gui.Board;
 import edu.brown.cs32.MFTG.gui.Constants.Orientation;
-import edu.brown.cs32.MFTG.gui.Constants.PropertyInfo;
+import edu.brown.cs32.MFTG.gui.Constants.ColorProperties;
 import edu.brown.cs32.MFTG.gui.Constants.Viewer;
 
 
@@ -17,9 +17,9 @@ public class Property  {
 	private PropertyButton _myButton;
 	private PropertyButton _generalButton;
 	private Board _board;
-	private PropertyInfo _propertyInfo;
+	private ColorProperties _propertyInfo;
 	
-	public Property(Board board, PropertyInfo propertyInfo) {
+	public Property(Board board, ColorProperties propertyInfo) {
 		_board = board;
 		_propertyInfo = propertyInfo;
 		

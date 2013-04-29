@@ -22,7 +22,7 @@ import javax.swing.JTextField;
 
 import edu.brown.cs32.MFTG.gui.Constants;
 import edu.brown.cs32.MFTG.gui.Helper;
-import edu.brown.cs32.MFTG.gui.Constants.ColorInfo;
+import edu.brown.cs32.MFTG.gui.Constants.Colors;
 import edu.brown.cs32.MFTG.gui.Constants.Orientation;
 import edu.brown.cs32.MFTG.gui.spaces.House;
 
@@ -31,7 +31,7 @@ public class ColorPanel extends JPanel{
 	/* General Information */
 	private Orientation _orientation;
 	private Color _color;
-	private ColorInfo _colorInfo;
+	private Colors _colorInfo;
 	private Rectangle _spaceBackground;
 	private Rectangle _spaceOutline;
 	private boolean _checkFont = false;
@@ -55,7 +55,7 @@ public class ColorPanel extends JPanel{
 	private double _noMonopolyValue = 1;
 	
 	
-	public ColorPanel(ColorInfo color) throws IOException {
+	public ColorPanel(Colors color) throws IOException {
 		this.setLayout(null);
 
 		_orientation = color.getOrientation();

@@ -1,10 +1,16 @@
 Things to do
 
 -some data that i could collect but don't
-	-for each property, % of the game for which each player owned said property, % of game for which it was unowned
+	-for each property, % of the game for which each player owned said property, % of game for which it was owned
 -player module data processing
 -testing
 -implementing different settings, i.e. the different win conditions
+
+-how to pass around the settings object
+
+- % of games during which you owned a certain property
+- average max # of houses you had on that property
+- average max # of houses on that property, in general
 
 
 Concerns
@@ -15,4 +21,20 @@ Concerns
 	-values are stored as integers, not conducive to averaging
 	-mortgaging is a boolean value, so i can't report back on the percentage of the time that something was mortgaged
 	-reporting back on individual player data for each property as well as combined data for each property is a bit hack-y
-	-there are some data fields that are absent : % of the games that a certain plater owned a property at a certain time	
+	-there are some data fields that are absent : % of the games that a certain plater owned a property at a certain time
+	
+-in player module i return data without synchronizing on it,
+	this should be fine since all threads should be done messing with it
+	but it makes me nervous and should probably be changed
+	
+	
+	
+_________________
+public void setWealthData(List<PlayerWealthData> data);
+
+public void setPropertyData(Map<String, PropertyData> data); //this is the cumulative property data
+
+public void setPlayerSpecificPropertyData(Map<String, PropertyData> data); 
+
+public void roundCompleted();
+

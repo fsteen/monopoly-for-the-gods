@@ -10,14 +10,14 @@ import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import edu.brown.cs32.MFTG.gui.Constants.RailRoadInfo;
+import edu.brown.cs32.MFTG.gui.Constants.Railroads;
 import edu.brown.cs32.MFTG.gui.Helper;
 
 public class RailRoadUtilityPopup extends JFrame{
 
 	private BufferedImage _image;
 	
-	public RailRoadUtilityPopup(RailRoadInfo railRoadInfo) throws IOException {
+	public RailRoadUtilityPopup(Railroads railRoadInfo) throws IOException {
 		super(railRoadInfo.getName());
 		//this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		

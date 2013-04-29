@@ -96,7 +96,11 @@ public class Tournament implements Runnable{
 			
 			// attempt to send the data about the game to the clients
 			try {
-				sendEndOfRoundData(DataProcessor.aggregate(data, NUM_DATA_POINTS));
+				List<GameData> dataToSend = new ArrayList<>();
+				for(List<GameData> d : data){
+					dataToSend.addAll(d);
+				}
+				sendEndOfRoundData(DataProcessor.aggregate(dataToSend, NUM_DATA_POINTS));
 			} catch (ClientCommunicationException e) {
 				// TODO figure out how this will be handled
 			}

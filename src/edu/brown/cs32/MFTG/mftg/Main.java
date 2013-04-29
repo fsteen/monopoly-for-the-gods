@@ -13,6 +13,7 @@ import edu.brown.cs32.MFTG.gui.Constants;
 import edu.brown.cs32.MFTG.gui.CreateGamePanel;
 import edu.brown.cs32.MFTG.gui.GameLobbyPanel;
 import edu.brown.cs32.MFTG.gui.GreetingPanel;
+import edu.brown.cs32.MFTG.gui.JoinGamePanel;
 
 public class Main extends JFrame{
 	private JPanel _currentPanel;
@@ -29,14 +30,14 @@ public class Main extends JFrame{
 		_panels.put("lobby", lobby);
 		CreateGamePanel create = new CreateGamePanel(this);
 		_panels.put("create", create);
-		Board board = new Board();
-		_panels.put("board", board);
+		JoinGamePanel join = new JoinGamePanel(this);
+		_panels.put("join", join);
+		/* DO NOT USE THE BOARD RIGHT NOW! */
+		//Board board = new Board();
+		//_panels.put("board", board);
 		
 		this.setSize(9*Constants.WIDTH + 2*Constants.HEIGHT, 9*Constants.WIDTH + 2*Constants.HEIGHT);
 		this.setResizable(false);
-		
-		Board b = new Board();
-		this.add(b);
 		
 		//ProfitGraph graph = new ProfitGraph();
 		//this.add(graph);
@@ -44,8 +45,8 @@ public class Main extends JFrame{
 		//ColorBoard board = new ColorBoard();
 		//this.add(board);
 		
-		//_currentPanel=greet;
-		//this.add(_currentPanel);
+		_currentPanel=greet;
+		this.add(_currentPanel);
 		
 		this.pack();
 		this.setVisible(true);
@@ -67,13 +68,13 @@ public class Main extends JFrame{
 	 */
 	public static void main(String[] args) {
 		try {
-			new Main();
 			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
 				if ("Nimbus".equals(info.getName())) {
 					UIManager.setLookAndFeel(info.getClassName());
 					break;
 				}
 			}
+			new Main();
 		} catch (UnsupportedLookAndFeelException|ClassNotFoundException|InstantiationException|IllegalAccessException e) {}
 
 

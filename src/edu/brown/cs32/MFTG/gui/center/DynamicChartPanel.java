@@ -22,6 +22,7 @@ public class DynamicChartPanel extends ChartPanel {
 	
 	public DynamicChartPanel(JFreeChart chart) {
 		super(chart);
+		this.setMouseWheelEnabled(true);
 		_chart = chart;
 		this.addChartMouseListener(new MinCashListener());
 	}
