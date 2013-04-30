@@ -22,8 +22,13 @@ class GameRunner implements Runnable{
 	
 	@Override
 	public void run() {
-		_game.run();
-		_module.addGameData(_game.getGameData());
+		try{
+			_game.run();
+			_module.addGameData(_game.getGameData());
+		} catch (Exception e){
+			e.printStackTrace();
+			_module.addGameData(null);
+		}
 				
 		synchronized(_module){
 			_numThreadsDone.incrementAndGet();

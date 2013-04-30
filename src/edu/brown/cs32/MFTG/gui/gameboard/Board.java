@@ -2,6 +2,7 @@ package edu.brown.cs32.MFTG.gui.gameboard;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -14,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -39,9 +39,7 @@ import edu.brown.cs32.MFTG.gui.properties.MyUtilityProperty;
 import edu.brown.cs32.MFTG.gui.properties.PropertyPanel;
 import edu.brown.cs32.MFTG.gui.properties.StaticProperty;
 import edu.brown.cs32.MFTG.monopoly.Player;
-import edu.brown.cs32.MFTG.monopoly.PlayerWealthData;
 import edu.brown.cs32.MFTG.tournament.data.PlayerWealthDataReport;
-import edu.brown.cs32.MFTG.tournament.data.PropertyDataAccumulator;
 import edu.brown.cs32.MFTG.tournament.data.PropertyDataReport;
 
 public class Board extends JPanel {
@@ -64,6 +62,10 @@ public class Board extends JPanel {
 		this.setMaximumSize(dimension);
 		this.setMinimumSize(dimension);
 		this.setPreferredSize(dimension);
+		this.setSize(dimension);
+		this.setLocation(0, 0);
+		
+		System.out.println("MAKING THE BOARD");
 		
 		/* Set up the layout */
 		BorderLayout layout = new BorderLayout(0, 0);
@@ -78,6 +80,13 @@ public class Board extends JPanel {
 		//initializeMenu();
 		
 		this.setVisible(true);
+		this.repaint();
+	}
+	
+	@Override
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		System.out.println("the board is painting");
 	}
 	
 	public void initializeMenu () {

@@ -20,53 +20,47 @@ public class MonopolyGui extends JFrame{
 	private JPanel _currentPanel;
 	private HashMap<String, JPanel> _panels;
 	private EndGamePanel _end;
+	private ChooseProfilePanel _choose;
 	private Profile _currentProfile;
 	private ProfileManager _profileManager;
-	private Client _module;
-	
-	public MonopolyGui(Client module) {
+	private Client _client;
+
+	public MonopolyGui(Client client) {
 		super("Monopoly for the GODS");
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		_panels = new HashMap<>(7);
+		_panels = new HashMap<>();
 		_profileManager = new ProfileManager();
+
+		_client = client;
+
+		GreetingPanel greet = new GreetingPanel(this);
+		_panels.put("greet", greet);
+		SettingsPanel settings = new SettingsPanel(this);
+		_panels.put("settings", settings);
+		GameLobbyPanel lobby = new GameLobbyPanel(this);
+		_panels.put("lobby", lobby);
+		ChooseProfilePanel choose = new ChooseProfilePanel(this);
+		_panels.put("choose", choose);
+		CreateGamePanel create = new CreateGamePanel(this);
+		_panels.put("create", create);
+		JoinGamePanel join = new JoinGamePanel(this);
+		_panels.put("join", join);
+		_end = new EndGamePanel(this);
+		_panels.put("end", _end);
+
+		this.setSize(9*Constants.WIDTH + 2*Constants.HEIGHT, 9*Constants.WIDTH + 2*Constants.HEIGHT);
+		this.setResizable(false);
+
+		//_currentPanel=lobby;
+		//this.add(_currentPanel);
+
+		createBoard(1);
 		
-		_module = module;
-
-		try {
-			GreetingPanel greet = new GreetingPanel(this);
-			_panels.put("greet", greet);
-			SettingsPanel settings = new SettingsPanel(this);
-			_panels.put("settings", settings);
-			GameLobbyPanel lobby = new GameLobbyPanel(this);
-			_panels.put("lobby", lobby);
-			ChooseProfilePanel choose = new ChooseProfilePanel(this);
-			_panels.put("choose", choose);
-			CreateGamePanel create = new CreateGamePanel(this);
-			_panels.put("create", create);
-			JoinGamePanel join = new JoinGamePanel(this);
-			_panels.put("join", join);
-			_end = new EndGamePanel(this);
-			_panels.put("end", _end);
-			Board board;
-			board = new Board(1);
-
-			_panels.put("board", board);
-			
-			this.setSize(9*Constants.WIDTH + 2*Constants.HEIGHT, 9*Constants.WIDTH + 2*Constants.HEIGHT);
-			this.setResizable(false);
-			
-			_currentPanel=board;
-			this.add(_currentPanel);
-			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		
 		this.pack();
 		this.setVisible(true);
 	}
-	
+
 	/**
 	 * sets winner of game
 	 * @param didWin
@@ -82,10 +76,16 @@ public class MonopolyGui extends JFrame{
 	public void switchPanels(String panel) {
 		remove(_currentPanel);
 		_currentPanel=_panels.get(panel);
+		System.out.println("going to add panel: " + panel);
 		add(_currentPanel);
-		_currentPanel.repaint();
+		if(_currentPanel==_choose) {
+			_choose.giveFocusToList();
+		}
+		System.out.println("added panel");
+		revalidate();
+		repaint();
 	}
-	
+
 	/**
 	 * 
 	 * @return profile manager
@@ -93,7 +93,7 @@ public class MonopolyGui extends JFrame{
 	public Set<String> getProfileNames() {
 		return _profileManager.getProfileNames();
 	}
-	
+
 	/**
 	 * sets current profile
 	 * @param profileName
@@ -101,23 +101,40 @@ public class MonopolyGui extends JFrame{
 	public void setCurrentProfile(String profileName) {
 		_currentProfile = _profileManager.getProfile(profileName);
 	}
-	
+
+	/**
+	 * adds a profile
+	 * @param name
+	 * @return name
+	 */
+	public String addProfile(String name) {
+		boolean done=_profileManager.addProfile(name, new Profile(name));
+		if(done==false) {
+			return null;
+		}
+		return name;
+	}
+
 	public Board getBoard(){
 		return (Board) _panels.get("board"); //TODO get rid of casting
 	}
-	
+
 	public void createBoard(int id){
 		try {
-		Board board = new Board(id);
-		_panels.put("board",  board);
-		switchPanels("board");
+			this.removeAll();
+			System.out.println("making board");
+			Board board = new Board(id);
+			this.add(board);
+			repaint();
+			//_panels.put("board",  board);
+			//switchPanels("board");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-	
-	public Client getModule(){
-		return _module;
+
+	public Client getClient(){
+		return _client;
 	}
 }

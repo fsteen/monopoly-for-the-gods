@@ -37,7 +37,6 @@ public class Jail extends CornerProperty{
 		
 		this.add(_jailWait);
 		_jailWait.setVisible(true);
-		System.out.println("here");
 		this.add(_poorWait);
 		this.add(_richWait);
 		this.updateUI();

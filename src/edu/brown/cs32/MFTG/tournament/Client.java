@@ -16,6 +16,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import javax.swing.JOptionPane;
+
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -73,8 +75,6 @@ public class Client {
 		_pool = Executors.newFixedThreadPool(NUM_THREADS);
 		_data = new ArrayList<>();
 		_numThreadsDone = new AtomicInteger(0);
-		_id = 0; //TODO client needs to know its ID!!!!!!!
-
 
 		_gui = new MonopolyGui(this);
 	//	_dummyGui = new DummyGUI();
@@ -83,12 +83,34 @@ public class Client {
 	/***************Networking Methods*************************/
 
 	/**
+	 * Writes a request to the output stream
+	 * @param request the request to write
+	 * @throws IOException
+	 */
+	private void write(ClientRequestContainer request) throws IOException{
+		String json = _oMapper.writeValueAsString(request);
+		_output.write(json);
+		_output.write("\n");
+		_output.flush();
+	}
+	
+	/**
+	 * Reads a request from the client
+	 * @return
+	 * @throws IOException
+	 */
+	private ClientRequestContainer readRequest() throws IOException{
+		String json = _input.readLine();
+		return _oMapper.readValue(json, ClientRequestContainer.class);
+	}
+	
+	/**
 	 * @throws IOException
 	 * @throws JsonMappingException 
 	 * @throws JsonParseException 
 	 */
 	private void handleRequest() throws InvalidRequestException, IOException{
-		ClientRequestContainer request = _oMapper.readValue(_input, ClientRequestContainer.class);
+		ClientRequestContainer request = readRequest();
 
 		Method method = request._method;
 
@@ -134,22 +156,22 @@ public class Client {
 			_input = new BufferedReader(new InputStreamReader(_server.getInputStream()));
 			_output = new BufferedWriter(new OutputStreamWriter(_server.getOutputStream()));
 		} catch (UnknownHostException e) {
-			displayError("Unknown host. Unable to connect to server :( WHAT THE FUCK, MAN!!!");
+			displayError("Unknown host. Unable to connect to server :( WHAT THE F*CK, MAN!!!");
 			return;
 		} catch (IOException e) {
 			displayError("Unable to connect to server :(");
 			return;
 		}
 		try {
-			System.out.println("fetching id");
 			_id = respondToSendID();
-			System.out.println("id " + _id);
+			System.out.println("creading board");
+			_gui.createBoard(_id);
+			System.out.println("created board");
 		} catch (IOException | InvalidRequestException e1) {
 			displayError("Unable to retrieve a unique ID from the server :(");
 			return;
 		}
-		_gui.createBoard(_id);
-
+		
 		while(true){
 			try {
 				handleRequest();
@@ -160,11 +182,8 @@ public class Client {
 	}
 
 	private int respondToSendID() throws IOException, InvalidRequestException{
-		System.out.println("respond to send id1");
 		
-		//TODO method hangs on this next line ....
-		ClientRequestContainer request = _oMapper.readValue(_input, ClientRequestContainer.class);
-		System.out.println("respond to send id2");
+		ClientRequestContainer request = readRequest();
 
 		if (request == null || request._method != Method.SENDID)
 			throw new InvalidRequestException();
@@ -179,7 +198,6 @@ public class Client {
 		}
 
 		try {
-			System.out.println("found id: " + arguments.get(0));
 			return Integer.parseInt(arguments.get(0));
 		} catch (NumberFormatException e){
 			throw new InvalidRequestException();
@@ -210,8 +228,21 @@ public class Client {
 	 * @throws IOException
 	 */
 	private void respondToGetPlayer(ClientRequestContainer request) throws JsonParseException, JsonMappingException, IOException{
-		Player p = getPlayer();
-		_oMapper.writeValue(_output, p);
+		List<String> arguments = request._arguments;
+		
+		if (arguments == null){
+			// throw an error
+		} else if (arguments.size() < 1){
+			// throw a different error
+		}
+		
+		int time = Integer.parseInt(arguments.get(0));
+		
+		Player p = getPlayer(time);
+		
+		String playerString = _oMapper.writeValueAsString(p);
+		ClientRequestContainer response = new ClientRequestContainer(Method.SENDPLAYER, Arrays.asList(playerString));
+		write(response);
 	}
 
 	/**
@@ -241,7 +272,7 @@ public class Client {
 
 		ClientRequestContainer response = new ClientRequestContainer(Method.SENDGAMEDATA, Arrays.asList(gameDataString));
 
-		_oMapper.writeValue(_output, response);
+		write(response);
 	}
 
 	/**
@@ -267,7 +298,6 @@ public class Client {
 
 	public void launchTournament(int numPlayers, Settings settings, int port){
 		try {
-			System.out.println("launching tournament");
 			_pool.execute((new Tournament(numPlayers, settings, port)));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -363,10 +393,12 @@ public class Client {
 
 	/**
 	 * Gets the player associated with this object
+	 * @param the time, in seconds, to wait before requesting the player
 	 * @return
 	 */
-	public Player getPlayer(){
-		return _gui.getBoard().getPlayer();		
+	public Player getPlayer(int time){
+		return _gui.getBoard().getPlayer();
+//		return _dummyGui.getPlayer();
 	}
 
 	/**
@@ -389,7 +421,7 @@ public class Client {
 	 * @param errorMessage the error message to be displayed
 	 */
 	private void displayError(String errorMessage){
-		// TODO implement
+		JOptionPane.showMessageDialog(_gui, errorMessage);
 	}
 
 	/*******************************************************/

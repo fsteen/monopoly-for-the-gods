@@ -145,8 +145,9 @@ public class JoinGamePanel extends JPanel{
 			else if(intersects(xloc,yloc,_goLite,_goLoc)) {
 				if(_goDark.isVisible()) {
 					fixPanels();
-					_main.getModule().connectAndRun();
-					//_main.switchPanels("lobby");
+					System.out.println("joining game");
+					_main.switchPanels("board");
+					_main.getClient().connectAndRun();
 				}
 				else {
 					fixPanels();
