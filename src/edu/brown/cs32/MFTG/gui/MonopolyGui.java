@@ -51,7 +51,7 @@ public class MonopolyGui extends JFrame{
 		this.setSize(9*Constants.WIDTH + 2*Constants.HEIGHT, 9*Constants.WIDTH + 2*Constants.HEIGHT);
 		this.setResizable(false);
 		
-		_currentPanel=greet;
+		_currentPanel=create;
 		this.add(_currentPanel);
 		
 		this.pack();
@@ -101,6 +101,7 @@ public class MonopolyGui extends JFrame{
 		try {
 		Board board = new Board(id);
 		_panels.put("board",  board);
+		switchPanels("board");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

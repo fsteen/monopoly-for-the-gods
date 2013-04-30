@@ -78,6 +78,13 @@ public class DataProcessor {
 	 */
 	public static boolean isCorrupted(List<List<GameData>> data, List<Integer> confirmationIndices){
 		boolean corrupted = false;
+		
+		System.out.println(data.size() + "\t" + confirmationIndices.size());
+		
+		if(data.size() != confirmationIndices.size()){
+			return true;
+		}
+		
 		List<GameData> setData;
 		for(int i = 0; i < confirmationIndices.size(); i++){
 			setData = data.get(confirmationIndices.get(i));

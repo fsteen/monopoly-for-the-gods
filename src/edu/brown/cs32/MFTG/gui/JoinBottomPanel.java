@@ -48,6 +48,9 @@ public class JoinBottomPanel extends JPanel {
 	private JPanel _fpPanel;
 	private JTextField _port;
 	private JLabel _portLabel;
+	
+	private int DEFAULT_PORT=3232;
+	
 	public JoinBottomPanel() {
 		super();
 		try {
@@ -70,6 +73,7 @@ public class JoinBottomPanel extends JPanel {
 			_port.setDocument(new NumDocument(4));
 			_port.setSize(200,30);
 			_port.setFont(new Font("myFont",Font.PLAIN,40));
+			_port.setText(DEFAULT_PORT + "");
 
 			_portLabel= new JLabel("Port: ");
 			_portLabel.setFont(new Font("portLabelFont",Font.PLAIN,40));
@@ -79,7 +83,8 @@ public class JoinBottomPanel extends JPanel {
 			
 			add(portPanel, BorderLayout.NORTH);
 			
-			addMouseListener(new FoodlerListener());
+			//THIS MESSES WITH THE OTHER MOUSE LISTENER ={
+//			addMouseListener(new FoodlerListener());
 
 
 		} catch (IOException e) {

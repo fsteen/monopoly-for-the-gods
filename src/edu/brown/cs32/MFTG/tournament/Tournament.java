@@ -51,7 +51,16 @@ public class Tournament implements Runnable{
 	}
 	
 	public void run() {
+		try {
+			getPlayerConnections();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		System.out.println("preparing to distribute games");
 		int gamesPerModule = (int)Math.ceil(_settings.getNumGamesPerRound()/_numPlayers);
+		System.out.println("games per module: " + gamesPerModule);
 		List<Player> players = null;
 		List<List<GameData>> data;
 		List<Integer> confirmationIndices;
@@ -117,15 +126,19 @@ public class Tournament implements Runnable{
 	 * @throws ClientCommunicationException 
 	 */
 	private List<Player> getNewPlayers(){
+		System.out.println("tournament is fetching players");
 		List<Future<Player>> playerFutures = new ArrayList<>();
 		List<Player> players = new ArrayList<>();
+		
+		System.out.println("num clients " + _clients.size());
 		
 		for(iClientHandler c : _clients){
 			Callable<Player> worker = new getPlayerCallable(c);
 			Future<Player> future = _executor.submit(worker);
 			playerFutures.add(future);
 		}
-		
+
+		//TODO players seems to be empty ...
 		for (int i = 0; i < playerFutures.size(); i++){
 			try {
 				players.add(playerFutures.get(i).get());
@@ -138,6 +151,9 @@ public class Tournament implements Runnable{
 			}
 		}
 		
+		System.out.println("tournament has players:");
+		System.out.println("\t" + players);
+
 		return players;
 	}
 	
@@ -221,18 +237,21 @@ public class Tournament implements Runnable{
 	public void getPlayerConnections() throws IOException{
 		int connectionsMade = 0;
 		
-		while(connectionsMade <= _numPlayers){
+		System.out.println("tournament is looking for #players " + _numPlayers);
+		
+		while(connectionsMade < _numPlayers){
 			Socket clientConnection = _socket.accept();
 			connectionsMade++;
 			iClientHandler cHandler = new ClientHandler(clientConnection, connectionsMade);
 			_clients.add(cHandler);
-			
+			System.out.println("connected to client# " + connectionsMade);
 			try {
 				cHandler.sendID();
 			} catch (ClientCommunicationException e) {
 				// TODO do something?
 			}
 		}
+		System.out.println("done connecting to clients");
 	}
 
 }

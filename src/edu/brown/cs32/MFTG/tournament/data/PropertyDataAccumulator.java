@@ -65,10 +65,10 @@ public class PropertyDataAccumulator{
 	}
 	
 	public PropertyDataReport toPropertyDataReport(){
-		//TODO deal with divide by 0 possibility
-		return new PropertyDataReport(propertyName, -1, accNumHouses/numDataPoints,
-				accTotalRevenueWithHouses/numDataPoints, accTotalRevenueWithoutHouses/numDataPoints,
-				accMortgaged/numDataPoints, numDataPoints);
+		int divideBy = numDataPoints == 0 ? 1 : numDataPoints;
+		return new PropertyDataReport(propertyName, -1, accNumHouses/divideBy,
+				accTotalRevenueWithHouses/divideBy, accTotalRevenueWithoutHouses/divideBy,
+				accMortgaged/divideBy, numDataPoints);
 	}
 
 	// getters and setters for serialization

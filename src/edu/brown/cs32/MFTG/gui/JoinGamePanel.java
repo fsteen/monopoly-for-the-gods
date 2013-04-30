@@ -98,6 +98,7 @@ public class JoinGamePanel extends JPanel{
 
 		@Override
 		public void mousePressed(MouseEvent e) {
+			System.out.println("clicked");
 			int xloc=e.getX();
 			int yloc=e.getY();
 			if(intersects(xloc,yloc,_backLite,_backLoc)) {
@@ -131,6 +132,7 @@ public class JoinGamePanel extends JPanel{
 			else if(intersects(xloc,yloc,_goLite,_goLoc)) {
 				if(_goDark.isVisible()) {
 					fixPanels();
+					_main.getModule().connectAndRun();
 					//_main.switchPanels("lobby");
 				}
 				else {
