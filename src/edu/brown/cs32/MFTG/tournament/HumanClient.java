@@ -115,6 +115,8 @@ public class HumanClient extends Client{
 	 * @param combinedData
 	 */
 	public void displayGameData(GameDataReport combinedData) {
+		System.out.println("displaying end of round data");
+
 		_gui.getBoard().setPlayerSpecificPropertyData(getPlayerPropertyData(combinedData._overallPlayerPropertyData));
 		_gui.getBoard().setPropertyData(combinedData._overallPropertyData);
 		_gui.getBoard().setWealthData(getPlayerWealthData(combinedData._timeStamps));
