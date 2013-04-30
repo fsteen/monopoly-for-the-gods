@@ -99,7 +99,8 @@ public class ColorBlock extends JPanel {
 		_houseField.setBorder(BorderFactory.createLineBorder(Color.WHITE, 0));
 		_houseField.setOpaque(false);
 		_houseField.setHorizontalAlignment(JTextField.CENTER);
-		
+
+		_houseField.setBackground(new Color(0,0,0,0));
 		_houseField.setSize((int) (.5*_houseWidth), 40);
 		
 		if(_orientation == Orientation.UP || _orientation == Orientation.DOWN) {
@@ -122,6 +123,7 @@ public class ColorBlock extends JPanel {
 		_twoField.setForeground(Color.RED);
 		_twoField.addPropertyChangeListener(new ValueChangeListener(_twoField));
 
+		_twoField.setBackground(new Color(0,0,0,0));
 		_twoField.setBorder(BorderFactory.createLineBorder(Color.WHITE, 0));
 		_twoField.setOpaque(false);
 		_twoField.setHorizontalAlignment(JTextField.CENTER);
@@ -134,6 +136,7 @@ public class ColorBlock extends JPanel {
 		_monopolyField.setForeground(Color.RED);
 		_monopolyField.addPropertyChangeListener(new ValueChangeListener(_monopolyField));
 
+		_monopolyField.setBackground(new Color(0,0,0,0));
 		_monopolyField.setBorder(BorderFactory.createLineBorder(Color.WHITE, 0));
 		_monopolyField.setOpaque(false);
 		_monopolyField.setHorizontalAlignment(JTextField.CENTER);
@@ -146,6 +149,7 @@ public class ColorBlock extends JPanel {
 		_noMonopolyField.setForeground(Color.RED);
 		_noMonopolyField.addPropertyChangeListener(new ValueChangeListener(_noMonopolyField));
 
+		_noMonopolyField.setBackground(new Color(0,0,0,0));
 		_noMonopolyField.setBorder(BorderFactory.createLineBorder(Color.WHITE, 0));
 		_noMonopolyField.setOpaque(false);
 		_noMonopolyField.setHorizontalAlignment(JTextField.CENTER);

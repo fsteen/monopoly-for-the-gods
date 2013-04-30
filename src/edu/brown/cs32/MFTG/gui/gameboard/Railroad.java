@@ -55,7 +55,7 @@ public class Railroad extends JPanel {
 		this.add(_myProperty);
 	}
 	
-	public String getName() {
+	public String getLowercaseName() {
 		return _railroad.getLowercaseName();
 	}
 	
