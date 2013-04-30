@@ -10,21 +10,23 @@ import java.util.List;
 import java.util.Map;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.brown.cs32.MFTG.monopoly.GameData;
 import edu.brown.cs32.MFTG.monopoly.Player;
-import edu.brown.cs32.MFTG.monopoly.TimeStamp;
 import edu.brown.cs32.MFTG.monopoly.Player.Aggression;
 import edu.brown.cs32.MFTG.monopoly.Player.Amount;
 import edu.brown.cs32.MFTG.monopoly.Player.Balance;
 import edu.brown.cs32.MFTG.monopoly.Player.Expense;
 import edu.brown.cs32.MFTG.monopoly.PlayerWealthData;
 import edu.brown.cs32.MFTG.monopoly.PropertyData;
+import edu.brown.cs32.MFTG.monopoly.TimeStamp;
 import edu.brown.cs32.MFTG.tournament.Profile;
+import edu.brown.cs32.MFTG.tournament.Settings;
+import edu.brown.cs32.MFTG.tournament.Settings.Turns;
+import edu.brown.cs32.MFTG.tournament.Settings.WinningCondition;
 import edu.brown.cs32.MFTG.tournament.data.GameDataReport;
 import edu.brown.cs32.MFTG.tournament.data.PlayerPropertyDataAccumulator;
 import edu.brown.cs32.MFTG.tournament.data.PlayerWealthDataReport;
@@ -186,5 +188,17 @@ public class ProtocolTests {
 		TimeStamp newT = oMapper.readValue(timeStampJson, TimeStamp.class);
 		
 		assertEquals(t, newT);
+	}
+	
+	@Test
+	public void testSettings() throws IOException {
+		ObjectMapper oMapper = new ObjectMapper();
+		
+		Settings settings = new Settings(5, 10, false, 10, false, Turns.BUNCHED, WinningCondition.MOST_SETS_WON, 100, 100);
+		String settingsJson = oMapper.writeValueAsString(settings);
+		Settings newSettings = oMapper.readValue(settingsJson, Settings.class);
+		
+		assertEquals(settings, newSettings);
+		
 	}
 }
