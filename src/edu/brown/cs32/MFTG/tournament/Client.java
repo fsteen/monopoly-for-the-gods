@@ -90,7 +90,18 @@ public class Client {
 	private void write(ClientRequestContainer request) throws IOException{
 		String json = _oMapper.writeValueAsString(request);
 		_output.write(json);
+		_output.write("\n");
 		_output.flush();
+	}
+	
+	/**
+	 * Reads a request from the client
+	 * @return
+	 * @throws IOException
+	 */
+	private ClientRequestContainer readRequest() throws IOException{
+		String json = _input.readLine();
+		return _oMapper.readValue(json, ClientRequestContainer.class);
 	}
 	
 	/**
@@ -99,7 +110,7 @@ public class Client {
 	 * @throws JsonParseException 
 	 */
 	private void handleRequest() throws InvalidRequestException, IOException{
-		ClientRequestContainer request = _oMapper.readValue(_input, ClientRequestContainer.class);
+		ClientRequestContainer request = readRequest();
 
 		Method method = request._method;
 
@@ -170,8 +181,7 @@ public class Client {
 
 	private int respondToSendID() throws IOException, InvalidRequestException{
 		
-		//TODO method hangs on this next line ....
-		ClientRequestContainer request = _oMapper.readValue(_input, ClientRequestContainer.class);
+		ClientRequestContainer request = readRequest();
 
 		if (request == null || request._method != Method.SENDID)
 			throw new InvalidRequestException();

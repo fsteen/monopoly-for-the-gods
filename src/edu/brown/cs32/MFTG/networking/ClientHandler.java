@@ -54,12 +54,23 @@ public class ClientHandler {
 	private void write(ClientRequestContainer request) throws IOException{
 		String json = _oMapper.writeValueAsString(request);
 		_output.write(json);
+		_output.write("\n");
 		_output.flush();
+	}
+	
+	/**
+	 * Reads a response form the client
+	 * @return
+	 * @throws IOException
+	 */
+	private ClientRequestContainer readResponse() throws IOException{
+		String json = _input.readLine();
+		return _oMapper.readValue(json, ClientRequestContainer.class);
 	}
 
 	/**
 	 * Gets the player associated with this object's client
-	 * @return
+	 * @return the player returned by the client
 	 * @throws ClientCommunicationException 
 	 * @throws InvalidResponseException 
 	 */
@@ -70,10 +81,10 @@ public class ClientHandler {
 		// ask the client for gameData
 		try {
 			write(request);
-
+			
 			// read in the response
-			ClientRequestContainer response = _oMapper.readValue(_input, ClientRequestContainer.class);
-
+			ClientRequestContainer response = readResponse();
+			
 			// check for bad responses
 			if (response._method != Method.SENDPLAYER){
 				throw new InvalidResponseException(Method.SENDPLAYER, response._method);
@@ -92,7 +103,6 @@ public class ClientHandler {
 			}
 
 		} catch (IOException e) {
-			e.printStackTrace();
 			throw new ClientCommunicationException(_id);
 		}
 		
@@ -117,7 +127,7 @@ public class ClientHandler {
 			write(request);
 
 			// read in the response
-			ClientRequestContainer response;
+			ClientRequestContainer response = readResponse();
 			
 			try {
 				_client.setSoTimeout(PLAY_GAMES_TIME * 1000);
