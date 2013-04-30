@@ -79,13 +79,10 @@ public class MonopolyGui extends JFrame{
 	public void switchPanels(String panel) {
 		remove(_currentPanel);
 		_currentPanel=_panels.get(panel);
-		System.out.println("trying to get panel: " + panel);
-		System.out.println("going to add panel: " + panel);
 		add(_currentPanel);
 		if(_currentPanel==_choose) {
 			_choose.giveFocusToList();
 		}
-		System.out.println("added panel");
 		revalidate();
 		repaint();
 	}
@@ -126,13 +123,9 @@ public class MonopolyGui extends JFrame{
 	public void createBoard(int id) {
 		Board board;
 		try {
-			board = new Board(1);
+			board = new Board(id);
 			_panels.put("board", board);
-			
-			
 			switchPanels("board");
-			
-			System.out.println("SWITCHED PANELS");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
