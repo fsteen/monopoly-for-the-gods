@@ -47,6 +47,7 @@ public abstract class MyPropertyPanel extends NonstaticProperty{
 		_valueField.setForeground(Color.RED);
 		
 		_valueField.setBorder(BorderFactory.createLineBorder(Color.BLACK, 0));
+		_valueField.setBackground(new Color(0,0,0,0));
 		_valueField.setOpaque(false);
 		_valueField.setHorizontalAlignment(JTextField.CENTER);
 		

@@ -9,6 +9,9 @@ import java.util.Set;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UIManager.LookAndFeelInfo;
+import javax.swing.UnsupportedLookAndFeelException;
 
 import edu.brown.cs32.MFTG.gui.gameboard.Board;
 import edu.brown.cs32.MFTG.networking.ProfileManager;
@@ -28,14 +31,25 @@ public class MonopolyGui extends JFrame{
 		super("Monopoly for the GODS");
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		
-		Dimension dimension = new Dimension(9*Constants.WIDTH + 2*Constants.HEIGHT, 9*Constants.WIDTH + 2*Constants.HEIGHT);
+			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+				if ("Nimbus".equals(info.getName())) {
+					try {
+						UIManager.setLookAndFeel(info.getClassName());
+					} catch (ClassNotFoundException | InstantiationException
+							| IllegalAccessException
+							| UnsupportedLookAndFeelException e) {
+					}
+					break;
+				}
+			}
+		
+		Dimension dimension = new Dimension(Constants.FULL_WIDTH, Constants.FULL_HEIGHT);
 		this.setSize(dimension);		
 		this.setPreferredSize(dimension);
 		this.setMaximumSize(dimension);
 		this.setMinimumSize(dimension);
 		
 		this.setResizable(false);
-
 		
 		_panels = new HashMap<>();
 		_profileManager = new ProfileManager();

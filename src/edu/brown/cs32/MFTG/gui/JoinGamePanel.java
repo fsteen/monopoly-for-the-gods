@@ -56,7 +56,7 @@ public class JoinGamePanel extends JPanel{
 
 			_backLite = new ImagePanel(Helper.resize(ImageIO.read(new File("images/BackLite.png")), 100, 50));
 			_backDark = new ImagePanel(Helper.resize(ImageIO.read(new File("images/BackDark.png")), 100, 50));
-			_backLoc= new Point(20, this.getHeight()-_backDark.getHeight()-10);
+			_backLoc= new Point(Constants.BACK_X, Constants.BACK_Y);
 			_backLite.setLocation(_backLoc);
 			_backDark.setLocation(_backLoc);
 			_backDark.setVisible(false);
@@ -113,7 +113,7 @@ public class JoinGamePanel extends JPanel{
 				_goDark.setVisible(true);
 				repaint();
 			}
-			if(e.getX()>276 &&e.getX()<503&&e.getY()>581 &&e.getY()<636) {
+			if(e.getX()>240 &&e.getX()<440&&e.getY()>560 &&e.getY()<620) {
 				String url = "https://itunes.apple.com/us/app/foodler/id615802139?mt=8"; // path to your new file
 
 				// open the default web browser for the HTML page

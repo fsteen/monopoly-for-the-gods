@@ -1,53 +1,30 @@
 package edu.brown.cs32.MFTG.gui;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Desktop;
+
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.GridLayout;
-import java.awt.Point;
 import java.awt.RenderingHints;
-import java.awt.TextField;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.regex.Pattern;
-
 import javax.imageio.ImageIO;
-import javax.swing.ButtonGroup;
-import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.MouseInputAdapter;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 
-import edu.brown.cs32.MFTG.monopoly.GamePlayer;
-import edu.brown.cs32.MFTG.monopoly.Player;
 
 public class JoinBottomPanel extends JPanel {
 	private BufferedImage _whiteBack, _foodler;
 	private final int BOTTOM_HEIGHT=Constants.FULL_HEIGHT*3/5;
 	private final int BOTTOM_WIDTH=Constants.FULL_WIDTH*15/16;
-	private JPanel _fpPanel;
-	private JTextField _port;
-	private JLabel _portLabel;
+	private JTextField _port, _hostName;
+	private JLabel _portLabel, _hostLabel;
 	
 	private int DEFAULT_PORT=3232;
 	
@@ -55,33 +32,47 @@ public class JoinBottomPanel extends JPanel {
 		super();
 		try {
 			_whiteBack = Helper.resize(ImageIO.read(new File("images/WhiteBack.png")), BOTTOM_WIDTH, BOTTOM_HEIGHT);
-			_foodler = Helper.resize(ImageIO.read(new File("images/foodler.png")), BOTTOM_WIDTH-240, BOTTOM_HEIGHT-160);
-			this.setLayout(new BorderLayout());
+			_foodler = Helper.resize(ImageIO.read(new File("images/foodler.png")), BOTTOM_WIDTH-320, BOTTOM_HEIGHT-180);
+			this.setLayout(null);
 			setBackground(Constants.CLEAR);
 			this.setSize(new Dimension(_whiteBack.getWidth(),_whiteBack.getHeight()));
 			this.setPreferredSize(new Dimension(_whiteBack.getWidth(),_whiteBack.getHeight()));
 			this.setBorder(new EmptyBorder(20,20,20,20));
-			JPanel lowerPanel = new JPanel(new GridLayout(2,3));
-			lowerPanel.setBackground(Color.WHITE);
 			
-			JPanel portPanel = new JPanel();
-			portPanel.setBackground(Color.WHITE);
-			Dimension portSize= new Dimension(BOTTOM_WIDTH,100);
-			portPanel.setSize(portSize);
-			portPanel.setPreferredSize(portSize);
+
 			_port = new JTextField(4);
 			_port.setDocument(new NumDocument(4));
-			_port.setSize(200,30);
-			_port.setFont(new Font("myFont",Font.PLAIN,40));
+			_port.setLocation(400,35);
+			Dimension portSize = new Dimension(120,50);
+			_port.setSize(portSize);
+			_port.setPreferredSize(portSize);
+			_port.setFont(new Font("portFont",Font.PLAIN,40));
 			_port.setText(DEFAULT_PORT + "");
+			_hostName = new JTextField(4);
+			Dimension hostNameSize = new Dimension(200,40);
+			_hostName.setSize(hostNameSize);
+			_hostName.setPreferredSize(hostNameSize);
+			_hostName.setLocation(400,90);
+			_hostName.setFont(new Font("hostFont",Font.PLAIN,30));
+			_hostName.setText("localhost");
 
 			_portLabel= new JLabel("Port: ");
 			_portLabel.setFont(new Font("portLabelFont",Font.PLAIN,40));
-			_portLabel.setSize(40, 40);
-			portPanel.add(_portLabel);
-			portPanel.add(_port);
-			
-			add(portPanel, BorderLayout.NORTH);
+			Dimension portLabelSize = new Dimension(200,50);
+			_portLabel.setSize(portLabelSize);
+			_portLabel.setPreferredSize(portLabelSize);
+			_portLabel.setLocation(270,35);
+			_hostLabel= new JLabel("Host Name: ");
+			_hostLabel.setFont(new Font("hostLabelFont",Font.PLAIN,30));
+			Dimension hostLabelSize = new Dimension(300,40);
+
+			_hostLabel.setSize(hostLabelSize);
+			_hostLabel.setPreferredSize(hostLabelSize);
+			_hostLabel.setLocation(185,90);
+			add(_portLabel);
+			add(_port);
+			add(_hostLabel);
+			add(_hostName);
 			
 
 		} catch (IOException e) {
