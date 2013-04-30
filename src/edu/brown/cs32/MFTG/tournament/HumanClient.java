@@ -67,6 +67,7 @@ public class HumanClient extends Client{
 		
 		Callable<Void> worker = new RequestCallable(this);
 		_executor.submit(worker);
+		System.out.println("ending connect and run");
 	}
 
 	/***************Networking Methods*************************/

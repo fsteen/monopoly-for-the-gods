@@ -60,16 +60,19 @@ public class Tournament implements Runnable{
 			System.out.println("you are fucked");
 			return;
 		}
-		
+		System.out.println("tournament running");
 		int gamesPerModule = (int)Math.ceil(_settings.getNumGamesPerRound()/_numPlayers);
 		
 		List<Player> players = null;
 		List<List<GameData>> data;
 		List<Integer> confirmationIndices;
 		
-		for(int i = 0; i < _settings.getNumRounds(); i++){			
+		for(int i = 0; i < _settings.getNumRounds(); i++){
+			System.out.println("entering rounds loop: " + i);
 			// request a Player from each client
 			List<Player> newPlayers = getNewPlayers();
+			
+			System.out.println("got players for iteration: " + i);
 			if (newPlayers != null)
 				players = newPlayers;
 			else 
@@ -139,16 +142,19 @@ public class Tournament implements Runnable{
 			Future<Player> future = _executor.submit(worker);
 			playerFutures.add(future);
 		}
-		
+		System.out.println("a");
 		
 		for (int i = 0; i < playerFutures.size(); i++){
 			try {
+				System.out.println("iteration: " + i);
 				players.add(playerFutures.get(i).get());
 			} catch (InterruptedException e) {
 				sendErrorMessage("Unable to retrieve heuristic information from client " + i + 
 						 ". Reusing old heuristics");
+				e.printStackTrace();
 				return null;
 			} catch (ExecutionException e) {
+				e.printStackTrace();
 				return null;
 			}
 		}
@@ -251,6 +257,7 @@ public class Tournament implements Runnable{
 	 */
 	public void getPlayerConnections() throws IOException{
 		int connectionsMade = 0;
+		System.out.println("player connections: " + _numPlayers);
 		
 		while(connectionsMade < _numPlayers){
 			Socket clientConnection = _socket.accept();
@@ -260,7 +267,7 @@ public class Tournament implements Runnable{
 			try {
 				cHandler.sendID();
 			} catch (ClientCommunicationException e) {
-				// TODO do something?
+				e.printStackTrace();
 			}
 		}
 	}
