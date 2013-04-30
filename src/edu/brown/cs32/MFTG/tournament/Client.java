@@ -16,6 +16,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import javax.swing.JOptionPane;
+
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -73,8 +75,6 @@ public class Client {
 		_pool = Executors.newFixedThreadPool(NUM_THREADS);
 		_data = new ArrayList<>();
 		_numThreadsDone = new AtomicInteger(0);
-		_id = 0; //TODO client needs to know its ID!!!!!!!
-
 
 		_gui = new MonopolyGui(this);
 		_dummyGui = new DummyGUI();
@@ -327,6 +327,7 @@ public class Client {
 			_dummyGui.setPlayerSpecificPropertyData(getPlayerPropertyData(r._overallPlayerPropertyData));
 			_dummyGui.setPropertyData(r._overallPropertyData);
 			_dummyGui.setWealthData(getPlayerWealthData(r._timeStamps));
+			_dummyGui.printSpaces();
 			_gui.getBoard().setPlayerSpecificPropertyData(getPlayerPropertyData(r._overallPlayerPropertyData));
 			_gui.getBoard().setPropertyData(r._overallPropertyData);
 			_gui.getBoard().setWealthData(getPlayerWealthData(r._timeStamps));
@@ -371,7 +372,8 @@ public class Client {
 	 * @return
 	 */
 	public Player getPlayer(int time){
-		return _gui.getBoard().getPlayer();		
+		return _gui.getBoard().getPlayer();
+//		return _dummyGui.getPlayer();
 	}
 
 	/**
@@ -394,7 +396,7 @@ public class Client {
 	 * @param errorMessage the error message to be displayed
 	 */
 	private void displayError(String errorMessage){
-		// TODO implement
+		JOptionPane.showMessageDialog(_gui, errorMessage);
 	}
 
 	/*******************************************************/

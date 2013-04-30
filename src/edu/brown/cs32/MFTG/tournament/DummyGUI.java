@@ -30,6 +30,10 @@ public class DummyGUI {
 	public void setRoundWinner(int playerID){
 		System.out.println("player " + playerID + " is the round winner!");
 	}
+	
+	public void printSpaces(){
+		System.out.println("\n\n\n");
+	}
 
 	public void roundCompleted(){
 		System.out.println("round over");
