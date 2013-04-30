@@ -84,10 +84,8 @@ public class ProfitGraph extends JPanel {
 	*/
 	
 	public void setWealthData(List<PlayerWealthDataReport> data) {
-		System.out.println("setting wealth data");
 		_currData = data;
 		update();
-		System.out.println("finished setting wealth data");
 	}
 	
 	public void update() {
