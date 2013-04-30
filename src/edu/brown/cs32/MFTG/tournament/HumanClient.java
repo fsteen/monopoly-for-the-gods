@@ -119,6 +119,7 @@ public class HumanClient extends Client{
 	 */
 	public void displayGameData(GameDataReport combinedData) {
 		//TODO implement
+		System.out.println("I'M A GONNA DISPLAY THE DATA");
 		_gui.getBoard().setPlayerSpecificPropertyData(getPlayerPropertyData(combinedData._overallPlayerPropertyData));
 		_gui.getBoard().setPropertyData(combinedData._overallPropertyData);
 		_gui.getBoard().setWealthData(getPlayerWealthData(combinedData._timeStamps));

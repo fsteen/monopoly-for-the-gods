@@ -70,8 +70,10 @@ public class Tournament implements Runnable{
 				players = newPlayers;
 			
 			// if an error was caught before the players could originally be chosen, re-enter the loop
-			if(players == null)
+			if(players == null){
+				i--;
 				continue;
+			}
 			
 			// generate which seeds will be used for integrity validation
 			confirmationIndices = DataProcessor.generateConfirmationIndices(gamesPerModule, CONFIRMATION_PERCENTAGE);
