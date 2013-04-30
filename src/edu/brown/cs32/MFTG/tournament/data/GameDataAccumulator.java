@@ -32,6 +32,7 @@ public class GameDataAccumulator {
 		//puts all the current max values into the entireGameData ...
 		PropertyDataAccumulator entireGameTemp;
 		
+		int i = 0;
 		for(PropertyDataAccumulator p : currentMaxValues.values()){ //for all of the current maxes
 			entireGameTemp = entireGameData.get(p.propertyName); //add to the overall property data
 			
@@ -47,17 +48,24 @@ public class GameDataAccumulator {
 			
 			PlayerPropertyDataAccumulator temp;
 			for(PlayerPropertyDataAccumulator d : p.getAll()){ //for all the player specific max data
+				
 				temp = entireGameTemp.get(d.playerOwnerID);
 				temp.playerNumHouses += d.playerNumHouses;
 				temp.playerPersonalRevenueWithHouses += d.playerPersonalRevenueWithHouses;
 				temp.playerPersonalRevenueWithoutHouses += d.playerPersonalRevenueWithoutHouses;
+				int divideBy = p.numDataPoints == 0 ? 1 : p.numDataPoints;
+				temp.playerTimeOwned += d.numDataPoints/divideBy;
+				temp.numDataPoints += 1;
 			}
+			
+			System.out.println(String.format("%d h:%f, rW:%f, rWO:%f", 
+					i++,p.accNumHouses , p.accTotalRevenueWithHouses, p.accTotalRevenueWithoutHouses));
 			
 			p.reset(); //reset the currentMaxes
 		}
 	}
 	
-	public void putPropertyData(PropertyData data){
+	public void putPropertyData(PropertyData data){ //this goes through all time stamps in a game
 		//finds the max so far
 		PropertyDataAccumulator accData = currentMaxValues.get(data.propertyName);
 		if(accData == null){
@@ -68,11 +76,13 @@ public class GameDataAccumulator {
 		accData.accNumHouses = Math.max(accData.accNumHouses, data.numHouses);
 		accData.accTotalRevenueWithHouses = Math.max(accData.accTotalRevenueWithHouses, data.totalRevenueWithHouses);
 		accData.accTotalRevenueWithoutHouses = Math.max(accData.accTotalRevenueWithoutHouses, data.totalRevenueWithoutHouses);
+		accData.numDataPoints += 1;
 		
 		PlayerPropertyDataAccumulator playerData = accData.get(data.ownerID);
 		playerData.playerNumHouses = Math.max(playerData.playerNumHouses, data.numHouses);
 		playerData.playerPersonalRevenueWithHouses = Math.max(playerData.playerPersonalRevenueWithHouses, data.personalRevenueWithHouses);
 		playerData.playerPersonalRevenueWithoutHouses = Math.max(playerData.playerPersonalRevenueWithoutHouses, data.personalRevenueWithoutHouses);
+		playerData.numDataPoints += 1;
 	}
 	
 	public void addPlayerWin(int playerID){

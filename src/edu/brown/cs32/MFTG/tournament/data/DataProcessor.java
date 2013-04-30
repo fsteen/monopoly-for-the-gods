@@ -22,8 +22,10 @@ public class DataProcessor {
 		GameDataAccumulator overall = new GameDataAccumulator(numDataPoints);
 		for(GameData d : data){
 			//TODO later ?? : for games that are repeats of each other, exclude all but one
-			combineGameData(overall, d);
-			overall.gameFinished();
+			if(d != null){
+				combineGameData(overall, d);
+				overall.gameFinished();
+			}
 		}
 		return overall.toGameDataReport();
 	}
@@ -47,6 +49,7 @@ public class DataProcessor {
 			specificIndex -= stepSize;			
 		}
 		
+		System.out.println("\n\ntimestamps " + specific.getData().size());
 		//overall game data
 		for(TimeStamp t : specific.getData()){
 			for(PropertyData p : t.getPropertyData()){
