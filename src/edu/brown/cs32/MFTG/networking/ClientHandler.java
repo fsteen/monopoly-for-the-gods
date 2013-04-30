@@ -94,9 +94,9 @@ public class ClientHandler {
 
 			// set the timeout and attempt to read the response from the client
 			try {
-				_client.setSoTimeout((GET_PLAYER_TIME + 10) * 1000);
+//				_client.setSoTimeout((GET_PLAYER_TIME + 10) * 1000);
 				Player p = _oMapper.readValue(response._arguments.get(0), Player.class);
-				_client.setSoTimeout(0);
+//				_client.setSoTimeout(0);
 				return p;
 			} catch (SocketTimeoutException | SocketException e){
 				throw new ClientLostException(_id);
@@ -128,14 +128,6 @@ public class ClientHandler {
 
 			// read in the response
 			ClientRequestContainer response = readResponse();
-			
-			try {
-				_client.setSoTimeout(PLAY_GAMES_TIME * 1000);
-				response = _oMapper.readValue(_input, ClientRequestContainer.class);
-				_client.setSoTimeout(0);
-			} catch (SocketTimeoutException | SocketException e){
-				throw new ClientLostException(_id);
-			}
 
 			// check for bad response
 			if (response._method != Method.SENDGAMEDATA){
@@ -152,6 +144,7 @@ public class ClientHandler {
 			return gameData;
 
 		} catch (IOException e){
+			e.printStackTrace();
 			throw new ClientCommunicationException(_id);
 		}
 	}
@@ -166,6 +159,7 @@ public class ClientHandler {
 			write(request);
 
 		} catch (IOException e){
+			e.printStackTrace();
 			throw new ClientCommunicationException(_id);
 		}
 	}

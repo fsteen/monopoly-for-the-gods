@@ -109,7 +109,7 @@ public abstract class Client {
 		ClientRequestContainer request = readRequest();
 
 		Method method = request._method;
-
+		
 		if (method == null)
 			throw new InvalidRequestException();
 
@@ -209,7 +209,6 @@ public abstract class Client {
 
 		JavaType listOfPlayers = _oMapper.getTypeFactory().constructCollectionType(List.class, Player.class);
 		JavaType listOfSeeds = _oMapper.getTypeFactory().constructCollectionType(List.class, Long.class);
-
 		List<Player> players = _oMapper.readValue(arguments.get(0), listOfPlayers);
 		List<Long> seeds = _oMapper.readValue(arguments.get(1), listOfSeeds);
 

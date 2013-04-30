@@ -17,10 +17,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.brown.cs32.MFTG.monopoly.GameData;
 import edu.brown.cs32.MFTG.monopoly.Player;
+import edu.brown.cs32.MFTG.monopoly.TimeStamp;
 import edu.brown.cs32.MFTG.monopoly.Player.Aggression;
 import edu.brown.cs32.MFTG.monopoly.Player.Amount;
 import edu.brown.cs32.MFTG.monopoly.Player.Balance;
 import edu.brown.cs32.MFTG.monopoly.Player.Expense;
+import edu.brown.cs32.MFTG.monopoly.PlayerWealthData;
+import edu.brown.cs32.MFTG.monopoly.PropertyData;
 import edu.brown.cs32.MFTG.tournament.Profile;
 import edu.brown.cs32.MFTG.tournament.data.GameDataReport;
 import edu.brown.cs32.MFTG.tournament.data.PlayerPropertyDataAccumulator;
@@ -165,5 +168,23 @@ public class ProtocolTests {
 		Profile newP = oMapper.readValue(profileJson, Profile.class);
 		
 		assertEquals(p, newP);
+	}
+	
+	@Test
+	public void testTimeStamp() throws IOException {
+		ObjectMapper oMapper = new ObjectMapper();
+		
+		PropertyData p = new PropertyData("test", 0, 0, 0, 0, 0, 0, false);
+		PlayerWealthData pwd = new PlayerWealthData(0, 0, 0);
+		
+		TimeStamp t = new TimeStamp(5);
+		t.setPropertyData(Arrays.asList(p));
+		t.setWealthData(Arrays.asList(pwd));
+		t.setTime(10);
+		
+		String timeStampJson = oMapper.writeValueAsString(t);
+		TimeStamp newT = oMapper.readValue(timeStampJson, TimeStamp.class);
+		
+		assertEquals(t, newT);
 	}
 }
