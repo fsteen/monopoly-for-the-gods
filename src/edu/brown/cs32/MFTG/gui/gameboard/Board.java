@@ -496,19 +496,19 @@ public class Board extends JPanel {
 			
 			for(ColorProperties color: ColorProperties.values()) {
 				PropertyDataReport d = new PropertyDataReport(color.getLowercaseName(), id, 
-						Math.random() * 5, Math.random() * 10000, 0, 1, 100);
+						Math.random() * 5, Math.random() * 10000, 0, 1, .5,100);
 				data.put(color.getLowercaseName(), d);
 			}
 			
 			for(Utilities utilities: Utilities.values()) {
 				PropertyDataReport d = new PropertyDataReport(utilities.getLowercaseName(), id, 
-						Math.random() * 5, Math.random() * 10000, 0, 1, 100);
+						Math.random() * 5, Math.random() * 10000, 0, 1,.5, 100);
 				data.put(utilities.getLowercaseName(), d);
 			}
 			
 			for(Railroads rr: Railroads.values()) {
 				PropertyDataReport d = new PropertyDataReport(rr.getLowercaseName(), id, 
-						Math.random() * 5, Math.random() * 10000, 0, 1, 100);
+						Math.random() * 5, Math.random() * 10000, 0, 1,.5, 100);
 				data.put(rr.getLowercaseName(), d);
 			}
 			
@@ -516,19 +516,19 @@ public class Board extends JPanel {
 			
 			for(ColorProperties color: ColorProperties.values()) {
 				PropertyDataReport d = new PropertyDataReport(color.getLowercaseName(), id, 
-						Math.random() * 5, Math.random() * 10000, 0, 1, 100);
+						Math.random() * 5, Math.random() * 10000, 0, 1,.5, 100);
 				data.put(color.getLowercaseName(), d);
 			}
 			
 			for(Utilities utilities: Utilities.values()) {
 				PropertyDataReport d = new PropertyDataReport(utilities.getLowercaseName(), id, 
-						Math.random() * 5, Math.random() * 10000, 0, 1, 100);
+						Math.random() * 5, Math.random() * 10000, 0, 1, .5,100);
 				data.put(utilities.getLowercaseName(), d);
 			}
 			
 			for(Railroads rr: Railroads.values()) {
 				PropertyDataReport d = new PropertyDataReport(rr.getLowercaseName(), id, 
-						Math.random() * 5, Math.random() * 10000, 0, 1, 100);
+						Math.random() * 5, Math.random() * 10000, 0, 1,.5, 100);
 				data.put(rr.getLowercaseName(), d);
 			}
 			

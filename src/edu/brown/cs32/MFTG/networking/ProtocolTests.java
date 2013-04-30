@@ -140,7 +140,7 @@ public class ProtocolTests {
 		TimeStampReport t = new TimeStampReport(100, wealthData);
 		timeStamps.add(t);
 		
-		PropertyDataReport p = new PropertyDataReport("hi!", 1, 2, 3, 4, 5, 6);
+		PropertyDataReport p = new PropertyDataReport("hi!", 1, 2, 3, 4, 5, 6, 7);
 		entireGameData.put("test", Arrays.asList(p));
 		
 		overallPropertyData.put("test", p);
