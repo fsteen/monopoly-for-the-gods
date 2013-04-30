@@ -40,7 +40,7 @@ public abstract class Client {
 
 	/* Module variables */
 	protected final int NUM_THREADS=10;
-	protected final int DATA_PACKET_SIZE=10;
+	protected final int DATA_PACKET_SIZE=100;
 	protected final int NUM_DATA_POINTS=100;	
 	protected final int MAX_NUM_TURNS=1000;
 	protected int _nextDisplaySize;
@@ -242,7 +242,9 @@ public abstract class Client {
 				MAX_NUM_TURNS,settings.freeParking,settings.doubleOnGo,
 				settings.auctions,players.toArray(new Player[players.size()]));
 
+		int i = 0;
 		for(Long seed : seeds){
+			System.out.println("launching game #" + (i++) + "/" + seeds.size());
 			_pool.execute(gameRunnerFactory.build(seed)); //launch games
 //			gameRunnerFactory.build(seed).run();
 		}
@@ -255,6 +257,7 @@ public abstract class Client {
 			}
 		}
 
+		System.out.println("sending data back");
 		return _data;
 	}
 
