@@ -73,7 +73,7 @@ public class Tournament implements Runnable{
 				i--;
 				continue;
 			}
-			
+
 			// generate which seeds will be used for integrity validation
 			confirmationIndices = DataProcessor.generateConfirmationIndices(gamesPerModule, CONFIRMATION_PERCENTAGE);
 			
@@ -178,7 +178,7 @@ public class Tournament implements Runnable{
 		}
 		
 		for (int i = 0; i < _clientHandlers.size(); i++){
-			Callable<List<GameData>> worker = new PlayGamesCallable(_clientHandlers.get(i), players, seeds.get(i));
+			Callable<List<GameData>> worker = new PlayGamesCallable(_clientHandlers.get(i), players, seeds.get(i), _settings);
 			Future<List<GameData>> future = _executor.submit(worker);
 			gameDataFutures.add(future);
 		}
