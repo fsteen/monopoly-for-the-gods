@@ -1,5 +1,7 @@
 package edu.brown.cs32.MFTG.monopoly;
 
+import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -45,7 +47,7 @@ public class PropertyData{
 		
 		PropertyData that = (PropertyData) o;
 		
-		return (this.propertyName == that.propertyName)
+		return (Objects.equals(this.propertyName, that.propertyName))
 			&& (this.ownerID == that.ownerID)
 			&& (this.numHouses == that.numHouses)
 			&& (this.personalRevenueWithHouses == that.personalRevenueWithHouses)

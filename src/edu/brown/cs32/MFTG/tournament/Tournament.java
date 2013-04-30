@@ -78,11 +78,9 @@ public class Tournament implements Runnable{
 			// generate which seeds will be used for integrity validation
 			confirmationIndices = DataProcessor.generateConfirmationIndices(gamesPerModule, CONFIRMATION_PERCENTAGE);
 			
-			System.out.println("playing a round of games");
 			// play a round of games
 			data = playRoundOfGames(players, DataProcessor.generateSeeds(gamesPerModule, players.size(), confirmationIndices));
-			System.out.println("games played motherfucker!!!");
-			
+
 			// make sure nobody cheated
 			if(DataProcessor.isCorrupted(data, confirmationIndices)){
 				System.out.println("WOOHOO ... SOMEONE IS CHEATING!!!!!"); //TODO change this
@@ -93,10 +91,10 @@ public class Tournament implements Runnable{
 				dataToSend.addAll(d);
 			}
 			
-			System.out.println("sending game data");
 			// send the data to all the clients
+			System.out.println("About to send data to clients");
 			sendEndOfRoundData(DataProcessor.aggregate(dataToSend, NUM_DATA_POINTS));
-			System.out.println("data sent!!!");
+			System.out.println("data sent");
 		}
 		sendEndOfGameData();
 	}
@@ -194,8 +192,10 @@ public class Tournament implements Runnable{
 			try {
 				gameData.add(gameDataFutures.get(i).get());
 			} catch (InterruptedException e) {
+				System.out.println("interrupted!");
 				numFails++;
 			} catch (ExecutionException e) {
+				System.out.println("execution exception");
 				numFails++;
 			}
 		}
