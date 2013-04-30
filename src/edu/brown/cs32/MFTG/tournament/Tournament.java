@@ -19,7 +19,6 @@ import edu.brown.cs32.MFTG.networking.ClientLostException;
 import edu.brown.cs32.MFTG.networking.InvalidResponseException;
 import edu.brown.cs32.MFTG.networking.PlayGamesCallable;
 import edu.brown.cs32.MFTG.networking.getPlayerCallable;
-import edu.brown.cs32.MFTG.networking.iClientHandler;
 import edu.brown.cs32.MFTG.tournament.data.DataProcessor;
 import edu.brown.cs32.MFTG.tournament.data.GameDataReport;
 
@@ -28,7 +27,7 @@ public class Tournament implements Runnable{
 	
 	public static final double CONFIRMATION_PERCENTAGE = 0.1; //confirm 10% of games
 	public static final int NUM_DATA_POINTS = 50;
-	private List<iClientHandler> _clients;
+	private List<ClientHandler> _clients;
 	private ServerSocket _socket;
 	private Settings _settings;
 	private ExecutorService _executor; 
@@ -51,6 +50,13 @@ public class Tournament implements Runnable{
 	}
 	
 	public void run() {
+		try {
+			getPlayerConnections();
+		} catch (IOException e) {
+			System.out.println("you are fucked");
+			return;
+		}
+		
 		int gamesPerModule = (int)Math.ceil(_settings.getNumGamesPerRound()/_numPlayers);
 		List<Player> players = null;
 		List<List<GameData>> data;
@@ -64,15 +70,17 @@ public class Tournament implements Runnable{
 				players = newPlayers;
 			
 			// if an error was caught before the players could originally be chosen, re-enter the loop
-			if(players == null)
+			if(players == null){
+				i--;
 				continue;
+			}
 			
 			// generate which seeds will be used for integrity validation
 			confirmationIndices = DataProcessor.generateConfirmationIndices(gamesPerModule, CONFIRMATION_PERCENTAGE);
 			
 			// play a round of games
 			data = playRoundOfGames(players, DataProcessor.generateSeeds(gamesPerModule, players.size(), confirmationIndices));
-			
+
 			// make sure nobody cheated
 			if(DataProcessor.isCorrupted(data, confirmationIndices)){
 				System.out.println("WOOHOO ... SOMEONE IS CHEATING!!!!!"); //TODO change this
@@ -84,7 +92,9 @@ public class Tournament implements Runnable{
 			}
 			
 			// send the data to all the clients
+			System.out.println("About to send data to clients");
 			sendEndOfRoundData(DataProcessor.aggregate(dataToSend, NUM_DATA_POINTS));
+			System.out.println("data sent");
 		}
 		sendEndOfGameData();
 	}
@@ -120,7 +130,7 @@ public class Tournament implements Runnable{
 		List<Future<Player>> playerFutures = new ArrayList<>();
 		List<Player> players = new ArrayList<>();
 		
-		for(iClientHandler c : _clients){
+		for(ClientHandler c : _clients){
 			Callable<Player> worker = new getPlayerCallable(c);
 			Future<Player> future = _executor.submit(worker);
 			playerFutures.add(future);
@@ -134,6 +144,8 @@ public class Tournament implements Runnable{
 						 ". Reusing old heuristics");
 				return null;
 			} catch (ExecutionException e) {
+				// e.printStackTrace();
+				assert(false);
 				return handlePlayerExecutionException(e.getCause(), i);
 			}
 		}
@@ -180,8 +192,10 @@ public class Tournament implements Runnable{
 			try {
 				gameData.add(gameDataFutures.get(i).get());
 			} catch (InterruptedException e) {
+				System.out.println("interrupted!");
 				numFails++;
 			} catch (ExecutionException e) {
+				System.out.println("execution exception");
 				numFails++;
 			}
 		}
@@ -193,7 +207,7 @@ public class Tournament implements Runnable{
 	}
 
 	private void sendEndOfRoundData(GameDataReport aggregatedData) {
-		for(iClientHandler c : _clients){
+		for(ClientHandler c : _clients){
 			try {
 				c.setGameData(aggregatedData);
 			} catch (ClientCommunicationException e) {
@@ -203,7 +217,7 @@ public class Tournament implements Runnable{
 	}
 	
 	private void sendErrorMessage(String errorMessage){
-		for (iClientHandler c : _clients){
+		for (ClientHandler c : _clients){
 			c.sendErrorMessage(errorMessage);
 		}
 	}
@@ -221,11 +235,17 @@ public class Tournament implements Runnable{
 	public void getPlayerConnections() throws IOException{
 		int connectionsMade = 0;
 		
-		while(connectionsMade <= _numPlayers){
+		while(connectionsMade < _numPlayers){
 			Socket clientConnection = _socket.accept();
 			connectionsMade++;
-			iClientHandler cHandler = new ClientHandler(clientConnection, connectionsMade);
+			ClientHandler cHandler = new ClientHandler(clientConnection, connectionsMade);
 			_clients.add(cHandler);
+			try {
+				cHandler.sendID();
+			} catch (ClientCommunicationException e) {
+				// TODO do something?
+			}
 		}
 	}
+
 }

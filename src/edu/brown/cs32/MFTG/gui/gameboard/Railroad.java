@@ -67,6 +67,10 @@ public class Railroad extends JPanel {
 		_aggregateProperty.setData(propertyDataReport);
 	}
 	
+	public int getValue() {
+		return _myProperty.getValue();
+	}
+	
 	public void update () {
 		this.removeAll();
 		if(_view == View.ME){
@@ -110,6 +114,13 @@ public class Railroad extends JPanel {
 		@Override
 		public void mouseExited(MouseEvent e) {
 			// TODO Auto-generated method stub
+		}
+	}
+
+	public void setView(View view) {
+		if(view == View.ME || view == View.AGGREGATE) {
+			_view = view;
+			update();
 		}
 	}
 

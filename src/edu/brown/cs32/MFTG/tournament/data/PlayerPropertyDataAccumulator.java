@@ -1,12 +1,11 @@
-package edu.brown.cs32.MFTG.tournament;
+package edu.brown.cs32.MFTG.tournament.data;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
 
-import edu.brown.cs32.MFTG.tournament.data.PropertyDataReport;
 
-public class PlayerPropertyData {
+public class PlayerPropertyDataAccumulator {
 	public final String propertyName;
 	public final int playerOwnerID;
 	public double playerNumHouses;
@@ -16,7 +15,7 @@ public class PlayerPropertyData {
 	public int numDataPoints;
 	
 	@JsonCreator
-	public PlayerPropertyData(@JsonProperty("propertyName") String propertyName, @JsonProperty("playerOwnerID") int playerOwnerID){
+	public PlayerPropertyDataAccumulator(@JsonProperty("propertyName") String propertyName, @JsonProperty("playerOwnerID") int playerOwnerID){
 		this.propertyName = propertyName;
 		this.playerOwnerID = playerOwnerID;
 		playerNumHouses = 0;
@@ -28,10 +27,10 @@ public class PlayerPropertyData {
 	
 	@Override
 	public boolean equals(Object o) {
-		if (o == null || !(o instanceof PlayerPropertyData))
+		if (o == null || !(o instanceof PlayerPropertyDataAccumulator))
 			return false;
 		
-		PlayerPropertyData that = (PlayerPropertyData) o;
+		PlayerPropertyDataAccumulator that = (PlayerPropertyDataAccumulator) o;
 		
 		return Objects.equal(this.propertyName, that.propertyName)
 			&& this.playerOwnerID == that.playerOwnerID 
@@ -50,14 +49,15 @@ public class PlayerPropertyData {
 		numDataPoints = 0;
 	}
 
-	public PropertyDataReport toPropertyDataReport(){
-		//TODO i cannot report mortgage info at the moment			
+	public PropertyDataReport toPropertyDataReport(int totalDataPoints){
+		int divideBy = numDataPoints == 0 ? 1 : numDataPoints;
 		return new PropertyDataReport(
 				propertyName,playerOwnerID,
-				Math.round(playerNumHouses/numDataPoints),
-				Math.round(playerPersonalRevenueWithHouses/numDataPoints),
-				Math.round(playerPersonalRevenueWithoutHouses/numDataPoints),
-				Math.round(playerMortgaged/numDataPoints),
+				playerNumHouses/divideBy,
+				playerPersonalRevenueWithHouses/divideBy,
+				playerPersonalRevenueWithoutHouses/divideBy,
+				playerMortgaged/divideBy,
+				numDataPoints/totalDataPoints,
 				numDataPoints);
 	}
 	

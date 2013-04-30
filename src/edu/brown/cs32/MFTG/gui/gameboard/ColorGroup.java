@@ -38,11 +38,13 @@ public class ColorGroup extends JPanel {
 	private ColorBlock _colorBlock;
 	private View _view = View.ME;
 	private Orientation _orientation;
+	private String _color;
 	private GridBagConstraints _c = new GridBagConstraints();
 	
 	public ColorGroup (Orientation orientation, List<Properties> properties, List<PropertyPanel> myPanel, List<PropertyPanel> aggregatePanel, ColorBlock colorBlock) {
 		super();
 		_orientation = orientation;
+		_color = colorBlock.getName();
 		
 		this.setLayout(new GridBagLayout());
 		
@@ -77,6 +79,10 @@ public class ColorGroup extends JPanel {
 		
 		_view = View.ME;
 		update();
+	}
+	
+	public String getName() {
+		return _color;
 	}
 	
 	public void update () {
@@ -261,6 +267,12 @@ public class ColorGroup extends JPanel {
 	}
 
 	public Double[] getColorValues() {
-		return _colorBlock.getColorValues();
+		Double[] _colorValues =  _colorBlock.getColorValues();
+		return _colorValues;
+	}
+
+	public void setView(View view) {
+		_view = view;
+		update();
 	}
 }

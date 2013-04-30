@@ -8,7 +8,6 @@ import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import edu.brown.cs32.MFTG.tournament.PlayerPropertyData;
 
 public class PropertyDataAccumulator{
 
@@ -18,7 +17,7 @@ public class PropertyDataAccumulator{
 	public double accTotalRevenueWithoutHouses;
 	public double accMortgaged;
 	public int numDataPoints;
-	private Map<Integer,PlayerPropertyData> playerPropertyData;
+	private Map<Integer,PlayerPropertyDataAccumulator> playerPropertyData;
 
 	@JsonCreator
 	public PropertyDataAccumulator(@JsonProperty("propertyName") String propertyName) {
@@ -37,38 +36,38 @@ public class PropertyDataAccumulator{
 		accTotalRevenueWithoutHouses = 0.0;
 		accMortgaged = 0.0;
 		numDataPoints = 0;
-		for(PlayerPropertyData p : playerPropertyData.values()){
+		for(PlayerPropertyDataAccumulator p : playerPropertyData.values()){
 			p.reset();
 		}
 	}
 
-	public PlayerPropertyData get(int playerOwnerID){
-		PlayerPropertyData data = playerPropertyData.get(playerOwnerID);
+	public PlayerPropertyDataAccumulator get(int playerOwnerID){
+		PlayerPropertyDataAccumulator data = playerPropertyData.get(playerOwnerID);
 		if(data == null){
-			data = new PlayerPropertyData(propertyName, playerOwnerID);
+			data = new PlayerPropertyDataAccumulator(propertyName, playerOwnerID);
 			playerPropertyData.put(playerOwnerID, data);
 		}
 		return data;
 	}
 
-	public List<PlayerPropertyData> getAll(){
-		return new ArrayList<PlayerPropertyData>(playerPropertyData.values());
+	public List<PlayerPropertyDataAccumulator> getAll(){
+		return new ArrayList<PlayerPropertyDataAccumulator>(playerPropertyData.values());
 	}
 
-	public List<PropertyDataReport> toPlayerPropertyDataReport(){
+	public List<PropertyDataReport> toPlayerPropertyDataReport(int totalDataPoints){
 		List<PropertyDataReport> playerData = new ArrayList<>();
 
-		for(PlayerPropertyData p : playerPropertyData.values()){
-			playerData.add(p.toPropertyDataReport());
+		for(PlayerPropertyDataAccumulator p : playerPropertyData.values()){
+			playerData.add(p.toPropertyDataReport(totalDataPoints));
 		}
 		return playerData;
 	}
 	
 	public PropertyDataReport toPropertyDataReport(){
-		//TODO deal with divide by 0 possibility
-		return new PropertyDataReport(propertyName, -1, accNumHouses/numDataPoints,
-				accTotalRevenueWithHouses/numDataPoints, accTotalRevenueWithoutHouses/numDataPoints,
-				accMortgaged/numDataPoints, numDataPoints);
+		int divideBy = numDataPoints == 0 ? 1 : numDataPoints;
+		return new PropertyDataReport(propertyName, -1, accNumHouses/divideBy,
+				accTotalRevenueWithHouses/divideBy, accTotalRevenueWithoutHouses/divideBy,
+				accMortgaged/divideBy, -1,numDataPoints);
 	}
 
 	// getters and setters for serialization
@@ -156,7 +155,7 @@ public class PropertyDataAccumulator{
 	 * Getter for playerPropertyData
 	 * @return
 	 */
-	public Map<Integer, PlayerPropertyData> getPlayerPropertyData() {
+	public Map<Integer, PlayerPropertyDataAccumulator> getPlayerPropertyData() {
 		return playerPropertyData;
 	}
 
@@ -164,7 +163,7 @@ public class PropertyDataAccumulator{
 	 * Setter for playerPropertyData
 	 * @param playerPropertyData
 	 */
-	public void setPlayerPropertyData(Map<Integer, PlayerPropertyData> playerPropertyData) {
+	public void setPlayerPropertyData(Map<Integer, PlayerPropertyDataAccumulator> playerPropertyData) {
 		this.playerPropertyData = playerPropertyData;
 	}
 }

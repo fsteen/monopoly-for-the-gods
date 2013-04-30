@@ -2,6 +2,7 @@ package edu.brown.cs32.MFTG.gui.gameboard;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -28,6 +29,7 @@ import edu.brown.cs32.MFTG.gui.Constants.Properties;
 import edu.brown.cs32.MFTG.gui.Constants.Railroads;
 import edu.brown.cs32.MFTG.gui.Constants.StaticProperties;
 import edu.brown.cs32.MFTG.gui.Constants.Utilities;
+import edu.brown.cs32.MFTG.gui.Constants.View;
 import edu.brown.cs32.MFTG.gui.center.Center;
 import edu.brown.cs32.MFTG.gui.properties.AggregateColorProperty;
 import edu.brown.cs32.MFTG.gui.properties.AggregateUtilityProperty;
@@ -38,9 +40,7 @@ import edu.brown.cs32.MFTG.gui.properties.MyUtilityProperty;
 import edu.brown.cs32.MFTG.gui.properties.PropertyPanel;
 import edu.brown.cs32.MFTG.gui.properties.StaticProperty;
 import edu.brown.cs32.MFTG.monopoly.Player;
-import edu.brown.cs32.MFTG.monopoly.PlayerWealthData;
 import edu.brown.cs32.MFTG.tournament.data.PlayerWealthDataReport;
-import edu.brown.cs32.MFTG.tournament.data.PropertyDataAccumulator;
 import edu.brown.cs32.MFTG.tournament.data.PropertyDataReport;
 
 public class Board extends JPanel {
@@ -50,7 +50,7 @@ public class Board extends JPanel {
 	private Jail _jail;
 	private JMenuBar _menu;
 	private Center _center;
-	private int _id;
+	private int _id = 1;
 	private Player _player = null;
 	
 	public Board (int id) throws IOException {
@@ -63,6 +63,8 @@ public class Board extends JPanel {
 		this.setMaximumSize(dimension);
 		this.setMinimumSize(dimension);
 		this.setPreferredSize(dimension);
+		this.setSize(dimension);
+		this.setLocation(0, 0);
 		
 		/* Set up the layout */
 		BorderLayout layout = new BorderLayout(0, 0);
@@ -77,6 +79,7 @@ public class Board extends JPanel {
 		//initializeMenu();
 		
 		this.setVisible(true);
+		this.repaint();
 	}
 	
 	public void initializeMenu () {
@@ -377,41 +380,41 @@ public class Board extends JPanel {
 	}
 	
 	public Player setHeuristics () {
-		_player = new Player(_id);
-	
+		Player player = new Player(1);
 		
 		HashMap<String, Integer> propertyValues = new HashMap<>();
 		HashMap<String, Double[]> colorValues = new HashMap<>();
 		for(ColorGroup c: _colorGroups) {
 			HashMap<String, Integer> properties = c.getPropertyValues();
 			Double[] colors = c.getColorValues();
+			colorValues.put(c.getName(), colors);
+			propertyValues.putAll(properties);
 		}
-		_player.setPropertyValues(propertyValues);
-		_player.setColorValues(colorValues);
+		for(Railroad r: _railroads) {
+			propertyValues.put(r.getName(), r.getValue());
+		}
+		player.setPropertyValues(propertyValues);
+		player.setColorValues(colorValues);
 		
-		//TODO: set values
 		List<Double> sliders = _center.getSliderInfo();
-		_player.setLiquidity(sliders.get(0));
-		_player.setTimeChange(sliders.get(1));
-		_player.setTradingFear(sliders.get(2));
+		player.setLiquidity(sliders.get(0));
+		player.setTimeChange(sliders.get(1));
+		player.setTradingFear(sliders.get(2));
 		
-		//TODO: minimum cash amounts
 		List<Integer> minCash = _center.getMinCash();
-		_player.setMinBuyCash(minCash.get(0));
-		_player.setMinBuildCash(minCash.get(1));
-		_player.setMinUnmortgageCash(minCash.get(2));
+		player.setMinBuyCash(minCash.get(0));
+		player.setMinBuildCash(minCash.get(1));
+		player.setMinUnmortgageCash(minCash.get(2));
 		
-		//TODO: jail information
 		List<Integer> waits = _jail.getWait();
-		_player.setJailWait(waits.get(0));
-		_player.setJailPoor(waits.get(1));
-		_player.setJailRich(waits.get(2));
+		player.setJailWait(waits.get(0));
+		player.setJailPoor(waits.get(1));
+		player.setJailRich(waits.get(2));
 		
-		//TODO: get information from the buttons
-		_center.setButtonChoices(_player);		
+		_center.setButtonChoices(player);		
 		
-		
-		return _player;
+		System.out.println("returning player");
+		return player;
 	}
 	
 	public Player getPlayer () {
@@ -420,15 +423,11 @@ public class Board extends JPanel {
 	}
 	
 	public void setPlayerSpecificPropertyData(Map<String, PropertyDataReport> data) {
-		System.out.println("set player specific data");
 		for(ColorGroup colorGroup: _colorGroups) {
 			Set<String> names = colorGroup.getNames();
 			for(String name: names) {
 				if(data.containsKey(name)) {
 					colorGroup.setMyData(name, data.get(name));
-				}
-				else {
-					System.out.println("not correct: " + name);
 				}
 			}
 		}
@@ -438,9 +437,6 @@ public class Board extends JPanel {
 			if(data.containsKey(name)) {
 				railroad.setMyData(data.get(name));
 			}
-			else {
-				System.out.println("not correct: " + name);
-			}
 		}
 		this.validate();
 		this.updateUI();
@@ -448,15 +444,11 @@ public class Board extends JPanel {
 	}
 	
 	public void setPropertyData(Map<String, PropertyDataReport> data) {
-		System.out.println("set property data");
 		for(ColorGroup colorGroup: _colorGroups) {
 			Set<String> names = colorGroup.getNames();
 			for(String name: names) {
 				if(data.containsKey(name)) {
 					colorGroup.setAggregateData(name, data.get(name));
-				}
-				else {
-					System.out.println("not correct: " + name);
 				}
 			}
 		}
@@ -466,9 +458,6 @@ public class Board extends JPanel {
 			if(data.containsKey(name)) {
 				railroad.setAggregateData(data.get(name));
 			}
-			else {
-				System.out.println("not correct: " + name);
-			}
 		}
 		this.validate();
 		this.updateUI();
@@ -477,13 +466,12 @@ public class Board extends JPanel {
 
 	
 	public void setWealthData(List<PlayerWealthDataReport> data) {
-		System.out.println("set wealth data");
 		_center.setWealthData(data);
 	}
 	
 	public static void main (String[] args) {
 		JFrame frame = new JFrame();
-		frame.setPreferredSize(new Dimension(Constants.FULL_WIDTH, Constants.FULL_HEIGHT));
+		frame.setPreferredSize(new Dimension(9*Constants.WIDTH + 2*Constants.HEIGHT, 9*Constants.WIDTH + 2*Constants.HEIGHT));
 		try {
 			JMenuBar menu = new JMenuBar();
 			Board board = new Board(1);
@@ -505,19 +493,19 @@ public class Board extends JPanel {
 			
 			for(ColorProperties color: ColorProperties.values()) {
 				PropertyDataReport d = new PropertyDataReport(color.getLowercaseName(), id, 
-						Math.random() * 5, Math.random() * 10000, 0, 1, 100);
+						Math.random() * 5, Math.random() * 10000, 0, 1, .5,100);
 				data.put(color.getLowercaseName(), d);
 			}
 			
 			for(Utilities utilities: Utilities.values()) {
 				PropertyDataReport d = new PropertyDataReport(utilities.getLowercaseName(), id, 
-						Math.random() * 5, Math.random() * 10000, 0, 1, 100);
+						Math.random() * 5, Math.random() * 10000, 0, 1,.5, 100);
 				data.put(utilities.getLowercaseName(), d);
 			}
 			
 			for(Railroads rr: Railroads.values()) {
 				PropertyDataReport d = new PropertyDataReport(rr.getLowercaseName(), id, 
-						Math.random() * 5, Math.random() * 10000, 0, 1, 100);
+						Math.random() * 5, Math.random() * 10000, 0, 1,.5, 100);
 				data.put(rr.getLowercaseName(), d);
 			}
 			
@@ -525,19 +513,19 @@ public class Board extends JPanel {
 			
 			for(ColorProperties color: ColorProperties.values()) {
 				PropertyDataReport d = new PropertyDataReport(color.getLowercaseName(), id, 
-						Math.random() * 5, Math.random() * 10000, 0, 1, 100);
+						Math.random() * 5, Math.random() * 10000, 0, 1,.5, 100);
 				data.put(color.getLowercaseName(), d);
 			}
 			
 			for(Utilities utilities: Utilities.values()) {
 				PropertyDataReport d = new PropertyDataReport(utilities.getLowercaseName(), id, 
-						Math.random() * 5, Math.random() * 10000, 0, 1, 100);
+						Math.random() * 5, Math.random() * 10000, 0, 1, .5,100);
 				data.put(utilities.getLowercaseName(), d);
 			}
 			
 			for(Railroads rr: Railroads.values()) {
 				PropertyDataReport d = new PropertyDataReport(rr.getLowercaseName(), id, 
-						Math.random() * 5, Math.random() * 10000, 0, 1, 100);
+						Math.random() * 5, Math.random() * 10000, 0, 1,.5, 100);
 				data.put(rr.getLowercaseName(), d);
 			}
 			
@@ -545,7 +533,6 @@ public class Board extends JPanel {
 			
 			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		frame.pack();
@@ -578,6 +565,15 @@ public class Board extends JPanel {
 			for(ColorGroup c: _colorGroups) {
 
 			}
+		}
+	}
+
+	public void setView(View view) {
+		for(ColorGroup c: _colorGroups) {
+			c.setView(view);
+		}
+		for(Railroad r: _railroads) {
+			r.setView(view);
 		}
 	}
 

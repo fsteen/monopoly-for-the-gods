@@ -44,7 +44,7 @@ public class AggregateUtilityProperty extends NonstaticProperty {
 
 	@Override
 	public void setData(PropertyDataReport data) {
-		updateProfit(data.accTotalRevenueWithHouses);
+		updateProfit(data.accTotalRevenueWithoutHouses);
 	}
 	
 	public int getValue() {

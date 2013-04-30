@@ -1,5 +1,6 @@
 package edu.brown.cs32.MFTG.gui.center;
 
+import java.awt.Dimension;
 import java.awt.event.MouseEvent;
 
 import org.jfree.chart.ChartMouseEvent;
@@ -11,6 +12,8 @@ import org.jfree.chart.entity.XYItemEntity;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
+
+import edu.brown.cs32.MFTG.gui.Constants;
 
 public class DynamicChartPanel extends ChartPanel {
 
@@ -25,11 +28,18 @@ public class DynamicChartPanel extends ChartPanel {
 		this.setMouseWheelEnabled(true);
 		_chart = chart;
 		this.addChartMouseListener(new MinCashListener());
+		
+		Dimension dim = new Dimension(9*Constants.WIDTH, 5*Constants.WIDTH);
+		this.setSize(dim);
+		this.setPreferredSize(dim);
+		this.setMaximumSize(dim);
+		this.setMinimumSize(dim);
+		
+		this.setLocation(0, 0);
 	}
 	
 	public void mousePressed (MouseEvent e) {
 		super.mousePressed(e);
-		System.out.println(_location);
 		_moving = _location;
 		_currHeight = e.getLocationOnScreen().getX();
 		_mousePressed = true;
@@ -39,8 +49,6 @@ public class DynamicChartPanel extends ChartPanel {
 		XYPlot plot = (XYPlot) _chart.getPlot();
 		XYSeriesCollection seriesCollection = (XYSeriesCollection) plot.getDataset();
 		XYSeries series = seriesCollection.getSeries(_moving);
-
-		
 		
 		double currValue = series.getMaxY();
 		currValue += (50*(-1)*change);
@@ -61,7 +69,6 @@ public class DynamicChartPanel extends ChartPanel {
 	
 	public void mouseClicked(MouseEvent e) {
 		super.mouseClicked(e);
-		System.out.println("ckicked");
 	}
 	
 	public void mouseDragged(MouseEvent e) {
@@ -86,7 +93,6 @@ public class DynamicChartPanel extends ChartPanel {
 			XYItemEntity xyItem = (XYItemEntity) entity;
 			
 			_location = xyItem.getSeriesIndex();
-			System.out.println("clicked in box");
 		}
 
 		@Override

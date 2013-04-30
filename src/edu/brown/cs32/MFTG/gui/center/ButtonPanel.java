@@ -1,10 +1,9 @@
 package edu.brown.cs32.MFTG.gui.center;
 
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
+import java.awt.Dimension;
 
-import javax.swing.JFrame;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import edu.brown.cs32.MFTG.gui.Constants;
@@ -14,7 +13,6 @@ import edu.brown.cs32.MFTG.gui.Constants.Price;
 import edu.brown.cs32.MFTG.gui.Constants.Quantity;
 import edu.brown.cs32.MFTG.gui.Constants.Toggle;
 import edu.brown.cs32.MFTG.monopoly.Player;
-import edu.brown.cs32.MFTG.monopoly.Player.Amount;
 import edu.brown.cs32.MFTG.monopoly.Player.Expense;
 
 public class ButtonPanel extends JPanel {
@@ -28,62 +26,54 @@ public class ButtonPanel extends JPanel {
 	
 	public ButtonPanel() {
 		super();
-		this.setSize(9*Constants.WIDTH, 3*Constants.WIDTH);
-		this.setLayout(new GridBagLayout());
+		this.setSize(9*Constants.WIDTH, 2*Constants.WIDTH);
+		this.setLocation(0, 0);
+		this.setBackground(Constants.BACKGROUND_COLOR);
+		
+		this.setLayout(null);
 		
 		setup();
 	}
 	
 	public void setup() {
-		GridBagConstraints c = new GridBagConstraints();
+		Dimension dim = new Dimension(Constants.BUTTON_DIMENSION, Constants.BUTTON_DIMENSION);
+		_buildingExpense.setSize(dim);
+		_buildingEvenness.setSize(dim);
+		_buildingAggressiveness.setSize(dim);
+		_sellingExpense.setSize(dim);
+		_sellingAmount.setSize(dim);
+		_mortgageExpense.setSize(dim);
 		
-		JPanel panel = new JPanel(new GridLayout(1,1));
-		panel.add(_buildingExpense);
-		c.weightx = 1;
-		c.weighty = 2;
-		c.gridx = 0;
-		c.gridy = 0;
-		this.add(panel, c);
+		double x = ((9*Constants.WIDTH/7));
+		int y = (int) (2*Constants.WIDTH/2 - dim.getHeight()/2) + 10;
 		
-		panel = new JPanel(new GridLayout(1,1));
-		panel.add(_buildingEvenness);
-		c.weightx = 1;
-		c.weighty = 2;
-		c.gridx = 1;
-		c.gridy = 0;
-		this.add(panel, c);
+		_buildingExpense.setLocation((int) (2*x - 3*_buildingExpense.getWidth()/2), y);
+		_buildingEvenness.setLocation((int) (2*x - _buildingExpense.getWidth()/2), y);
+		_buildingAggressiveness.setLocation((int) (2*x + _buildingExpense.getWidth()/2), y);
+		_sellingExpense.setLocation((int) (4*x - _buildingExpense.getWidth()/2), y);
+		_sellingAmount.setLocation((int) (4*x + _buildingExpense.getWidth()/2), y);
+		_mortgageExpense.setLocation((int) (6*x - _buildingExpense.getWidth()/2), y);
+
+		this.add(_buildingExpense);
+		this.add(_buildingEvenness);
+		this.add(_buildingAggressiveness);
+		this.add(_sellingExpense);
+		this.add(_sellingAmount);
+		this.add(_mortgageExpense);
 		
-		panel = new JPanel(new GridLayout(1,1));
-		panel.add(_buildingAggressiveness);
-		c.weightx = 1;
-		c.weighty = 2;
-		c.gridx = 2;
-		c.gridy = 0;
-		this.add(panel, c);
+		JLabel building = new JLabel("Building", JLabel.CENTER);
+		building.setSize(100, 40);
+		building.setLocation((int) (2*x - building.getWidth()/2), y-30);
+		JLabel selling = new JLabel("Selling", JLabel.CENTER);
+		selling.setSize(100, 40);
+		selling.setLocation((int) (4*x + _buildingExpense.getWidth()/2 - selling.getWidth()/2), y-30);
+		JLabel mortgaging = new JLabel("Mortgaging", JLabel.CENTER);
+		mortgaging.setSize(100, 40);
+		mortgaging.setLocation((int) (6*x - mortgaging.getWidth()/2), y-30);
 		
-		panel = new JPanel(new GridLayout(1,1));
-		panel.add(_sellingExpense);
-		c.weightx = 1;
-		c.weighty = 2;
-		c.gridx = 3;
-		c.gridy = 0;
-		this.add(panel, c);
-		
-		panel = new JPanel(new GridLayout(1,1));
-		panel.add(_sellingAmount);
-		c.weightx = 1;
-		c.weighty = 2;
-		c.gridx = 4;
-		c.gridy = 0;
-		this.add(panel, c);
-		
-		panel = new JPanel(new GridLayout(1,1));
-		panel.add(_mortgageExpense);
-		c.weightx = 1;
-		c.weighty = 2;
-		c.gridx = 5;
-		c.gridy = 0;
-		this.add(panel, c);
+		this.add(building);
+		this.add(selling);
+		this.add(mortgaging);
 	}
 
 	public void setButtonChoices(Player player) {

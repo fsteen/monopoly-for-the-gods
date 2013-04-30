@@ -48,6 +48,9 @@ public class JoinBottomPanel extends JPanel {
 	private JPanel _fpPanel;
 	private JTextField _port;
 	private JLabel _portLabel;
+	
+	private int DEFAULT_PORT=3232;
+	
 	public JoinBottomPanel() {
 		super();
 		try {
@@ -70,6 +73,7 @@ public class JoinBottomPanel extends JPanel {
 			_port.setDocument(new NumDocument(4));
 			_port.setSize(200,30);
 			_port.setFont(new Font("myFont",Font.PLAIN,40));
+			_port.setText(DEFAULT_PORT + "");
 
 			_portLabel= new JLabel("Port: ");
 			_portLabel.setFont(new Font("portLabelFont",Font.PLAIN,40));
@@ -79,8 +83,6 @@ public class JoinBottomPanel extends JPanel {
 			
 			add(portPanel, BorderLayout.NORTH);
 			
-			addMouseListener(new FoodlerListener());
-
 
 		} catch (IOException e) {
 			System.out.println("ERROR: "+e.getMessage());
@@ -142,25 +144,5 @@ public class JoinBottomPanel extends JPanel {
 		}
 	}
 	
-
-	
-	private class FoodlerListener extends MouseInputAdapter{
-
-		@Override
-		public void mousePressed(MouseEvent e) {
-			if(e.getX()>243 &&e.getX()<481&&e.getY()>353 &&e.getY()<411) {
-				String url = "https://itunes.apple.com/us/app/foodler/id615802139?mt=8"; // path to your new file
-
-				// open the default web browser for the HTML page
-				try {
-					Desktop.getDesktop().browse(new URI(url));
-				} catch (IOException e1) {
-				} catch (URISyntaxException e1) {
-				}
-
-			}
-		}
-		
-	}
 
 }

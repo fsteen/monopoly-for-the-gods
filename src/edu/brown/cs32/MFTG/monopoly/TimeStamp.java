@@ -1,8 +1,8 @@
 package edu.brown.cs32.MFTG.monopoly;
 
 import java.util.ArrayList;
-
-import edu.brown.cs32.MFTG.monopoly.PlayerWealthData;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * class to hold all data for a given property at any given time
@@ -10,8 +10,8 @@ import edu.brown.cs32.MFTG.monopoly.PlayerWealthData;
  *
  */
 public class TimeStamp{
-	ArrayList<PropertyData> _propertyData;
-	ArrayList<PlayerWealthData> _wealthData;
+	List<PropertyData> _propertyData;
+	List<PlayerWealthData> _wealthData;
 	int _time;
 	
 	public TimeStamp(int time){
@@ -20,13 +20,49 @@ public class TimeStamp{
 		_wealthData = new ArrayList<>();
 	}
 	
+	public TimeStamp(){
+	}
+	
 	public int getTime(){
 		return _time;
 	}
 	
-	public void setTime(int t){
-		_time = t;
+	public void setTime(int time){
+		_time = time;
 	}
+	
+	/**
+	 * 
+	 * @return property data at given time
+	 */
+	public List<PropertyData> getPropertyData(){
+		return _propertyData;
+	}
+	
+	/**
+	 * A setter for the propertyData attribute
+	 * @param propertyData the value to set _propertyData to
+	 */
+	public void setPropertyData(List<PropertyData> propertyData){
+		_propertyData = propertyData;
+	}
+	
+	/**
+	 * 
+	 * @return wealth data at given time
+	 */
+	public List<PlayerWealthData> getWealthData(){
+		return _wealthData;
+	}
+	
+	/**
+	 * Setter for the wealthData attribute
+	 * @param wealthData
+	 */
+	public void setWealthData(List<PlayerWealthData> wealthData){
+		_wealthData = wealthData;
+	}
+
 	
 	/**
 	 * Sets property data at the given time
@@ -41,23 +77,6 @@ public class TimeStamp{
 	}
 	
 	/**
-	 * 
-	 * @return property data at given time
-	 */
-	public ArrayList<PropertyData> getPropertyData(){
-		return _propertyData;
-	}
-	
-	/**
-	 * A setter for the propertyData attribute
-	 * @param propertyData the value to set _propertyData to
-	 */
-	//TODO i changed this method to public, is that ok Judah?
-	public void setPropertyData(ArrayList<PropertyData> propertyData){
-		_propertyData = propertyData;
-	}
-	
-	/**
 	 * sets wealth data for the given owner at the given time
 	 * @param ownerID
 	 * @param cash
@@ -67,45 +86,14 @@ public class TimeStamp{
 		_wealthData.add(new PlayerWealthData(ownerID,cash,totalWealth));
 	}
 	
-	/**
-	 * 
-	 * @return wealth data at given time
-	 */
-	public ArrayList<PlayerWealthData> getWealthData(){
-		return _wealthData;
-	}
-	
-	/**
-	 * Setter for the wealthData attribute
-	 * @param wealthData
-	 */
-	public void setWealthData(ArrayList<PlayerWealthData> wealthData){
-		_wealthData = wealthData;
-	}
-	
 	@Override
-	public boolean equals(Object other){
-		if(other instanceof TimeStamp){
-			TimeStamp otherTime= (TimeStamp)other;
-			for(int i=0; i<_propertyData.size();i++) {
-				if(otherTime.getPropertyData().get(i)==null) {
-					return false;
-				}
-				if(otherTime.getPropertyData().get(i).equals(_propertyData.get(i))==false) {
-					return false;
-				}
-			}
-			for(int j=0; j<_wealthData.size();j++) {
-				if(otherTime.getWealthData().get(j)==null) {
-					return false;
-				}
-				if(otherTime.getWealthData().get(j).equals(_wealthData.get(j))==false) {
-					return false;
-				}
-			}
-			return true;
-
-		}
-		return false;
+	public boolean equals(Object o){
+		if (o == null || !(o instanceof TimeStamp))
+			return false;
+		
+		TimeStamp that = (TimeStamp) o;
+		
+		return Objects.equals(_propertyData, that.getPropertyData()) && Objects.equals(_wealthData, that.getWealthData())
+			&& _time == that.getTime();
 	}
 }

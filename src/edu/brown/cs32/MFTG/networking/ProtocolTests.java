@@ -17,13 +17,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.brown.cs32.MFTG.monopoly.GameData;
 import edu.brown.cs32.MFTG.monopoly.Player;
+import edu.brown.cs32.MFTG.monopoly.TimeStamp;
 import edu.brown.cs32.MFTG.monopoly.Player.Aggression;
 import edu.brown.cs32.MFTG.monopoly.Player.Amount;
 import edu.brown.cs32.MFTG.monopoly.Player.Balance;
 import edu.brown.cs32.MFTG.monopoly.Player.Expense;
-import edu.brown.cs32.MFTG.tournament.PlayerPropertyData;
+import edu.brown.cs32.MFTG.monopoly.PlayerWealthData;
+import edu.brown.cs32.MFTG.monopoly.PropertyData;
 import edu.brown.cs32.MFTG.tournament.Profile;
 import edu.brown.cs32.MFTG.tournament.data.GameDataReport;
+import edu.brown.cs32.MFTG.tournament.data.PlayerPropertyDataAccumulator;
 import edu.brown.cs32.MFTG.tournament.data.PlayerWealthDataReport;
 import edu.brown.cs32.MFTG.tournament.data.PropertyDataAccumulator;
 import edu.brown.cs32.MFTG.tournament.data.PropertyDataReport;
@@ -32,7 +35,7 @@ import edu.brown.cs32.MFTG.tournament.data.TimeStampReport;
 public class ProtocolTests {
 	PlayerWealthDataReport _playerWealthDataReport;
 	TimeStampReport _timeStampReport;
-	PlayerPropertyData _playerPropertyData;
+	PlayerPropertyDataAccumulator _playerPropertyData;
 	PropertyDataAccumulator _propertyDataAccumulator;
 	
 	@Before
@@ -44,7 +47,7 @@ public class ProtocolTests {
 		
 		_timeStampReport = new TimeStampReport(1, wealthData);
 		
-		_playerPropertyData = new PlayerPropertyData("test", 1);
+		_playerPropertyData = new PlayerPropertyDataAccumulator("test", 1);
 		_playerPropertyData.setPlayerNumHouses(2);
 		_playerPropertyData.setPlayerPersonalRevenueWithHouses(3);
 		_playerPropertyData.setPlayerPersonalRevenueWithoutHouses(4);
@@ -140,7 +143,7 @@ public class ProtocolTests {
 		TimeStampReport t = new TimeStampReport(100, wealthData);
 		timeStamps.add(t);
 		
-		PropertyDataReport p = new PropertyDataReport("hi!", 1, 2, 3, 4, 5, 6);
+		PropertyDataReport p = new PropertyDataReport("hi!", 1, 2, 3, 4, 5, 6, 7);
 		entireGameData.put("test", Arrays.asList(p));
 		
 		overallPropertyData.put("test", p);
@@ -165,5 +168,23 @@ public class ProtocolTests {
 		Profile newP = oMapper.readValue(profileJson, Profile.class);
 		
 		assertEquals(p, newP);
+	}
+	
+	@Test
+	public void testTimeStamp() throws IOException {
+		ObjectMapper oMapper = new ObjectMapper();
+		
+		PropertyData p = new PropertyData("test", 0, 0, 0, 0, 0, 0, false);
+		PlayerWealthData pwd = new PlayerWealthData(0, 0, 0);
+		
+		TimeStamp t = new TimeStamp(5);
+		t.setPropertyData(Arrays.asList(p));
+		t.setWealthData(Arrays.asList(pwd));
+		t.setTime(10);
+		
+		String timeStampJson = oMapper.writeValueAsString(t);
+		TimeStamp newT = oMapper.readValue(timeStampJson, TimeStamp.class);
+		
+		assertEquals(t, newT);
 	}
 }

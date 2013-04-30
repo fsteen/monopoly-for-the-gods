@@ -63,7 +63,7 @@ public class DataProcessorTests {
 		System.out.println(DataProcessor.aggregate(data, 500).toString());
 	}
 	
-//	@Test
+	@Test
 	public void generateGameDataReportMany(){
 		Random rand = new Random();
 		Player p0=new Player(0);

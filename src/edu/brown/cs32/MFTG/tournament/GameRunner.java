@@ -5,16 +5,16 @@ import java.util.concurrent.atomic.AtomicInteger;
 import edu.brown.cs32.MFTG.monopoly.Game;
 
 /**
- * GameRunners are games that update the data in the PlayerModule
+ * GameRunners are games that update the data in the Client
  * once they finish running
  * @author frances
  */
 class GameRunner implements Runnable{
 	private Game _game;
 	private AtomicInteger _numThreadsDone;
-	private PlayerModule _module;
+	private Client _module;
 	
-	public GameRunner(Game game, AtomicInteger numThreadsDone, PlayerModule module){
+	public GameRunner(Game game, AtomicInteger numThreadsDone, Client module){
 		_game = game;
 		_numThreadsDone = numThreadsDone;
 		_module = module;
@@ -22,8 +22,13 @@ class GameRunner implements Runnable{
 	
 	@Override
 	public void run() {
-		_game.run();
-		_module.addGameData(_game.getGameData());
+		try{
+			_game.run();
+			_module.addGameData(_game.getGameData());
+		} catch (Exception e){
+			e.printStackTrace();
+			_module.addGameData(null);
+		}
 				
 		synchronized(_module){
 			_numThreadsDone.incrementAndGet();

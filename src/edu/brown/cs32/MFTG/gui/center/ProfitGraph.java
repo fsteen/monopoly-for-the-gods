@@ -39,9 +39,18 @@ public class ProfitGraph extends JPanel {
 	public ProfitGraph() {
 		createChart();
 		update();
+		this.setLayout(null);
 		
 		_chartPanel = new DynamicChartPanel(_chart);
-		_chartPanel.setPreferredSize(new Dimension(500, 270));
+		
+		Dimension dim = new Dimension(9*Constants.WIDTH, 5*Constants.WIDTH);
+		this.setMaximumSize(dim);
+		this.setMinimumSize(dim);
+		this.setPreferredSize(dim);
+		this.setSize(dim);
+		
+		this.setLocation(0, 2*Constants.WIDTH);
+	
 		this.add(_chartPanel);
 	}
 
@@ -140,7 +149,7 @@ public class ProfitGraph extends JPanel {
 		renderer.setSeriesShapesVisible(3, false);
 		renderer.setSeriesVisible(3, true);
 		renderer.setSeriesStroke(4, new BasicStroke(2));
-		renderer.setSeriesPaint(4, Color.WHITE);
+		renderer.setSeriesPaint(4, Color.GRAY);
 		renderer.setSeriesShapesVisible(4, false);
 		renderer.setSeriesVisible(4, true);
 		_plot.setRenderer(renderer);

@@ -55,12 +55,14 @@ public class ColorBlock extends JPanel {
 	private int _houseHeight = 80;
 	private JFormattedTextField _houseField;
 	private double _houseValue = 1;
+	private String _name;
 	
 	public ColorBlock(Colors color) throws IOException {
 		this.setLayout(null);
 		_colorInfo = color;
 		_orientation = color.getOrientation();
 		_color = color.getColor();
+		_name = color.getName();
 		
 		if(_orientation == Orientation.UP || _orientation == Orientation.DOWN) {
 			_dimension = new Dimension(4*Constants.WIDTH, Constants.HEIGHT);
@@ -80,6 +82,10 @@ public class ColorBlock extends JPanel {
 		initializeBackground();
 		
 		repaint();
+	}
+	
+	public String getName() {
+		return _name;
 	}
 	
 	public void initializeHouse() {

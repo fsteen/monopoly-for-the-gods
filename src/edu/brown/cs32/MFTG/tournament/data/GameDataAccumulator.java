@@ -9,7 +9,6 @@ import java.util.Map.Entry;
 import com.google.common.collect.ArrayListMultimap;
 
 import edu.brown.cs32.MFTG.monopoly.PropertyData;
-import edu.brown.cs32.MFTG.tournament.PlayerPropertyData;
 
 public class GameDataAccumulator {
 
@@ -33,8 +32,8 @@ public class GameDataAccumulator {
 		//puts all the current max values into the entireGameData ...
 		PropertyDataAccumulator entireGameTemp;
 		
-		for(PropertyDataAccumulator p : currentMaxValues.values()){
-			entireGameTemp = entireGameData.get(p.propertyName);
+		for(PropertyDataAccumulator p : currentMaxValues.values()){ //for all of the current maxes
+			entireGameTemp = entireGameData.get(p.propertyName); //add to the overall property data
 			
 			if(entireGameTemp == null){
 				entireGameTemp = new PropertyDataAccumulator(p.propertyName);
@@ -46,8 +45,8 @@ public class GameDataAccumulator {
 			entireGameTemp.accTotalRevenueWithoutHouses += p.accTotalRevenueWithoutHouses;
 			entireGameTemp.numDataPoints += 1;
 			
-			PlayerPropertyData temp;
-			for(PlayerPropertyData d : p.getAll()){
+			PlayerPropertyDataAccumulator temp;
+			for(PlayerPropertyDataAccumulator d : p.getAll()){ //for all the player specific max data
 				temp = entireGameTemp.get(d.playerOwnerID);
 				temp.playerNumHouses += d.playerNumHouses;
 				temp.playerPersonalRevenueWithHouses += d.playerPersonalRevenueWithHouses;
@@ -70,7 +69,7 @@ public class GameDataAccumulator {
 		accData.accTotalRevenueWithHouses = Math.max(accData.accTotalRevenueWithHouses, data.totalRevenueWithHouses);
 		accData.accTotalRevenueWithoutHouses = Math.max(accData.accTotalRevenueWithoutHouses, data.totalRevenueWithoutHouses);
 		
-		PlayerPropertyData playerData = accData.get(data.ownerID);
+		PlayerPropertyDataAccumulator playerData = accData.get(data.ownerID);
 		playerData.playerNumHouses = Math.max(playerData.playerNumHouses, data.numHouses);
 		playerData.playerPersonalRevenueWithHouses = Math.max(playerData.playerPersonalRevenueWithHouses, data.personalRevenueWithHouses);
 		playerData.playerPersonalRevenueWithoutHouses = Math.max(playerData.playerPersonalRevenueWithoutHouses, data.personalRevenueWithoutHouses);
@@ -111,9 +110,8 @@ public class GameDataAccumulator {
 		Map<String,List<PropertyDataReport>> overallPlayerPropertyData = new HashMap<>();
 		Map<String,PropertyDataReport> overallPropertyData = new HashMap<>();
 		for(PropertyDataAccumulator p : entireGameData.values()){
-			overallPlayerPropertyData.put(p.propertyName, p.toPlayerPropertyDataReport());
+			overallPlayerPropertyData.put(p.propertyName, p.toPlayerPropertyDataReport(p.numDataPoints));
 			overallPropertyData.put(p.propertyName, p.toPropertyDataReport());
-
 		}
 		
 		return new GameDataReport(times, getPlayerWithMostWins(), overallPlayerPropertyData, overallPropertyData);		

@@ -73,8 +73,8 @@ public class GreetingPanel extends JPanel{
 			add(_playDark);
 			add(_settingsLite);
 			add(_settingsDark);
-			add(_recordsLite);
-			add(_recordsDark);
+			//add(_recordsLite);
+			//add(_recordsDark);
 			
 			
 		} catch (IOException e) {
@@ -138,7 +138,8 @@ public class GreetingPanel extends JPanel{
 				
 				if(_settingsDark.isVisible()) {
 					fixPanels();
-					//TODO
+					_main.switchPanels("settings");
+
 				}
 				else {
 					fixPanels();

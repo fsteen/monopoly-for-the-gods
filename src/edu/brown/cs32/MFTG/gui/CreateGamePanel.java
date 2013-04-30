@@ -62,11 +62,11 @@ public class CreateGamePanel extends JPanel{
 			
 			_goLite = new ImagePanel(Helper.resize(ImageIO.read(new File("images/GoLite.png")), 100, 50));
 			_goDark = new ImagePanel(Helper.resize(ImageIO.read(new File("images/GoDark.png")), 100, 50));
-			_goLoc= new Point(_whiteLoc.getLocation().x+_bottomPanel.getWidth()-_goLite.getWidth()-30, _whiteLoc.getLocation().y+_goDark.getHeight()-20);
+			//_goLoc= new Point(_whiteLoc.getLocation().x+_bottomPanel.getWidth()-_goLite.getWidth()-30, _whiteLoc.getLocation().y+_goDark.getHeight()-20);
+			_goLoc = new Point(this.getWidth()-_goLite.getWidth()-30, this.getHeight()-_goLite.getHeight()-20);
 			_goLite.setLocation(_goLoc);
 			_goDark.setLocation(_goLoc);
 			_goDark.setVisible(false);
-			
 			
 			addMouseListener(new MyMouseListener());
 			
@@ -83,7 +83,8 @@ public class CreateGamePanel extends JPanel{
 			System.exit(1);
 		}
 
-	}
+	}//					Integer[] players = _bottomPanel.getPlayers();
+
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -132,19 +133,17 @@ public class CreateGamePanel extends JPanel{
 			}
 			else if(intersects(xloc,yloc,_goLite,_goLoc)) {
 				if(_goDark.isVisible()) {
-					fixPanels();
-					
-					System.out.println("launching tournament");
+					fixPanels();					
 					Settings settings = _bottomPanel.getSettings();
-					Integer[] players = _bottomPanel.getPlayers();
-					int numPlayers = 4; //TODO change later
+					int numPlayers = 2; //TODO change later
 					int port = _bottomPanel.getPort();
-					//client.launchTournament(settings, numPlayers, port);
-					try{
-						(new Tournament(numPlayers, settings, port)).run();
-					} catch (IOException f){
-						//TODO handle
-					}
+					//_main.switchPanels("board");
+					//System.out.println("switching to board");
+					//_main.createBoard(1);
+					//_main.switchPanels("board");
+					
+					_main.getClient().launchTournament(numPlayers, settings,port);
+					_main.getClient().connectAndRun();
 				}
 				else {
 					fixPanels();

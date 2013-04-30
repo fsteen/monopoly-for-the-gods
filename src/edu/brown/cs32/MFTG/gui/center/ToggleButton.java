@@ -1,5 +1,7 @@
 package edu.brown.cs32.MFTG.gui.center;
 
+import java.awt.Button;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -7,6 +9,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
+import edu.brown.cs32.MFTG.gui.Constants;
 import edu.brown.cs32.MFTG.gui.Constants.Balance;
 import edu.brown.cs32.MFTG.gui.Constants.Price;
 import edu.brown.cs32.MFTG.gui.Constants.Quantity;
@@ -19,7 +22,7 @@ public class ToggleButton extends JButton {
 
 	public ToggleButton(Toggle toggle) {
 		super();
-		this.setSize(100, 100);
+		this.setSize(Constants.BUTTON_DIMENSION, Constants.BUTTON_DIMENSION);
 		this.setFocusPainted(false);
 		this.setBorder(BorderFactory.createEmptyBorder());
 		this.addActionListener(new MyListener(this));

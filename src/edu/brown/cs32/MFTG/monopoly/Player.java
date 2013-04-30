@@ -82,10 +82,32 @@ public class Player {
 		_tradingFear=1.25;
 	}
 	
-	/**
-	 * does nothing for human player, called however everytime to see if it wants to set its own heuristics
-	 */
-	public void setHeuristics() {
+	public Player(Player copyPlayer) {
+		ID=copyPlayer.ID;
+		_propertyValues=new HashMap();
+		_colorValues = new HashMap();
+		for(String s:copyPlayer.getColorValues().keySet()) {
+			Integer val =copyPlayer.getPropertyValue(s);
+			_propertyValues.put(s, val);
+		}
+		for(String s:copyPlayer.getColorValues().keySet()) {
+			Double[] color = {copyPlayer.getMonopolyValue(s), copyPlayer.getHouseValueOfColor(s), copyPlayer.getBreakingOpponentMonopolyValue(s), copyPlayer.getSameColorEffect(s)};
+			_colorValues.put(s, color);
+		}
+		_liquidity=copyPlayer.getLiquidity();
+		_timeChange=copyPlayer.getTimeChange();
+		_minBuyCash=copyPlayer.getMinBuyCash();
+		_minUnmortgageCash=copyPlayer.getMinUnmortgageCash();
+		_jailWait = copyPlayer.getJailWait();
+		_mortgageChoice = copyPlayer.getMortgageChoice();
+		_buildingEvenness=copyPlayer.getBuildingEvenness();
+		_buildingChoice = copyPlayer.getBuildingChoice();
+		_houseSelling=copyPlayer.getHouseSelling();
+		_jailPoor=copyPlayer.getJailPoor();
+		_jailRich=copyPlayer.getJailRich();
+		_minBuildCash = copyPlayer.getMinBuildCash();
+		_buildAggression=copyPlayer.getBuildAggression();
+		_tradingFear=copyPlayer.getTradingFear();
 		
 	}
 	
@@ -121,7 +143,10 @@ public class Player {
 	 */
 	@JsonIgnore
 	public int getPropertyValue(String property){
-		return _propertyValues.get(property);
+		if(_propertyValues.containsKey(property))
+				return _propertyValues.get(property);
+		System.out.println("Property Values doesn't contain: " + property);
+		return 0;
 	}
 	
 	/**
@@ -168,6 +193,16 @@ public class Player {
 	/**
 	 * 
 	 * @param color
+	 * @return value of monopoly
+	 */
+	@JsonIgnore
+	public void setMonopolyValue(String color, double newVal){
+		_colorValues.get(color)[0]=newVal;
+	}
+	
+	/**
+	 * 
+	 * @param color
 	 * @return value of houses on color
 	 */
 	@JsonIgnore
@@ -178,11 +213,38 @@ public class Player {
 	/**
 	 * 
 	 * @param color
+	 * @return value of houses
+	 */
+	@JsonIgnore
+	public void setHouseValueOfColor(String color, double newVal){
+		_colorValues.get(color)[1]=newVal;
+	}
+	
+	/**
+	 * 
+	 * @param color
 	 * @return value of breaking opponents value
 	 */
 	@JsonIgnore
 	public double getBreakingOpponentMonopolyValue(String color){
-		return _colorValues.get(color)[2];
+		if(_colorValues.containsKey(color) && _colorValues.get(color).length > 2) {
+			if(_colorValues.get(color).length > 2) {
+				return _colorValues.get(color)[2];
+			}
+			else System.out.println("Color values length incorrect");
+		}
+		else System.out.println("Breaking opponent monopoly not set: " + color);
+		return 1;
+	}
+	
+	/**
+	 * 
+	 * @param color
+	 * @return value of breaking monopoly
+	 */
+	@JsonIgnore
+	public void setBreakingOpponentMonopolyValue(String color, double newVal){
+		_colorValues.get(color)[2]=newVal;
 	}
 	
 	/**
@@ -193,6 +255,16 @@ public class Player {
 	@JsonIgnore
 	public double getSameColorEffect(String color){
 		return _colorValues.get(color)[3];
+	}
+	
+	/**
+	 * 
+	 * @param color
+	 * @return value of same color
+	 */
+	@JsonIgnore
+	public void setSameColorEffect(String color, double newVal){
+		_colorValues.get(color)[3]=newVal;
 	}
 	
 	/**

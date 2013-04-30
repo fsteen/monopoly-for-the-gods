@@ -1,36 +1,51 @@
 package edu.brown.cs32.MFTG.gui;
 
+import java.awt.Dimension;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Set;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.UIManager;
-import javax.swing.UIManager.LookAndFeelInfo;
-import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.SwingUtilities;
 
 import edu.brown.cs32.MFTG.gui.gameboard.Board;
 import edu.brown.cs32.MFTG.networking.ProfileManager;
+import edu.brown.cs32.MFTG.tournament.Client;
 import edu.brown.cs32.MFTG.tournament.Profile;
 
 public class MonopolyGui extends JFrame{
 	private JPanel _currentPanel;
 	private HashMap<String, JPanel> _panels;
 	private EndGamePanel _end;
+	private ChooseProfilePanel _choose;
 	private Profile _currentProfile;
 	private ProfileManager _profileManager;
-	
-	public MonopolyGui() {
-		super("Monopoly for the GODS");
+	private Client _client;
 
+	public MonopolyGui(Client client) {
+		super("Monopoly for the GODS");
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		_panels = new HashMap<>(7);
+		
+		Dimension dimension = new Dimension(9*Constants.WIDTH + 2*Constants.HEIGHT, 9*Constants.WIDTH + 2*Constants.HEIGHT);
+		this.setSize(dimension);		
+		this.setPreferredSize(dimension);
+		this.setMaximumSize(dimension);
+		this.setMinimumSize(dimension);
+		
+		this.setResizable(false);
+
+		
+		_panels = new HashMap<>();
 		_profileManager = new ProfileManager();
+
+		_client = client;
 
 		GreetingPanel greet = new GreetingPanel(this);
 		_panels.put("greet", greet);
+		SettingsPanel settings = new SettingsPanel(this);
+		_panels.put("settings", settings);
 		GameLobbyPanel lobby = new GameLobbyPanel(this);
 		_panels.put("lobby", lobby);
 		ChooseProfilePanel choose = new ChooseProfilePanel(this);
@@ -41,28 +56,14 @@ public class MonopolyGui extends JFrame{
 		_panels.put("join", join);
 		_end = new EndGamePanel(this);
 		_panels.put("end", _end);
-		
-		
-		this.setSize(9*Constants.WIDTH + 2*Constants.HEIGHT, 9*Constants.WIDTH + 2*Constants.HEIGHT);
-		this.setResizable(false);
-		
-		_currentPanel=create;
+
+		_currentPanel=lobby;
 		this.add(_currentPanel);
 		
 		this.pack();
 		this.setVisible(true);
 	}
-	
-	public void makeBoard (int id) {
-		try {
-			Board board = new Board(id);
-			_panels.put("board",  board);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
+
 	/**
 	 * sets winner of game
 	 * @param didWin
@@ -78,10 +79,17 @@ public class MonopolyGui extends JFrame{
 	public void switchPanels(String panel) {
 		remove(_currentPanel);
 		_currentPanel=_panels.get(panel);
+		System.out.println("trying to get panel: " + panel);
+		System.out.println("going to add panel: " + panel);
 		add(_currentPanel);
-		_currentPanel.repaint();
+		if(_currentPanel==_choose) {
+			_choose.giveFocusToList();
+		}
+		System.out.println("added panel");
+		revalidate();
+		repaint();
 	}
-	
+
 	/**
 	 * 
 	 * @return profile manager
@@ -89,7 +97,7 @@ public class MonopolyGui extends JFrame{
 	public Set<String> getProfileNames() {
 		return _profileManager.getProfileNames();
 	}
-	
+
 	/**
 	 * sets current profile
 	 * @param profileName
@@ -98,4 +106,40 @@ public class MonopolyGui extends JFrame{
 		_currentProfile = _profileManager.getProfile(profileName);
 	}
 
+	/**
+	 * adds a profile
+	 * @param name
+	 * @return name
+	 */
+	public String addProfile(String name) {
+		boolean done=_profileManager.addProfile(name, new Profile(name));
+		if(done==false) {
+			return null;
+		}
+		return name;
+	}
+
+	public Board getBoard(){
+		return (Board) _panels.get("board"); //TODO get rid of casting
+	}
+
+	public void createBoard(int id) {
+		Board board;
+		try {
+			board = new Board(1);
+			_panels.put("board", board);
+			
+			
+			switchPanels("board");
+			
+			System.out.println("SWITCHED PANELS");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public Client getClient(){
+		return _client;
+	}
 }
