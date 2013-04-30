@@ -141,8 +141,6 @@ public class Tournament implements Runnable{
 						 ". Reusing old heuristics");
 				return null;
 			} catch (ExecutionException e) {
-				// e.printStackTrace();
-				assert(false);
 				return handlePlayerExecutionException(e.getCause(), i);
 			}
 		}
