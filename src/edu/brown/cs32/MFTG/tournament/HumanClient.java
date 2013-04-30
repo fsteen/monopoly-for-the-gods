@@ -157,7 +157,6 @@ public class HumanClient extends Client{
 	 */
 	public Player getPlayer(int time){
 		return _gui.getBoard().getPlayer();
-		//return _dummyGui.getPlayer();
 	}
 
 	/**

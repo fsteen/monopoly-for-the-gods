@@ -53,7 +53,7 @@ public class ClientTests {
 	public static void playManyGamesTest(){
 		int numGames = 10000;
 		//TODO get exception when numGames gets large
-		Client p = new HumanClient("fakehost", -1);
+		Client p = new HumanClient("fakehost", 1);
 
 		System.out.println("Starting to wait");
 //		try {
