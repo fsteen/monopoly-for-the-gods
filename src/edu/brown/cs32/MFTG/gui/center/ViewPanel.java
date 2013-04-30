@@ -54,12 +54,12 @@ public class ViewPanel extends JPanel{
 		
 		double x = (9*Constants.WIDTH/2) - .25*Constants.WIDTH - myProperty.getWidth();
 		double y = 2*Constants.WIDTH/4;
-		myProperty.setLocation((int) (x), (int) (y-myProperty.getHeight()/2));
-		aggregateProperty.setLocation((int) (x), (int) (2*y-myProperty.getHeight()/2));
-		colorGroup.setLocation((int) (x), (int) (3*y-myProperty.getHeight()/2));
+		myProperty.setLocation((int) (x), (int) (y-myProperty.getHeight()/2) - 10);
+		aggregateProperty.setLocation((int) (x), (int) (2*y-myProperty.getHeight()/2) - 10);
+		colorGroup.setLocation((int) (x), (int) (3*y-myProperty.getHeight()/2) - 10);
 		
 		_setHeuristics.setSize(100, 100);
-		_setHeuristics.setLocation(0, Constants.WIDTH - _setHeuristics.getHeight()/2);
+		_setHeuristics.setLocation(0, Constants.WIDTH - _setHeuristics.getHeight()/2 - 10);
 		
 		this.add(myProperty);
 		this.add(aggregateProperty);

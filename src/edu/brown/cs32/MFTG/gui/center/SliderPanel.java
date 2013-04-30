@@ -53,9 +53,9 @@ public class SliderPanel extends JPanel {
 		_timeChange.setSize((int) (4*Constants.WIDTH), 20);
 		_tradingFear.setSize((int) (4*Constants.WIDTH), 20);
 		
-		_liquidity.setLocation((int) (.25*Constants.WIDTH), (int) (2*Constants.WIDTH/4 - _liquidity.getHeight()/2));
-		_timeChange.setLocation((int) (.25*Constants.WIDTH), (int) (4*Constants.WIDTH/4 - _timeChange.getHeight()/2));
-		_tradingFear.setLocation((int) (.25*Constants.WIDTH), (int) (6*Constants.WIDTH/4 - _tradingFear.getHeight()/2));
+		_liquidity.setLocation((int) (.25*Constants.WIDTH), (int) (2*Constants.WIDTH/4 - _liquidity.getHeight()/2 - 10));
+		_timeChange.setLocation((int) (.25*Constants.WIDTH), (int) (4*Constants.WIDTH/4 - _timeChange.getHeight()/2 - 10));
+		_tradingFear.setLocation((int) (.25*Constants.WIDTH), (int) (6*Constants.WIDTH/4 - _tradingFear.getHeight()/2 - 10));
 		
 		this.add(_liquidity);
 		this.add(_timeChange);
@@ -69,9 +69,9 @@ public class SliderPanel extends JPanel {
 		timeChange.setSize(100, 40);
 		tradingFear.setSize(100, 40);
 		
-		liquidity.setLocation((int) (Constants.WIDTH/4.), (int) (2*Constants.WIDTH/4 - liquidity.getHeight()/2 - 17));
-		timeChange.setLocation((int) (Constants.WIDTH/4.), (int) (4*Constants.WIDTH/4 - timeChange.getHeight()/2 - 17));
-		tradingFear.setLocation((int) (Constants.WIDTH/4.), (int) (6*Constants.WIDTH/4 - tradingFear.getHeight()/2 - 17));
+		liquidity.setLocation((int) (Constants.WIDTH/4.), (int) (2*Constants.WIDTH/4 - liquidity.getHeight()/2 - 17 - 10));
+		timeChange.setLocation((int) (Constants.WIDTH/4.), (int) (4*Constants.WIDTH/4 - timeChange.getHeight()/2 - 17 - 10));
+		tradingFear.setLocation((int) (Constants.WIDTH/4.), (int) (6*Constants.WIDTH/4 - tradingFear.getHeight()/2 - 17 - 10));
 		
 		this.add(liquidity);
 		this.add(timeChange);
