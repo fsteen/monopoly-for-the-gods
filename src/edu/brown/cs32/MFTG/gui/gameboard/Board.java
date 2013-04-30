@@ -413,7 +413,7 @@ public class Board extends JPanel {
 		
 		_center.setButtonChoices(player);		
 		
-		System.out.println("returning player");
+		//System.out.println("returning player");
 		return player;
 	}
 	

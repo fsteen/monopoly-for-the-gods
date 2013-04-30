@@ -63,7 +63,6 @@ public class Tournament implements Runnable{
 		List<Integer> confirmationIndices;
 		
 		for(int i = 0; i < _settings.getNumRounds(); i++){
-			
 			// request a Player from each client
 			List<Player> newPlayers = getNewPlayers();
 			if (newPlayers != null)
@@ -74,7 +73,7 @@ public class Tournament implements Runnable{
 				i--;
 				continue;
 			}
-			
+
 			// generate which seeds will be used for integrity validation
 			confirmationIndices = DataProcessor.generateConfirmationIndices(gamesPerModule, CONFIRMATION_PERCENTAGE);
 			
@@ -83,7 +82,7 @@ public class Tournament implements Runnable{
 
 			// make sure nobody cheated
 			if(DataProcessor.isCorrupted(data, confirmationIndices)){
-				System.out.println("WOOHOO ... SOMEONE IS CHEATING!!!!!"); //TODO change this
+				//System.out.println("WOOHOO ... SOMEONE IS CHEATING!!!!!"); //TODO change this
 			}
 			
 			List<GameData> dataToSend = new ArrayList<>();
@@ -92,9 +91,8 @@ public class Tournament implements Runnable{
 			}
 			
 			// send the data to all the clients
-			System.out.println("About to send data to clients");
+			//System.out.println("About to send data to clients");
 			sendEndOfRoundData(DataProcessor.aggregate(dataToSend, NUM_DATA_POINTS));
-			System.out.println("data sent");
 		}
 		sendEndOfGameData();
 	}
