@@ -19,7 +19,6 @@ import edu.brown.cs32.MFTG.networking.ClientLostException;
 import edu.brown.cs32.MFTG.networking.InvalidResponseException;
 import edu.brown.cs32.MFTG.networking.PlayGamesCallable;
 import edu.brown.cs32.MFTG.networking.getPlayerCallable;
-import edu.brown.cs32.MFTG.networking.iClientHandler;
 import edu.brown.cs32.MFTG.tournament.data.DataProcessor;
 import edu.brown.cs32.MFTG.tournament.data.GameDataReport;
 
@@ -28,7 +27,7 @@ public class Tournament implements Runnable{
 	
 	public static final double CONFIRMATION_PERCENTAGE = 0.1; //confirm 10% of games
 	public static final int NUM_DATA_POINTS = 50;
-	private List<iClientHandler> _clients;
+	private List<ClientHandler> _clients;
 	private ServerSocket _socket;
 	private Settings _settings;
 	private ExecutorService _executor; 
@@ -54,13 +53,11 @@ public class Tournament implements Runnable{
 		try {
 			getPlayerConnections();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("you are fucked");
+			return;
 		}
 		
-		System.out.println("preparing to distribute games");
 		int gamesPerModule = (int)Math.ceil(_settings.getNumGamesPerRound()/_numPlayers);
-		System.out.println("games per module: " + gamesPerModule);
 		List<Player> players = null;
 		List<List<GameData>> data;
 		List<Integer> confirmationIndices;
@@ -72,6 +69,8 @@ public class Tournament implements Runnable{
 			if (newPlayers != null)
 				players = newPlayers;
 			
+			assert(false);
+	/*		
 			// if an error was caught before the players could originally be chosen, re-enter the loop
 			if(players == null)
 				continue;
@@ -94,6 +93,7 @@ public class Tournament implements Runnable{
 			
 			// send the data to all the clients
 			sendEndOfRoundData(DataProcessor.aggregate(dataToSend, NUM_DATA_POINTS));
+			*/
 		}
 		sendEndOfGameData();
 	}
@@ -126,34 +126,41 @@ public class Tournament implements Runnable{
 	 * @throws ClientCommunicationException 
 	 */
 	private List<Player> getNewPlayers(){
-		System.out.println("tournament is fetching players");
 		List<Future<Player>> playerFutures = new ArrayList<>();
 		List<Player> players = new ArrayList<>();
 		
-		System.out.println("num clients " + _clients.size());
-		
-		for(iClientHandler c : _clients){
-			Callable<Player> worker = new getPlayerCallable(c);
-			Future<Player> future = _executor.submit(worker);
-			playerFutures.add(future);
-		}
+//		for(ClientHandler c : _clients){
+//			Callable<Player> worker = new getPlayerCallable(c);
+//			Future<Player> future = _executor.submit(worker);
+//			playerFutures.add(future);
+//		}
+//		
+//		for (int i = 0; i < playerFutures.size(); i++){
+//			System.out.println("tryna get a muthafuckin playa, bitch!!!");
+//			try {
+//				players.add(playerFutures.get(i).get());
+//			} catch (InterruptedException e) {
+//				sendErrorMessage("Unable to retrieve heuristic information from client " + i + 
+//						 ". Reusing old heuristics");
+//				System.out.println("DAYUUUUUMMMM. DAT BE A MUTHAFUCKIN INTERRUPTED EXCEPTION");
+//				return null;
+//			} catch (ExecutionException e) {
+//				System.out.println("EXECUTION EXCEPTION!!!!!");
+//				return handlePlayerExecutionException(e.getCause(), i);
+//			}
+//		}
 
-		//TODO players seems to be empty ...
-		for (int i = 0; i < playerFutures.size(); i++){
+		for (ClientHandler c : _clients){
 			try {
-				players.add(playerFutures.get(i).get());
-			} catch (InterruptedException e) {
-				sendErrorMessage("Unable to retrieve heuristic information from client " + i + 
-						 ". Reusing old heuristics");
-				return null;
-			} catch (ExecutionException e) {
-				return handlePlayerExecutionException(e.getCause(), i);
+				Player p = c.getPlayer();
+				players.add(p);
+			} catch (ClientCommunicationException | ClientLostException
+					| InvalidResponseException e) {
+				System.out.println("fuck you");
 			}
+			
 		}
 		
-		System.out.println("tournament has players:");
-		System.out.println("\t" + players);
-
 		return players;
 	}
 	
@@ -209,7 +216,7 @@ public class Tournament implements Runnable{
 	}
 
 	private void sendEndOfRoundData(GameDataReport aggregatedData) {
-		for(iClientHandler c : _clients){
+		for(ClientHandler c : _clients){
 			try {
 				c.setGameData(aggregatedData);
 			} catch (ClientCommunicationException e) {
@@ -219,7 +226,7 @@ public class Tournament implements Runnable{
 	}
 	
 	private void sendErrorMessage(String errorMessage){
-		for (iClientHandler c : _clients){
+		for (ClientHandler c : _clients){
 			c.sendErrorMessage(errorMessage);
 		}
 	}
@@ -237,21 +244,17 @@ public class Tournament implements Runnable{
 	public void getPlayerConnections() throws IOException{
 		int connectionsMade = 0;
 		
-		System.out.println("tournament is looking for #players " + _numPlayers);
-		
 		while(connectionsMade < _numPlayers){
 			Socket clientConnection = _socket.accept();
 			connectionsMade++;
-			iClientHandler cHandler = new ClientHandler(clientConnection, connectionsMade);
+			ClientHandler cHandler = new ClientHandler(clientConnection, connectionsMade);
 			_clients.add(cHandler);
-			System.out.println("connected to client# " + connectionsMade);
 			try {
 				cHandler.sendID();
 			} catch (ClientCommunicationException e) {
 				// TODO do something?
 			}
 		}
-		System.out.println("done connecting to clients");
 	}
 
 }

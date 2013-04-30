@@ -98,7 +98,6 @@ public class JoinGamePanel extends JPanel{
 
 		@Override
 		public void mousePressed(MouseEvent e) {
-			System.out.println("clicked");
 			int xloc=e.getX();
 			int yloc=e.getY();
 			if(intersects(xloc,yloc,_backLite,_backLoc)) {
