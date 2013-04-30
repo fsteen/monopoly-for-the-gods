@@ -148,7 +148,6 @@ public class ClientHandler {
 			return gameData;
 
 		} catch (IOException e){
-			e.printStackTrace();
 			throw new ClientCommunicationException(_id);
 		}
 	}
@@ -163,7 +162,6 @@ public class ClientHandler {
 			write(request);
 
 		} catch (IOException e){
-			e.printStackTrace();
 			throw new ClientCommunicationException(_id);
 		}
 	}

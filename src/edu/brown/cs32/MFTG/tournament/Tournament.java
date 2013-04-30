@@ -67,13 +67,9 @@ public class Tournament implements Runnable{
 			List<Player> newPlayers = getNewPlayers();
 			if (newPlayers != null)
 				players = newPlayers;
-			
-			// if an error was caught before the players could originally be chosen, re-enter the loop
-			if(players == null){
-				i--;
+			else 
 				continue;
-			}
-
+			
 			// generate which seeds will be used for integrity validation
 			confirmationIndices = DataProcessor.generateConfirmationIndices(gamesPerModule, CONFIRMATION_PERCENTAGE);
 			
@@ -103,17 +99,16 @@ public class Tournament implements Runnable{
 	 * @throws InvalidResponseException
 	 * @throws ClientCommunicationException
 	 */
-	private List<Player> handlePlayerExecutionException(Throwable cause, int culprit){
+	private void handlePlayerExecutionException(Throwable cause, int culprit){
 		if (cause instanceof ClientLostException){
 			_clientHandlers.remove(culprit);
 			sendErrorMessage("Lost connection to client " + culprit +". Ejecting client from game and " +
-							 " requesting new heuristic information");
-			return getNewPlayers();
+							 " advancing to the next round");
 		} else if (cause instanceof InvalidResponseException || cause instanceof ClientCommunicationException){
-			sendErrorMessage("Unable to retrieve heuristic information from client. Reusing old heuristics");
-			return null;
+			sendErrorMessage("Unable to retrieve heuristic information from client. Reusing old heuristics and " +
+							 "advancing to the next round");
 		} else {
-			return null;
+			sendErrorMessage("An error has occured retrieving heuristic information. Advancing to the next round");
 		}
 	}
 	
@@ -141,7 +136,7 @@ public class Tournament implements Runnable{
 						 ". Reusing old heuristics");
 				return null;
 			} catch (ExecutionException e) {
-				return handlePlayerExecutionException(e.getCause(), i);
+				return null;
 			}
 		}
 		
