@@ -35,6 +35,7 @@ public class HumanClient extends Client{
 		super(host, port);
 
 		_gui = new MonopolyGui(this);
+		
 	//	_dummyGui = new DummyGUI();
 	}
 	
@@ -43,6 +44,7 @@ public class HumanClient extends Client{
 	 * @throws IOException
 	 */
 	public void connectAndRun(){
+		System.out.println("IF YOU AIN'T GOT NO MONEY TAKE YO BROKE ASS HOME!!!!1");
 		try {
 			_server = new Socket(_host, _port);
 			_input = new BufferedReader(new InputStreamReader(_server.getInputStream()));

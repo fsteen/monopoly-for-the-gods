@@ -146,8 +146,8 @@ public class JoinGamePanel extends JPanel{
 				if(_goDark.isVisible()) {
 					fixPanels();
 					System.out.println("joining game");
-					_main.switchPanels("board");
 					_main.getClient().connectAndRun();
+					_main.switchPanels("board");
 				}
 				else {
 					fixPanels();
