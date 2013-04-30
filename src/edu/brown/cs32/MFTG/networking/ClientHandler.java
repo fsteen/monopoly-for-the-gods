@@ -54,18 +54,8 @@ public class ClientHandler {
 	 * @throws InvalidResponseException 
 	 */
 	public Player getPlayer() throws ClientCommunicationException, ClientLostException, InvalidResponseException{
-		ClientRequestContainer request = new ClientRequestContainer(Method.SENDID, Arrays.asList("1"));
-		try {
-			_oMapper.writeValue(_output, request);
-		} catch (IOException e) {
-			e.printStackTrace();
-			throw new ClientCommunicationException(_id);
-		}
-		
-		return null;
-		
-		/*
-		ClientRequestContainer request = new ClientRequestContainer(Method.GETPLAYER, new ArrayList<String>());
+		String time = String.valueOf(GET_PLAYER_TIME);
+		ClientRequestContainer request = new ClientRequestContainer(Method.GETPLAYER, Arrays.asList(time));
 
 		// ask the client for gameData
 		try {
@@ -83,7 +73,7 @@ public class ClientHandler {
 
 			// set the timeout and attempt to read the response from the client
 			try {
-				_client.setSoTimeout(GET_PLAYER_TIME * 1000);
+				_client.setSoTimeout((GET_PLAYER_TIME + 10) * 1000);
 				Player p = _oMapper.readValue(response._arguments.get(0), Player.class);
 				_client.setSoTimeout(0);
 				return p;
@@ -95,7 +85,7 @@ public class ClientHandler {
 			e.printStackTrace();
 			throw new ClientCommunicationException(_id);
 		}
-		*/
+		
 	}
 
 	/**

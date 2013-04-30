@@ -129,36 +129,23 @@ public class Tournament implements Runnable{
 		List<Future<Player>> playerFutures = new ArrayList<>();
 		List<Player> players = new ArrayList<>();
 		
-//		for(ClientHandler c : _clients){
-//			Callable<Player> worker = new getPlayerCallable(c);
-//			Future<Player> future = _executor.submit(worker);
-//			playerFutures.add(future);
-//		}
-//		
-//		for (int i = 0; i < playerFutures.size(); i++){
-//			System.out.println("tryna get a muthafuckin playa, bitch!!!");
-//			try {
-//				players.add(playerFutures.get(i).get());
-//			} catch (InterruptedException e) {
-//				sendErrorMessage("Unable to retrieve heuristic information from client " + i + 
-//						 ". Reusing old heuristics");
-//				System.out.println("DAYUUUUUMMMM. DAT BE A MUTHAFUCKIN INTERRUPTED EXCEPTION");
-//				return null;
-//			} catch (ExecutionException e) {
-//				System.out.println("EXECUTION EXCEPTION!!!!!");
-//				return handlePlayerExecutionException(e.getCause(), i);
-//			}
-//		}
-
-		for (ClientHandler c : _clients){
+		for(ClientHandler c : _clients){
+			Callable<Player> worker = new getPlayerCallable(c);
+			Future<Player> future = _executor.submit(worker);
+			playerFutures.add(future);
+		}
+		
+		for (int i = 0; i < playerFutures.size(); i++){
+			System.out.println("tryna get a muthafuckin playa, bitch!!!");
 			try {
-				Player p = c.getPlayer();
-				players.add(p);
-			} catch (ClientCommunicationException | ClientLostException
-					| InvalidResponseException e) {
-				System.out.println("fuck you");
+				players.add(playerFutures.get(i).get());
+			} catch (InterruptedException e) {
+				sendErrorMessage("Unable to retrieve heuristic information from client " + i + 
+						 ". Reusing old heuristics");
+				return null;
+			} catch (ExecutionException e) {
+				return handlePlayerExecutionException(e.getCause(), i);
 			}
-			
 		}
 		
 		return players;

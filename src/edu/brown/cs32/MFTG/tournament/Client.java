@@ -205,7 +205,17 @@ public class Client {
 	 * @throws IOException
 	 */
 	private void respondToGetPlayer(ClientRequestContainer request) throws JsonParseException, JsonMappingException, IOException{
-		Player p = getPlayer();
+		List<String> arguments = request._arguments;
+		
+		if (arguments == null){
+			// throw an error
+		} else if (arguments.size() < 1){
+			// throw a different error
+		}
+		
+		int time = Integer.parseInt(arguments.get(0));
+		
+		Player p = getPlayer(time);
 		_oMapper.writeValue(_output, p);
 	}
 
@@ -357,9 +367,10 @@ public class Client {
 
 	/**
 	 * Gets the player associated with this object
+	 * @param the time, in seconds, to wait before requesting the player
 	 * @return
 	 */
-	public Player getPlayer(){
+	public Player getPlayer(int time){
 		return _gui.getBoard().getPlayer();		
 	}
 
