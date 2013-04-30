@@ -371,7 +371,7 @@ public class Client {
 	 * @param the time, in seconds, to wait before requesting the player
 	 * @return
 	 */
-	public Player getPlayer(){
+	public Player getPlayer(int time){
 		return _gui.getBoard().getPlayer();
 //		return _dummyGui.getPlayer();
 	}

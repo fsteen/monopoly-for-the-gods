@@ -64,7 +64,7 @@ public class ClientTests {
 //		}
 		System.out.println("Hope you set your heuristics ...");
 		
-		Player player = p.getPlayer();
+		Player player = p.getPlayer(0);
 		
 		List<Player> players = new ArrayList<>();
 		players.add(new Player(0));
