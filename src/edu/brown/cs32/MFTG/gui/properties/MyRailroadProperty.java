@@ -23,19 +23,19 @@ public class MyRailroadProperty extends MyPropertyPanel {
 		/* Move the label */
 		if(_orientation == Orientation.UP){
 			moveProfitField(0, _orientation.getHeight()/2 -10);
-			moveValueField(0, _orientation.getHeight()/2 + 10);
+			moveValueField(0, _orientation.getHeight()/2 + 20);
 		}
 		else if ( _orientation == Orientation.DOWN) {
 			moveProfitField(0, _orientation.getHeight()/2 - 50);
-			moveValueField(0, _orientation.getHeight()/2 - 30);
+			moveValueField(0, _orientation.getHeight()/2 - 20);
 		}
 		else if (_orientation == Orientation.RIGHT) {
 			moveProfitField(_orientation.getWidth()/16, _orientation.getHeight()/2 - 30);
-			moveValueField(_orientation.getWidth()/16, _orientation.getHeight()/2 - 10);
+			moveValueField(_orientation.getWidth()/16, _orientation.getHeight()/2);
 		}
 		else {
 			moveProfitField(_orientation.getWidth()/2 - _orientation.getWidth()/16, _orientation.getHeight()/2 - 30);
-			moveValueField(_orientation.getWidth()/2 - _orientation.getWidth()/16, _orientation.getHeight()/2 - 10);
+			moveValueField(_orientation.getWidth()/2 - _orientation.getWidth()/16, _orientation.getHeight()/2);
 		}
 	}
 

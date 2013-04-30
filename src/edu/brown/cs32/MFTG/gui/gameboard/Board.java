@@ -66,8 +66,6 @@ public class Board extends JPanel {
 		this.setSize(dimension);
 		this.setLocation(0, 0);
 		
-		System.out.println("MAKING THE BOARD");
-		
 		/* Set up the layout */
 		BorderLayout layout = new BorderLayout(0, 0);
 		this.setLayout(layout);
@@ -82,12 +80,6 @@ public class Board extends JPanel {
 		
 		this.setVisible(true);
 		this.repaint();
-	}
-	
-	@Override
-	public void paintComponent(Graphics g) {
-		super.paintComponent(g);
-		System.out.println("the board is painting");
 	}
 	
 	public void initializeMenu () {
@@ -395,7 +387,6 @@ public class Board extends JPanel {
 		for(ColorGroup c: _colorGroups) {
 			HashMap<String, Integer> properties = c.getPropertyValues();
 			Double[] colors = c.getColorValues();
-			System.out.println(c.getName());
 			colorValues.put(c.getName(), colors);
 			propertyValues.putAll(properties);
 		}

@@ -289,7 +289,6 @@ public class ColorBlock extends JPanel {
 		Double[] colorValues = new Double[4];
 		colorValues[0] = _monopolyValue;
 		colorValues[1] = _houseValue;
-		System.out.println(_breakMonopolyValue);
 		colorValues[2] = _breakMonopolyValue;
 		colorValues[3] = _sameColorEffect;
 		return colorValues;

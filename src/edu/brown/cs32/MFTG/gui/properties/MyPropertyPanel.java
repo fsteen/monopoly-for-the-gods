@@ -3,6 +3,8 @@ package edu.brown.cs32.MFTG.gui.properties;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.font.FontRenderContext;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
@@ -17,7 +19,6 @@ import javax.swing.JTextField;
 import edu.brown.cs32.MFTG.gui.Constants;
 import edu.brown.cs32.MFTG.gui.Constants.Orientation;
 import edu.brown.cs32.MFTG.gui.Constants.Properties;
-import edu.brown.cs32.MFTG.gui.Constants.Viewer;
 
 public abstract class MyPropertyPanel extends NonstaticProperty{
 
@@ -45,27 +46,29 @@ public abstract class MyPropertyPanel extends NonstaticProperty{
 		_valueField.setFont(Constants.FONT);
 		_valueField.setForeground(Color.RED);
 		
-		_valueField.setBorder(BorderFactory.createLineBorder(Color.WHITE, 0));
+		_valueField.setBorder(BorderFactory.createLineBorder(Color.BLACK, 0));
 		_valueField.setOpaque(false);
 		_valueField.setHorizontalAlignment(JTextField.CENTER);
 		
 		
 		if(_orientation == Orientation.DOWN) {
-			_valueField.setSize(_orientation.getWidth(), 40);
-			_valueField.setLocation(0, _orientation.getHeight()/2 + 10);
+			_valueField.setSize(_orientation.getWidth(), 20);
+			_valueField.setLocation(0, _orientation.getHeight()/2 + 20);
 		}
 		else if(_orientation == Orientation.UP) {
-			_valueField.setSize(_orientation.getWidth(), 40);
-			_valueField.setLocation(0, _orientation.getHeight()/2 - 30);
+			_valueField.setSize(_orientation.getWidth(), 20);
+			_valueField.setLocation(0, _orientation.getHeight()/2 - 20);
 		}
 		else if (_orientation == Orientation.LEFT){
-			_valueField.setSize((int) (_orientation.getWidth()/2), 40);
-			_valueField.setLocation(_orientation.getWidth()/16, _orientation.getHeight()/2 - 10);
+			_valueField.setSize((int) (_orientation.getWidth()/2), 20);
+			_valueField.setLocation(_orientation.getWidth()/16, _orientation.getHeight()/2);
 		}
 		else {
-			_valueField.setSize((int) (_orientation.getWidth()/2), 40);
-			_valueField.setLocation(_orientation.getWidth()/2 - _orientation.getWidth()/16, _orientation.getHeight()/2 - 10);
+			_valueField.setSize((int) (_orientation.getWidth()/2), 20);
+			_valueField.setLocation(_orientation.getWidth()/2 - _orientation.getWidth()/16, _orientation.getHeight()/2);
 		}
+		
+		_valueField.addMouseListener(new ValueHoverListener());
 		
 		this.add(_valueField);
 	}
@@ -107,5 +110,36 @@ public abstract class MyPropertyPanel extends NonstaticProperty{
 	public int getValue() {
 		return _value;
 	}
+	
+	public class ValueHoverListener implements MouseListener {
+		
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
 
+		@Override
+		public void mousePressed(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			_valueField.setForeground(Color.DARK_GRAY);
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			_valueField.setForeground(Color.RED);
+		}
+		
+	}
 }
