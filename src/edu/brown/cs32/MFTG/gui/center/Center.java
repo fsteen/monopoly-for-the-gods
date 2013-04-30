@@ -1,18 +1,14 @@
 package edu.brown.cs32.MFTG.gui.center;
 
 import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.GridLayout;
 import java.util.List;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import edu.brown.cs32.MFTG.gui.Constants;
 import edu.brown.cs32.MFTG.gui.gameboard.Board;
 import edu.brown.cs32.MFTG.monopoly.Player;
-import edu.brown.cs32.MFTG.monopoly.PlayerWealthData;
 import edu.brown.cs32.MFTG.tournament.data.PlayerWealthDataReport;
 
 public class Center extends JPanel {
@@ -26,18 +22,18 @@ public class Center extends JPanel {
 		super();
 		_board = board;
 		this.setSize(9*Constants.WIDTH, 9*Constants.WIDTH);
-		this.setLayout(new BorderLayout());
+		this.setBackground(Constants.BACKGROUND_COLOR);
 		
+		this.setLayout(null);
 		_buttonPanel = new ButtonPanel();
-		this.add(_buttonPanel, BorderLayout.NORTH);
+		this.add(_buttonPanel);
 		_profitGraph = new ProfitGraph();
-		this.add(_profitGraph, BorderLayout.CENTER);
+		this.add(_profitGraph);
 		_sliderPanel = new SliderPanel();
-		this.add(_sliderPanel, BorderLayout.SOUTH);
+		this.add(_sliderPanel);
 		
-		JButton setHeuristics = new JButton();
-		setHeuristics.addActionListener(new SetHeuristicsListener());
-		this.add(setHeuristics, BorderLayout.WEST);
+		ViewPanel viewPanel = new ViewPanel(board);
+		this.add(viewPanel);
 	}
 	
 	
@@ -47,7 +43,7 @@ public class Center extends JPanel {
 	
 	public List<Double> getSliderInfo () {
 		return _sliderPanel.getSliderInfo();
-	}
+	} 
 
 
 	public List<Integer> getMinCash() {
@@ -59,13 +55,6 @@ public class Center extends JPanel {
 		_buttonPanel.setButtonChoices(player);
 	}
 	
-	private class SetHeuristicsListener implements ActionListener {
 
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			System.out.println(_board.setHeuristics());
-		}
-		
-	}
 	
 }

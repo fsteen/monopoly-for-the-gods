@@ -28,6 +28,7 @@ import edu.brown.cs32.MFTG.gui.Constants.Properties;
 import edu.brown.cs32.MFTG.gui.Constants.Railroads;
 import edu.brown.cs32.MFTG.gui.Constants.StaticProperties;
 import edu.brown.cs32.MFTG.gui.Constants.Utilities;
+import edu.brown.cs32.MFTG.gui.Constants.View;
 import edu.brown.cs32.MFTG.gui.center.Center;
 import edu.brown.cs32.MFTG.gui.properties.AggregateColorProperty;
 import edu.brown.cs32.MFTG.gui.properties.AggregateUtilityProperty;
@@ -394,25 +395,21 @@ public class Board extends JPanel {
 		player.setPropertyValues(propertyValues);
 		player.setColorValues(colorValues);
 		
-		//TODO: set values
 		List<Double> sliders = _center.getSliderInfo();
 		player.setLiquidity(sliders.get(0));
 		player.setTimeChange(sliders.get(1));
 		player.setTradingFear(sliders.get(2));
 		
-		//TODO: minimum cash amounts
 		List<Integer> minCash = _center.getMinCash();
 		player.setMinBuyCash(minCash.get(0));
 		player.setMinBuildCash(minCash.get(1));
 		player.setMinUnmortgageCash(minCash.get(2));
 		
-		//TODO: jail information
 		List<Integer> waits = _jail.getWait();
 		player.setJailWait(waits.get(0));
 		player.setJailPoor(waits.get(1));
 		player.setJailRich(waits.get(2));
 		
-		//TODO: get information from the buttons
 		_center.setButtonChoices(player);		
 		
 		System.out.println("returning player");
@@ -446,7 +443,6 @@ public class Board extends JPanel {
 	}
 	
 	public void setPropertyData(Map<String, PropertyDataReport> data) {
-		System.out.println("set property data");
 		for(ColorGroup colorGroup: _colorGroups) {
 			Set<String> names = colorGroup.getNames();
 			for(String name: names) {
@@ -472,7 +468,7 @@ public class Board extends JPanel {
 		_center.setWealthData(data);
 	}
 	
-	public static void main (String[] args) {
+/*	public static void main (String[] args) {
 		JFrame frame = new JFrame();
 		frame.setPreferredSize(new Dimension(Constants.FULL_WIDTH, Constants.FULL_HEIGHT));
 		try {
@@ -536,12 +532,11 @@ public class Board extends JPanel {
 			
 			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		frame.pack();
 		frame.setVisible(true);
-	}
+	}*/
 
 /* ----------------------------------------------------------------------------
  * ----------------------------- MENU LISTENERS -------------------------------
@@ -569,6 +564,15 @@ public class Board extends JPanel {
 			for(ColorGroup c: _colorGroups) {
 
 			}
+		}
+	}
+
+	public void setView(View view) {
+		for(ColorGroup c: _colorGroups) {
+			c.setView(view);
+		}
+		for(Railroad r: _railroads) {
+			r.setView(view);
 		}
 	}
 

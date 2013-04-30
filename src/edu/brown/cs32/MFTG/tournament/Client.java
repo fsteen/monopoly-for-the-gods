@@ -48,7 +48,7 @@ public class Client {
 
 	/* Module variables */
 	private MonopolyGui _gui;
-	private DummyGUI _dummyGui;
+//	private DummyGUI _dummyGui;
 	private final int NUM_THREADS=25;
 	private final int DATA_PACKET_SIZE=100;
 	private final int NUM_DATA_POINTS=100;	
@@ -77,7 +77,7 @@ public class Client {
 
 
 		_gui = new MonopolyGui(this);
-		_dummyGui = new DummyGUI();
+	//	_dummyGui = new DummyGUI();
 	}
 
 	/***************Networking Methods*************************/
@@ -320,9 +320,9 @@ public class Client {
 		if(_data.size() >= _nextDisplaySize){
 			//TODO display some data
 			GameDataReport r = DataProcessor.aggregate(_data, NUM_DATA_POINTS);
-			_dummyGui.setPlayerSpecificPropertyData(getPlayerPropertyData(r._overallPlayerPropertyData));
-			_dummyGui.setPropertyData(r._overallPropertyData);
-			_dummyGui.setWealthData(getPlayerWealthData(r._timeStamps));
+			//_dummyGui.setPlayerSpecificPropertyData(getPlayerPropertyData(r._overallPlayerPropertyData));
+		//	_dummyGui.setPropertyData(r._overallPropertyData);
+		//	_dummyGui.setWealthData(getPlayerWealthData(r._timeStamps));
 			_gui.getBoard().setPlayerSpecificPropertyData(getPlayerPropertyData(r._overallPlayerPropertyData));
 			_gui.getBoard().setPropertyData(r._overallPropertyData);
 			_gui.getBoard().setWealthData(getPlayerWealthData(r._timeStamps));
@@ -378,9 +378,9 @@ public class Client {
 		_gui.getBoard().setPlayerSpecificPropertyData(getPlayerPropertyData(combinedData._overallPlayerPropertyData));
 		_gui.getBoard().setPropertyData(combinedData._overallPropertyData);
 		_gui.getBoard().setWealthData(getPlayerWealthData(combinedData._timeStamps));
-		_dummyGui.setPlayerSpecificPropertyData(getPlayerPropertyData(combinedData._overallPlayerPropertyData));
-		_dummyGui.setPropertyData(combinedData._overallPropertyData);
-		_dummyGui.setWealthData(getPlayerWealthData(combinedData._timeStamps));
+		//_dummyGui.setPlayerSpecificPropertyData(getPlayerPropertyData(combinedData._overallPlayerPropertyData));
+	//	_dummyGui.setPropertyData(combinedData._overallPropertyData);
+	//	_dummyGui.setWealthData(getPlayerWealthData(combinedData._timeStamps));
 		_gui.getBoard().roundCompleted();	
 	}
 

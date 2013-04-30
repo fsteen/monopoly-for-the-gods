@@ -46,6 +46,6 @@ public class MyUtilityProperty extends MyPropertyPanel {
 
 	@Override
 	public void setData(PropertyDataReport data) {
-		updateProfit(data.accTotalRevenueWithHouses);
+		updateProfit(data.accTotalRevenueWithoutHouses);
 	}
 }

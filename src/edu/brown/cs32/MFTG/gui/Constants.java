@@ -32,7 +32,7 @@ public class Constants {
 	public static String f = "Deed_Cards/";
 	public static final Color CLEAR = new Color(0,0,0,0);
 
-	public static int BUTTON_DIMENSION = 100;
+	public static int BUTTON_DIMENSION = Constants.WIDTH;
 	
 	public interface Toggle {
 		public ImageIcon getIcon();

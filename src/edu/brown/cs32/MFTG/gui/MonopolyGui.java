@@ -32,27 +32,36 @@ public class MonopolyGui extends JFrame{
 		
 		_module = module;
 
-		GreetingPanel greet = new GreetingPanel(this);
-		_panels.put("greet", greet);
-		SettingsPanel settings = new SettingsPanel(this);
-		_panels.put("settings", settings);
-		GameLobbyPanel lobby = new GameLobbyPanel(this);
-		_panels.put("lobby", lobby);
-		ChooseProfilePanel choose = new ChooseProfilePanel(this);
-		_panels.put("choose", choose);
-		CreateGamePanel create = new CreateGamePanel(this);
-		_panels.put("create", create);
-		JoinGamePanel join = new JoinGamePanel(this);
-		_panels.put("join", join);
-		_end = new EndGamePanel(this);
-		_panels.put("end", _end);
+		try {
+			GreetingPanel greet = new GreetingPanel(this);
+			_panels.put("greet", greet);
+			SettingsPanel settings = new SettingsPanel(this);
+			_panels.put("settings", settings);
+			GameLobbyPanel lobby = new GameLobbyPanel(this);
+			_panels.put("lobby", lobby);
+			ChooseProfilePanel choose = new ChooseProfilePanel(this);
+			_panels.put("choose", choose);
+			CreateGamePanel create = new CreateGamePanel(this);
+			_panels.put("create", create);
+			JoinGamePanel join = new JoinGamePanel(this);
+			_panels.put("join", join);
+			_end = new EndGamePanel(this);
+			_panels.put("end", _end);
+			Board board;
+			board = new Board(1);
 
-		
-		this.setSize(9*Constants.WIDTH + 2*Constants.HEIGHT, 9*Constants.WIDTH + 2*Constants.HEIGHT);
-		this.setResizable(false);
-		
-		_currentPanel=create;
-		this.add(_currentPanel);
+			_panels.put("board", board);
+			
+			this.setSize(9*Constants.WIDTH + 2*Constants.HEIGHT, 9*Constants.WIDTH + 2*Constants.HEIGHT);
+			this.setResizable(false);
+			
+			_currentPanel=board;
+			this.add(_currentPanel);
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		this.pack();
 		this.setVisible(true);

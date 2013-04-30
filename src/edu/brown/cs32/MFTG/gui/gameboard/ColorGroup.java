@@ -270,4 +270,9 @@ public class ColorGroup extends JPanel {
 		Double[] _colorValues =  _colorBlock.getColorValues();
 		return _colorValues;
 	}
+
+	public void setView(View view) {
+		_view = view;
+		update();
+	}
 }

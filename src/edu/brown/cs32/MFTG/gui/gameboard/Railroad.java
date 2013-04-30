@@ -117,4 +117,11 @@ public class Railroad extends JPanel {
 		}
 	}
 
+	public void setView(View view) {
+		if(view == View.ME || view == View.AGGREGATE) {
+			_view = view;
+			update();
+		}
+	}
+
 }
