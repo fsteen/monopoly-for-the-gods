@@ -10,6 +10,7 @@ import java.net.UnknownHostException;
 import java.util.List;
 
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -46,7 +47,9 @@ public class HumanClient extends Client{
 	public void connectAndRun(){
 		System.out.println("IF YOU AIN'T GOT NO MONEY TAKE YO BROKE ASS HOME!!!!1");
 		try {
+			System.out.println("trying to connect to server");
 			_server = new Socket(_host, _port);
+			System.out.println("connected to server");
 			_input = new BufferedReader(new InputStreamReader(_server.getInputStream()));
 			_output = new BufferedWriter(new OutputStreamWriter(_server.getOutputStream()));
 		} catch (UnknownHostException e) {
@@ -66,13 +69,19 @@ public class HumanClient extends Client{
 			return;
 		}
 
-		while(true){
-			try {
-				handleRequest();
-			} catch (Exception e){
-				// TODO handle this
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				while(true){
+					try {
+						handleRequest();
+					} catch (Exception e){
+						// TODO handle this
+					}
+				}
 			}
-		}
+		});
+		
+		
 	}
 
 	/***************Networking Methods*************************/

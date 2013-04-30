@@ -147,7 +147,8 @@ public class JoinGamePanel extends JPanel{
 					fixPanels();
 					System.out.println("joining game");
 					_main.getClient().connectAndRun();
-					_main.switchPanels("board");
+					//_main.createBoard(2);
+					//_main.switchPanels("board");
 				}
 				else {
 					fixPanels();

@@ -139,6 +139,9 @@ public class CreateGamePanel extends JPanel{
 					int port = _bottomPanel.getPort();
 					//_main.switchPanels("board");
 					//System.out.println("switching to board");
+					//_main.createBoard(1);
+					//_main.switchPanels("board");
+					
 					_main.getClient().launchTournament(numPlayers, settings,port);
 					_main.getClient().connectAndRun();
 				}

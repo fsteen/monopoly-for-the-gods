@@ -2,11 +2,13 @@ package edu.brown.cs32.MFTG.gui;
 
 import java.awt.Dimension;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Set;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 import edu.brown.cs32.MFTG.gui.gameboard.Board;
 import edu.brown.cs32.MFTG.networking.ProfileManager;
@@ -121,18 +123,20 @@ public class MonopolyGui extends JFrame{
 		return (Board) _panels.get("board"); //TODO get rid of casting
 	}
 
-	public void createBoard(int id){
+	public void createBoard(int id) {
 		Board board;
 		try {
 			board = new Board(1);
 			_panels.put("board", board);
+			
+			
 			switchPanels("board");
+			
+			System.out.println("SWITCHED PANELS");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		this.repaint();
-		
 	}
 
 	public Client getClient(){
