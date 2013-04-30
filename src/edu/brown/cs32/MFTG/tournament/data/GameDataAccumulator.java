@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 
 import com.google.common.collect.ArrayListMultimap;
 
+import edu.brown.cs32.MFTG.monopoly.GameData;
 import edu.brown.cs32.MFTG.monopoly.PropertyData;
 
 public class GameDataAccumulator {
@@ -28,7 +29,7 @@ public class GameDataAccumulator {
 		}
 	}
 	
-	public void gameFinished(){
+	public void gameFinished(GameData specific){
 		//puts all the current max values into the entireGameData ...
 		PropertyDataAccumulator entireGameTemp;
 		
@@ -58,8 +59,13 @@ public class GameDataAccumulator {
 				temp.numDataPoints += 1;
 			}
 			
-			System.out.println(String.format("%d h:%f, rW:%f, rWO:%f", 
-					i++,p.accNumHouses , p.accTotalRevenueWithHouses, p.accTotalRevenueWithoutHouses));
+			if(p.numDataPoints == 0){
+				System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+				specific.printData();
+//				System.out.println(String.format("%d h:%f, rW:%f, rWO:%f", 
+//						i++,p.accNumHouses , p.accTotalRevenueWithHouses, p.accTotalRevenueWithoutHouses));
+			}
+
 			
 			p.reset(); //reset the currentMaxes
 		}

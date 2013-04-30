@@ -24,7 +24,8 @@ public class DataProcessor {
 			//TODO later ?? : for games that are repeats of each other, exclude all but one
 			if(d != null){
 				combineGameData(overall, d);
-				overall.gameFinished();
+				overall.gameFinished(d);
+				overall.addPlayerWin(d.getWinner());
 			}
 		}
 		return overall.toGameDataReport();
@@ -48,17 +49,12 @@ public class DataProcessor {
 			stepSize = (int)Math.round(((double)specificIndex)/i); //improve this
 			specificIndex -= stepSize;			
 		}
-		
-		System.out.println("\n\ntimestamps " + specific.getData().size());
 		//overall game data
 		for(TimeStamp t : specific.getData()){
 			for(PropertyData p : t.getPropertyData()){
 				overall.putPropertyData(p);
 			}
 		}
-		
-		overall.gameFinished();	
-		overall.addPlayerWin(specific.getWinner());
 	}
 	
 	/**
