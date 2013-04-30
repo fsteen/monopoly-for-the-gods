@@ -141,9 +141,7 @@ public class Client {
 			return;
 		}
 		try {
-			System.out.println("fetching id");
 			_id = respondToSendID();
-			System.out.println("id " + _id);
 		} catch (IOException | InvalidRequestException e1) {
 			displayError("Unable to retrieve a unique ID from the server :(");
 			return;
@@ -160,11 +158,9 @@ public class Client {
 	}
 
 	private int respondToSendID() throws IOException, InvalidRequestException{
-		System.out.println("respond to send id1");
 		
 		//TODO method hangs on this next line ....
 		ClientRequestContainer request = _oMapper.readValue(_input, ClientRequestContainer.class);
-		System.out.println("respond to send id2");
 
 		if (request == null || request._method != Method.SENDID)
 			throw new InvalidRequestException();
@@ -179,7 +175,6 @@ public class Client {
 		}
 
 		try {
-			System.out.println("found id: " + arguments.get(0));
 			return Integer.parseInt(arguments.get(0));
 		} catch (NumberFormatException e){
 			throw new InvalidRequestException();
@@ -210,7 +205,17 @@ public class Client {
 	 * @throws IOException
 	 */
 	private void respondToGetPlayer(ClientRequestContainer request) throws JsonParseException, JsonMappingException, IOException{
-		Player p = getPlayer();
+		List<String> arguments = request._arguments;
+		
+		if (arguments == null){
+			// throw an error
+		} else if (arguments.size() < 1){
+			// throw a different error
+		}
+		
+		int time = Integer.parseInt(arguments.get(0));
+		
+		Player p = getPlayer(time);
 		_oMapper.writeValue(_output, p);
 	}
 
@@ -267,7 +272,6 @@ public class Client {
 
 	public void launchTournament(int numPlayers, Settings settings, int port){
 		try {
-			System.out.println("launching tournament");
 			_pool.execute((new Tournament(numPlayers, settings, port)));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -364,6 +368,7 @@ public class Client {
 
 	/**
 	 * Gets the player associated with this object
+	 * @param the time, in seconds, to wait before requesting the player
 	 * @return
 	 */
 	public Player getPlayer(){

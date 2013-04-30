@@ -11,9 +11,9 @@ import edu.brown.cs32.MFTG.monopoly.Player;
  */
 public class getPlayerCallable implements Callable<Player>{
 
-	private final iClientHandler _client;
+	private final ClientHandler _client;
 	
-	public getPlayerCallable(iClientHandler client){
+	public getPlayerCallable(ClientHandler client){
 		_client = client;
 	}
 	

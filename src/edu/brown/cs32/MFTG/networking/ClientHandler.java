@@ -5,6 +5,8 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.io.Writer;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
@@ -20,7 +22,7 @@ import edu.brown.cs32.MFTG.monopoly.Player;
 import edu.brown.cs32.MFTG.networking.ClientRequestContainer.Method;
 import edu.brown.cs32.MFTG.tournament.data.GameDataReport;
 
-public class ClientHandler implements iClientHandler{
+public class ClientHandler {
 
 	private final int GET_PLAYER_TIME = 180;
 	private final int PLAY_GAMES_TIME = 15;
@@ -52,7 +54,8 @@ public class ClientHandler implements iClientHandler{
 	 * @throws InvalidResponseException 
 	 */
 	public Player getPlayer() throws ClientCommunicationException, ClientLostException, InvalidResponseException{
-		ClientRequestContainer request = new ClientRequestContainer(Method.GETPLAYER, new ArrayList<String>());
+		String time = String.valueOf(GET_PLAYER_TIME);
+		ClientRequestContainer request = new ClientRequestContainer(Method.GETPLAYER, Arrays.asList(time));
 
 		// ask the client for gameData
 		try {
@@ -70,7 +73,7 @@ public class ClientHandler implements iClientHandler{
 
 			// set the timeout and attempt to read the response from the client
 			try {
-				_client.setSoTimeout(GET_PLAYER_TIME * 1000);
+				_client.setSoTimeout((GET_PLAYER_TIME + 10) * 1000);
 				Player p = _oMapper.readValue(response._arguments.get(0), Player.class);
 				_client.setSoTimeout(0);
 				return p;
@@ -79,8 +82,10 @@ public class ClientHandler implements iClientHandler{
 			}
 
 		} catch (IOException e) {
+			e.printStackTrace();
 			throw new ClientCommunicationException(_id);
 		}
+		
 	}
 
 	/**
@@ -163,9 +168,19 @@ public class ClientHandler implements iClientHandler{
 		
 		// request that the client display the error message
 		try {
-			_oMapper.writeValue(_output, request);
+			String json = _oMapper.writeValueAsString(request);
+			_output.write(json);
+			_output.flush();
 		} catch (IOException e) {
 			throw new ClientCommunicationException(_id);
 		}
+	}
+	
+	public Reader getInputReader(){
+		return _input;
+	}
+	
+	public Writer getOutputWriter(){
+		return _output;
 	}
 }
