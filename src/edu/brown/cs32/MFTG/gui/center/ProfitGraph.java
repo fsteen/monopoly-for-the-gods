@@ -84,13 +84,14 @@ public class ProfitGraph extends JPanel {
 	*/
 	
 	public void setWealthData(List<PlayerWealthDataReport> data) {
+		System.out.println("setting wealth data");
 		_currData = data;
 		update();
+		System.out.println("finished setting wealth data");
 	}
 	
 	public void update() {
 		_dataset.removeAllSeries();
-
 		XYSeries minBuild = new XYSeries("Minimum Build Cash");
 		XYSeries minBuy = new XYSeries("Minimum Buy Cash");
 		XYSeries minMortgage = new XYSeries("Minimum Mortgage Cash");
@@ -100,7 +101,6 @@ public class ProfitGraph extends JPanel {
 			minBuy.add(x, _minBuyCash);
 			minMortgage.add(x, _minMortgageCash);
 		}
-		
 		_dataset.addSeries(minBuild);
 		_dataset.addSeries(minBuy);
 		_dataset.addSeries(minMortgage);
@@ -110,13 +110,15 @@ public class ProfitGraph extends JPanel {
 			XYSeries totalWealth = new XYSeries("Total Wealth");
 			for(int x=0; x<_currData.size(); x++) {
 				PlayerWealthDataReport d = _currData.get(x);
-				cash.add(x, d.accCash);
-				totalWealth.add(x, d.accTotalWealth);
+				if(d != null) {
+					cash.add(x, d.accCash);
+					totalWealth.add(x, d.accTotalWealth);
+				}				
 			}
 			_dataset.addSeries(cash);
 			_dataset.addSeries(totalWealth);
+			
 		}
-		
 		_chart.fireChartChanged();
 	}
 	

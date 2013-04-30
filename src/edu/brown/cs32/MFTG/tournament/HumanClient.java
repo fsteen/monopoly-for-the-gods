@@ -33,15 +33,14 @@ public class HumanClient extends Client{
 	
 	private MonopolyGui _gui;
 	private ExecutorService _executor = Executors.newCachedThreadPool();
-
-//	private DummyGUI _dummyGui;
+	private DummyGUI _dummyGui;
 
 	public HumanClient(String host, int port){
 		super(host, port);
 
 		_gui = new MonopolyGui(this);
 		
-	//	_dummyGui = new DummyGUI();
+		_dummyGui = new DummyGUI();
 	}
 	
 	/**
@@ -121,11 +120,14 @@ public class HumanClient extends Client{
 		//TODO implement
 		System.out.println("I'M A GONNA DISPLAY THE DATA");
 		_gui.getBoard().setPlayerSpecificPropertyData(getPlayerPropertyData(combinedData._overallPlayerPropertyData));
+		System.out.println("set player specific data");
 		_gui.getBoard().setPropertyData(combinedData._overallPropertyData);
+		System.out.println("set property data");
 		_gui.getBoard().setWealthData(getPlayerWealthData(combinedData._timeStamps));
-		//_dummyGui.setPlayerSpecificPropertyData(getPlayerPropertyData(combinedData._overallPlayerPropertyData));
-	//	_dummyGui.setPropertyData(combinedData._overallPropertyData);
-	//	_dummyGui.setWealthData(getPlayerWealthData(combinedData._timeStamps));
+		System.out.println("I finished setting the gui");
+		_dummyGui.setPlayerSpecificPropertyData(getPlayerPropertyData(combinedData._overallPlayerPropertyData));
+		_dummyGui.setPropertyData(combinedData._overallPropertyData);
+		_dummyGui.setWealthData(getPlayerWealthData(combinedData._timeStamps));
 		_gui.getBoard().roundCompleted();	
 	}
 	
@@ -136,12 +138,16 @@ public class HumanClient extends Client{
 	 */
 	public synchronized void addGameData(GameData gameData){
 		_data.add(gameData);
+		System.out.println("next display size " + _nextDisplaySize);
+		
 		if(_data.size() >= _nextDisplaySize){
+			System.out.println("sending data\n");
 			//TODO display some data
 			GameDataReport r = DataProcessor.aggregate(_data, NUM_DATA_POINTS);
 			//_dummyGui.setPlayerSpecificPropertyData(getPlayerPropertyData(r._overallPlayerPropertyData));
-		//	_dummyGui.setPropertyData(r._overallPropertyData);
-		//	_dummyGui.setWealthData(getPlayerWealthData(r._timeStamps));
+			//_dummyGui.setPropertyData(r._overallPropertyData);
+			//_dummyGui.setWealthData(getPlayerWealthData(r._timeStamps));
+			
 			_gui.getBoard().setPlayerSpecificPropertyData(getPlayerPropertyData(r._overallPlayerPropertyData));
 			_gui.getBoard().setPropertyData(r._overallPropertyData);
 			_gui.getBoard().setWealthData(getPlayerWealthData(r._timeStamps));
@@ -156,7 +162,7 @@ public class HumanClient extends Client{
 	 */
 	public Player getPlayer(int time){
 		return _gui.getBoard().getPlayer();
-//		return _dummyGui.getPlayer();
+		//return _dummyGui.getPlayer();
 	}
 
 	/**

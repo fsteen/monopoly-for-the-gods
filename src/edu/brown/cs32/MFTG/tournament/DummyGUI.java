@@ -16,14 +16,17 @@ public class DummyGUI {
 	}
 	
 	public void setWealthData(List<PlayerWealthDataReport> data){
+		System.out.println("WEALTH DATA");
 		System.out.println(data);
 	}
 
 	public void setPropertyData(Map<String, PropertyDataReport> data){ //this is the cumulative property data
+		System.out.println("PROPERTY DATA");
 		System.out.println(new ArrayList<PropertyDataReport>(data.values()));
 	}
 
 	public void setPlayerSpecificPropertyData(Map<String, PropertyDataReport> data){
+		System.out.println("PLAYER SPECIFIC PROPERTY DATA");
 		System.out.println(new ArrayList<PropertyDataReport>(data.values()));
 	}
 	

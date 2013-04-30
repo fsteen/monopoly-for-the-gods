@@ -126,10 +126,8 @@ public class MonopolyGui extends JFrame{
 	public void createBoard(int id) {
 		Board board;
 		try {
-			board = new Board(1);
+			board = new Board(id);
 			_panels.put("board", board);
-			
-			
 			switchPanels("board");
 			
 			System.out.println("SWITCHED PANELS");
