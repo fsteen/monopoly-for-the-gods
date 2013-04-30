@@ -59,12 +59,12 @@ public class GameDataAccumulator {
 				temp.numDataPoints += 1;
 			}
 			
-			if(p.numDataPoints == 0){
-				System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-				specific.printData();
-//				System.out.println(String.format("%d h:%f, rW:%f, rWO:%f", 
-//						i++,p.accNumHouses , p.accTotalRevenueWithHouses, p.accTotalRevenueWithoutHouses));
-			}
+//			if(p.numDataPoints == 0){
+//				System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+//				specific.printData();
+////				System.out.println(String.format("%d h:%f, rW:%f, rWO:%f", 
+////						i++,p.accNumHouses , p.accTotalRevenueWithHouses, p.accTotalRevenueWithoutHouses));
+//			}
 
 			
 			p.reset(); //reset the currentMaxes
