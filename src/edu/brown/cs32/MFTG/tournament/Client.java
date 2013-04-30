@@ -39,8 +39,8 @@ public abstract class Client {
 	protected Method _lastRequest;
 
 	/* Module variables */
-	protected final int NUM_THREADS=25;
-	protected final int DATA_PACKET_SIZE=100;
+	protected final int NUM_THREADS=10;
+	protected final int DATA_PACKET_SIZE=10;
 	protected final int NUM_DATA_POINTS=100;	
 	protected final int MAX_NUM_TURNS=1000;
 	protected int _nextDisplaySize;
@@ -48,11 +48,6 @@ public abstract class Client {
 	protected AtomicInteger _numThreadsDone;
 	protected ExecutorService _pool;
 	protected int _id;
-	
-	/* Temporary variables - replace later */
-	private final int FREE_PARKING=-1;
-	private final boolean DOUBLE_ON_GO=false;
-	private final boolean AUCTIONS=false;
 
 	public Client(String host, int port) {
 		_oMapper = new ObjectMapper();
@@ -65,9 +60,8 @@ public abstract class Client {
 		_numThreadsDone = new AtomicInteger(0);
 	}
 	
-	
 	public abstract void connectAndRun();
-	
+
 	protected abstract void respondToDisplayError(ClientRequestContainer request);
 	
 	protected abstract void respondToDisplayData(ClientRequestContainer request) throws JsonParseException, JsonMappingException, IOException;
@@ -245,11 +239,12 @@ public abstract class Client {
 
 		GameRunnerFactory gameRunnerFactory = new GameRunnerFactory(
 				_numThreadsDone, this, 
-				MAX_NUM_TURNS,FREE_PARKING,DOUBLE_ON_GO,
-				AUCTIONS,players.toArray(new Player[players.size()]));
+				MAX_NUM_TURNS,settings.freeParking,settings.doubleOnGo,
+				settings.auctions,players.toArray(new Player[players.size()]));
 
 		for(Long seed : seeds){
 			_pool.execute(gameRunnerFactory.build(seed)); //launch games
+//			gameRunnerFactory.build(seed).run();
 		}
 
 		synchronized (this){

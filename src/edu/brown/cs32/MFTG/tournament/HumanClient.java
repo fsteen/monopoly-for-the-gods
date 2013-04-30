@@ -33,14 +33,12 @@ public class HumanClient extends Client{
 	
 	private MonopolyGui _gui;
 	private ExecutorService _executor = Executors.newCachedThreadPool();
-	private DummyGUI _dummyGui;
+//	private DummyGUI _dummyGui;
 
 	public HumanClient(String host, int port){
 		super(host, port);
-
 		_gui = new MonopolyGui(this);
-		
-		_dummyGui = new DummyGUI();
+//		_dummyGui = new DummyGUI();
 	}
 	
 	/**
@@ -53,17 +51,17 @@ public class HumanClient extends Client{
 			_input = new BufferedReader(new InputStreamReader(_server.getInputStream()));
 			_output = new BufferedWriter(new OutputStreamWriter(_server.getOutputStream()));
 		} catch (UnknownHostException e) {
-			displayError("Unknown host. Unable to connect to server :( WHAT THE FUCK, MAN!!!");
+			displayMessage("Unknown host. Unable to connect to server :( WHAT THE FUCK, MAN!!!");
 			return;
 		} catch (IOException e) {
-			displayError("Unable to connect to server :(");
+			displayMessage("Unable to connect to server :(");
 			return;
 		}
 		try {
 			_id = respondToSendID();
 			_gui.createBoard(_id);
 		} catch (IOException | InvalidRequestException e1) {
-			displayError("Unable to retrieve a unique ID from the server :(");
+			displayMessage("Unable to retrieve a unique ID from the server :(");
 			return;
 		}
 		
@@ -86,7 +84,7 @@ public class HumanClient extends Client{
 			// throw a different error
 		}
 
-		displayError(arguments.get(0));
+		displayMessage(arguments.get(0));
 	}
 
 	/**
@@ -123,7 +121,8 @@ public class HumanClient extends Client{
 //		_dummyGui.setPlayerSpecificPropertyData(getPlayerPropertyData(combinedData._overallPlayerPropertyData));
 //		_dummyGui.setPropertyData(combinedData._overallPropertyData);
 //		_dummyGui.setWealthData(getPlayerWealthData(combinedData._timeStamps));
-		_gui.getBoard().roundCompleted();	
+		_gui.getBoard().roundCompleted();
+		displayMessage("Time to choose heuristics!");
 	}
 	
 	/**
@@ -134,22 +133,22 @@ public class HumanClient extends Client{
 	public synchronized void addGameData(GameData gameData){
 		_data.add(gameData);
 		
-//		if(_data.size() >= _nextDisplaySize){
-//			//System.out.println("sending data\n");
-//			//TODO display some data
-//			GameDataReport r = DataProcessor.aggregate(_data, NUM_DATA_POINTS);
-//			
+		if(_data.size() >= _nextDisplaySize){
+			System.out.println("client " + _id + "displaying intermediate data");
+			//TODO display some data
+			GameDataReport r = DataProcessor.aggregate(_data, NUM_DATA_POINTS);
+			
 //			System.out.println("**************************\n"+r.toString()+"\n**************************\n");
-//			
+			
 //			_dummyGui.setPlayerSpecificPropertyData(getPlayerPropertyData(r._overallPlayerPropertyData));
 //			_dummyGui.setPropertyData(r._overallPropertyData);
 //			_dummyGui.setWealthData(getPlayerWealthData(r._timeStamps));
-//			
-////			_gui.getBoard().setPlayerSpecificPropertyData(getPlayerPropertyData(r._overallPlayerPropertyData));
-////			_gui.getBoard().setPropertyData(r._overallPropertyData);
-////			_gui.getBoard().setWealthData(getPlayerWealthData(r._timeStamps));
-//			_nextDisplaySize += DATA_PACKET_SIZE; //set next point at which to display
-//		}
+			
+			_gui.getBoard().setPlayerSpecificPropertyData(getPlayerPropertyData(r._overallPlayerPropertyData));
+			_gui.getBoard().setPropertyData(r._overallPropertyData);
+			_gui.getBoard().setWealthData(getPlayerWealthData(r._timeStamps));
+			_nextDisplaySize += DATA_PACKET_SIZE; //set next point at which to display
+		}
 	}
 	
 	/**
@@ -165,8 +164,8 @@ public class HumanClient extends Client{
 	 * Displays an error message in the gui
 	 * @param errorMessage the error message to be displayed
 	 */
-	private void displayError(String errorMessage){
-		JOptionPane.showMessageDialog(_gui, errorMessage);
+	private void displayMessage(String message){
+		JOptionPane.showMessageDialog(_gui, message);
 	}
 
 	/*******************************************************/

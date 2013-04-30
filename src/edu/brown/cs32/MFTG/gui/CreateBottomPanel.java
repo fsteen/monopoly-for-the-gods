@@ -47,7 +47,7 @@ import edu.brown.cs32.MFTG.tournament.Settings.WinningCondition;
 
 public class CreateBottomPanel extends JPanel {
 	
-	private int DEFAULT_NUM_SETS=25;
+	private int DEFAULT_NUM_SETS=5;
 	private int DEFAULT_GAMES_PER_SET=1000;
 	private int DEFAULT_TIME_BEGIN=60;
 	private int DEFAULT_TIME_BETWEEN=60;

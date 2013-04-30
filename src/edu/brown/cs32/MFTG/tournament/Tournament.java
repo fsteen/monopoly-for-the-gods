@@ -83,7 +83,8 @@ public class Tournament implements Runnable{
 
 			// make sure nobody cheated
 			if(DataProcessor.isCorrupted(data, confirmationIndices)){
-				System.out.println("Tournament : WOOHOO ... SOMEONE IS CHEATING!!!!!"); //TODO change this
+				//System.out.println("Tournament : WOOHOO ... SOMEONE IS CHEATING!!!!!"); //TODO change this
+				//TODO FIGURE THIS OUT FRANCES!!!!!!!!!!!!!!!
 			}
 			
 			List<GameData> dataToSend = new ArrayList<>();
@@ -171,9 +172,10 @@ public class Tournament implements Runnable{
 		List<Future<List<GameData>>> gameDataFutures = new ArrayList<>();
 		List<List<GameData>> gameData = new ArrayList<>();
 		
-		if (_clientHandlers.size() != seeds.size()){
+		if (_clientHandlers.size() != seeds.get(0).size()){
 			// throw an error or something
 			System.out.println("seed size doesn't match num clients");
+			System.out.println("seeds size " + seeds.size() + " clients size " + _clientHandlers.size());
 		}
 		
 		for (int i = 0; i < _clientHandlers.size(); i++){
