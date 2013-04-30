@@ -26,6 +26,7 @@ public class Main {
 //		} catch (UnsupportedLookAndFeelException|ClassNotFoundException|InstantiationException|IllegalAccessException e) {}
 
 
+		@SuppressWarnings("unused")
 		Client pm = new HumanClient("localhost", 3232);
 
 	}

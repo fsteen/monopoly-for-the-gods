@@ -1,5 +1,6 @@
 package edu.brown.cs32.MFTG.gui.center;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.MouseEvent;
 
@@ -10,6 +11,7 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.entity.ChartEntity;
 import org.jfree.chart.entity.XYItemEntity;
 import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
@@ -22,9 +24,11 @@ public class DynamicChartPanel extends ChartPanel {
 	private int _moving = -1;
 	private boolean _mousePressed;
 	private JFreeChart _chart;
+	private XYLineAndShapeRenderer _renderer;
 	
-	public DynamicChartPanel(JFreeChart chart) {
+	public DynamicChartPanel(JFreeChart chart, XYLineAndShapeRenderer renderer) {
 		super(chart);
+		_renderer = renderer;
 		this.setMouseWheelEnabled(true);
 		_chart = chart;
 		this.addChartMouseListener(new MinCashListener());
@@ -100,12 +104,27 @@ public class DynamicChartPanel extends ChartPanel {
 			ChartEntity entity = e.getEntity();
 			if(!(entity instanceof XYItemEntity)) {
 				_location = -1;
+				_renderer.setSeriesPaint(0, Color.BLUE);
+				_renderer.setSeriesPaint(1, Color.GREEN);
+				_renderer.setSeriesPaint(2, Color.RED);
+				_renderer.setSeriesPaint(3, Color.BLACK);
+				_renderer.setSeriesPaint(4, Color.GRAY);
 				return;
 			}
 			XYItemEntity xyItem = (XYItemEntity) entity;
 			
 			_location = xyItem.getSeriesIndex();
 			if(_location == 3 || _location == 4 ) _location = -1;
+			if(_location != -1) {
+				_renderer.setSeriesPaint(_location, Color.YELLOW);
+			}
+			else {
+				_renderer.setSeriesPaint(0, Color.BLUE);
+				_renderer.setSeriesPaint(1, Color.GREEN);
+				_renderer.setSeriesPaint(2, Color.RED);
+				_renderer.setSeriesPaint(3, Color.BLACK);
+				_renderer.setSeriesPaint(4, Color.GRAY);
+			}
 		}
 		
 	}
