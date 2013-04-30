@@ -205,6 +205,8 @@ public class Tournament implements Runnable{
 		for (int i = 0; i < gameDataFutures.size(); i++){
 			try {
 				gameData.add(gameDataFutures.get(i).get());
+				gameDataFutures.get(i).get().get(0).printData();
+				
 			} catch (InterruptedException e) {
 				System.out.println("interrupted!");
 				numFails++;

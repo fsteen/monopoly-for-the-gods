@@ -92,8 +92,6 @@ public abstract class Client {
 		return _oMapper.readValue(json, ClientRequestContainer.class);
 	}
 
-
-
 	/**
 	 * @throws IOException
 	 * @throws JsonMappingException 
@@ -244,7 +242,7 @@ public abstract class Client {
 
 		int i = 0;
 		for(Long seed : seeds){
-			System.out.println("launching game #" + (i++) + "/" + seeds.size());
+//			System.out.println("launching game #" + (i++) + "/" + seeds.size());
 			_pool.execute(gameRunnerFactory.build(seed)); //launch games
 //			gameRunnerFactory.build(seed).run();
 		}
@@ -258,6 +256,7 @@ public abstract class Client {
 		}
 
 		System.out.println("sending data back");
+		System.out.println(_data);
 		return _data;
 	}
 

@@ -57,7 +57,7 @@ public class MonopolyGui extends JFrame{
 		_end = new EndGamePanel(this);
 		_panels.put("end", _end);
 
-		_currentPanel=_end;
+		_currentPanel=lobby;
 		this.add(_currentPanel);
 		
 		this.pack();
