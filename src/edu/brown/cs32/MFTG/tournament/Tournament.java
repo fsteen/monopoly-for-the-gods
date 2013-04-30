@@ -79,7 +79,7 @@ public class Tournament implements Runnable{
 			confirmationIndices = DataProcessor.generateConfirmationIndices(gamesPerModule, CONFIRMATION_PERCENTAGE);
 			
 			// play a round of games
-			data = playRoundOfGames(players, DataProcessor.generateSeeds(gamesPerModule, players.size(), confirmationIndices));
+			data = playRoundOfGames(players, DataProcessor.generateSeeds(players.size(),gamesPerModule, confirmationIndices));
 
 			// make sure nobody cheated
 			if(DataProcessor.isCorrupted(data, confirmationIndices)){
