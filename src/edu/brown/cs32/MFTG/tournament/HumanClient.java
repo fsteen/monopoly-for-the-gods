@@ -35,8 +35,9 @@ public class HumanClient extends Client{
 	private ExecutorService _executor = Executors.newCachedThreadPool();
 //	private DummyGUI _dummyGui;
 
-	public HumanClient(String host, int port){
-		super(host, port);
+	public HumanClient(/*String host, int port*/){
+		//super(host, port);
+		super();
 		_gui = new MonopolyGui(this);
 //		_dummyGui = new DummyGUI();
 	}
@@ -45,9 +46,10 @@ public class HumanClient extends Client{
 	 * Connects the Client to a socket
 	 * @throws IOException
 	 */
-	public void connectAndRun(){
+	public void connectAndRun(int port, String host){
 		try {
-			_server = new Socket(_host, _port);
+			_server = new Socket(host, port);
+			//_server = new Socket(_host, _port);
 			_input = new BufferedReader(new InputStreamReader(_server.getInputStream()));
 			_output = new BufferedWriter(new OutputStreamWriter(_server.getOutputStream()));
 		} catch (UnknownHostException e) {

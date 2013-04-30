@@ -30,8 +30,8 @@ import edu.brown.cs32.MFTG.tournament.data.TimeStampReport;
 public abstract class Client {
 
 	/* Networking variables */
-	final String _host;
-	final int _port;
+	//final String _host;
+	//final int _port;
 	protected Socket _server;
 	protected BufferedReader _input;
 	protected BufferedWriter _output;
@@ -49,10 +49,10 @@ public abstract class Client {
 	protected ExecutorService _pool;
 	protected int _id;
 
-	public Client(String host, int port) {
+	public Client(/*String host, int port*/) {
 		_oMapper = new ObjectMapper();
-		_host = host;
-		_port = port;
+		//_host = host;
+		//_port = port;
 		_lastRequest = Method.DISPLAYGAMEDATA;
 
 		_pool = Executors.newFixedThreadPool(NUM_THREADS);
@@ -60,7 +60,7 @@ public abstract class Client {
 		_numThreadsDone = new AtomicInteger(0);
 	}
 	
-	public abstract void connectAndRun();
+	public abstract void connectAndRun(int port, String host);
 
 	protected abstract void respondToDisplayError(ClientRequestContainer request);
 	

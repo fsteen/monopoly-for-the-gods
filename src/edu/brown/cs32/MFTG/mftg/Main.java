@@ -27,7 +27,8 @@ public class Main {
 
 
 		@SuppressWarnings("unused")
-		Client pm = new HumanClient("localhost", 3232);
+		//Client pm = new HumanClient("localhost", 3232);
+		Client pm = new HumanClient();
 
 	}
 

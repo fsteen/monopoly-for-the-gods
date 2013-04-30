@@ -30,15 +30,17 @@ public class AIClient extends Client{
 	Player _player;
 	Player _previousPlayer;
 
-	public AIClient(String host, int port) {
-		super(host, port);
+	public AIClient(/*String host, int port*/) {
+		//super(host, port);
+		super();
 		_player = new Player(_id);
 		_previousPlayer=null;
 	}
 	
-	public void connectAndRun() {
+	public void connectAndRun(int port, String host) {
 		try {
-			_server = new Socket(_host, _port);
+			_server = new Socket(host,port);
+			//_server = new Socket(_host, _port);
 			_input = new BufferedReader(new InputStreamReader(_server.getInputStream()));
 			_output = new BufferedWriter(new OutputStreamWriter(_server.getOutputStream()));
 		} catch (UnknownHostException e) {

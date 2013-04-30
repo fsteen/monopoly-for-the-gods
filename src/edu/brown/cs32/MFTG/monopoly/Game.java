@@ -12,6 +12,7 @@ import java.util.Random;
  */
 public class Game implements Runnable{
 	private ArrayList<GamePlayer> _players;
+	private ArrayList<GamePlayer> _bankruptPlayers;
 	private GamePlayer _currentPlayer;
 	private int _currentTurn,_freeParkingMoney, _defaultFP, _numHousesLeft, _numHotelsLeft, _maxNumTurns;
 	private Board _board;
@@ -35,6 +36,7 @@ public class Game implements Runnable{
 		_maxNumTurns=maxNumTurns;
 		 Random rand= new Random(seed);
 		_players=new ArrayList<>(players.length);
+		_bankruptPlayers=new ArrayList<>(players.length-1);
 		_turnsPerTimeStamp=Math.max(2, _players.size());
 		for(Player p:players){
 			_players.add(new GamePlayer(this,p));
@@ -42,7 +44,7 @@ public class Game implements Runnable{
 		Collections.shuffle(_players, rand);
 		_currentPlayer = _players.get(0);
 		
-		_banker = new GamePlayer(this, null);
+		_banker = new GamePlayer(this, new Player(-1));
 		
 		_seed=seed;
 		_currentTurn=0;
@@ -66,10 +68,8 @@ public class Game implements Runnable{
 		_chance= new ChanceDeck(rand);
 
 		_gameData=new GameData(_players.size());
-		_gameData.addNewTime();
-		for(GamePlayer player: _players){
-			_gameData.setWealthAtTime(player.getPlayer().ID, player.getCash(), player.getTotalWealth());
-		}
+		sendGameData();
+
 
 
 
@@ -118,19 +118,30 @@ public class Game implements Runnable{
 							tryGettingOutOfJail(_currentPlayer);
 						}
 					}
+					//check for bankrupcy
 					if(_currentPlayer.isBankrupt()) {
 						continue;
 					}
+					
 					if(_currentPlayer.isInJail()==false){
 						Space s=movePlayer(_currentPlayer, roll);
 						//System.out.println("Landed on "+s);
 						s.react(this, _currentPlayer);
 					}
+					
+					//check for bankrupcy
 					if(_currentPlayer.isBankrupt()) {
 						continue;
 					}
+					
 					tryUnmortgaging(_currentPlayer);
 					tryTrading(_currentPlayer);
+					
+					//check for bankrupcy
+					if(_currentPlayer.isBankrupt()) {
+						continue;
+					}
+					
 					tryBuilding(_currentPlayer);
 
 					if(!wasDoubles){
@@ -144,6 +155,24 @@ public class Game implements Runnable{
 			System.err.println("ERROR: "+e.getMessage());
 			e.printStackTrace();
 			return;
+		}
+
+	}
+	
+	/**
+	 * sends off current game data
+	 */
+	private void sendGameData() {
+		_gameData.addNewTime();
+		for(Property prop:_board.getAllProperties()){
+			if(prop.getOwner()!=null)_gameData.setPropertyAtTime(prop.Name, prop.getOwner().getPlayer().ID, prop.getNumHouses(), prop.getPersonalRevenueWith(),prop.getPersonalRevenueWithout(),prop.getTotalRevenueWithHouses(),prop.getTotalRevenueWithoutHouses(), prop.getMortgagedState());
+			else _gameData.setPropertyAtTime(prop.Name, -1, prop.getNumHouses(), prop.getPersonalRevenueWith(),prop.getPersonalRevenueWithout(),prop.getTotalRevenueWithHouses(),prop.getTotalRevenueWithoutHouses(), prop.getMortgagedState());
+		}
+		for(GamePlayer player: _players){
+			_gameData.setWealthAtTime(player.getPlayer().ID, player.getCash(), player.getTotalWealth());
+		}
+		for(GamePlayer player: _bankruptPlayers){
+			_gameData.setWealthAtTime(player.getPlayer().ID, 0, 0);
 		}
 
 	}
@@ -188,13 +217,7 @@ public class Game implements Runnable{
 			tieGame();
 		}
 		if(_currentTurn%_turnsPerTimeStamp==0){
-			_gameData.addNewTime();
-			for(GamePlayer player: _players){
-				_gameData.setWealthAtTime(player.getPlayer().ID, player.getCash(), player.getTotalWealth());
-				for(Property prop: player.getProperties()){
-					_gameData.setPropertyAtTime(prop.Name, player.getPlayer().ID, prop.getNumHouses(), prop.getPersonalRevenueWith(),prop.getPersonalRevenueWithout(),prop.getTotalRevenueWithHouses(),prop.getTotalRevenueWithoutHouses(), prop.getMortgagedState());
-				}
-			}
+			sendGameData();
 
 		}
 		_currentTurn++;
@@ -209,13 +232,7 @@ public class Game implements Runnable{
 	private void endGame(){
 		_gameData.setWinner(_players.get(0).getPlayer().ID);
 		_playing=false;
-		_gameData.addNewTime();
-		for(GamePlayer player: _players){
-			_gameData.setWealthAtTime(player.getPlayer().ID, player.getCash(), player.getTotalWealth());
-			for(Property prop: player.getProperties()){
-				_gameData.setPropertyAtTime(prop.Name, player.getPlayer().ID, prop.getNumHouses(), prop.getPersonalRevenueWith(),prop.getPersonalRevenueWithout(),prop.getTotalRevenueWithHouses(),prop.getTotalRevenueWithoutHouses(), prop.getMortgagedState());
-			}
-		}
+		sendGameData();
 	}
 	
 	/**
@@ -224,13 +241,7 @@ public class Game implements Runnable{
 	private void tieGame() {
 		_gameData.setWinner(-1);
 		_playing=false;
-		_gameData.addNewTime();
-		for(GamePlayer player: _players){
-			_gameData.setWealthAtTime(player.getPlayer().ID, player.getCash(), player.getTotalWealth());
-			for(Property prop: player.getProperties()){
-				_gameData.setPropertyAtTime(prop.Name, player.getPlayer().ID, prop.getNumHouses(), prop.getPersonalRevenueWith(),prop.getPersonalRevenueWithout(),prop.getTotalRevenueWithHouses(),prop.getTotalRevenueWithoutHouses(), prop.getMortgagedState());
-			}
-		}
+		sendGameData();
 	}
 
 	/**
@@ -312,9 +323,11 @@ public class Game implements Runnable{
 	 */
 	void bankruptPlayer(GamePlayer bankruptPlayer, GamePlayer creditor) throws Exception{
 		//System.out.println("BANKRUPT: "+bankruptPlayer +" by "+creditor);
-		if(_players.remove(bankruptPlayer)==false){
+		if(_bankruptPlayers.contains(bankruptPlayer)){
 			return;
 		}
+		_players.remove(bankruptPlayer);
+		_bankruptPlayers.add(bankruptPlayer);
 		bankruptPlayer.makeBankrupt();
 		if(_players.size()==1) {
 			creditor=_players.get(0);
@@ -325,7 +338,6 @@ public class Game implements Runnable{
 			}
 		}
 		else{
-
 			for(Property p: bankruptPlayer.getProperties()) {
 				p.setOwner(null);
 				p.setMortgagedState(false);
@@ -333,6 +345,7 @@ public class Game implements Runnable{
 				auction(p);
 			}
 		}
+		bankruptPlayer.loseAllProperties();
 		if(_players.size()==1){
 			endGame();
 		}
