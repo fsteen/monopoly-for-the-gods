@@ -16,6 +16,7 @@ import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
@@ -35,8 +36,8 @@ public class ChooseProfilePanel extends JPanel{
 	private BufferedImage _background;
 	private Point _chooseLoc,  _backLoc, _selectLoc;
 	private MonopolyGui _main;
+	private ProfileScrollPane _profileScrollPane;
 
-	private ProfileManager _profileManager;
 	private JList<String> _profileList;
 	private DefaultListModel<String> _listModel;
 	private boolean _selectActivated;
@@ -77,9 +78,9 @@ public class ChooseProfilePanel extends JPanel{
 			_selectDark.setLocation(_selectLoc);
 			_selectGrey.setLocation(_selectLoc);
 			_selectDark.setVisible(false);
-			_selectLite.setVisible(false);
-			
-			_selectActivated=false;
+			_selectLite.setVisible(true);
+
+			//_selectActivated=false;
 
 			addMouseListener(new MyMouseListener());
 
@@ -88,7 +89,7 @@ public class ChooseProfilePanel extends JPanel{
 			add(_backDark);
 			add(_selectLite);
 			add(_selectDark);
-			add(_selectGrey);
+			//add(_selectGrey);
 
 			addProfileList();
 		} catch (IOException e) {
@@ -96,6 +97,13 @@ public class ChooseProfilePanel extends JPanel{
 			System.exit(1);
 		}
 
+	}
+	
+	/**
+	 * grabs focus
+	 */
+	public void giveFocusToList() {
+		_profileList.grabFocus();
 	}
 
 	/**
@@ -108,7 +116,7 @@ public class ChooseProfilePanel extends JPanel{
 		_selectGrey.setVisible(false);
 		repaint();
 	}
-	
+
 	/**
 	 * makes select button deactivated
 	 */
@@ -119,19 +127,19 @@ public class ChooseProfilePanel extends JPanel{
 		_selectGrey.setVisible(true);
 		repaint();
 	}
-	
+
 	private void addProfileList(){
 		_listModel = new DefaultListModel<>();
 		_profileList = new JList<>(_listModel);
-		
-		ProfileScrollPane profileScrollPane = new ProfileScrollPane(_profileList, _listModel);
-		profileScrollPane.setup();
-		
-		profileScrollPane.setLocation(Constants.FULL_WIDTH/32, START_HEIGHT+BUTTON_HEIGHT*6/5);
+
+		_profileScrollPane = new ProfileScrollPane(_profileList, _listModel, _main);
+		_profileScrollPane.setup();
+
+		_profileScrollPane.setLocation(Constants.FULL_WIDTH/32, START_HEIGHT+BUTTON_HEIGHT*6/5);
 		Dimension listSize = new Dimension(BOTTOM_WIDTH, BOTTOM_HEIGHT);
-		profileScrollPane.setSize(listSize);
-		profileScrollPane.setPreferredSize(listSize);
-		add(profileScrollPane);
+		_profileScrollPane.setSize(listSize);
+		_profileScrollPane.setPreferredSize(listSize);
+		add(_profileScrollPane);
 	}
 
 	@Override
@@ -147,7 +155,7 @@ public class ChooseProfilePanel extends JPanel{
 		public MyMouseListener() {
 			super();
 		}
-
+		
 		@Override
 		public void mousePressed(MouseEvent e) {
 			int xloc=e.getX();
@@ -158,14 +166,12 @@ public class ChooseProfilePanel extends JPanel{
 				repaint();
 			}
 			else if(intersects(xloc,yloc,_selectLite,_selectLoc)) {
-				if(_selectActivated==false) {
-					return;
-				}
 				_selectLite.setVisible(false);
 				_selectDark.setVisible(true);
 				_selectGrey.setVisible(false);
 				repaint();
 			}
+
 
 		}
 
@@ -185,12 +191,9 @@ public class ChooseProfilePanel extends JPanel{
 
 			}
 			else if(intersects(xloc,yloc,_selectLite,_selectLoc)) {
-				if(_selectActivated==false) {
-					return;
-				}
 				if(_selectDark.isVisible()) {
 					fixPanels();
-					_main.switchPanels("lobby");
+					_profileScrollPane.processClick();
 				}
 				else {
 					fixPanels();
@@ -206,8 +209,8 @@ public class ChooseProfilePanel extends JPanel{
 			_backDark.setVisible(false);
 			_backLite.setVisible(true);
 			_selectDark.setVisible(false);
-			_selectLite.setVisible(false);
-			_selectGrey.setVisible(true);
+			_selectLite.setVisible(true);
+			//_selectGrey.setVisible(true);
 			repaint();
 		}
 		private boolean intersects(int xloc, int yloc, JPanel img, Point loc) {

@@ -17,7 +17,7 @@ public class AIPlayerModule extends Client{
 	// data from previous set
 	GameDataReport _currentGameData;
 	GameDataReport _previousGameData;
-	
+
 	// player from previous set
 	Player _player;
 	Player _previousPlayer;
@@ -25,8 +25,9 @@ public class AIPlayerModule extends Client{
 	public AIPlayerModule(String host, int port) {
 		super(host, port);
 		_player = new Player(_id);
+		_previousPlayer=null;
 	}
-	
+
 	/**
 	 * Responds to a request sent over the server to display game data by displaying the data received
 	 * @param the request which is being responded to
@@ -37,22 +38,22 @@ public class AIPlayerModule extends Client{
 	@Override
 	protected void respondToDisplayData(ClientRequestContainer request) throws JsonParseException, JsonMappingException, IOException{
 		List<String> arguments = request._arguments;
-		
+
 		if (arguments == null){
 			// error
 		} else if (arguments.size() < 1){
 			// error
 		}
-		
+
 		GameDataReport gameDataReport = _oMapper.readValue(arguments.get(0), GameDataReport.class);
 		_previousGameData=_currentGameData;
 		_currentGameData = gameDataReport;
-		
+
 		displayGameData(gameDataReport);
 	}
-	
-	
-	
+
+
+
 	@Override
 	public Player getPlayer(){
 		Player temp = new Player(_player);
@@ -96,7 +97,7 @@ public class AIPlayerModule extends Client{
 				else if(valDif<0){
 					_player.setPropertyValue(key, (int) (_player.getPropertyValue(key)-valDif*.9));
 				}
-				
+
 			}
 			else {
 				int valDif = _player.getPropertyValue(key)-_previousPlayer.getPropertyValue(key);
@@ -107,7 +108,7 @@ public class AIPlayerModule extends Client{
 					_player.setPropertyValue(key, (int) (_player.getPropertyValue(key)+valDif*.9));
 				}
 			}
-			
+
 			if(mine.accTotalRevenueWithHouses>minePrev.accTotalRevenueWithHouses) {
 				double monopolyDif = _player.getMonopolyValue(key)-_previousPlayer.getMonopolyValue(key);
 				if(monopolyDif>0) {
@@ -116,7 +117,7 @@ public class AIPlayerModule extends Client{
 				else if(monopolyDif<0){
 					_player.setMonopolyValue(key, _player.getMonopolyValue(key)-monopolyDif*.9);
 				}
-				
+
 				double houseDif = _player.getHouseValueOfColor(key)-_previousPlayer.getHouseValueOfColor(key);
 				if(houseDif>0) {
 					_player.setHouseValueOfColor(key, _player.getHouseValueOfColor(key)+houseDif*.9);
@@ -124,7 +125,7 @@ public class AIPlayerModule extends Client{
 				else if(houseDif<0){
 					_player.setHouseValueOfColor(key, _player.getHouseValueOfColor(key)-houseDif*.9);
 				}
-				
+
 				double sameDif = _player.getSameColorEffect(key)-_previousPlayer.getSameColorEffect(key);
 				if(sameDif>0) {
 					_player.setSameColorEffect(key, _player.getSameColorEffect(key)+sameDif*.9);
@@ -132,8 +133,8 @@ public class AIPlayerModule extends Client{
 				else if(sameDif<0){
 					_player.setSameColorEffect(key, _player.getSameColorEffect(key)-sameDif*.9);
 				}
-				
-				
+
+
 			}
 			else {
 				double monopolyDif = _player.getMonopolyValue(key)-_previousPlayer.getMonopolyValue(key);
@@ -143,7 +144,7 @@ public class AIPlayerModule extends Client{
 				else if(monopolyDif<0){
 					_player.setMonopolyValue(key, _player.getMonopolyValue(key)+monopolyDif*.9);
 				}
-				
+
 				double houseDif = _player.getHouseValueOfColor(key)-_previousPlayer.getHouseValueOfColor(key);
 				if(houseDif>0) {
 					_player.setHouseValueOfColor(key, _player.getHouseValueOfColor(key)-houseDif*.9);
@@ -151,7 +152,7 @@ public class AIPlayerModule extends Client{
 				else if(houseDif<0){
 					_player.setHouseValueOfColor(key, _player.getHouseValueOfColor(key)+houseDif*.9);
 				}
-				
+
 				double sameDif = _player.getSameColorEffect(key)-_previousPlayer.getSameColorEffect(key);
 				if(sameDif>0) {
 					_player.setSameColorEffect(key, _player.getSameColorEffect(key)-sameDif*.9);
@@ -160,7 +161,7 @@ public class AIPlayerModule extends Client{
 					_player.setSameColorEffect(key, _player.getSameColorEffect(key)+sameDif*.9);
 				}
 			}
-			
+
 			if(others.accTotalRevenueWithHouses>mine.accTotalRevenueWithHouses) {
 				double monopolyDif = _player.getBreakingOpponentMonopolyValue(key)-_previousPlayer.getBreakingOpponentMonopolyValue(key);
 				if(monopolyDif>0) {
@@ -170,7 +171,7 @@ public class AIPlayerModule extends Client{
 					_player.setBreakingOpponentMonopolyValue(key, _player.getBreakingOpponentMonopolyValue(key)-monopolyDif*.9);
 				}	
 			}
-			
+
 		}
 		double mycash=0;
 		double mywealth=0;
@@ -182,39 +183,66 @@ public class AIPlayerModule extends Client{
 				mycash=r.accCash;
 				mywealth=r.accTotalWealth;
 			}
-			else {
-				othercash+=r.accCash;
-				otherwealth+=r.accTotalWealth;
+		}
+		for(TimeStampReport t : _previousGameData._timeStamps){
+			PlayerWealthDataReport r=t.wealthData.get(t.wealthData.size()-1);
+			if(r.ownerID==_id) {
+				othercash=r.accCash;
+				otherwealth=r.accTotalWealth;
 			}
 		}
-		othercash=othercash/(_currentGameData._timeStamps.size()-1);
-		otherwealth=otherwealth/(_currentGameData._timeStamps.size()-1);
+		othercash=othercash/(_previousGameData._timeStamps.size()-1);
+		otherwealth=otherwealth/(_previousGameData._timeStamps.size()-1);
+		if(_previousPlayer==null) {
+			_player.setLiquidity(Math.min(_player.getLiquidity()+1,10));
+			_player.setTimeChange(Math.min(_player.getTimeChange()+1,10));
+			_player.setJailWait(Math.min(_player.getJailWait()+1,3));
+			_player.setJailPoor(Math.min(_player.getJailPoor()+1,3));
+			_player.setJailRich(Math.min(_player.getJailRich()+1,3));
+			_player.setTradingFear(Math.min(_player.getTradingFear()+1,10));
+		}
 		//if I did poorly
 		if(otherwealth>=mywealth) {
 			//I did really poorly and lost in cash and wealth
 			if(othercash>=mycash) {
-				
+				_player.setLiquidity(Math.min(Math.max(1,_previousPlayer.getLiquidity()+.9*(_previousPlayer.getLiquidity()-_player.getLiquidity())),10));
+				_player.setTimeChange(Math.min(Math.max(1,_previousPlayer.getTimeChange()+.9*(_previousPlayer.getTimeChange()-_player.getTimeChange())),10));
+				_player.setMinBuyCash((int) Math.max(0,_previousPlayer.getMinBuyCash()+.9*(_previousPlayer.getMinBuyCash()-_player.getMinBuyCash())));
+				_player.setMinUnmortgageCash((int) Math.max(0,_previousPlayer.getMinUnmortgageCash()+.9*(_previousPlayer.getMinUnmortgageCash()-_player.getMinUnmortgageCash())));
+				_player.setJailWait(Math.min(Math.max(1,_previousPlayer.getJailWait()+(_previousPlayer.getJailWait()-_player.getJailWait())),3));
+				_player.setMortgageChoice(_previousPlayer.getMortgageChoice());
+				_player.setBuildingEvenness(_previousPlayer.getBuildingEvenness());
+				_player.setBuildingChoice(_previousPlayer.getBuildingChoice());
+				_player.setHouseSelling(_previousPlayer.getHouseSelling());
+				_player.setJailPoor(Math.min(Math.max(1,_previousPlayer.getJailPoor()+(_previousPlayer.getJailPoor()-_player.getJailPoor())),3));
+				_player.setJailRich(Math.min(Math.max(1,_previousPlayer.getJailRich()+(_previousPlayer.getJailRich()-_player.getJailRich())),3));
+				_player.setMinBuildCash((int) Math.max(0,_previousPlayer.getMinBuildCash()+.9*(_previousPlayer.getMinBuildCash()-_player.getMinBuildCash())));
+				_player.setBuildAggression(_previousPlayer.getBuildAggression());
+				_player.setTradingFear(Math.min(Math.max(1,_previousPlayer.getTradingFear()+.9*(_previousPlayer.getTradingFear()-_player.getTradingFear())),10));
 			}
 			//I hoarded cash way too much
 			else {
-				
+				_player.setMinBuildCash(Math.max(0, _previousPlayer.getMinBuildCash()-50));
+				_player.setMinBuyCash(Math.max(0,_previousPlayer.getMinBuyCash()-50));
+				_player.setMinUnmortgageCash(Math.max(0,_previousPlayer.getMinUnmortgageCash()-50));
 			}
 		}
 		//if I did well
 		else {
-			//I spent cash wisely but could have had more
-			if(othercash>=mycash) {
-				
-			}
-			//I played like a GOD
-			else {
-				
-			}
+			_player.setLiquidity(Math.min(Math.max(1,_previousPlayer.getLiquidity()-.9*(_previousPlayer.getLiquidity()-_player.getLiquidity())),10));
+			_player.setTimeChange(Math.min(Math.max(1,_previousPlayer.getTimeChange()-.9*(_previousPlayer.getTimeChange()-_player.getTimeChange())),10));
+			_player.setMinBuyCash((int) Math.max(0,_previousPlayer.getMinBuyCash()-.9*(_previousPlayer.getMinBuyCash()-_player.getMinBuyCash())));
+			_player.setMinUnmortgageCash((int) Math.max(0,_previousPlayer.getMinUnmortgageCash()+.9*(_previousPlayer.getMinUnmortgageCash()-_player.getMinUnmortgageCash())));
+			_player.setJailWait(Math.min(Math.max(1,_previousPlayer.getJailWait()-(_previousPlayer.getJailWait()-_player.getJailWait())),3));
+			_player.setJailPoor(Math.min(Math.max(1,_previousPlayer.getJailPoor()-(_previousPlayer.getJailPoor()-_player.getJailPoor())),3));
+			_player.setJailRich(Math.min(Math.max(1,_previousPlayer.getJailRich()-(_previousPlayer.getJailRich()-_player.getJailRich())),3));
+			_player.setMinBuildCash((int) Math.max(0,_previousPlayer.getMinBuildCash()-.9*(_previousPlayer.getMinBuildCash()-_player.getMinBuildCash())));
+			_player.setTradingFear(Math.min(Math.max(1,_previousPlayer.getTradingFear()-.9*(_previousPlayer.getTradingFear()-_player.getTradingFear())),10));
 		}
 		_previousPlayer=temp;
 		return _player;
 	}
-	
+
 	private PropertyDataReport findMyReport(List<PropertyDataReport> reports) {
 		if(reports==null) {
 			return null;

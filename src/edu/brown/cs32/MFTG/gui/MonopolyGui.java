@@ -20,6 +20,7 @@ public class MonopolyGui extends JFrame{
 	private JPanel _currentPanel;
 	private HashMap<String, JPanel> _panels;
 	private EndGamePanel _end;
+	private ChooseProfilePanel _choose;
 	private Profile _currentProfile;
 	private ProfileManager _profileManager;
 	private Client _module;
@@ -38,8 +39,8 @@ public class MonopolyGui extends JFrame{
 		_panels.put("settings", settings);
 		GameLobbyPanel lobby = new GameLobbyPanel(this);
 		_panels.put("lobby", lobby);
-		ChooseProfilePanel choose = new ChooseProfilePanel(this);
-		_panels.put("choose", choose);
+		_choose = new ChooseProfilePanel(this);
+		_panels.put("choose", _choose);
 		CreateGamePanel create = new CreateGamePanel(this);
 		_panels.put("create", create);
 		JoinGamePanel join = new JoinGamePanel(this);
@@ -51,7 +52,7 @@ public class MonopolyGui extends JFrame{
 		this.setSize(9*Constants.WIDTH + 2*Constants.HEIGHT, 9*Constants.WIDTH + 2*Constants.HEIGHT);
 		this.setResizable(false);
 		
-		_currentPanel=create;
+		_currentPanel=_choose;
 		this.add(_currentPanel);
 		
 		this.pack();
@@ -74,6 +75,9 @@ public class MonopolyGui extends JFrame{
 		remove(_currentPanel);
 		_currentPanel=_panels.get(panel);
 		add(_currentPanel);
+		if(_currentPanel==_choose) {
+			_choose.giveFocusToList();
+		}
 		_currentPanel.repaint();
 	}
 	
@@ -91,6 +95,19 @@ public class MonopolyGui extends JFrame{
 	 */
 	public void setCurrentProfile(String profileName) {
 		_currentProfile = _profileManager.getProfile(profileName);
+	}
+	
+	/**
+	 * adds a profile
+	 * @param name
+	 * @return name
+	 */
+	public String addProfile(String name) {
+		boolean done=_profileManager.addProfile(name, new Profile(name));
+		if(done==false) {
+			return null;
+		}
+		return name;
 	}
 	
 	public Board getBoard(){
