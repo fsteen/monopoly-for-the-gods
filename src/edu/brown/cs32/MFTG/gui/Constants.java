@@ -23,8 +23,11 @@ public class Constants {
 	public static final int FONT_SIZE = 12;
 	public static final Font FONT = new Font("sansserif", Font.BOLD, FONT_SIZE);
 
-	public final static int FULL_WIDTH=9*Constants.WIDTH + 2*Constants.HEIGHT;
-	public final static int FULL_HEIGHT=9*Constants.WIDTH + 2*Constants.HEIGHT;
+	public final static int FULL_WIDTH=827;
+	public final static int FULL_HEIGHT=827;
+	
+	public final static int BACK_Y=740;
+	public final static int BACK_X=20;
 	
 	public static String t = "_two.jpg";
 	public static String m = "_monopoly.jpg";
