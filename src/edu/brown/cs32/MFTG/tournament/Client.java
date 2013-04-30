@@ -203,7 +203,7 @@ public abstract class Client {
 
 		if (arguments == null){
 			// throw a different different error
-		} else if (arguments.size() < 2){
+		} else if (arguments.size() < 3){
 			// you get the idea
 		}
 
@@ -211,8 +211,9 @@ public abstract class Client {
 		JavaType listOfSeeds = _oMapper.getTypeFactory().constructCollectionType(List.class, Long.class);
 		List<Player> players = _oMapper.readValue(arguments.get(0), listOfPlayers);
 		List<Long> seeds = _oMapper.readValue(arguments.get(1), listOfSeeds);
+		Settings settings = _oMapper.readValue(arguments.get(2), Settings.class);
 
-		List<GameData> gameData = playGames(players, seeds);
+		List<GameData> gameData = playGames(players, seeds, settings);
 		String gameDataString = _oMapper.writeValueAsString(gameData);
 
 		ClientRequestContainer response = new ClientRequestContainer(Method.SENDGAMEDATA, Arrays.asList(gameDataString));
@@ -237,10 +238,13 @@ public abstract class Client {
 	 * @param seeds the game seeds
 	 * @return the data collected from the games
 	 */
-	public List<GameData> playGames(List<Player> players, List<Long> seeds){
+	public List<GameData> playGames(List<Player> players, List<Long> seeds, Settings settings){
+		System.out.println("client " + _id + " is playing games");
+		
+		
 		_data.clear();
 		_nextDisplaySize = DATA_PACKET_SIZE;
-		synchronized(this){ _numThreadsDone.set(0); }
+		_numThreadsDone.set(0);
 
 		GameRunnerFactory gameRunnerFactory = new GameRunnerFactory(
 				_numThreadsDone, this, 

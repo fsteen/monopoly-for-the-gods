@@ -25,7 +25,7 @@ public class ClientTests {
 		seeds.add((long) 1);
 
 		Client p = new HumanClient("fakehost", -1);
-		p.playGames(new ArrayList<Player>(), seeds);
+		p.playGames(new ArrayList<Player>(), seeds, null);
 		
 	}
 	
@@ -45,7 +45,7 @@ public class ClientTests {
 		seeds.add((long) 77733);
 		
 		Client p = new HumanClient("fakehost", -1);
-		List<GameData> data = p.playGames(players, seeds);
+		List<GameData> data = p.playGames(players, seeds, null);
 		
 		assertTrue(data.size() == seeds.size());
 	}
@@ -78,7 +78,7 @@ public class ClientTests {
 			seeds.add(rand.nextLong());
 		}
 		
-		List<GameData> data = p.playGames(players, seeds);
+		List<GameData> data = p.playGames(players, seeds, null);
 		
 		assertTrue(data.size() == seeds.size());
 	}

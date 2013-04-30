@@ -34,7 +34,7 @@ public class DataProcessorTests {
 	
 	@Test
 	public void generateSeedsTest(){
-		int numGames1 = 100;
+		int numGames1 = 1;
 		int numPlayers1 = 4;
 		List<Integer> confirmationIndices1 = DataProcessor.generateConfirmationIndices(numGames1, .10);
 		List<List<Long>> seeds1 = DataProcessor.generateSeeds(numGames1, numPlayers1, confirmationIndices1);

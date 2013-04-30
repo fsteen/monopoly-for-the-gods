@@ -8,8 +8,6 @@ import java.util.Random;
 
 import org.junit.Test;
 
-import edu.brown.cs32.MFTG.monopoly.TimeStamp;
-
 public class GameTest {
 
 	//@Test

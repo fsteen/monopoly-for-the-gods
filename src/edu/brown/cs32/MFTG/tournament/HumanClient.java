@@ -117,7 +117,6 @@ public class HumanClient extends Client{
 	 * @param combinedData
 	 */
 	public void displayGameData(GameDataReport combinedData) {
-		//TODO implement
 		_gui.getBoard().setPlayerSpecificPropertyData(getPlayerPropertyData(combinedData._overallPlayerPropertyData));
 		_gui.getBoard().setPropertyData(combinedData._overallPropertyData);
 		_gui.getBoard().setWealthData(getPlayerWealthData(combinedData._timeStamps));
@@ -136,7 +135,7 @@ public class HumanClient extends Client{
 		_data.add(gameData);
 		
 		if(_data.size() >= _nextDisplaySize){
-			System.out.println("sending data\n");
+			//System.out.println("sending data\n");
 			//TODO display some data
 			GameDataReport r = DataProcessor.aggregate(_data, NUM_DATA_POINTS);
 			//_dummyGui.setPlayerSpecificPropertyData(getPlayerPropertyData(r._overallPlayerPropertyData));

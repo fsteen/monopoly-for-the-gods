@@ -2,13 +2,8 @@ package edu.brown.cs32.MFTG.monopoly;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.PriorityQueue;
 import java.util.Random;
-
-import edu.brown.cs32.MFTG.monopoly.GamePlayer.HouseSellingComparator;
-import edu.brown.cs32.MFTG.monopoly.GamePlayer.MortgageComparator;
 
 /**
  * this class models a game and is a runnable so it can run in its own thread

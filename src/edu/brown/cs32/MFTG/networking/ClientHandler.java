@@ -19,6 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.brown.cs32.MFTG.monopoly.GameData;
 import edu.brown.cs32.MFTG.monopoly.Player;
 import edu.brown.cs32.MFTG.networking.ClientRequestContainer.Method;
+import edu.brown.cs32.MFTG.tournament.Settings;
 import edu.brown.cs32.MFTG.tournament.data.GameDataReport;
 
 public class ClientHandler {
@@ -116,12 +117,15 @@ public class ClientHandler {
 	 * @throws ClientLostException 
 	 * @throws InvalidResponseException 
 	 */
-	public List<GameData> playGames(List<Player> players, List<Long> seeds) throws ClientCommunicationException, ClientLostException, InvalidResponseException{
+	public List<GameData> playGames(List<Player> players, List<Long> seeds, Settings settings) throws ClientCommunicationException, ClientLostException, InvalidResponseException{
 		try {
 			String playerList = _oMapper.writeValueAsString(players);
 			String seedList = _oMapper.writeValueAsString(seeds);
+			String settingsString = _oMapper.writeValueAsString(settings);
+			
+			List<String> arguments = Arrays.asList(playerList, seedList, settingsString);
 
-			ClientRequestContainer request = new ClientRequestContainer(Method.PLAYGAMES, Arrays.asList(playerList, seedList));
+			ClientRequestContainer request = new ClientRequestContainer(Method.PLAYGAMES, arguments);
 
 			// request that the client play the games
 			write(request);
@@ -144,7 +148,6 @@ public class ClientHandler {
 			return gameData;
 
 		} catch (IOException e){
-			e.printStackTrace();
 			throw new ClientCommunicationException(_id);
 		}
 	}
@@ -159,7 +162,6 @@ public class ClientHandler {
 			write(request);
 
 		} catch (IOException e){
-			e.printStackTrace();
 			throw new ClientCommunicationException(_id);
 		}
 	}
