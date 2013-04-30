@@ -239,9 +239,6 @@ public abstract class Client {
 	 * @return the data collected from the games
 	 */
 	public List<GameData> playGames(List<Player> players, List<Long> seeds, Settings settings){
-		System.out.println("client " + _id + " is playing games");
-		
-		
 		_data.clear();
 		_nextDisplaySize = DATA_PACKET_SIZE;
 		_numThreadsDone.set(0);

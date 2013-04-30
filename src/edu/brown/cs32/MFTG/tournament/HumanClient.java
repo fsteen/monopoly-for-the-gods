@@ -120,9 +120,9 @@ public class HumanClient extends Client{
 		_gui.getBoard().setPlayerSpecificPropertyData(getPlayerPropertyData(combinedData._overallPlayerPropertyData));
 		_gui.getBoard().setPropertyData(combinedData._overallPropertyData);
 		_gui.getBoard().setWealthData(getPlayerWealthData(combinedData._timeStamps));
-		//_dummyGui.setPlayerSpecificPropertyData(getPlayerPropertyData(combinedData._overallPlayerPropertyData));
-		//_dummyGui.setPropertyData(combinedData._overallPropertyData);
-		//_dummyGui.setWealthData(getPlayerWealthData(combinedData._timeStamps));
+//		_dummyGui.setPlayerSpecificPropertyData(getPlayerPropertyData(combinedData._overallPlayerPropertyData));
+//		_dummyGui.setPropertyData(combinedData._overallPropertyData);
+//		_dummyGui.setWealthData(getPlayerWealthData(combinedData._timeStamps));
 		_gui.getBoard().roundCompleted();	
 	}
 	
@@ -134,19 +134,22 @@ public class HumanClient extends Client{
 	public synchronized void addGameData(GameData gameData){
 		_data.add(gameData);
 		
-		if(_data.size() >= _nextDisplaySize){
-			//System.out.println("sending data\n");
-			//TODO display some data
-			GameDataReport r = DataProcessor.aggregate(_data, NUM_DATA_POINTS);
-			//_dummyGui.setPlayerSpecificPropertyData(getPlayerPropertyData(r._overallPlayerPropertyData));
-			//_dummyGui.setPropertyData(r._overallPropertyData);
-			//_dummyGui.setWealthData(getPlayerWealthData(r._timeStamps));
-			
-			_gui.getBoard().setPlayerSpecificPropertyData(getPlayerPropertyData(r._overallPlayerPropertyData));
-			_gui.getBoard().setPropertyData(r._overallPropertyData);
-			_gui.getBoard().setWealthData(getPlayerWealthData(r._timeStamps));
-			_nextDisplaySize += DATA_PACKET_SIZE; //set next point at which to display
-		}
+//		if(_data.size() >= _nextDisplaySize){
+//			//System.out.println("sending data\n");
+//			//TODO display some data
+//			GameDataReport r = DataProcessor.aggregate(_data, NUM_DATA_POINTS);
+//			
+//			System.out.println("**************************\n"+r.toString()+"\n**************************\n");
+//			
+//			_dummyGui.setPlayerSpecificPropertyData(getPlayerPropertyData(r._overallPlayerPropertyData));
+//			_dummyGui.setPropertyData(r._overallPropertyData);
+//			_dummyGui.setWealthData(getPlayerWealthData(r._timeStamps));
+//			
+////			_gui.getBoard().setPlayerSpecificPropertyData(getPlayerPropertyData(r._overallPlayerPropertyData));
+////			_gui.getBoard().setPropertyData(r._overallPropertyData);
+////			_gui.getBoard().setWealthData(getPlayerWealthData(r._timeStamps));
+//			_nextDisplaySize += DATA_PACKET_SIZE; //set next point at which to display
+//		}
 	}
 	
 	/**
@@ -156,7 +159,6 @@ public class HumanClient extends Client{
 	 */
 	public Player getPlayer(int time){
 		return _gui.getBoard().getPlayer();
-		//return _dummyGui.getPlayer();
 	}
 
 	/**

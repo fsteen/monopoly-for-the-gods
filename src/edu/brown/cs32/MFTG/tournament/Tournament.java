@@ -11,6 +11,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import edu.brown.cs32.MFTG.monopoly.GameData;
 import edu.brown.cs32.MFTG.monopoly.Player;
 import edu.brown.cs32.MFTG.networking.ClientCommunicationException;
@@ -19,6 +21,8 @@ import edu.brown.cs32.MFTG.networking.ClientLostException;
 import edu.brown.cs32.MFTG.networking.InvalidResponseException;
 import edu.brown.cs32.MFTG.networking.PlayGamesCallable;
 import edu.brown.cs32.MFTG.networking.getPlayerCallable;
+import edu.brown.cs32.MFTG.tournament.Settings.Turns;
+import edu.brown.cs32.MFTG.tournament.Settings.WinningCondition;
 import edu.brown.cs32.MFTG.tournament.data.DataProcessor;
 import edu.brown.cs32.MFTG.tournament.data.GameDataReport;
 
@@ -26,7 +30,7 @@ public class Tournament implements Runnable{
 	private final int _numPlayers;
 	
 	public static final double CONFIRMATION_PERCENTAGE = 0.1; //confirm 10% of games
-	public static final int NUM_DATA_POINTS = 50;
+	public static final int NUM_DATA_POINTS = 100;
 	private List<ClientHandler> _clientHandlers;
 	private ServerSocket _socket;
 	private Settings _settings;
@@ -58,6 +62,7 @@ public class Tournament implements Runnable{
 		}
 		
 		int gamesPerModule = (int)Math.ceil(_settings.getNumGamesPerRound()/_numPlayers);
+		
 		List<Player> players = null;
 		List<List<GameData>> data;
 		List<Integer> confirmationIndices;
@@ -78,7 +83,7 @@ public class Tournament implements Runnable{
 
 			// make sure nobody cheated
 			if(DataProcessor.isCorrupted(data, confirmationIndices)){
-				System.out.println("WOOHOO ... SOMEONE IS CHEATING!!!!!"); //TODO change this
+				System.out.println("Tournament : WOOHOO ... SOMEONE IS CHEATING!!!!!"); //TODO change this
 			}
 			
 			List<GameData> dataToSend = new ArrayList<>();
@@ -86,7 +91,6 @@ public class Tournament implements Runnable{
 				dataToSend.addAll(d);
 			}
 			
-			// send the data to all the clients
 			sendEndOfRoundData(DataProcessor.aggregate(dataToSend, NUM_DATA_POINTS));
 		}
 		sendEndOfGameData();
@@ -140,6 +144,7 @@ public class Tournament implements Runnable{
 			}
 		}
 		
+		
 		return players;
 	}
 	
@@ -168,6 +173,7 @@ public class Tournament implements Runnable{
 		
 		if (_clientHandlers.size() != seeds.size()){
 			// throw an error or something
+			System.out.println("seed size doesn't match num clients");
 		}
 		
 		for (int i = 0; i < _clientHandlers.size(); i++){
@@ -237,5 +243,4 @@ public class Tournament implements Runnable{
 			}
 		}
 	}
-
 }

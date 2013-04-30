@@ -50,7 +50,7 @@ public class Board extends JPanel {
 	private Jail _jail;
 	private JMenuBar _menu;
 	private Center _center;
-	private int _id = 1;
+	private int _id;
 	private Player _player = null;
 	
 	public Board (int id) throws IOException {
@@ -380,7 +380,7 @@ public class Board extends JPanel {
 	}
 	
 	public Player setHeuristics () {
-		Player player = new Player(1);
+		Player player = new Player(_id);
 		
 		HashMap<String, Integer> propertyValues = new HashMap<>();
 		HashMap<String, Double[]> colorValues = new HashMap<>();

@@ -11,23 +11,29 @@ import edu.brown.cs32.MFTG.tournament.data.PropertyDataReport;
 
 public class DummyGUI {
 
-	public Player getPlayer(){
-		return new Player(0);
-	}
+//	public Player getPlayer(){
+//		return new Player(0);
+//	}
 	
 	public void setWealthData(List<PlayerWealthDataReport> data){
 		System.out.println("WEALTH DATA");
-		System.out.println(data);
+		for(PlayerWealthDataReport p : data){
+			System.out.println(p);
+		}
 	}
 
 	public void setPropertyData(Map<String, PropertyDataReport> data){ //this is the cumulative property data
 		System.out.println("PROPERTY DATA");
-		System.out.println(new ArrayList<PropertyDataReport>(data.values()));
+		for(PropertyDataReport p : data.values()){
+			System.out.println(p);
+		}
 	}
 
 	public void setPlayerSpecificPropertyData(Map<String, PropertyDataReport> data){
 		System.out.println("PLAYER SPECIFIC PROPERTY DATA");
-		System.out.println(new ArrayList<PropertyDataReport>(data.values()));
+		for(PropertyDataReport p : data.values()){
+			System.out.println(p);
+		}
 	}
 	
 	public void setRoundWinner(int playerID){
