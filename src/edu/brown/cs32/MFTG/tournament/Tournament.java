@@ -69,8 +69,6 @@ public class Tournament implements Runnable{
 			if (newPlayers != null)
 				players = newPlayers;
 			
-			assert(false);
-	/*		
 			// if an error was caught before the players could originally be chosen, re-enter the loop
 			if(players == null)
 				continue;
@@ -93,7 +91,6 @@ public class Tournament implements Runnable{
 			
 			// send the data to all the clients
 			sendEndOfRoundData(DataProcessor.aggregate(dataToSend, NUM_DATA_POINTS));
-			*/
 		}
 		sendEndOfGameData();
 	}

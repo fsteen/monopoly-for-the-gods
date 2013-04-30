@@ -46,6 +46,11 @@ public class ClientHandler {
 		_listOfPlayers = _oMapper.getTypeFactory().constructCollectionType(List.class, Player.class);
 	}
 	
+	/**
+	 * Writes a request to the output stream
+	 * @param request the request to write
+	 * @throws IOException
+	 */
 	private void write(ClientRequestContainer request) throws IOException{
 		String json = _oMapper.writeValueAsString(request);
 		_output.write(json);

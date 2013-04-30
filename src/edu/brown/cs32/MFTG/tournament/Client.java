@@ -83,6 +83,17 @@ public class Client {
 	/***************Networking Methods*************************/
 
 	/**
+	 * Writes a request to the output stream
+	 * @param request the request to write
+	 * @throws IOException
+	 */
+	private void write(ClientRequestContainer request) throws IOException{
+		String json = _oMapper.writeValueAsString(request);
+		_output.write(json);
+		_output.flush();
+	}
+	
+	/**
 	 * @throws IOException
 	 * @throws JsonMappingException 
 	 * @throws JsonParseException 
@@ -216,7 +227,10 @@ public class Client {
 		int time = Integer.parseInt(arguments.get(0));
 		
 		Player p = getPlayer(time);
-		_oMapper.writeValue(_output, p);
+		
+		String playerString = _oMapper.writeValueAsString(p);
+		ClientRequestContainer response = new ClientRequestContainer(Method.SENDPLAYER, Arrays.asList(playerString));
+		write(response);
 	}
 
 	/**
@@ -246,7 +260,7 @@ public class Client {
 
 		ClientRequestContainer response = new ClientRequestContainer(Method.SENDGAMEDATA, Arrays.asList(gameDataString));
 
-		_oMapper.writeValue(_output, response);
+		write(response);
 	}
 
 	/**
