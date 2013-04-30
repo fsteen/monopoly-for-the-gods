@@ -3,10 +3,7 @@ package edu.brown.cs32.MFTG.tournament;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -16,57 +13,48 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import javax.swing.JOptionPane;
-
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import edu.brown.cs32.MFTG.gui.MonopolyGui;
 import edu.brown.cs32.MFTG.monopoly.GameData;
 import edu.brown.cs32.MFTG.monopoly.Player;
 import edu.brown.cs32.MFTG.networking.ClientRequestContainer;
 import edu.brown.cs32.MFTG.networking.ClientRequestContainer.Method;
 import edu.brown.cs32.MFTG.networking.InvalidRequestException;
-import edu.brown.cs32.MFTG.tournament.data.DataProcessor;
-import edu.brown.cs32.MFTG.tournament.data.GameDataReport;
 import edu.brown.cs32.MFTG.tournament.data.PlayerWealthDataReport;
 import edu.brown.cs32.MFTG.tournament.data.PropertyDataReport;
 import edu.brown.cs32.MFTG.tournament.data.TimeStampReport;
 
-public class Client {
-
-	private static final int DEFAULT_PORT = 8080;
+public abstract class Client {
 
 	/* Networking variables */
 	final String _host;
 	final int _port;
-	private Socket _server;
-	private BufferedReader _input;
-	private BufferedWriter _output;
-	final ObjectMapper _oMapper;
-	private Method _lastRequest;
+	protected Socket _server;
+	protected BufferedReader _input;
+	protected BufferedWriter _output;
+	protected final ObjectMapper _oMapper;
+	protected Method _lastRequest;
 
 	/* Module variables */
-	private MonopolyGui _gui;
-//	private DummyGUI _dummyGui;
-	private final int NUM_THREADS=25;
-	private final int DATA_PACKET_SIZE=100;
-	private final int NUM_DATA_POINTS=100;	
-	private final int MAX_NUM_TURNS=1000;
-	private int _nextDisplaySize;
-	private List<GameData> _data;
-	private AtomicInteger _numThreadsDone;
-	private ExecutorService _pool;
+	protected final int NUM_THREADS=25;
+	protected final int DATA_PACKET_SIZE=100;
+	protected final int NUM_DATA_POINTS=100;	
+	protected final int MAX_NUM_TURNS=1000;
+	protected int _nextDisplaySize;
+	protected List<GameData> _data;
+	protected AtomicInteger _numThreadsDone;
+	protected ExecutorService _pool;
 	protected int _id;
-
+	
 	/* Temporary variables - replace later */
 	private final int FREE_PARKING=-1;
 	private final boolean DOUBLE_ON_GO=false;
 	private final boolean AUCTIONS=false;
 
-	public Client(String host, int port){
+	public Client(String host, int port) {
 		_oMapper = new ObjectMapper();
 		_host = host;
 		_port = port;
@@ -75,41 +63,50 @@ public class Client {
 		_pool = Executors.newFixedThreadPool(NUM_THREADS);
 		_data = new ArrayList<>();
 		_numThreadsDone = new AtomicInteger(0);
-
-		_gui = new MonopolyGui(this);
-	//	_dummyGui = new DummyGUI();
+		// TODO Auto-generated constructor stub
 	}
-
-	/***************Networking Methods*************************/
+	
+	
+	protected abstract void connectAndRun();
+	
+	protected abstract void respondToDisplayError(ClientRequestContainer request);
+	
+	protected abstract void respondToDisplayData(ClientRequestContainer request) throws JsonParseException, JsonMappingException, IOException;
+	
+	public abstract Player getPlayer(int time);
+	
+	public abstract void addGameData(GameData gameData);
 
 	/**
 	 * Writes a request to the output stream
 	 * @param request the request to write
 	 * @throws IOException
 	 */
-	private void write(ClientRequestContainer request) throws IOException{
+	protected void write(ClientRequestContainer request) throws IOException{
 		String json = _oMapper.writeValueAsString(request);
 		_output.write(json);
 		_output.write("\n");
 		_output.flush();
 	}
-	
+
 	/**
 	 * Reads a request from the client
 	 * @return
 	 * @throws IOException
 	 */
-	private ClientRequestContainer readRequest() throws IOException{
+	protected ClientRequestContainer readRequest() throws IOException{
 		String json = _input.readLine();
 		return _oMapper.readValue(json, ClientRequestContainer.class);
 	}
-	
+
+
+
 	/**
 	 * @throws IOException
 	 * @throws JsonMappingException 
 	 * @throws JsonParseException 
 	 */
-	private void handleRequest() throws InvalidRequestException, IOException{
+	protected void handleRequest() throws InvalidRequestException, IOException{
 		ClientRequestContainer request = readRequest();
 
 		Method method = request._method;
@@ -146,48 +143,13 @@ public class Client {
 		}
 	}
 
-	/**
-	 * Connects the Client to a socket
-	 * @throws IOException
-	 */
-	public void connectAndRun(){
-		try {
-			_server = new Socket(_host, _port);
-			_input = new BufferedReader(new InputStreamReader(_server.getInputStream()));
-			_output = new BufferedWriter(new OutputStreamWriter(_server.getOutputStream()));
-		} catch (UnknownHostException e) {
-			displayError("Unknown host. Unable to connect to server :( WHAT THE F*CK, MAN!!!");
-			return;
-		} catch (IOException e) {
-			displayError("Unable to connect to server :(");
-			return;
-		}
-		try {
-			_id = respondToSendID();
-			System.out.println("creading board");
-			_gui.createBoard(_id);
-			System.out.println("created board");
-		} catch (IOException | InvalidRequestException e1) {
-			displayError("Unable to retrieve a unique ID from the server :(");
-			return;
-		}
-		
-		while(true){
-			try {
-				handleRequest();
-			} catch (Exception e){
-				// TODO handle this
-			}
-		}
-	}
+	protected int respondToSendID() throws IOException, InvalidRequestException{
 
-	private int respondToSendID() throws IOException, InvalidRequestException{
-		
 		ClientRequestContainer request = readRequest();
 
 		if (request == null || request._method != Method.SENDID)
 			throw new InvalidRequestException();
-		
+
 
 		List<String> arguments = request._arguments;
 
@@ -203,23 +165,7 @@ public class Client {
 			throw new InvalidRequestException();
 		}
 	}
-
-	/**
-	 * 
-	 * @param the request which is being responded to
-	 */
-	private void respondToDisplayError(ClientRequestContainer request){
-		List<String> arguments = request._arguments;
-
-		if (arguments == null){
-			// throw an error
-		} else if (arguments.size() < 1){
-			// throw a different error
-		}
-
-		displayError(arguments.get(0));
-	}
-
+	
 	/**
 	 * Responds to a request sent over the socket for player data, and sends the player information back in response
 	 * @param the request which is being responded to
@@ -244,7 +190,7 @@ public class Client {
 		ClientRequestContainer response = new ClientRequestContainer(Method.SENDPLAYER, Arrays.asList(playerString));
 		write(response);
 	}
-
+	
 	/**
 	 * Responds to a request sent over the socket to play games, and sends the game data back in response
 	 * @param the request which is being responded to
@@ -274,28 +220,7 @@ public class Client {
 
 		write(response);
 	}
-
-	/**
-	 * Responds to a request sent over the server to display game data by displaying the data received
-	 * @param the request which is being responded to
-	 * @throws JsonParseException
-	 * @throws JsonMappingException
-	 * @throws IOException
-	 */
-	protected void respondToDisplayData(ClientRequestContainer request) throws JsonParseException, JsonMappingException, IOException{
-		List<String> arguments = request._arguments;
-
-		if (arguments == null){
-			// error
-		} else if (arguments.size() < 1){
-			// error
-		}
-
-		GameDataReport gameDataReport = _oMapper.readValue(arguments.get(0), GameDataReport.class);
-
-		displayGameData(gameDataReport);
-	}
-
+	
 	public void launchTournament(int numPlayers, Settings settings, int port){
 		try {
 			_pool.execute((new Tournament(numPlayers, settings, port)));
@@ -304,9 +229,7 @@ public class Client {
 			e.printStackTrace();
 		}
 	}
-
-	/*******************************************************/
-
+	
 	/***************Module Methods *************************/
 
 	/**
@@ -341,31 +264,11 @@ public class Client {
 	}
 
 	/**
-	 * Called by the game runnables to update GameData info
-	 * when they finish playing
-	 * @param gameData
-	 */
-	public synchronized void addGameData(GameData gameData){
-		_data.add(gameData);
-		if(_data.size() >= _nextDisplaySize){
-			//TODO display some data
-			GameDataReport r = DataProcessor.aggregate(_data, NUM_DATA_POINTS);
-			//_dummyGui.setPlayerSpecificPropertyData(getPlayerPropertyData(r._overallPlayerPropertyData));
-		//	_dummyGui.setPropertyData(r._overallPropertyData);
-		//	_dummyGui.setWealthData(getPlayerWealthData(r._timeStamps));
-			_gui.getBoard().setPlayerSpecificPropertyData(getPlayerPropertyData(r._overallPlayerPropertyData));
-			_gui.getBoard().setPropertyData(r._overallPropertyData);
-			_gui.getBoard().setWealthData(getPlayerWealthData(r._timeStamps));
-			_nextDisplaySize += DATA_PACKET_SIZE; //set next point at which to display
-		}
-	}
-
-	/**
 	 * Find the player property data specific to this player
 	 * @param allPlayerPropertyData
 	 * @return
 	 */
-	private Map<String, PropertyDataReport> getPlayerPropertyData(Map<String,List<PropertyDataReport>> allPlayerPropertyData){
+	protected Map<String, PropertyDataReport> getPlayerPropertyData(Map<String,List<PropertyDataReport>> allPlayerPropertyData){
 		Map<String, PropertyDataReport> playerPropertyData = new HashMap<>();
 		for(List<PropertyDataReport> l : allPlayerPropertyData.values()){
 			for(PropertyDataReport d : l){
@@ -383,7 +286,7 @@ public class Client {
 	 * @param timeStamps
 	 * @return
 	 */
-	private List<PlayerWealthDataReport> getPlayerWealthData(List<TimeStampReport> timeStamps){
+	protected List<PlayerWealthDataReport> getPlayerWealthData(List<TimeStampReport> timeStamps){
 		List<PlayerWealthDataReport> playerWealthData = new ArrayList<>();
 		for(TimeStampReport t : timeStamps){
 			playerWealthData.add(t.wealthData.get(_id));
@@ -391,61 +294,4 @@ public class Client {
 		return playerWealthData;
 	}
 
-	/**
-	 * Gets the player associated with this object
-	 * @param the time, in seconds, to wait before requesting the player
-	 * @return
-	 */
-	public Player getPlayer(int time){
-		return _gui.getBoard().getPlayer();
-//		return _dummyGui.getPlayer();
-	}
-
-	/**
-	 * Set and display the combined GameData
-	 * @param combinedData
-	 */
-	public void displayGameData(GameDataReport combinedData) {
-		//TODO implement
-		_gui.getBoard().setPlayerSpecificPropertyData(getPlayerPropertyData(combinedData._overallPlayerPropertyData));
-		_gui.getBoard().setPropertyData(combinedData._overallPropertyData);
-		_gui.getBoard().setWealthData(getPlayerWealthData(combinedData._timeStamps));
-		//_dummyGui.setPlayerSpecificPropertyData(getPlayerPropertyData(combinedData._overallPlayerPropertyData));
-	//	_dummyGui.setPropertyData(combinedData._overallPropertyData);
-	//	_dummyGui.setWealthData(getPlayerWealthData(combinedData._timeStamps));
-		_gui.getBoard().roundCompleted();	
-	}
-
-	/**
-	 * Displays an error message in the gui
-	 * @param errorMessage the error message to be displayed
-	 */
-	private void displayError(String errorMessage){
-		JOptionPane.showMessageDialog(_gui, errorMessage);
-	}
-
-	/*******************************************************/
-
-	public static void main (String[] args){
-		int port;
-
-		if(args.length == 1){
-			port = DEFAULT_PORT;
-		} else if (args.length == 2){
-			try {
-				port = Integer.parseInt(args[1]);
-			} catch (NumberFormatException e){
-				System.out.println("ERROR: please enter a valid number");
-				System.out.println("Usage: <hostname> [serverport]");
-				return;
-			}
-		} else {
-			System.out.println("Usage: <hostname> [serverport]");
-			return;
-		}
-
-		Client pm = new Client(args[0], port);
-
-		pm.connectAndRun();
-	}
 }

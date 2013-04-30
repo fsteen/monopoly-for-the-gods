@@ -24,7 +24,7 @@ public class ClientTests {
 		seeds.add((long) 1);
 		seeds.add((long) 1);
 
-		Client p = new Client("fakehost", -1);
+		Client p = new HumanClient("fakehost", -1);
 		p.playGames(new ArrayList<Player>(), seeds);
 		
 	}
@@ -44,7 +44,7 @@ public class ClientTests {
 		seeds.add((long) 98989);
 		seeds.add((long) 77733);
 		
-		Client p = new Client("fakehost", -1);
+		Client p = new HumanClient("fakehost", -1);
 		List<GameData> data = p.playGames(players, seeds);
 		
 		assertTrue(data.size() == seeds.size());
@@ -53,7 +53,7 @@ public class ClientTests {
 	public static void playManyGamesTest(){
 		int numGames = 10000;
 		//TODO get exception when numGames gets large
-		Client p = new Client("fakehost", -1);
+		Client p = new HumanClient("fakehost", -1);
 
 		System.out.println("Starting to wait");
 //		try {
