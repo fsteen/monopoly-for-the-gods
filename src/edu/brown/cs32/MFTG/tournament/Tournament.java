@@ -82,7 +82,7 @@ public class Tournament implements Runnable{
 
 			// make sure nobody cheated
 			if(DataProcessor.isCorrupted(data, confirmationIndices)){
-				//System.out.println("WOOHOO ... SOMEONE IS CHEATING!!!!!"); //TODO change this
+				System.out.println("WOOHOO ... SOMEONE IS CHEATING!!!!!"); //TODO change this
 			}
 			
 			List<GameData> dataToSend = new ArrayList<>();

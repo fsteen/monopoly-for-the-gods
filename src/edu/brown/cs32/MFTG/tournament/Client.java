@@ -240,7 +240,7 @@ public abstract class Client {
 	public List<GameData> playGames(List<Player> players, List<Long> seeds){
 		_data.clear();
 		_nextDisplaySize = DATA_PACKET_SIZE;
-		synchronized(this){ _numThreadsDone.set(0); }
+		_numThreadsDone.set(0);
 
 		GameRunnerFactory gameRunnerFactory = new GameRunnerFactory(
 				_numThreadsDone, this, 
