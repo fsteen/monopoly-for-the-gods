@@ -1,4 +1,4 @@
 - test that timeouts work
 - figure out how to make everything close properly
 - figure out how to handle errors
-- add list to ChoosePrilePanel
+- make playGames take in a settings

@@ -10,7 +10,6 @@ import java.io.Writer;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -46,6 +45,12 @@ public class ClientHandler {
 
 		_listOfPlayers = _oMapper.getTypeFactory().constructCollectionType(List.class, Player.class);
 	}
+	
+	private void write(ClientRequestContainer request) throws IOException{
+		String json = _oMapper.writeValueAsString(request);
+		_output.write(json);
+		_output.flush();
+	}
 
 	/**
 	 * Gets the player associated with this object's client
@@ -59,7 +64,7 @@ public class ClientHandler {
 
 		// ask the client for gameData
 		try {
-			_oMapper.writeValue(_output, request);
+			write(request);
 
 			// read in the response
 			ClientRequestContainer response = _oMapper.readValue(_input, ClientRequestContainer.class);
@@ -104,8 +109,7 @@ public class ClientHandler {
 			ClientRequestContainer request = new ClientRequestContainer(Method.PLAYGAMES, Arrays.asList(playerList, seedList));
 
 			// request that the client play the games
-			_oMapper.writeValue(_output, request);
-
+			write(request);
 
 			// read in the response
 			ClientRequestContainer response;
@@ -144,7 +148,7 @@ public class ClientHandler {
 			ClientRequestContainer request = new ClientRequestContainer(Method.DISPLAYGAMEDATA, Arrays.asList(data));
 
 			// request that the client display the data
-			_oMapper.writeValue(_output, request);
+			write(request);
 
 		} catch (IOException e){
 			throw new ClientCommunicationException(_id);
@@ -156,7 +160,7 @@ public class ClientHandler {
 		
 		// request that the client display the error message
 		try {
-			_oMapper.writeValue(_output, request);
+			write(request);
 		} catch (IOException e) {
 			// do nothing -- you are already fucked
 		}
@@ -168,9 +172,7 @@ public class ClientHandler {
 		
 		// request that the client display the error message
 		try {
-			String json = _oMapper.writeValueAsString(request);
-			_output.write(json);
-			_output.flush();
+			write(request);
 		} catch (IOException e) {
 			throw new ClientCommunicationException(_id);
 		}
