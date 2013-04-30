@@ -66,7 +66,7 @@ public abstract class Client {
 	}
 	
 	
-	protected abstract void connectAndRun();
+	public abstract void connectAndRun();
 	
 	protected abstract void respondToDisplayError(ClientRequestContainer request);
 	
@@ -224,6 +224,7 @@ public abstract class Client {
 	public void launchTournament(int numPlayers, Settings settings, int port){
 		try {
 			_pool.execute((new Tournament(numPlayers, settings, port)));
+			connectAndRun();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

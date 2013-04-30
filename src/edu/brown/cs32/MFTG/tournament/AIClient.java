@@ -36,7 +36,7 @@ public class AIClient extends Client{
 		_previousPlayer=null;
 	}
 	
-	protected void connectAndRun() {
+	public void connectAndRun() {
 		try {
 			_server = new Socket(_host, _port);
 			_input = new BufferedReader(new InputStreamReader(_server.getInputStream()));
