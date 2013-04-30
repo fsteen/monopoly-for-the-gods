@@ -83,7 +83,7 @@ public class CreateGamePanel extends JPanel{
 			System.exit(1);
 		}
 
-	}//					Integer[] players = _bottomPanel.getPlayers();
+	}
 
 	@Override
 	public void paintComponent(Graphics g) {

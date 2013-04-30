@@ -12,6 +12,7 @@ public class PlayerPropertyDataAccumulator {
 	public double playerPersonalRevenueWithHouses;
 	public double playerPersonalRevenueWithoutHouses;
 	public double playerMortgaged;
+	public double playerTimeOwned;
 	public int numDataPoints;
 	
 	@JsonCreator
@@ -22,7 +23,9 @@ public class PlayerPropertyDataAccumulator {
 		playerPersonalRevenueWithHouses = 0;
 		playerPersonalRevenueWithoutHouses = 0;
 		playerMortgaged = 0;
+		playerTimeOwned = 0;
 		numDataPoints = 0;
+		
 	}
 	
 	@Override
@@ -38,6 +41,7 @@ public class PlayerPropertyDataAccumulator {
 			&& this.playerPersonalRevenueWithHouses == that.playerPersonalRevenueWithHouses
 			&& this.playerPersonalRevenueWithoutHouses == that.playerPersonalRevenueWithoutHouses
 			&& this.playerMortgaged == that.playerMortgaged
+			&& this.playerTimeOwned == that.playerTimeOwned
 			&& this.numDataPoints == that.numDataPoints;
 	}
 
@@ -46,6 +50,7 @@ public class PlayerPropertyDataAccumulator {
 		playerPersonalRevenueWithHouses = 0;
 		playerPersonalRevenueWithoutHouses = 0;
 		playerMortgaged = 0;
+		playerTimeOwned = 0;
 		numDataPoints = 0;
 	}
 
@@ -57,7 +62,7 @@ public class PlayerPropertyDataAccumulator {
 				playerPersonalRevenueWithHouses/divideBy,
 				playerPersonalRevenueWithoutHouses/divideBy,
 				playerMortgaged/divideBy,
-				numDataPoints/totalDataPoints,
+				playerTimeOwned/totalDataPoints,
 				numDataPoints);
 	}
 	
