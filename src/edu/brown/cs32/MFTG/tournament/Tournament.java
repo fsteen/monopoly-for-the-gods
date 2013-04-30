@@ -142,7 +142,7 @@ public class Tournament implements Runnable{
 			Future<Player> future = _executor.submit(worker);
 			playerFutures.add(future);
 		}
-		System.out.println("a");
+		System.out.println("1");
 		
 		for (int i = 0; i < playerFutures.size(); i++){
 			try {

@@ -168,17 +168,18 @@ public abstract class Client {
 	private void respondToGetPlayer(ClientRequestContainer request) throws JsonParseException, JsonMappingException, IOException{
 		List<String> arguments = request._arguments;
 		
+		System.out.println("im here");
 		if (arguments == null){
 			// throw an error
 		} else if (arguments.size() < 1){
 			// throw a different error
 		}
-		
+		System.out.println("b");
 		int time = Integer.parseInt(arguments.get(0));
 		
 		Player p = getPlayer(time);
-		
-		String playerString = _oMapper.writeValueAsString(p);
+		String playerString = _oMapper.writeValueAsString(p); //TODO: the problem is this line
+		System.out.println("d");
 		ClientRequestContainer response = new ClientRequestContainer(Method.SENDPLAYER, Arrays.asList(playerString));
 		write(response);
 	}

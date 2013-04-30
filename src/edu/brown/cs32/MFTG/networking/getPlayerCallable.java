@@ -11,13 +11,13 @@ import edu.brown.cs32.MFTG.monopoly.Player;
  */
 public class getPlayerCallable implements Callable<Player>{
 
-	private final ClientHandler _client;
+	private final ClientHandler _clientHandler;
 	
 	public getPlayerCallable(ClientHandler client){
-		_client = client;
+		_clientHandler = client;
 	}
 	
 	public Player call() throws Exception{
-		return _client.getPlayer();
+		return _clientHandler.getPlayer();
 	}
 }

@@ -160,6 +160,7 @@ public class HumanClient extends Client{
 	 * @return
 	 */
 	public Player getPlayer(int time){
+		System.out.println(_gui.getBoard().getPlayer());
 		return _gui.getBoard().getPlayer();
 	}
 

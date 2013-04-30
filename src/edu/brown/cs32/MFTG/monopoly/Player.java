@@ -23,6 +23,7 @@ public class Player {
 	public enum Aggression {
 		PASSIVE, AGGRESSIVE
 	}
+	
 	public final int ID;
 	private HashMap<String, Integer> _propertyValues;
 	private HashMap<String, Double[]> _colorValues;

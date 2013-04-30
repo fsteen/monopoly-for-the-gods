@@ -127,7 +127,6 @@ public abstract class NonstaticProperty extends PropertyPanel {
 		g2.fill(_profitBlock);
 
 		g2.setColor(border);
-		g2.setStroke(new BasicStroke(Constants.BORDER/2));
 		g2.setStroke(new BasicStroke(Constants.BORDER));
 		g2.draw(_spaceOutline);
 
@@ -168,7 +167,6 @@ public abstract class NonstaticProperty extends PropertyPanel {
 		houses.paint(g2);
 
 		g2.setColor(border);
-		g2.setStroke(new BasicStroke(Constants.BORDER/2));
 		g2.setStroke(new BasicStroke(Constants.BORDER));
 		g2.draw(_spaceOutline);
 

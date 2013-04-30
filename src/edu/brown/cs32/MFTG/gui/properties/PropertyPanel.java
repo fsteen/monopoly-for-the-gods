@@ -54,7 +54,6 @@ public abstract class PropertyPanel extends JPanel {
 		}
 		
 		initializeBackground();
-
 	}
 
 	public void initializeBackground () {
@@ -65,8 +64,17 @@ public abstract class PropertyPanel extends JPanel {
 
 		/* Make the box outline */
 		_spaceOutline = new Rectangle();
-		_spaceOutline.setLocation(Constants.BORDER/2, Constants.BORDER/2);
-		_spaceOutline.setSize(Constants.WIDTH-Constants.BORDER, Constants.HEIGHT - Constants.BORDER);
+		_spaceOutline.setLocation(Constants.BORDER/2, 0);
+		_spaceOutline.setSize(Constants.WIDTH, Constants.HEIGHT);
+		if(_orientation == Orientation.LEFT) {
+			_spaceOutline.setLocation(0, 0);			
+		}
+		else if (_orientation == Orientation.DOWN || _orientation == Orientation.UP) {
+			_spaceOutline.setLocation((int) (-.5*Constants.BORDER), 0);
+		}
+		else {
+			_spaceOutline.setLocation((int) (-.5*Constants.BORDER), 0);
+		}
 	}
 
 	public abstract int getValue();

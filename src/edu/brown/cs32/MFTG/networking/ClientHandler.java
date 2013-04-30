@@ -83,8 +83,12 @@ public class ClientHandler {
 		try {
 			write(request);
 			
+			System.out.println("will alex look like a dumbass?");
+			
 			// read in the response
 			ClientRequestContainer response = readResponse();
+			
+			System.out.println("past where Alex had doubts");
 			
 			// check for bad responses
 			if (response._method != Method.SENDPLAYER){
