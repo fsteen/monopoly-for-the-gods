@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -477,9 +478,9 @@ public class Board extends JPanel {
 		_center.setWealthData(data);
 	}
 	
-/*	public static void main (String[] args) {
+	public static void main (String[] args) {
 		JFrame frame = new JFrame();
-		frame.setPreferredSize(new Dimension(Constants.FULL_WIDTH, Constants.FULL_HEIGHT));
+		frame.setPreferredSize(new Dimension(9*Constants.WIDTH + 2*Constants.HEIGHT, 9*Constants.WIDTH + 2*Constants.HEIGHT));
 		try {
 			JMenuBar menu = new JMenuBar();
 			Board board = new Board(1);
@@ -545,7 +546,7 @@ public class Board extends JPanel {
 		}
 		frame.pack();
 		frame.setVisible(true);
-	}*/
+	}
 
 /* ----------------------------------------------------------------------------
  * ----------------------------- MENU LISTENERS -------------------------------

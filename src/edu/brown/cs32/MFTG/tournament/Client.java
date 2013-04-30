@@ -76,6 +76,7 @@ public class Client {
 		_data = new ArrayList<>();
 		_numThreadsDone = new AtomicInteger(0);
 
+		System.out.println("making new monopoly gui");
 		_gui = new MonopolyGui(this);
 	//	_dummyGui = new DummyGUI();
 	}
@@ -164,7 +165,7 @@ public class Client {
 		}
 		try {
 			_id = respondToSendID();
-			System.out.println("creading board");
+			System.out.println("creating board");
 			_gui.createBoard(_id);
 			System.out.println("created board");
 		} catch (IOException | InvalidRequestException e1) {

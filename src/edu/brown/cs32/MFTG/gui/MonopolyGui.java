@@ -1,15 +1,12 @@
 package edu.brown.cs32.MFTG.gui;
 
+import java.awt.Dimension;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Set;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.UIManager;
-import javax.swing.UIManager.LookAndFeelInfo;
-import javax.swing.UnsupportedLookAndFeelException;
 
 import edu.brown.cs32.MFTG.gui.gameboard.Board;
 import edu.brown.cs32.MFTG.networking.ProfileManager;
@@ -28,6 +25,16 @@ public class MonopolyGui extends JFrame{
 	public MonopolyGui(Client client) {
 		super("Monopoly for the GODS");
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		
+		Dimension dimension = new Dimension(9*Constants.WIDTH + 2*Constants.HEIGHT, 9*Constants.WIDTH + 2*Constants.HEIGHT);
+		this.setSize(dimension);		
+		this.setPreferredSize(dimension);
+		this.setMaximumSize(dimension);
+		this.setMinimumSize(dimension);
+		
+		this.setResizable(false);
+
+		
 		_panels = new HashMap<>();
 		_profileManager = new ProfileManager();
 
@@ -48,14 +55,8 @@ public class MonopolyGui extends JFrame{
 		_end = new EndGamePanel(this);
 		_panels.put("end", _end);
 
-		this.setSize(9*Constants.WIDTH + 2*Constants.HEIGHT, 9*Constants.WIDTH + 2*Constants.HEIGHT);
-		this.setResizable(false);
-
-		//_currentPanel=lobby;
-		//this.add(_currentPanel);
-
-		createBoard(1);
-		
+		_currentPanel=lobby;
+		this.add(_currentPanel);
 		
 		this.pack();
 		this.setVisible(true);
@@ -76,6 +77,7 @@ public class MonopolyGui extends JFrame{
 	public void switchPanels(String panel) {
 		remove(_currentPanel);
 		_currentPanel=_panels.get(panel);
+		System.out.println("trying to get panel: " + panel);
 		System.out.println("going to add panel: " + panel);
 		add(_currentPanel);
 		if(_currentPanel==_choose) {
@@ -120,18 +122,17 @@ public class MonopolyGui extends JFrame{
 	}
 
 	public void createBoard(int id){
+		Board board;
 		try {
-			this.removeAll();
-			System.out.println("making board");
-			Board board = new Board(id);
-			this.add(board);
-			repaint();
-			//_panels.put("board",  board);
-			//switchPanels("board");
+			board = new Board(1);
+			_panels.put("board", board);
+			switchPanels("board");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		this.repaint();
+		
 	}
 
 	public Client getClient(){
