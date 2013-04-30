@@ -51,20 +51,20 @@ public class ClientTests {
 	}
 	
 	public static void playManyGamesTest(){
-		int numGames = 1000;
+		int numGames = 10000;
 		//TODO get exception when numGames gets large
 		Client p = new Client("fakehost", -1);
 
 		System.out.println("Starting to wait");
-		try {
-			Thread.sleep(30000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		try {
+//			Thread.sleep(30000);
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		System.out.println("Hope you set your heuristics ...");
 		
-		Player player = p.getPlayer();
+		Player player = p.getPlayer(0);
 		
 		List<Player> players = new ArrayList<>();
 		players.add(new Player(0));
