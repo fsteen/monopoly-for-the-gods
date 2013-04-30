@@ -27,7 +27,7 @@ public class Tournament implements Runnable{
 	
 	public static final double CONFIRMATION_PERCENTAGE = 0.1; //confirm 10% of games
 	public static final int NUM_DATA_POINTS = 50;
-	private List<ClientHandler> _clients;
+	private List<ClientHandler> _clientHandlers;
 	private ServerSocket _socket;
 	private Settings _settings;
 	private ExecutorService _executor; 
@@ -44,7 +44,7 @@ public class Tournament implements Runnable{
 		
 		_numPlayers = numPlayers;
 		_socket = new ServerSocket(port);
-		_clients = new ArrayList<>();
+		_clientHandlers = new ArrayList<>();
 		_settings = settings;
 		_executor = Executors.newFixedThreadPool(numPlayers);
 	}
@@ -62,7 +62,7 @@ public class Tournament implements Runnable{
 		List<List<GameData>> data;
 		List<Integer> confirmationIndices;
 		
-		for(int i = 0; i < _settings.getNumRounds(); i++){
+		for(int i = 0; i < _settings.getNumRounds(); i++){			
 			// request a Player from each client
 			List<Player> newPlayers = getNewPlayers();
 			if (newPlayers != null)
@@ -91,7 +91,6 @@ public class Tournament implements Runnable{
 			}
 			
 			// send the data to all the clients
-			//System.out.println("About to send data to clients");
 			sendEndOfRoundData(DataProcessor.aggregate(dataToSend, NUM_DATA_POINTS));
 		}
 		sendEndOfGameData();
@@ -106,7 +105,7 @@ public class Tournament implements Runnable{
 	 */
 	private List<Player> handlePlayerExecutionException(Throwable cause, int culprit){
 		if (cause instanceof ClientLostException){
-			_clients.remove(culprit);
+			_clientHandlers.remove(culprit);
 			sendErrorMessage("Lost connection to client " + culprit +". Ejecting client from game and " +
 							 " requesting new heuristic information");
 			return getNewPlayers();
@@ -128,7 +127,7 @@ public class Tournament implements Runnable{
 		List<Future<Player>> playerFutures = new ArrayList<>();
 		List<Player> players = new ArrayList<>();
 		
-		for(ClientHandler c : _clients){
+		for(ClientHandler c : _clientHandlers){
 			Callable<Player> worker = new getPlayerCallable(c);
 			Future<Player> future = _executor.submit(worker);
 			playerFutures.add(future);
@@ -153,7 +152,7 @@ public class Tournament implements Runnable{
 	
 	private void handlePlayGamesException (Throwable cause, int culprit){
 		if (cause instanceof ClientLostException){
-			_clients.remove(culprit);
+			_clientHandlers.remove(culprit);
 			sendErrorMessage("Lost connection to client " + culprit +". Ejecting client from game");
 		} else if (cause instanceof InvalidResponseException || cause instanceof ClientCommunicationException){
 			sendErrorMessage("Unable to retrieve game data from client " + culprit + ". Reusing old heuristics");
@@ -174,12 +173,12 @@ public class Tournament implements Runnable{
 		List<Future<List<GameData>>> gameDataFutures = new ArrayList<>();
 		List<List<GameData>> gameData = new ArrayList<>();
 		
-		if (_clients.size() != seeds.size()){
+		if (_clientHandlers.size() != seeds.size()){
 			// throw an error or something
 		}
 		
-		for (int i = 0; i < _clients.size(); i++){
-			Callable<List<GameData>> worker = new PlayGamesCallable(_clients.get(i), players, seeds.get(i));
+		for (int i = 0; i < _clientHandlers.size(); i++){
+			Callable<List<GameData>> worker = new PlayGamesCallable(_clientHandlers.get(i), players, seeds.get(i));
 			Future<List<GameData>> future = _executor.submit(worker);
 			gameDataFutures.add(future);
 		}
@@ -199,13 +198,13 @@ public class Tournament implements Runnable{
 		}
 		
 		if (numFails > 0)
-			sendErrorMessage("Unable to use game data from " + numFails + " of the " + _clients.size() + " clients");
+			sendErrorMessage("Unable to use game data from " + numFails + " of the " + _clientHandlers.size() + " clients");
 		
 		return gameData;
 	}
 
 	private void sendEndOfRoundData(GameDataReport aggregatedData) {
-		for(ClientHandler c : _clients){
+		for(ClientHandler c : _clientHandlers){
 			try {
 				c.setGameData(aggregatedData);
 			} catch (ClientCommunicationException e) {
@@ -215,7 +214,7 @@ public class Tournament implements Runnable{
 	}
 	
 	private void sendErrorMessage(String errorMessage){
-		for (ClientHandler c : _clients){
+		for (ClientHandler c : _clientHandlers){
 			c.sendErrorMessage(errorMessage);
 		}
 	}
@@ -237,7 +236,7 @@ public class Tournament implements Runnable{
 			Socket clientConnection = _socket.accept();
 			connectionsMade++;
 			ClientHandler cHandler = new ClientHandler(clientConnection, connectionsMade);
-			_clients.add(cHandler);
+			_clientHandlers.add(cHandler);
 			try {
 				cHandler.sendID();
 			} catch (ClientCommunicationException e) {
