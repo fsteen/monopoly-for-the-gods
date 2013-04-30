@@ -548,6 +548,7 @@ public class GamePlayer {
 		if(property.getOwner()!=this) {
 			throw new Exception("Property "+property+"not already owned by "+this+", owned by "+property.getOwner());
 		}
+		property.setOwner(_game.getBanker());
 		_properties.remove(property);
 		//checks if the property now creates a monopoly
 		if(property.getMonopolyState()) {
@@ -561,6 +562,19 @@ public class GamePlayer {
 		else if(property.Name.equals("reading railroad")||property.Name.equals("pennsylvania railroad")||property.Name.equals("b and o railroad")||property.Name.equals("short line")){
 			_numRailroads--;
 		}
+	}
+	
+	/**
+	 * make player lose all properties when bankrupt
+	 */
+	public void loseAllProperties() {
+		for(Property p:_properties) {
+			p.setMonopolyState(false);
+		}
+		_properties.clear();
+		_numUtilities=0;
+		_numRailroads=0;
+		
 	}
 
 	/**

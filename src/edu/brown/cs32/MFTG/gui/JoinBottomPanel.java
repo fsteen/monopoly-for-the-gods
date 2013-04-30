@@ -91,6 +91,22 @@ public class JoinBottomPanel extends JPanel {
 	}
 
 	/**
+	 * 
+	 * @return hostname
+	 */
+	public String getHost() {
+		return _hostName.getText().equals("")? "localhost" : _hostName.getText();
+	}
+	
+	/**
+	 * 
+	 * @return port number
+	 */
+	public int getPort() {
+		return _port.getText().equals("") ? DEFAULT_PORT : Integer.parseInt(_port.getText());
+	}
+	
+	/**
 	 * This class makes sure that the port can only take in numbers of length 4 or less
 	 * @author jschvime
 	 *

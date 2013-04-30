@@ -22,7 +22,7 @@ public class GameTest {
 		
 	}
 	
-	@Test
+	//@Test
 	//tests two players with no freeparking, double on go, or auctions.
 	public void fourplayertest() {
 		Player p0=new Player(0);
@@ -35,11 +35,12 @@ public class GameTest {
 		
 	}
 	
-	@Test
+	//@Test
 	public void thousandTest() {
 		List<Exception> exc = new ArrayList<>();
 		for (int i=0; i<100000; i++) {
 			try {
+				if(i%10000==0)System.out.println(i);
 				Player p0=new Player(0);
 				Player p1=new Player(1);
 				Player p2=new Player(2);
