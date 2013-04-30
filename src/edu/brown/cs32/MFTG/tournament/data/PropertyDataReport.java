@@ -13,6 +13,7 @@ public class PropertyDataReport {
 	public final double accTotalRevenueWithHouses;
 	public final double accTotalRevenueWithoutHouses;
 	public final double accMortgaged;
+	public final double timeOwned;
 	public final int numDataPoints;
 	
 	@JsonCreator
@@ -21,7 +22,8 @@ public class PropertyDataReport {
 							  @JsonProperty("accNumHouses") double accNumHouses,
 							  @JsonProperty("accTotalRevenueWithHouses") double accTotalRevenueWithHouses, 
 							  @JsonProperty("accTotalRevenueWithoutHouses") double accTotalRevenueWithoutHouses,
-							  @JsonProperty("accMortgaged") double accMortgaged, 
+							  @JsonProperty("accMortgaged") double accMortgaged,
+							  @JsonProperty("timeOwned") double timeOwned,
 							  @JsonProperty("numDataPoints") int numDataPoints){
 		
 		this.ownerID = ownerID;
@@ -30,14 +32,15 @@ public class PropertyDataReport {
 		this.accTotalRevenueWithHouses = accTotalRevenueWithHouses;
 		this.accTotalRevenueWithoutHouses = accTotalRevenueWithoutHouses;
 		this.accMortgaged = accMortgaged;
+		this.timeOwned = timeOwned;
 		this.numDataPoints = numDataPoints;
 	}
 	
 	@Override
 	public String toString(){
-		return String.format("{%s, ID: %d, houses: %f, revW: %f, revWO: %f, mort: %f, #data: %d}",
+		return String.format("{%s, ID: %d, houses: %f, revW: %f, revWO: %f, mort: %f, timeOwned: %f, #data: %d}",
 				propertyName,ownerID,accNumHouses,accTotalRevenueWithHouses,
-				accTotalRevenueWithoutHouses,accMortgaged,numDataPoints);
+				accTotalRevenueWithoutHouses,accMortgaged,timeOwned,numDataPoints);
 	}
 	
 	@Override
@@ -53,6 +56,7 @@ public class PropertyDataReport {
 			   && (this.accTotalRevenueWithHouses == that.accTotalRevenueWithHouses)
 			   && (this.accTotalRevenueWithoutHouses == that.accTotalRevenueWithoutHouses)
 			   && (this.accMortgaged == that.accMortgaged)
+			   && (this.timeOwned == that.timeOwned)
 			   && (this.numDataPoints == that.numDataPoints);
 	}
 }

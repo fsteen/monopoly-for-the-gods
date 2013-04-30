@@ -14,8 +14,6 @@ public class PlayerWealthDataAccumulator{
 	}
 	
 	public PlayerWealthDataReport toPlayerWealthDataReport(){
-		//TODO must currently round the averages if i want to use PlayerWealthData class
-		
 		int divideBy = numDataPoints == 0 ? 1 : numDataPoints;
 		return new PlayerWealthDataReport(
 				ownerID,

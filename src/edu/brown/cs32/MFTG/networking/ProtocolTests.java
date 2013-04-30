@@ -21,9 +21,9 @@ import edu.brown.cs32.MFTG.monopoly.Player.Aggression;
 import edu.brown.cs32.MFTG.monopoly.Player.Amount;
 import edu.brown.cs32.MFTG.monopoly.Player.Balance;
 import edu.brown.cs32.MFTG.monopoly.Player.Expense;
-import edu.brown.cs32.MFTG.tournament.PlayerPropertyData;
 import edu.brown.cs32.MFTG.tournament.Profile;
 import edu.brown.cs32.MFTG.tournament.data.GameDataReport;
+import edu.brown.cs32.MFTG.tournament.data.PlayerPropertyDataAccumulator;
 import edu.brown.cs32.MFTG.tournament.data.PlayerWealthDataReport;
 import edu.brown.cs32.MFTG.tournament.data.PropertyDataAccumulator;
 import edu.brown.cs32.MFTG.tournament.data.PropertyDataReport;
@@ -32,7 +32,7 @@ import edu.brown.cs32.MFTG.tournament.data.TimeStampReport;
 public class ProtocolTests {
 	PlayerWealthDataReport _playerWealthDataReport;
 	TimeStampReport _timeStampReport;
-	PlayerPropertyData _playerPropertyData;
+	PlayerPropertyDataAccumulator _playerPropertyData;
 	PropertyDataAccumulator _propertyDataAccumulator;
 	
 	@Before
@@ -44,7 +44,7 @@ public class ProtocolTests {
 		
 		_timeStampReport = new TimeStampReport(1, wealthData);
 		
-		_playerPropertyData = new PlayerPropertyData("test", 1);
+		_playerPropertyData = new PlayerPropertyDataAccumulator("test", 1);
 		_playerPropertyData.setPlayerNumHouses(2);
 		_playerPropertyData.setPlayerPersonalRevenueWithHouses(3);
 		_playerPropertyData.setPlayerPersonalRevenueWithoutHouses(4);
