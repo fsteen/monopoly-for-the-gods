@@ -23,10 +23,10 @@ import edu.brown.cs32.MFTG.networking.ProfileManager;
 import edu.brown.cs32.MFTG.tournament.Profile;
 
 @SuppressWarnings("serial")
-public class ProfileScrollPane extends JScrollPane{
-	private DefaultListModel<String> _listModel;
-	private JList<String> _profileList;
-	private MonopolyGui _main;
+public abstract class ProfileScrollPane extends JScrollPane{
+	protected DefaultListModel<String> _listModel;
+	protected JList<String> _profileList;
+	protected MonopolyGui _main;
 
 	public ProfileScrollPane(JList<String> profileList, DefaultListModel<String> listModel, MonopolyGui main) {
 		super(profileList);
@@ -43,11 +43,10 @@ public class ProfileScrollPane extends JScrollPane{
 	/**
 	 * adds profile names to list
 	 */
-	private void addProfileNames() {
+	protected void addProfileNames() {
 		for(String s: _main.getProfileNames()) {
 			_listModel.addElement(s);
 		}
-		_listModel.addElement("Create New Profile");
 	}
                                                         
 	void setup(){
@@ -66,28 +65,10 @@ public class ProfileScrollPane extends JScrollPane{
 		_profileList.getActionMap().put( "doDownAction", new DownAction());
 	}
 	
-	public void processClick() {
-		int index=_profileList.getSelectedIndex();
-		if(index==_listModel.size()-1) {
-			String newProfile=JOptionPane.showInputDialog("New profile name: ");
-			while(true) {
-				if(newProfile==null) {
-					_profileList.setSelectedIndex(_listModel.size()-1);
-					return;
-				}
-				if(_main.addProfile(newProfile)!=null) {
-					break;
-				}
-				newProfile=JOptionPane.showInputDialog("Please choose an unused name: ");
-			}
-			_main.addProfile(newProfile);
-			_listModel.add(index, newProfile);
-			_profileList.clearSelection();
-			_profileList.setSelectedIndex(index);
-		}
-		_main.setCurrentProfile(_listModel.get(index));
-		_main.switchPanels("lobby");
-	}
+	/**
+	 * proces click
+	 */
+	public abstract void processClick();
 	
 	/**********************Private inner classes*************************************/
 	public class ListListener implements ListSelectionListener{

@@ -36,7 +36,7 @@ public class ChooseProfilePanel extends JPanel{
 	private BufferedImage _background;
 	private Point _chooseLoc,  _backLoc, _selectLoc;
 	private MonopolyGui _main;
-	private ProfileScrollPane _profileScrollPane;
+	private ChooseProfileScrollPane _profileScrollPane;
 
 	private JList<String> _profileList;
 	private DefaultListModel<String> _listModel;
@@ -132,7 +132,7 @@ public class ChooseProfilePanel extends JPanel{
 		_listModel = new DefaultListModel<>();
 		_profileList = new JList<>(_listModel);
 
-		_profileScrollPane = new ProfileScrollPane(_profileList, _listModel, _main);
+		_profileScrollPane = new ChooseProfileScrollPane(_profileList, _listModel, _main);
 		_profileScrollPane.setup();
 
 		_profileScrollPane.setLocation(Constants.FULL_WIDTH/32, START_HEIGHT+BUTTON_HEIGHT*6/5);

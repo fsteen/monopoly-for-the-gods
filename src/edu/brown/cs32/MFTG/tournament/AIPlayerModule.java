@@ -55,7 +55,7 @@ public class AIPlayerModule extends Client{
 
 
 	@Override
-	public Player getPlayer(){
+	public Player getPlayer(int time){
 		Player temp = new Player(_player);
 		for(String key: _currentGameData._overallPlayerPropertyData.keySet()) {
 			PropertyDataReport others =  _currentGameData._overallPropertyData.get(key);
