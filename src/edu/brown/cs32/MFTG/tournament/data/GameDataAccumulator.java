@@ -51,7 +51,6 @@ public class GameDataAccumulator {
 				temp.playerNumHouses += d.playerNumHouses;
 				temp.playerPersonalRevenueWithHouses += d.playerPersonalRevenueWithHouses;
 				temp.playerPersonalRevenueWithoutHouses += d.playerPersonalRevenueWithoutHouses;
-				temp.numDataPoints += 1;
 			}
 			
 			p.reset(); //reset the currentMaxes

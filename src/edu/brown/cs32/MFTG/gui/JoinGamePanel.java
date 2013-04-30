@@ -1,6 +1,7 @@
 package edu.brown.cs32.MFTG.gui;
 
 import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -11,6 +12,8 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import javax.imageio.ImageIO;
 import javax.swing.ButtonGroup;
@@ -27,7 +30,7 @@ public class JoinGamePanel extends JPanel{
 	private Point _createLoc, _whiteLoc, _backLoc, _goLoc;
 	private JoinBottomPanel _bottomPanel;
 	private MonopolyGui _main;
-	
+
 	private final int BUTTON_HEIGHT=Constants.FULL_HEIGHT/8;
 	private final int BUTTON_WIDTH=2*Constants.FULL_HEIGHT/3;
 	private final int START_HEIGHT=Constants.FULL_HEIGHT/8;
@@ -42,32 +45,32 @@ public class JoinGamePanel extends JPanel{
 			this.setBackground(Color.GRAY);
 			this.setLayout(null);
 			_background = Helper.resize(ImageIO.read(new File("images/mountain2.png")),this.getWidth(),this.getHeight());
-			
+
 			_createLite = new ImagePanel(Helper.resize(ImageIO.read(new File("images/JoinGameLite.png")), BUTTON_WIDTH-40, BUTTON_HEIGHT));
 			_createLoc= new Point(START_WIDTH, START_HEIGHT);
 			_createLite.setLocation(_createLoc);
-					
+
 			_whiteLoc= new Point(Constants.FULL_WIDTH/32, START_HEIGHT+BUTTON_HEIGHT*6/5);
 			_bottomPanel=new JoinBottomPanel();
 			_bottomPanel.setLocation(_whiteLoc);
-			
+
 			_backLite = new ImagePanel(Helper.resize(ImageIO.read(new File("images/BackLite.png")), 100, 50));
 			_backDark = new ImagePanel(Helper.resize(ImageIO.read(new File("images/BackDark.png")), 100, 50));
 			_backLoc= new Point(20, this.getHeight()-_backDark.getHeight()-10);
 			_backLite.setLocation(_backLoc);
 			_backDark.setLocation(_backLoc);
 			_backDark.setVisible(false);
-			
+
 			_goLite = new ImagePanel(Helper.resize(ImageIO.read(new File("images/GoLite.png")), 100, 50));
 			_goDark = new ImagePanel(Helper.resize(ImageIO.read(new File("images/GoDark.png")), 100, 50));
 			_goLoc= new Point(_whiteLoc.getLocation().x+_bottomPanel.getWidth()-_goLite.getWidth()-30, _whiteLoc.getLocation().y+_goDark.getHeight()-20);
 			_goLite.setLocation(_goLoc);
 			_goDark.setLocation(_goLoc);
 			_goDark.setVisible(false);
-			
-			
+
+
 			addMouseListener(new MyMouseListener());
-			
+
 			add(_createLite);
 			add(_backLite);
 			add(_backDark);
@@ -75,7 +78,7 @@ public class JoinGamePanel extends JPanel{
 			add(_goDark);
 			add(_bottomPanel);
 
-			
+
 		} catch (IOException e) {
 			System.out.println("ERROR: "+e.getMessage());
 			System.exit(1);
@@ -110,9 +113,20 @@ public class JoinGamePanel extends JPanel{
 				_goDark.setVisible(true);
 				repaint();
 			}
+			if(e.getX()>276 &&e.getX()<503&&e.getY()>581 &&e.getY()<636) {
+				String url = "https://itunes.apple.com/us/app/foodler/id615802139?mt=8"; // path to your new file
+
+				// open the default web browser for the HTML page
+				try {
+					Desktop.getDesktop().browse(new URI(url));
+				} catch (IOException e1) {
+				} catch (URISyntaxException e1) {
+				}
+
+			}
 
 		}
-		
+
 		@Override
 		public void mouseReleased(MouseEvent e) {
 
@@ -143,7 +157,7 @@ public class JoinGamePanel extends JPanel{
 				fixPanels();
 			}
 		}
-		
+
 		private void fixPanels() {
 			_backDark.setVisible(false);
 			_backLite.setVisible(true);

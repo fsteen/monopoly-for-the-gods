@@ -83,9 +83,6 @@ public class JoinBottomPanel extends JPanel {
 			
 			add(portPanel, BorderLayout.NORTH);
 			
-			//THIS MESSES WITH THE OTHER MOUSE LISTENER ={
-//			addMouseListener(new FoodlerListener());
-
 
 		} catch (IOException e) {
 			System.out.println("ERROR: "+e.getMessage());
@@ -147,25 +144,5 @@ public class JoinBottomPanel extends JPanel {
 		}
 	}
 	
-
-	
-	private class FoodlerListener extends MouseInputAdapter{
-
-		@Override
-		public void mousePressed(MouseEvent e) {
-			if(e.getX()>243 &&e.getX()<481&&e.getY()>353 &&e.getY()<411) {
-				String url = "https://itunes.apple.com/us/app/foodler/id615802139?mt=8"; // path to your new file
-
-				// open the default web browser for the HTML page
-				try {
-					Desktop.getDesktop().browse(new URI(url));
-				} catch (IOException e1) {
-				} catch (URISyntaxException e1) {
-				}
-
-			}
-		}
-		
-	}
 
 }
