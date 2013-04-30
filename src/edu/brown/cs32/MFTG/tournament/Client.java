@@ -16,6 +16,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import javax.swing.JOptionPane;
+
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -47,7 +49,7 @@ public class Client {
 	private Method _lastRequest;
 
 	/* Module variables */
-	private MonopolyGui _gui;
+//	private MonopolyGui _gui;
 	private DummyGUI _dummyGui;
 	private final int NUM_THREADS=25;
 	private final int DATA_PACKET_SIZE=100;
@@ -73,10 +75,8 @@ public class Client {
 		_pool = Executors.newFixedThreadPool(NUM_THREADS);
 		_data = new ArrayList<>();
 		_numThreadsDone = new AtomicInteger(0);
-		_id = 0; //TODO client needs to know its ID!!!!!!!
 
-
-		_gui = new MonopolyGui(this);
+//		_gui = new MonopolyGui(this);
 		_dummyGui = new DummyGUI();
 	}
 
@@ -148,7 +148,7 @@ public class Client {
 			displayError("Unable to retrieve a unique ID from the server :(");
 			return;
 		}
-		_gui.createBoard(_id);
+//		_gui.createBoard(_id);
 
 		while(true){
 			try {
@@ -323,9 +323,10 @@ public class Client {
 			_dummyGui.setPlayerSpecificPropertyData(getPlayerPropertyData(r._overallPlayerPropertyData));
 			_dummyGui.setPropertyData(r._overallPropertyData);
 			_dummyGui.setWealthData(getPlayerWealthData(r._timeStamps));
-			_gui.getBoard().setPlayerSpecificPropertyData(getPlayerPropertyData(r._overallPlayerPropertyData));
-			_gui.getBoard().setPropertyData(r._overallPropertyData);
-			_gui.getBoard().setWealthData(getPlayerWealthData(r._timeStamps));
+			_dummyGui.printSpaces();
+//			_gui.getBoard().setPlayerSpecificPropertyData(getPlayerPropertyData(r._overallPlayerPropertyData));
+//			_gui.getBoard().setPropertyData(r._overallPropertyData);
+//			_gui.getBoard().setWealthData(getPlayerWealthData(r._timeStamps));
 			_nextDisplaySize += DATA_PACKET_SIZE; //set next point at which to display
 		}
 	}
@@ -366,7 +367,8 @@ public class Client {
 	 * @return
 	 */
 	public Player getPlayer(){
-		return _gui.getBoard().getPlayer();		
+//		return _gui.getBoard().getPlayer();
+		return _dummyGui.getPlayer();
 	}
 
 	/**
@@ -375,13 +377,13 @@ public class Client {
 	 */
 	public void displayGameData(GameDataReport combinedData) {
 		//TODO implement
-		_gui.getBoard().setPlayerSpecificPropertyData(getPlayerPropertyData(combinedData._overallPlayerPropertyData));
-		_gui.getBoard().setPropertyData(combinedData._overallPropertyData);
-		_gui.getBoard().setWealthData(getPlayerWealthData(combinedData._timeStamps));
+//		_gui.getBoard().setPlayerSpecificPropertyData(getPlayerPropertyData(combinedData._overallPlayerPropertyData));
+//		_gui.getBoard().setPropertyData(combinedData._overallPropertyData);
+//		_gui.getBoard().setWealthData(getPlayerWealthData(combinedData._timeStamps));
 		_dummyGui.setPlayerSpecificPropertyData(getPlayerPropertyData(combinedData._overallPlayerPropertyData));
 		_dummyGui.setPropertyData(combinedData._overallPropertyData);
 		_dummyGui.setWealthData(getPlayerWealthData(combinedData._timeStamps));
-		_gui.getBoard().roundCompleted();	
+//		_gui.getBoard().roundCompleted();	
 	}
 
 	/**
@@ -389,7 +391,7 @@ public class Client {
 	 * @param errorMessage the error message to be displayed
 	 */
 	private void displayError(String errorMessage){
-		// TODO implement
+//		JOptionPane.showMessageDialog(_gui, errorMessage);
 	}
 
 	/*******************************************************/
