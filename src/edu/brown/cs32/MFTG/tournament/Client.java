@@ -14,6 +14,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -165,23 +166,38 @@ public abstract class Client {
 	 * @throws JsonMappingException
 	 * @throws IOException
 	 */
-	private void respondToGetPlayer(ClientRequestContainer request) throws JsonParseException, JsonMappingException, IOException{
+	private void respondToGetPlayer(ClientRequestContainer request) {
 		List<String> arguments = request._arguments;
 		
-		System.out.println("im here");
 		if (arguments == null){
 			// throw an error
 		} else if (arguments.size() < 1){
 			// throw a different error
 		}
-		System.out.println("b");
 		int time = Integer.parseInt(arguments.get(0));
 		
 		Player p = getPlayer(time);
-		String playerString = _oMapper.writeValueAsString(p); //TODO: the problem is this line
+		String playerString;
+		
+//		assert(!(p.getPropertyValues().keySet().contains(null)));
+//		assert(!(p.getColorValues().keySet().contains(null)));
+		
+		try {
+			playerString = _oMapper.writeValueAsString(p);  //TODO: the problem is this line
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+			assert(false);
+			return;
+		}
+		
 		System.out.println("d");
 		ClientRequestContainer response = new ClientRequestContainer(Method.SENDPLAYER, Arrays.asList(playerString));
-		write(response);
+		try {
+			write(response);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	/**
