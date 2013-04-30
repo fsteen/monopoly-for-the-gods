@@ -85,15 +85,23 @@ public class DataProcessor {
 			return true;
 		}
 		
+		GameData previous;
+		GameData current;
 		List<GameData> setData;
-		for(int i = 0; i < confirmationIndices.size(); i++){
-			setData = data.get(confirmationIndices.get(i));
+		for(Integer i : confirmationIndices){
+			setData = data.get(i);
+			previous = setData.get(0);
 			for(int j = 1; j < setData.size(); j++){
-				if(!setData.get(j-1).equals(setData.get(j))){
-					corrupted = true;
+				current = setData.get(j);
+				if(current != null && previous != null){ //because games might have expections
+					if(!current.equals(previous)){
+						corrupted = true;
+					}
 				}
+				previous = current;
 			}
 		}
+		
 		return corrupted;
 	}
 	

@@ -134,7 +134,7 @@ public class Client {
 			_input = new BufferedReader(new InputStreamReader(_server.getInputStream()));
 			_output = new BufferedWriter(new OutputStreamWriter(_server.getOutputStream()));
 		} catch (UnknownHostException e) {
-			displayError("Unknown host. Unable to connect to server :( WHAT THE FUCK, MAN!!!");
+			displayError("Unknown host. Unable to connect to server :( WHAT THE F*CK, MAN!!!");
 			return;
 		} catch (IOException e) {
 			displayError("Unable to connect to server :(");

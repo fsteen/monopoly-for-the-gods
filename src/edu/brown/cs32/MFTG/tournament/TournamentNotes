@@ -27,9 +27,10 @@ Concerns
 	this should be fine since all threads should be done messing with it
 	but it makes me nervous and should probably be changed
 	
-	
-	
+
 ------------------------
 TODO
--for player properties % time you owned it
--/finish creating settings object
+-fix data processing
+-fix threading issues
+-catch game exceptions
+
