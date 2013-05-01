@@ -32,15 +32,15 @@ import edu.brown.cs32.MFTG.tournament.Profile;
 @SuppressWarnings("serial")
 public class SettingsPanel extends JPanel{
 
-	private ImagePanel _chooseLite, _backLite, _backDark, _selectLite, _selectDark, _selectGrey;
+	private ImagePanel _settingsLite, _backLite, _backDark, _editLite, _editDark, _removeLite, _removeDark;
 	private BufferedImage _background;
-	private Point _chooseLoc,  _backLoc, _selectLoc;
+	private Point _settingsLoc,  _backLoc, _editLoc, _removeLoc;
 	private MonopolyGui _main;
 	private SettingsProfileScrollPane _settingsScrollPane;
 	private PlayersScrollPane _playersScrollPane;
 
-	private JList<String> _profileList, _playerList;
-	private DefaultListModel<String> _profileListModel,_playerListModel;
+	private JList<String> _profileList;
+	private DefaultListModel<String> _profileListModel;
 	private boolean _selectActivated;
 
 	private final int BUTTON_HEIGHT=Constants.FULL_HEIGHT/8;
@@ -60,9 +60,9 @@ public class SettingsPanel extends JPanel{
 			this.setLayout(null);
 			_background = Helper.resize(ImageIO.read(new File("images/mountain2.png")),this.getWidth(),this.getHeight());
 
-			_chooseLite = new ImagePanel(Helper.resize(ImageIO.read(new File("images/SettingsLite.png")), BUTTON_WIDTH-40, BUTTON_HEIGHT));
-			_chooseLoc= new Point(START_WIDTH, START_HEIGHT);
-			_chooseLite.setLocation(_chooseLoc);
+			_settingsLite = new ImagePanel(Helper.resize(ImageIO.read(new File("images/SettingsLite.png")), BUTTON_WIDTH-40, BUTTON_HEIGHT));
+			_settingsLoc= new Point(START_WIDTH, START_HEIGHT);
+			_settingsLite.setLocation(_settingsLoc);
 
 			_backLite = new ImagePanel(Helper.resize(ImageIO.read(new File("images/BackLite.png")), 100, 50));
 			_backDark = new ImagePanel(Helper.resize(ImageIO.read(new File("images/BackDark.png")), 100, 50));
@@ -71,23 +71,31 @@ public class SettingsPanel extends JPanel{
 			_backDark.setLocation(_backLoc);
 			_backDark.setVisible(false);
 
-			_selectLite = new ImagePanel(Helper.resize(ImageIO.read(new File("images/EditLite.png")), 100, 50));
-			_selectDark = new ImagePanel(Helper.resize(ImageIO.read(new File("images/EditDark.png")), 100, 50));
-			_selectLoc= new Point(this.getWidth()-_selectLite.getWidth()-30, this.getHeight()-_selectLite.getHeight()-20);
-			_selectLite.setLocation(_selectLoc);
-			_selectDark.setLocation(_selectLoc);
-			_selectDark.setVisible(false);
-			_selectLite.setVisible(true);
-
-			//_selectActivated=false;
+			_editLite = new ImagePanel(Helper.resize(ImageIO.read(new File("images/EditLite.png")), 100, 50));
+			_editDark = new ImagePanel(Helper.resize(ImageIO.read(new File("images/EditDark.png")), 100, 50));
+			_editLoc= new Point(this.getWidth()-_editLite.getWidth()-30, this.getHeight()-_editLite.getHeight()-40);
+			_editLite.setLocation(_editLoc);
+			_editDark.setLocation(_editLoc);
+			_editDark.setVisible(false);
+			_editLite.setVisible(true);
+			
+			_removeLite = new ImagePanel(Helper.resize(ImageIO.read(new File("images/RemoveLite.png")), 130, 50));
+			_removeDark = new ImagePanel(Helper.resize(ImageIO.read(new File("images/RemoveDark.png")), 130, 50));
+			_removeLoc= new Point(this.getWidth()-_editLite.getWidth()-_removeLite.getWidth()-40, this.getHeight()-_removeLite.getHeight()-40);
+			_removeLite.setLocation(_removeLoc);
+			_removeDark.setLocation(_removeLoc);
+			_removeDark.setVisible(false);
+			_removeLite.setVisible(true);
 
 			addMouseListener(new MyMouseListener());
 
-			add(_chooseLite);
+			add(_settingsLite);
 			add(_backLite);
 			add(_backDark);
-			add(_selectLite);
-			add(_selectDark);
+			add(_editLite);
+			add(_editDark);
+			add(_removeLite);
+			add(_removeDark);
 			
 			addProfileList();
 			//addPlayerList();
@@ -104,27 +112,12 @@ public class SettingsPanel extends JPanel{
 	public void giveFocusToList() {
 		_profileList.grabFocus();
 	}
-
+	
 	/**
-	 * makes select button activated
+	 * resets the list of profiles 
 	 */
-	private void activateSelect() {
-		_selectActivated = true;
-		_selectDark.setVisible(false);
-		_selectLite.setVisible(true);
-		_selectGrey.setVisible(false);
-		repaint();
-	}
-
-	/**
-	 * makes select button deactivated
-	 */
-	private void deactivateSelect() {
-		_selectActivated = false;
-		_selectDark.setVisible(false);
-		_selectLite.setVisible(false);
-		_selectGrey.setVisible(true);
-		repaint();
+	public void resetProfileList() {
+		_settingsScrollPane.addProfileNames();;
 	}
 
 	private void addProfileList(){
@@ -141,7 +134,7 @@ public class SettingsPanel extends JPanel{
 		add(_settingsScrollPane);
 	}
 	
-	private void addPlayerList(){
+	/*private void addPlayerList(){
 		_playerListModel = new DefaultListModel<>();
 		_playerList = new JList<>(_playerListModel);
 		
@@ -154,7 +147,7 @@ public class SettingsPanel extends JPanel{
 		_playersScrollPane.setSize(listSize);
 		_playersScrollPane.setPreferredSize(listSize);
 		add(_playersScrollPane);
-	}
+	}*/
 	
 
 	@Override
@@ -180,9 +173,14 @@ public class SettingsPanel extends JPanel{
 				_backDark.setVisible(true);
 				repaint();
 			}
-			else if(intersects(xloc,yloc,_selectLite,_selectLoc)) {
-				_selectLite.setVisible(false);
-				_selectDark.setVisible(true);
+			else if(intersects(xloc,yloc,_editLite,_editLoc)) {
+				_editLite.setVisible(false);
+				_editDark.setVisible(true);
+				repaint();
+			}
+			else if(intersects(xloc,yloc,_removeLite,_removeLoc)) {
+				_removeLite.setVisible(false);
+				_removeDark.setVisible(true);
 				repaint();
 			}
 
@@ -204,10 +202,27 @@ public class SettingsPanel extends JPanel{
 				}
 
 			}
-			else if(intersects(xloc,yloc,_selectLite,_selectLoc)) {
-				if(_selectDark.isVisible()) {
+			else if(intersects(xloc,yloc,_editLite,_editLoc)) {
+				if(_editDark.isVisible()) {
 					fixPanels();
 					_settingsScrollPane.processClick();
+				}
+				else {
+					fixPanels();
+				}
+
+			}
+			else if(intersects(xloc,yloc,_removeLite,_removeLoc)) {
+				if(_removeDark.isVisible()&&_profileList.getSelectedIndex()!=_profileListModel.size()-1) {
+					fixPanels();
+					int remove=JOptionPane.showConfirmDialog(_main, "Are you sure you want to remove the profile \""+_profileList.getSelectedValue()+"\"?\nThis action cannot be reversed.");
+					if(remove!=0) {
+						return;
+					}
+					int index=_profileList.getSelectedIndex();
+					_main.removeProfile(_profileList.getSelectedValue());
+					_profileListModel.remove(index);
+					_profileList.setSelectedIndex(index);
 				}
 				else {
 					fixPanels();
@@ -222,8 +237,10 @@ public class SettingsPanel extends JPanel{
 		private void fixPanels() {
 			_backDark.setVisible(false);
 			_backLite.setVisible(true);
-			_selectDark.setVisible(false);
-			_selectLite.setVisible(true);
+			_editDark.setVisible(false);
+			_editLite.setVisible(true);
+			_removeDark.setVisible(false);
+			_removeLite.setVisible(true);
 			repaint();
 		}
 		private boolean intersects(int xloc, int yloc, JPanel img, Point loc) {

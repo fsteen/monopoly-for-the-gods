@@ -73,8 +73,8 @@ public class GreetingPanel extends JPanel{
 			add(_playDark);
 			add(_settingsLite);
 			add(_settingsDark);
-			//add(_recordsLite);
-			//add(_recordsDark);
+			add(_recordsLite);
+			add(_recordsDark);
 			
 			
 		} catch (IOException e) {
@@ -148,7 +148,7 @@ public class GreetingPanel extends JPanel{
 			else if(intersects(xloc,yloc,_recordsLite,_recordsLoc)) {
 				if(_recordsDark.isVisible()) {
 					fixPanels();
-					//TODO
+					_main.switchPanels("records");
 				}
 				else {
 					fixPanels();

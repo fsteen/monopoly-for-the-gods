@@ -18,6 +18,7 @@ import edu.brown.cs32.MFTG.monopoly.Player;
 import edu.brown.cs32.MFTG.networking.ProfileManager;
 import edu.brown.cs32.MFTG.tournament.Client;
 import edu.brown.cs32.MFTG.tournament.Profile;
+import edu.brown.cs32.MFTG.tournament.Record;
 
 public class MonopolyGui extends JFrame{
 	private JPanel _currentPanel;
@@ -26,6 +27,8 @@ public class MonopolyGui extends JFrame{
 	private ChooseProfilePanel _choose;
 	private Profile _currentProfile;
 	private ProfileManager _profileManager;
+	private SettingsPanel _settings;
+	private RecordsPanel _records;
 	private Client _client;
 
 	public MonopolyGui(Client client) {
@@ -59,12 +62,14 @@ public class MonopolyGui extends JFrame{
 
 		GreetingPanel greet = new GreetingPanel(this);
 		_panels.put("greet", greet);
-		SettingsPanel settings = new SettingsPanel(this);
-		_panels.put("settings", settings);
+		_settings = new SettingsPanel(this);
+		_panels.put("settings", _settings);
+		_records = new RecordsPanel(this);
+		_panels.put("records", _records);
 		GameLobbyPanel lobby = new GameLobbyPanel(this);
 		_panels.put("lobby", lobby);
-		ChooseProfilePanel choose = new ChooseProfilePanel(this);
-		_panels.put("choose", choose);
+		_choose = new ChooseProfilePanel(this);
+		_panels.put("choose", _choose);
 		CreateGamePanel create = new CreateGamePanel(this);
 		_panels.put("create", create);
 		JoinGamePanel join = new JoinGamePanel(this);
@@ -78,7 +83,7 @@ public class MonopolyGui extends JFrame{
 		try {
 			board = new Board(1);
 
-			_currentPanel=settings;
+			_currentPanel=_records;
 
 			this.add(_currentPanel);
 		} catch (IOException e) {
@@ -108,7 +113,16 @@ public class MonopolyGui extends JFrame{
 		_currentPanel=_panels.get(panel);
 		add(_currentPanel);
 		if(_currentPanel==_choose) {
+			_choose.resetProfileList();
 			_choose.giveFocusToList();
+		}
+		else if(_currentPanel==_settings) {
+			_settings.resetProfileList();
+			_settings.giveFocusToList();
+		}
+		else if(_currentPanel==_records) {
+			_records.resetProfileList();
+			_records.giveFocusToList();
 		}
 		revalidate();
 		repaint();
@@ -120,6 +134,32 @@ public class MonopolyGui extends JFrame{
 	 */
 	public Set<String> getProfileNames() {
 		return _profileManager.getProfileNames();
+	}
+	
+	/**
+	 * gets a profile
+	 * @param name
+	 * @return profile
+	 */
+	public Profile getProfile(String name) {
+		return _profileManager.getProfile(name);
+	}
+	
+	/**
+	 * 
+	 * @param profileName
+	 * @return record for profile
+	 */
+	public Record getRecord(String profileName) {
+		return (_profileManager.getProfile(profileName)==null)? null:_profileManager.getProfile(profileName).getRecord();
+	}
+	
+	/**
+	 * removes a profile
+	 * @param profileName
+	 */
+	public void removeProfile(String profileName) {
+		_profileManager.deleteProfile(profileName);
 	}
 	
 	/**

@@ -39,6 +39,7 @@ public abstract class ProfileScrollPane extends JScrollPane{
 		 _profileList.addMouseListener(new MyClickListener());
 		 _profileList.setFont(new Font("itemFont", Font.PLAIN, 30));
 		 addProfileNames();
+		if(listModel.size()>0)_profileList.setSelectedIndex(0);
 	}
 	
 
@@ -46,6 +47,7 @@ public abstract class ProfileScrollPane extends JScrollPane{
 	 * adds profile names to list
 	 */
 	protected void addProfileNames() {
+		_listModel.clear();
 		for(String s: _main.getProfileNames()) {
 			_listModel.addElement(s);
 		}

@@ -52,9 +52,9 @@ public class EndGamePanel extends JPanel{
 			_loser = Helper.resize(ImageIO.read(new File("images/Loser.png")),this.getWidth(),this.getHeight());
 			_foreground = Helper.resize(ImageIO.read(new File("images/WinnerColumns.png")),this.getWidth(),this.getHeight());
 								
-			_backLite = new ImagePanel(Helper.resize(ImageIO.read(new File("images/MainMenuLite.png")), 120, 50));
-			_backDark = new ImagePanel(Helper.resize(ImageIO.read(new File("images/MainMenuDark.png")), 120, 50));
-			_backLoc= new Point(this.getWidth()-_backLite.getWidth()-50, this.getHeight()-_backDark.getHeight()-20);
+			_backLite = new ImagePanel(Helper.resize(ImageIO.read(new File("images/MainMenuLite.png")), 130, 50));
+			_backDark = new ImagePanel(Helper.resize(ImageIO.read(new File("images/MainMenuDark.png")), 130, 50));
+			_backLoc= new Point(this.getWidth()-_backLite.getWidth()-50, this.getHeight()-_backDark.getHeight()-40);
 			_backLite.setLocation(_backLoc);
 			_backDark.setLocation(_backLoc);
 			_backDark.setVisible(false);

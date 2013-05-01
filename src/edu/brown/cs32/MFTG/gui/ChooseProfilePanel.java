@@ -32,7 +32,7 @@ import edu.brown.cs32.MFTG.tournament.Profile;
 @SuppressWarnings("serial")
 public class ChooseProfilePanel extends JPanel{
 
-	private ImagePanel _chooseLite, _backLite, _backDark, _selectLite, _selectDark, _selectGrey;
+	private ImagePanel _chooseLite, _backLite, _backDark, _selectLite, _selectDark;
 	private BufferedImage _background;
 	private Point _chooseLoc,  _backLoc, _selectLoc;
 	private MonopolyGui _main;
@@ -70,17 +70,13 @@ public class ChooseProfilePanel extends JPanel{
 			_backDark.setLocation(_backLoc);
 			_backDark.setVisible(false);
 
-			_selectLite = new ImagePanel(Helper.resize(ImageIO.read(new File("images/SelectLite.png")), 100, 50));
-			_selectDark = new ImagePanel(Helper.resize(ImageIO.read(new File("images/SelectDark.png")), 100, 50));
-			_selectGrey = new ImagePanel(Helper.resize(ImageIO.read(new File("images/SelectGrey.png")), 100, 50));
-			_selectLoc= new Point(this.getWidth()-_selectLite.getWidth()-30, this.getHeight()-_selectLite.getHeight()-20);
+			_selectLite = new ImagePanel(Helper.resize(ImageIO.read(new File("images/SelectLite.png")), 120, 50));
+			_selectDark = new ImagePanel(Helper.resize(ImageIO.read(new File("images/SelectDark.png")), 120, 50));
+			_selectLoc= new Point(this.getWidth()-_selectLite.getWidth()-30, this.getHeight()-_selectLite.getHeight()-40);
 			_selectLite.setLocation(_selectLoc);
 			_selectDark.setLocation(_selectLoc);
-			_selectGrey.setLocation(_selectLoc);
 			_selectDark.setVisible(false);
 			_selectLite.setVisible(true);
-
-			//_selectActivated=false;
 
 			addMouseListener(new MyMouseListener());
 
@@ -89,7 +85,6 @@ public class ChooseProfilePanel extends JPanel{
 			add(_backDark);
 			add(_selectLite);
 			add(_selectDark);
-			//add(_selectGrey);
 
 			addProfileList();
 		} catch (IOException e) {
@@ -105,27 +100,12 @@ public class ChooseProfilePanel extends JPanel{
 	public void giveFocusToList() {
 		_profileList.grabFocus();
 	}
-
+	
 	/**
-	 * makes select button activated
+	 * resets the list of profiles 
 	 */
-	private void activateSelect() {
-		_selectActivated = true;
-		_selectDark.setVisible(false);
-		_selectLite.setVisible(true);
-		_selectGrey.setVisible(false);
-		repaint();
-	}
-
-	/**
-	 * makes select button deactivated
-	 */
-	private void deactivateSelect() {
-		_selectActivated = false;
-		_selectDark.setVisible(false);
-		_selectLite.setVisible(false);
-		_selectGrey.setVisible(true);
-		repaint();
+	public void resetProfileList() {
+		_profileScrollPane.addProfileNames();
 	}
 
 	private void addProfileList(){
@@ -168,7 +148,6 @@ public class ChooseProfilePanel extends JPanel{
 			else if(intersects(xloc,yloc,_selectLite,_selectLoc)) {
 				_selectLite.setVisible(false);
 				_selectDark.setVisible(true);
-				_selectGrey.setVisible(false);
 				repaint();
 			}
 
@@ -209,9 +188,7 @@ public class ChooseProfilePanel extends JPanel{
 			_backDark.setVisible(false);
 			_backLite.setVisible(true);
 			_selectDark.setVisible(false);
-			_selectLite.setVisible(true);
-			//_selectGrey.setVisible(true);
-			repaint();
+			_selectLite.setVisible(true);			repaint();
 		}
 		private boolean intersects(int xloc, int yloc, JPanel img, Point loc) {
 			if(xloc>=loc.x && xloc<=loc.x+img.getWidth() && yloc>=loc.y && yloc<=loc.y+img.getHeight()) {
