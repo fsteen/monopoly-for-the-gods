@@ -13,28 +13,25 @@ import edu.brown.cs32.MFTG.tournament.Profile;
 
 public class ProfileManager {
 	private final String DEFAULT_PATH = ".profiles.mf";
+	private String _filePath;
 	
 	Map<String, Profile> _profiles;
 	
 	public ProfileManager(){
-		buildProfileMap(null);
+		_filePath = DEFAULT_PATH;
+		buildProfileMap();
 	}
 	
 	public ProfileManager(String filePath){
-		buildProfileMap(filePath);
+		_filePath = filePath;
+		buildProfileMap();
 	}
 	
 	/**
 	 * Builds the profile map from the given input file
-	 * @param filePath
 	 */
-	private void buildProfileMap(String filePath){
-		File f;
-		
-		if (filePath != null) 
-			f = new File(filePath);
-		else
-			f = new File(DEFAULT_PATH); 
+	private void buildProfileMap(){
+		File f = new File(_filePath);
 		
 		if (!(f.isFile() && f.canRead())){
 			_profiles = new HashMap<>();
@@ -98,5 +95,9 @@ public class ProfileManager {
 	 */
 	public int numProfiles(){
 		return _profiles.size();
+	}
+	
+	public void saveProfiles(){
+		// TODO implement
 	}
 }
