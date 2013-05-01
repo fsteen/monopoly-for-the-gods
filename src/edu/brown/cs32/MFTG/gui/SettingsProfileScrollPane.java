@@ -45,6 +45,7 @@ public class SettingsProfileScrollPane extends ProfileScrollPane {
 			_profileList.clearSelection();
 			_profileList.setSelectedIndex(index);
 		}
+		//TODO: spawn board
 		
 		
 	}

@@ -69,7 +69,6 @@ public class MonopolyGui extends JFrame{
 		_panels.put("create", create);
 		JoinGamePanel join = new JoinGamePanel(this);
 		_panels.put("join", join);
-		Board board = new Board(-1);
 		_end = new EndGamePanel(this);
 		_panels.put("end", _end);
 

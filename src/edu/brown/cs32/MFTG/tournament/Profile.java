@@ -16,12 +16,14 @@ public class Profile {
 	public final String _name;
 	Map<String, Player> _players;
 	Map<String, Settings> _settings;
+	private Record _record;
 
 	@JsonCreator
 	public Profile(@JsonProperty("name") String name){
 		_name = name;
 		buildPlayersMap();
 		buildSettingsMap();
+		_record = new Record();
 	}
 	
 	/**
@@ -111,6 +113,20 @@ public class Profile {
 	 */
 	public void setSettings(Map<String, Settings> settings) {
 		_settings = settings;
+	}
+
+	/**
+	 * @return the _record
+	 */
+	public Record getRecord() {
+		return _record;
+	}
+
+	/**
+	 * @param _record the _record to set
+	 */
+	public void setRecord(Record record) {
+		_record = record;
 	}
 	
 }
