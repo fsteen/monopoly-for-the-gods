@@ -19,6 +19,14 @@ public class PlayerWealthDataReport {
 		this.accTotalWealth = accTotalWealth;
 		this.numDataPoints = numDataPoints;
 	}
+	
+	public PlayerWealthDataAccumulator toPlayerWealthDataAccumulator(){
+		PlayerWealthDataAccumulator p = new PlayerWealthDataAccumulator(ownerID);
+		p.accCash = accCash;
+		p.accTotalWealth = accTotalWealth;
+		p.numDataPoints = numDataPoints;
+		return p;
+	}
 
 	@Override
 	public boolean equals(Object o){
