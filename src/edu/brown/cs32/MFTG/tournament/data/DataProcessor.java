@@ -132,7 +132,7 @@ public class DataProcessor {
 		List<Long> seedValues;
 		List<List<Long>> allSeedValues = new ArrayList<>();
 		
-		for(int i = 0; i < numGames; i++){
+		for(int i = 0; i < numGames; i++){ // TODO change to numGames
 			seedValues = new ArrayList<>();
 			
 			if(confirmationListIndex < confirmationListSize && i == confirmationIndices.get(confirmationListIndex)){

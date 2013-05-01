@@ -10,6 +10,7 @@ import java.io.Writer;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -65,11 +66,7 @@ public class ClientHandler {
 	 * @throws IOException
 	 */
 	private ClientRequestContainer readResponse() throws IOException{
-		//TODO: blocking on readline because I think that there is nothing to read
-		System.out.println("about to get json up in here");
 		String json = _input.readLine();
-		System.out.println("got json");
-		System.out.println(json);
 		ClientRequestContainer c = _oMapper.readValue(json, ClientRequestContainer.class);
 		return c;
 	}
@@ -114,6 +111,18 @@ public class ClientHandler {
 		}
 		
 	}
+	
+	public List<GameData> readPlayGamesResponse() throws IOException {
+		List<GameData> toRet = new ArrayList<>();
+		
+		String line;
+		while(!(line = _input.readLine()).equals("DONE")){
+			GameData g = _oMapper.readValue(line, GameData.class);
+			toRet.add(g);
+		}
+		
+		return toRet;
+	}
 
 	/**
 	 * Sends an encoding of the players to the client and a request to play numGame games
@@ -134,26 +143,12 @@ public class ClientHandler {
 			// request that the client play the games
 			write(request);
 
-			// read in the response
-			System.out.println("-------------------about to read the response------------------");
-			ClientRequestContainer response = readResponse();
-			System.out.println("-------------------READ THE MOTHAFUCKING RESPONSE-IZLE!!!!!!!------------------");
-			
-			// check for bad response
-			if (response._method != Method.SENDGAMEDATA){
-				throw new InvalidResponseException(Method.SENDGAMEDATA, response._method);
-			} else if (response._arguments == null || response._arguments.size() < 1){
-				throw new InvalidResponseException("Not enough arguments");
-			}
-			// construct the JavaType that will be read in
-			JavaType listOfGameData = _oMapper.getTypeFactory().constructCollectionType(List.class, GameData.class);
+			List<GameData> gameData = readPlayGamesResponse();
 
-			// set the timeout and attempt to read the response from the client
-			List<GameData> gameData = _oMapper.readValue(response._arguments.get(0), listOfGameData);
-			
 			return gameData;
 
 		} catch (IOException e){
+			e.printStackTrace();
 			throw new ClientCommunicationException(_id);
 		}
 	}

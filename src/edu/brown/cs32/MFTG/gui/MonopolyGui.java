@@ -83,7 +83,7 @@ public class MonopolyGui extends JFrame{
 		try {
 			board = new Board(1);
 
-			_currentPanel=_records;
+			_currentPanel=lobby;
 
 			this.add(_currentPanel);
 		} catch (IOException e) {

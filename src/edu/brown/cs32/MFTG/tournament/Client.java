@@ -78,10 +78,7 @@ public abstract class Client {
 	 * @throws IOException
 	 */
 	protected void write(ClientRequestContainer request) throws IOException{
-		System.out.println("about to turn request into JSON");
-		System.out.println("request: " + request);
 		String json = _oMapper.writeValueAsString(request);
-		System.out.println("about to write: " + json);
 		_output.write(json);
 		_output.write("\n");
 		_output.flush();
@@ -236,13 +233,29 @@ public abstract class Client {
 
 		List<GameData> gameData = playGames(players, seeds, settings);
 		
-		String gameDataString = _oMapper.writeValueAsString(gameData); //TODO this is the current problem line
-
-		ClientRequestContainer response = new ClientRequestContainer(Method.SENDGAMEDATA, Arrays.asList(gameDataString));
-
-		System.out.println("about to write the response for respondToPlayGames()");
-		write(response);
-		System.out.println("response for respondToPlayGames() written");
+		try {
+		sendGameResponse(gameData);
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Writes a list of of gameData to the server
+	 * @param gameData
+	 * @throws IOException
+	 */
+	private void sendGameResponse(List<GameData> gameData) throws IOException{
+		for (GameData g : gameData){
+			System.out.println("writing g as a string");
+			String gameDataString = _oMapper.writeValueAsString(g);
+			System.out.println("written");
+			_output.write(gameDataString);
+			_output.write("\n");
+		}
+		_output.write("DONE\n");
+		_output.flush();
+		System.out.println("entire response written");
 	}
 	
 	public void launchTournament(int numPlayers, Settings settings, int port){
@@ -274,7 +287,6 @@ public abstract class Client {
 
 		int i = 0;
 		for(Long seed : seeds){
-//			System.out.println("launching game #" + (i++) + "/" + seeds.size());
 			_pool.execute(gameRunnerFactory.build(seed)); //launch games
 //			gameRunnerFactory.build(seed).run();
 		}
@@ -287,8 +299,6 @@ public abstract class Client {
 			}
 		}
 
-		System.out.println("sending data back");
-		//System.out.println(_data);
 		return _data;
 	}
 

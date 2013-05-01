@@ -67,7 +67,6 @@ public class Tournament implements Runnable{
 		List<Integer> confirmationIndices;
 		
 		for(int i = 0; i < _settings.getNumRounds(); i++){
-			System.out.println("entering rounds loop: " + i);
 			// request a Player from each client
 			List<Player> newPlayers = getNewPlayers();
 			
@@ -80,8 +79,11 @@ public class Tournament implements Runnable{
 			confirmationIndices = DataProcessor.generateConfirmationIndices(gamesPerModule, CONFIRMATION_PERCENTAGE);
 			
 			// play a round of games
+			System.out.println("about to play a round of games");
 			data = playRoundOfGames(players, DataProcessor.generateSeeds(players.size(),gamesPerModule, confirmationIndices));
-
+			
+			System.out.println("whooooooooo!!!!!!!!!!");
+			
 			// make sure nobody cheated
 			if(DataProcessor.isCorrupted(data, confirmationIndices)){
 				//System.out.println("Tournament : WOOHOO ... SOMEONE IS CHEATING!!!!!"); //TODO change this
@@ -133,11 +135,9 @@ public class Tournament implements Runnable{
 			Future<Player> future = _executor.submit(worker);
 			playerFutures.add(future);
 		}
-		System.out.println("1");
 		
 		for (int i = 0; i < playerFutures.size(); i++){
 			try {
-				System.out.println("iteration: " + i);
 				players.add(playerFutures.get(i).get());
 			} catch (InterruptedException e) {
 				sendErrorMessage("Unable to retrieve heuristic information from client " + i + 
@@ -195,18 +195,14 @@ public class Tournament implements Runnable{
 		for (int i = 0; i < gameDataFutures.size(); i++){
 			try {
 				Future<List<GameData>> future = gameDataFutures.get(i);
-				
 				future.get();
-				System.out.println("got the future!!!!!!!!!!!1");
 				gameData.add(gameDataFutures.get(i).get());
 				gameDataFutures.get(i).get().get(0).printData();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
-				System.out.println("interrupted!");
 				numFails++;
 			} catch (ExecutionException e) {
 				e.getStackTrace();
-				System.out.println("execution exception");
 				numFails++;
 			}
 		}
@@ -214,7 +210,6 @@ public class Tournament implements Runnable{
 		if (numFails > 0)
 			sendErrorMessage("Unable to use game data from " + numFails + " of the " + _clientHandlers.size() + " clients");
 		
-		System.out.println("returning game data");
 		return gameData;
 	}
 
