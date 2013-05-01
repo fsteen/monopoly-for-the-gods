@@ -79,9 +79,9 @@ public class ProtocolTests {
 	public void testPlayer() throws IOException {
 		ObjectMapper oMapper = new ObjectMapper();
 		
-		oMapper.configure(SerializationFeature.WRITE_NULL_MAP_VALUES, false);
-	    oMapper.setSerializationInclusion(Include.NON_NULL);
-	    oMapper.getSerializerProvider().setNullKeySerializer(new MyNullKeySerializer());
+//		oMapper.configure(SerializationFeature.WRITE_NULL_MAP_VALUES, false);
+//	    oMapper.setSerializationInclusion(Include.NON_NULL);
+//	    oMapper.getSerializerProvider().setNullKeySerializer(new MyNullKeySerializer());
 		
 		Player p = new Player(1);
 		Player p2 = new Player(1);
