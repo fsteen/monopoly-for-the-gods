@@ -3,6 +3,7 @@ package edu.brown.cs32.MFTG.tournament.data;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import edu.brown.cs32.MFTG.monopoly.GameData;
 import edu.brown.cs32.MFTG.monopoly.PlayerWealthData;
@@ -67,6 +68,22 @@ public class DataProcessor {
 			overall.putWealthData(w);
 		}
 	}
+	
+	public static GameDataReport aggregate(GameDataReport...reports){
+		List<TimeStampReport> combinedTimeStamps = reports[0]._timeStamps;
+		Map<String,PropertyDataReport> combinedPropertyData = reports[0]._overallPropertyData;
+		Map<String,List<PropertyDataReport>> combinedPlayerPropertyData = reports[0]._overallPlayerPropertyData;
+		
+		for(int i = 1; i < reports.length; i++){
+			
+			
+		}
+		
+		
+		return null;
+		
+	}
+
 	
 	/**
 	 * Checks to make sure that the games at confirmationIndices are identical
