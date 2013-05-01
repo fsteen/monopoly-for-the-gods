@@ -16,6 +16,7 @@ import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
@@ -31,17 +32,18 @@ import edu.brown.cs32.MFTG.tournament.Profile;
 @SuppressWarnings("serial")
 public class SettingsPanel extends JPanel{
 
-	private ImagePanel _settingsLite, _backLite, _backDark, _editLite, _editDark, _editGrey;
+	private ImagePanel _chooseLite, _backLite, _backDark, _selectLite, _selectDark, _selectGrey;
 	private BufferedImage _background;
-	private Point _settingsLoc,  _backLoc, _editLoc;
+	private Point _chooseLoc,  _backLoc, _selectLoc;
 	private MonopolyGui _main;
+	private SettingsProfileScrollPane _settingsScrollPane;
+	private PlayersScrollPane _playersScrollPane;
 
-	private ProfileManager _profileManager;
-	private JList<String> _profileList;
-	private DefaultListModel<String> _listModel;
+	private JList<String> _profileList, _playerList;
+	private DefaultListModel<String> _profileListModel,_playerListModel;
 	private boolean _selectActivated;
 
-	private final int BUTTON_HEIGHT=Constants.FULL_HEIGHT/9;
+	private final int BUTTON_HEIGHT=Constants.FULL_HEIGHT/8;
 	private final int BUTTON_WIDTH=2*Constants.FULL_HEIGHT/3;
 	private final int START_HEIGHT=Constants.FULL_HEIGHT/8;
 	private final int START_WIDTH=Constants.FULL_WIDTH/6;
@@ -58,9 +60,9 @@ public class SettingsPanel extends JPanel{
 			this.setLayout(null);
 			_background = Helper.resize(ImageIO.read(new File("images/mountain2.png")),this.getWidth(),this.getHeight());
 
-			_settingsLite = new ImagePanel(Helper.resize(ImageIO.read(new File("images/SettingsLite.png")), BUTTON_WIDTH-40, BUTTON_HEIGHT));
-			_settingsLoc= new Point(START_WIDTH, START_HEIGHT);
-			_settingsLite.setLocation(_settingsLoc);
+			_chooseLite = new ImagePanel(Helper.resize(ImageIO.read(new File("images/SettingsLite.png")), BUTTON_WIDTH-40, BUTTON_HEIGHT));
+			_chooseLoc= new Point(START_WIDTH, START_HEIGHT);
+			_chooseLite.setLocation(_chooseLoc);
 
 			_backLite = new ImagePanel(Helper.resize(ImageIO.read(new File("images/BackLite.png")), 100, 50));
 			_backDark = new ImagePanel(Helper.resize(ImageIO.read(new File("images/BackDark.png")), 100, 50));
@@ -69,33 +71,38 @@ public class SettingsPanel extends JPanel{
 			_backDark.setLocation(_backLoc);
 			_backDark.setVisible(false);
 
-			_editLite = new ImagePanel(Helper.resize(ImageIO.read(new File("images/EditLite.png")), 90, 50));
-			_editDark = new ImagePanel(Helper.resize(ImageIO.read(new File("images/EditDark.png")), 90, 50));
-			_editGrey = new ImagePanel(Helper.resize(ImageIO.read(new File("images/EditGrey.png")), 90, 50));
-			_editLoc= new Point(this.getWidth()-_editLite.getWidth()-30, this.getHeight()-_editLite.getHeight()-20);
-			_editLite.setLocation(_editLoc);
-			_editDark.setLocation(_editLoc);
-			_editGrey.setLocation(_editLoc);
-			_editDark.setVisible(false);
-			_editLite.setVisible(false);
-			
-			_selectActivated=false;
+			_selectLite = new ImagePanel(Helper.resize(ImageIO.read(new File("images/EditLite.png")), 100, 50));
+			_selectDark = new ImagePanel(Helper.resize(ImageIO.read(new File("images/EditDark.png")), 100, 50));
+			_selectLoc= new Point(this.getWidth()-_selectLite.getWidth()-30, this.getHeight()-_selectLite.getHeight()-20);
+			_selectLite.setLocation(_selectLoc);
+			_selectDark.setLocation(_selectLoc);
+			_selectDark.setVisible(false);
+			_selectLite.setVisible(true);
+
+			//_selectActivated=false;
 
 			addMouseListener(new MyMouseListener());
 
-			add(_settingsLite);
+			add(_chooseLite);
 			add(_backLite);
 			add(_backDark);
-			add(_editLite);
-			add(_editDark);
-			add(_editGrey);
-
+			add(_selectLite);
+			add(_selectDark);
+			
 			addProfileList();
+			//addPlayerList();
 		} catch (IOException e) {
 			System.out.println("ERROR: "+e.getMessage());
 			System.exit(1);
 		}
 
+	}
+	
+	/**
+	 * grabs focus
+	 */
+	public void giveFocusToList() {
+		_profileList.grabFocus();
 	}
 
 	/**
@@ -103,50 +110,52 @@ public class SettingsPanel extends JPanel{
 	 */
 	private void activateSelect() {
 		_selectActivated = true;
-		_editDark.setVisible(false);
-		_editLite.setVisible(true);
-		_editGrey.setVisible(false);
+		_selectDark.setVisible(false);
+		_selectLite.setVisible(true);
+		_selectGrey.setVisible(false);
 		repaint();
 	}
-	
+
 	/**
 	 * makes select button deactivated
 	 */
 	private void deactivateSelect() {
 		_selectActivated = false;
-		_editDark.setVisible(false);
-		_editLite.setVisible(false);
-		_editGrey.setVisible(true);
+		_selectDark.setVisible(false);
+		_selectLite.setVisible(false);
+		_selectGrey.setVisible(true);
 		repaint();
 	}
-	
+
 	private void addProfileList(){
-		_profileManager = new ProfileManager();
-		_listModel = new DefaultListModel<String>();
-		_profileList = new JList<String>(_listModel);
-		_profileList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+		_profileListModel = new DefaultListModel<>();
+		_profileList = new JList<>(_profileListModel);
 
-		_profileList.setSelectedIndex(0);
-		_profileList.addListSelectionListener(new ListListener());
-		_profileList.setVisibleRowCount(_profileManager.numProfiles());
-		JScrollPane listScrollPane = new JScrollPane(_profileList);
-		
-		// TODO figure out how the FUCK to add shit
-		listScrollPane.setLocation(Constants.FULL_WIDTH/32, START_HEIGHT+BUTTON_HEIGHT*6/5);
+		_settingsScrollPane = new SettingsProfileScrollPane(_profileList, _profileListModel, _main);
+		_settingsScrollPane.setup();
+
+		_settingsScrollPane.setLocation(Constants.FULL_WIDTH/32, START_HEIGHT+BUTTON_HEIGHT*6/5);
 		Dimension listSize = new Dimension(BOTTOM_WIDTH, BOTTOM_HEIGHT);
-		listScrollPane.setSize(listSize);
-		listScrollPane.setPreferredSize(listSize);
-		add(listScrollPane);
-
-		_profileList.getInputMap().put( KeyStroke.getKeyStroke( "ENTER" ), "completeAction" );
-		_profileList.getActionMap().put( "completeAction", new CompleteAction());
-
-		_profileList.getInputMap().put( KeyStroke.getKeyStroke( "DOWN" ), "doUpAction" );
-		_profileList.getActionMap().put( "doUpAction", new UpAction());
-
-		_profileList.getInputMap().put( KeyStroke.getKeyStroke( "UP" ), "doDownAction" );
-		_profileList.getActionMap().put( "doDownAction", new DownAction());
+		_settingsScrollPane.setSize(listSize);
+		_settingsScrollPane.setPreferredSize(listSize);
+		add(_settingsScrollPane);
 	}
+	
+	private void addPlayerList(){
+		_playerListModel = new DefaultListModel<>();
+		_playerList = new JList<>(_playerListModel);
+		
+		_playersScrollPane = new PlayersScrollPane(_playerList, _playerListModel, _main, _profileListModel.get(_profileList.getSelectedIndex()));
+		_settingsScrollPane.setPlayerScrollPane(_playersScrollPane);
+		_playersScrollPane.setup();
+
+		_playersScrollPane.setLocation(Constants.FULL_WIDTH/32+BOTTOM_WIDTH/2, START_HEIGHT+BUTTON_HEIGHT*6/5);
+		Dimension listSize = new Dimension(BOTTOM_WIDTH/2, BOTTOM_HEIGHT);
+		_playersScrollPane.setSize(listSize);
+		_playersScrollPane.setPreferredSize(listSize);
+		add(_playersScrollPane);
+	}
+	
 
 	@Override
 	public void paintComponent(Graphics g) {
@@ -161,7 +170,7 @@ public class SettingsPanel extends JPanel{
 		public MyMouseListener() {
 			super();
 		}
-
+		
 		@Override
 		public void mousePressed(MouseEvent e) {
 			int xloc=e.getX();
@@ -171,14 +180,12 @@ public class SettingsPanel extends JPanel{
 				_backDark.setVisible(true);
 				repaint();
 			}
-			else if(intersects(xloc,yloc,_editLite,_editLoc)) {
-				if(_selectActivated==false) {
-					return;
-				}
-				_editLite.setVisible(false);
-				_editDark.setVisible(true);
+			else if(intersects(xloc,yloc,_selectLite,_selectLoc)) {
+				_selectLite.setVisible(false);
+				_selectDark.setVisible(true);
 				repaint();
 			}
+
 
 		}
 
@@ -197,13 +204,10 @@ public class SettingsPanel extends JPanel{
 				}
 
 			}
-			else if(intersects(xloc,yloc,_editLite,_editLoc)) {
-				if(_selectActivated==false) {
-					return;
-				}
-				if(_editDark.isVisible()) {
+			else if(intersects(xloc,yloc,_selectLite,_selectLoc)) {
+				if(_selectDark.isVisible()) {
 					fixPanels();
-					_main.switchPanels("lobby");
+					_settingsScrollPane.processClick();
 				}
 				else {
 					fixPanels();
@@ -218,8 +222,8 @@ public class SettingsPanel extends JPanel{
 		private void fixPanels() {
 			_backDark.setVisible(false);
 			_backLite.setVisible(true);
-			_editDark.setVisible(false);
-			_editLite.setVisible(true);
+			_selectDark.setVisible(false);
+			_selectLite.setVisible(true);
 			repaint();
 		}
 		private boolean intersects(int xloc, int yloc, JPanel img, Point loc) {
@@ -230,76 +234,5 @@ public class SettingsPanel extends JPanel{
 		}
 
 	}
-	/**********************Private inner classes*************************************/
-	public class ListListener implements ListSelectionListener{
-		public void valueChanged(ListSelectionEvent e) {
-			if (e.getValueIsAdjusting() == false) {
-
-			}
-		}
-	}
-
-	/**
-	 * CompeteAction
-	 * Used to map the enter key in the list to complete the
-	 * current last word with the word selected in the list of suggestions
-	 */
-	class CompleteAction extends AbstractAction {
-		private static final long serialVersionUID = 1L;
-
-		@Override
-		public void actionPerformed(ActionEvent arg0) {
-
-			if (_listModel.size() < 1) {
-				return;
-			}
-
-			int index = _profileList.getSelectedIndex();
-
-			String profileName;
-
-			if (index < 0) {
-				profileName = _listModel.firstElement().toString();
-			} else {
-				profileName = _listModel.elementAt(index).toString();
-			}
-
-			Profile p = _profileManager.getProfile(profileName);
-
-			// TODO use this mofo
-		}
-	}
-
-	/**
-	 * UpAction
-	 * Used to map the up key in the list to move the index of
-	 * the list up by one.
-	 */
-	class UpAction extends AbstractAction {
-		private static final long serialVersionUID = 1L;
-
-		@Override
-		public void actionPerformed(ActionEvent arg0) {
-			int index = _profileList.getSelectedIndex() + 1;
-			index = index > _listModel.getSize() ? _listModel.getSize() : index;
-			_profileList.setSelectedIndex(index);
-		}
-	}
-
-	/**
-	 * DownAction
-	 * Used to map the down key in the list to move the index of
-	 * the list down by one.
-	 */
-	class DownAction extends AbstractAction {
-		private static final long serialVersionUID = 1L;
-
-		@Override
-		public void actionPerformed(ActionEvent arg0) {
-			int index = _profileList.getSelectedIndex() - 1;
-			index = index > 0 ? index : 0;
-			_profileList.setSelectedIndex(index);
-		}
-	}	
 }
 

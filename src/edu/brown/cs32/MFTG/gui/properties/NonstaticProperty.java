@@ -35,8 +35,8 @@ public abstract class NonstaticProperty extends PropertyPanel {
 	public NonstaticProperty(Properties myProperty) {
 		super(myProperty);
 		//TODO: take out preassignment
-		_timeOwned = .5;
-		_profit = 10000;
+		_timeOwned = .25;
+		_profit = 1000;
 		
 		initializeProfitBlock();
 		initializeProfitField();
@@ -99,7 +99,7 @@ public abstract class NonstaticProperty extends PropertyPanel {
 
 		_profitField.setBorder(BorderFactory.createLineBorder(Color.WHITE, 0));
 		_profitField.setOpaque(false);
-		_profitField.setText(numFormat.format(_profit));
+		//_profitField.setText(numFormat.format(_profit));
 		
 		this.add(_profitField);
 	}

@@ -14,7 +14,7 @@ public class MyColorPropertyPanel extends MyPropertyPanel {
 
 	private Color _color;
 	private Houses _houseRow;
-	private double _houses = 2.5;
+	private double _houses = 0;
 	
 	public MyColorPropertyPanel(ColorProperties color) {
 		super(color);

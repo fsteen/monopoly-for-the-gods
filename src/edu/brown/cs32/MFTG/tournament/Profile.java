@@ -3,6 +3,7 @@ package edu.brown.cs32.MFTG.tournament;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -15,12 +16,30 @@ public class Profile {
 	public final String _name;
 	Map<String, Player> _players;
 	Map<String, Settings> _settings;
+	private Record _record;
 
 	@JsonCreator
 	public Profile(@JsonProperty("name") String name){
 		_name = name;
 		buildPlayersMap();
 		buildSettingsMap();
+		_record = new Record();
+	}
+	
+	/**
+	 * 
+	 * @return palyer names
+	 */
+	public Set<String> getPlayerNames(){
+		return _players.keySet();
+	}
+	
+	/**
+	 * 
+	 * @return get settings names
+	 */
+	public Set<String> getSettingsNames(){
+		return _settings.keySet();
 	}
 	
 	/**
@@ -66,10 +85,10 @@ public class Profile {
 
 	/**
 	 * 
-	 * @return _players
+	 * @return player
 	 */
-	public Map<String, Player> getPlayers() {
-		return _players;
+	public Player getPlayer(String s) {
+		return _players.get(s);
 	}
 
 	/**
@@ -94,6 +113,20 @@ public class Profile {
 	 */
 	public void setSettings(Map<String, Settings> settings) {
 		_settings = settings;
+	}
+
+	/**
+	 * @return the _record
+	 */
+	public Record getRecord() {
+		return _record;
+	}
+
+	/**
+	 * @param _record the _record to set
+	 */
+	public void setRecord(Record record) {
+		_record = record;
 	}
 	
 }

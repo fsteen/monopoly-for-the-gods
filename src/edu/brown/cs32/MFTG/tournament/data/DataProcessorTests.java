@@ -180,7 +180,8 @@ public class DataProcessorTests {
 	
 	@Test
 	public void wealthAccumulationTest(){
-		int numGames = 100;
+
+		int numGames = 1000;
 		int numTimestamps = 100;
 		int numPlayers = 4;
 		

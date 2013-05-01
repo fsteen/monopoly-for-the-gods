@@ -18,12 +18,12 @@ import java.util.Set;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JToolTip;
 
 import edu.brown.cs32.MFTG.gui.Constants;
 import edu.brown.cs32.MFTG.gui.Constants.Orientation;
 import edu.brown.cs32.MFTG.gui.Constants.Properties;
 import edu.brown.cs32.MFTG.gui.Constants.View;
-import edu.brown.cs32.MFTG.gui.Helper;
 import edu.brown.cs32.MFTG.gui.properties.PropertyPanel;
 import edu.brown.cs32.MFTG.tournament.data.PropertyDataReport;
 
@@ -40,10 +40,22 @@ public class ColorGroup extends JPanel {
 	private String _color;
 	private GridBagConstraints _c = new GridBagConstraints();
 	
+	private JToolTip _toolTip;
+	
 	public ColorGroup (Orientation orientation, List<Properties> properties, List<PropertyPanel> myPanel, List<PropertyPanel> aggregatePanel, ColorBlock colorBlock) {
 		super();
 		_orientation = orientation;
 		_color = colorBlock.getName();
+		
+		try {
+			_toolTip = new IconToolTip("Deed_Cards/railroad.jpg", 20, 20);
+			_toolTip.setComponent(this);
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		setToolTipText("hello, can you see this");
 		
 		for(Properties p: properties) {
 			BufferedImage im;
@@ -93,6 +105,10 @@ public class ColorGroup extends JPanel {
 		
 		_view = View.ME;
 		update();
+	}
+	
+	public JToolTip createToolTip () {
+		return _toolTip;
 	}
 	
 	public String getName() {
