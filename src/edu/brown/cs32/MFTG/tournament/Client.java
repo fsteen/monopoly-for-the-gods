@@ -181,15 +181,15 @@ public abstract class Client {
 
 		String playerString;
 		
-//		assert(!(p.getPropertyValues().keySet().contains(null)));
-//		assert(!(p.getColorValues().keySet().contains(null)));
+		assert(!(p.getPropertyValues().keySet().contains(null)));
+		assert(!(p.getColorValues().keySet().contains(null)));
 		
 		try {
 			for(Entry<String, Double[]> d : p.getColorValues().entrySet()){
-				System.out.println(d);
+			//	System.out.println(d);
 			}
 			for(Entry<String, Integer> d : p.getPropertyValues().entrySet()){
-				System.out.println(d);
+			//	System.out.println(d);
 			}
 			
 			playerString = _oMapper.writeValueAsString(p);  //TODO: the problem is this line
