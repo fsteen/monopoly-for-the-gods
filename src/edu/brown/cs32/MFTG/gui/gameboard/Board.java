@@ -393,6 +393,9 @@ public class Board extends JPanel {
 		for(Railroad r: _railroads) {
 			propertyValues.put(r.getName(), r.getValue());
 		}
+		System.out.println("property values");
+		System.out.println(propertyValues);
+		
 		player.setPropertyValues(propertyValues);
 		player.setColorValues(colorValues);
 		

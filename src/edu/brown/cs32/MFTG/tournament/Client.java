@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -183,6 +184,13 @@ public abstract class Client {
 //		assert(!(p.getColorValues().keySet().contains(null)));
 		
 		try {
+			for(Entry<String, Double[]> d : p.getColorValues().entrySet()){
+				System.out.println(d);
+			}
+			for(Entry<String, Integer> d : p.getPropertyValues().entrySet()){
+				System.out.println(d);
+			}
+			
 			playerString = _oMapper.writeValueAsString(p);  //TODO: the problem is this line
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
