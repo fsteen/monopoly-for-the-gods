@@ -22,7 +22,9 @@ public class PlayGamesCallable implements Callable<List<GameData>>{
 	}
 	
 	public List<GameData> call() throws Exception {
-		return _clientHandler.playGames(_players, _seeds, _settings);
+		List<GameData> gameData =  _clientHandler.playGames(_players, _seeds, _settings);
+		System.out.println("returning game data");
+		return gameData;
 	}
 
 }

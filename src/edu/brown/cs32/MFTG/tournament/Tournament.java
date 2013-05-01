@@ -60,7 +60,6 @@ public class Tournament implements Runnable{
 			System.out.println("you are fucked");
 			return;
 		}
-		System.out.println("tournament running");
 		int gamesPerModule = (int)Math.ceil(_settings.getNumGamesPerRound()/_numPlayers);
 		
 		List<Player> players = null;
@@ -72,7 +71,6 @@ public class Tournament implements Runnable{
 			// request a Player from each client
 			List<Player> newPlayers = getNewPlayers();
 			
-			System.out.println("got players for iteration: " + i);
 			if (newPlayers != null)
 				players = newPlayers;
 			else 
@@ -81,27 +79,21 @@ public class Tournament implements Runnable{
 			// generate which seeds will be used for integrity validation
 			confirmationIndices = DataProcessor.generateConfirmationIndices(gamesPerModule, CONFIRMATION_PERCENTAGE);
 			
-			System.out.println("play games");
 			
 			// play a round of games
 			data = playRoundOfGames(players, DataProcessor.generateSeeds(players.size(),gamesPerModule, confirmationIndices));
-
-			System.out.println("is data corrupted");
 			
 			// make sure nobody cheated
 			if(DataProcessor.isCorrupted(data, confirmationIndices)){
 				//System.out.println("Tournament : WOOHOO ... SOMEONE IS CHEATING!!!!!"); //TODO change this
 				//TODO FIGURE THIS OUT FRANCES!!!!!!!!!!!!!!!
 			}
-			
-			System.out.println("before sending data");
-			
+						
 			List<GameData> dataToSend = new ArrayList<>();
 			for(List<GameData> d : data){
 				dataToSend.addAll(d);
 			}
 			
-			System.out.println("sending end of round data");
 			sendEndOfRoundData(DataProcessor.aggregate(dataToSend, NUM_DATA_POINTS));
 		}
 		sendEndOfGameData();
@@ -208,12 +200,23 @@ public class Tournament implements Runnable{
 
 		int numFails = 0;
 		
+		System.out.println("game data future size: " + gameDataFutures.size());
 		for (int i = 0; i < gameDataFutures.size(); i++){
 			try {
-				gameData.add(gameDataFutures.get(i).get());
-				gameDataFutures.get(i).get().get(0).printData();
+				System.out.println("adding game future: " + i);
+				System.out.println(gameDataFutures.get(i));
 				
+				Future<List<GameData>> future = gameDataFutures.get(i);
+				
+				System.out.println("see if it printed");
+				future.get();
+				System.out.println("hi");
+				gameData.add(gameDataFutures.get(i).get());
+				System.out.println("add game data futures");
+				gameDataFutures.get(i).get().get(0).printData();
+				System.out.println("printing data");
 			} catch (InterruptedException e) {
+				e.printStackTrace();
 				System.out.println("interrupted!");
 				numFails++;
 			} catch (ExecutionException e) {
@@ -223,9 +226,12 @@ public class Tournament implements Runnable{
 			}
 		}
 		
+		System.out.println("After data futurs stuff");
+		
 		if (numFails > 0)
 			sendErrorMessage("Unable to use game data from " + numFails + " of the " + _clientHandlers.size() + " clients");
 		
+		System.out.println("returning game data");
 		return gameData;
 	}
 

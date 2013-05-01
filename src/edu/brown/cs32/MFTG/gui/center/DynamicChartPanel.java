@@ -2,7 +2,12 @@ package edu.brown.cs32.MFTG.gui.center;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+
+import javax.swing.ButtonGroup;
+import javax.swing.JToggleButton;
 
 import org.jfree.chart.ChartMouseEvent;
 import org.jfree.chart.ChartMouseListener;
@@ -19,12 +24,17 @@ import edu.brown.cs32.MFTG.gui.Constants;
 
 public class DynamicChartPanel extends ChartPanel {
 
-	private int _location = -1;
+	//private int _location = -1;
 	private double _currHeight = 0;
 	private int _moving = -1;
-	private boolean _mousePressed;
+	//private boolean _mousePressed;
 	private JFreeChart _chart;
 	private XYLineAndShapeRenderer _renderer;
+	
+	private ButtonGroup _buttons;
+	private JToggleButton _buyCash;
+	private JToggleButton _buildCash;
+	private JToggleButton _unmortgageCash;
 	
 	public DynamicChartPanel(JFreeChart chart, XYLineAndShapeRenderer renderer) {
 		super(chart);
@@ -33,6 +43,7 @@ public class DynamicChartPanel extends ChartPanel {
 		_chart = chart;
 		this.addChartMouseListener(new MinCashListener());
 		
+		this.setLayout(null);
 		Dimension dim = new Dimension(9*Constants.WIDTH, 5*Constants.WIDTH);
 		this.setSize(dim);
 		this.setPreferredSize(dim);
@@ -40,13 +51,54 @@ public class DynamicChartPanel extends ChartPanel {
 		this.setMinimumSize(dim);
 		
 		this.setLocation(0, 0);
+		
+		initializeButtons();
+	}
+	
+	public void initializeButtons() {
+		_buttons = new ButtonGroup();
+		
+		_buyCash = new JToggleButton("Buy");
+		_buildCash = new JToggleButton("Build");
+		_unmortgageCash = new JToggleButton("Unmortgage");
+		
+		_buyCash.setLocation(370, 5);
+		_buildCash.setLocation(421, 5);
+		_unmortgageCash.setLocation(479, 5);
+		
+		_buyCash.setSize(50, 25);
+		_buildCash.setSize(58, 25);
+		_unmortgageCash.setSize(109, 25);
+		
+		_buyCash.addActionListener(new MinCashButton(0));
+		_buyCash.setSelected(true);
+		_moving = 0;
+		_renderer.setSeriesPaint(0, Color.YELLOW);
+		
+		_buildCash.addActionListener(new MinCashButton(1));
+		_unmortgageCash.addActionListener(new MinCashButton(2));
+		
+		_buttons.add(_buyCash);
+		_buttons.add(_buildCash);
+		_buttons.add(_unmortgageCash);
+		
+		_buildCash.setBackground(Color.GREEN);
+		_buyCash.setBackground(Color.BLUE);
+		_unmortgageCash.setBackground(Color.RED);
+		
+		this.add(_buyCash);
+		this.add(_buildCash);
+		this.add(_unmortgageCash);
 	}
 	
 	public void mousePressed (MouseEvent e) {
-		super.mousePressed(e);
+		/* super.mousePressed(e);
 		_moving = _location;
+		if(_moving == 0) _buttons.setSelected(_buyCash.getModel(), true);
+		if(_moving == 1) _buttons.setSelected(_buildCash.getModel(), true);
+		if(_moving == 2) _buttons.setSelected(_unmortgageCash.getModel(), true);
 		_currHeight = e.getLocationOnScreen().getX();
-		_mousePressed = true;
+		_mousePressed = true;*/
 	}
 	
 	public void update (double change) {
@@ -65,10 +117,10 @@ public class DynamicChartPanel extends ChartPanel {
 	}
 	
 	public void mouseReleased(MouseEvent e) {
-		super.mouseReleased(e);
+		/* super.mouseReleased(e);
 		_location = -1;
-		_moving = -1;
-		_mousePressed = false;
+		//_moving = -1;
+		_mousePressed = false; */
 	}
 	
 	public void mouseClicked(MouseEvent e) {
@@ -90,18 +142,49 @@ public class DynamicChartPanel extends ChartPanel {
 	private class MinCashListener implements ChartMouseListener {
 		@Override
 		public void chartMouseClicked(ChartMouseEvent e) {
+			_renderer.setSeriesPaint(0, Color.BLUE);
+			_renderer.setSeriesPaint(1, Color.GREEN);
+			_renderer.setSeriesPaint(2, Color.RED);
+			_renderer.setSeriesPaint(3, Color.BLACK);
+			_renderer.setSeriesPaint(4, Color.GRAY);
+			
+			
+			
 			ChartEntity entity = e.getEntity();
 			if(!(entity instanceof XYItemEntity)) {
+				_renderer.setSeriesPaint(0, Color.BLUE);
+				_renderer.setSeriesPaint(1, Color.GREEN);
+				_renderer.setSeriesPaint(2, Color.RED);
+				_renderer.setSeriesPaint(3, Color.BLACK);
+				_renderer.setSeriesPaint(4, Color.GRAY);
+				_moving = -1;
 				return;
 			}
 			XYItemEntity xyItem = (XYItemEntity) entity;
-			
-			_location = xyItem.getSeriesIndex();
+			int loc = xyItem.getSeriesIndex();
+			if(loc == 0) {
+				_moving = 0;
+				_renderer.setSeriesPaint(0, Color.YELLOW);
+				_buttons.setSelected(_buyCash.getModel(), true);
+			}
+			else if (loc == 1) {
+				_moving = 1;
+				_renderer.setSeriesPaint(1, Color.YELLOW);
+				_buttons.setSelected(_buildCash.getModel(), true);
+			}
+			else if (loc == 2) {
+				_moving = 2;
+				_renderer.setSeriesPaint(2, Color.YELLOW);
+				_buttons.setSelected(_unmortgageCash.getModel(), true);
+			}
+			else {
+				_moving = -1;
+			}
 		}
 
 		@Override
 		public void chartMouseMoved(ChartMouseEvent e) {
-			ChartEntity entity = e.getEntity();
+			/*ChartEntity entity = e.getEntity();
 			if(!(entity instanceof XYItemEntity)) {
 				_location = -1;
 				_renderer.setSeriesPaint(0, Color.BLUE);
@@ -124,7 +207,27 @@ public class DynamicChartPanel extends ChartPanel {
 				_renderer.setSeriesPaint(2, Color.RED);
 				_renderer.setSeriesPaint(3, Color.BLACK);
 				_renderer.setSeriesPaint(4, Color.GRAY);
-			}
+			}*/
+		}
+		
+	}
+	
+	public class MinCashButton implements ActionListener {
+
+		private int line;
+		public MinCashButton (int line) {
+			this.line = line;
+		}
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			_moving = line;
+			_renderer.setSeriesPaint(0, Color.BLUE);
+			_renderer.setSeriesPaint(1, Color.GREEN);
+			_renderer.setSeriesPaint(2, Color.RED);
+			_renderer.setSeriesPaint(3, Color.BLACK);
+			_renderer.setSeriesPaint(4, Color.GRAY);
+			_renderer.setSeriesPaint(_moving, Color.YELLOW);
 		}
 		
 	}
