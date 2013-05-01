@@ -19,6 +19,10 @@ public class TimeStampAccumulator {
 		_wealthData = new HashMap<>();
 	}
 	
+	public void setPlayerWealthData(Map<Integer, PlayerWealthDataAccumulator> wealthData){
+		_wealthData = wealthData;
+	}
+	
 //	public void putPropertyData(PropertyData data){
 //		//add everything together so that in the end you can average it
 //		PropertyDataAccumulator accData = _propertyData.get(data.propertyName);
@@ -62,6 +66,15 @@ public class TimeStampAccumulator {
 		return new ArrayList<PlayerWealthDataAccumulator>(_wealthData.values());
 	}
 	
+	public void averageWith(TimeStampAccumulator t){
+		if(_time != t._time){
+			System.out.println("TIMES DON'T MATCH");
+		}
+		for(PlayerWealthDataAccumulator p : t._wealthData.values()){
+			_wealthData.get(p.ownerID).averageWith(p);
+		}
+	}
+	
 	/**
 	 * Converts a TimeStampAccumulator to a TimeStamp
 	 * @return
@@ -69,6 +82,7 @@ public class TimeStampAccumulator {
 	public TimeStampReport toTimeStampReport(){		
 		Map<Integer,PlayerWealthDataReport> wData = new HashMap<>();
 		for(PlayerWealthDataAccumulator w : _wealthData.values()){
+			w.average();
 			wData.put(w.ownerID, w.toPlayerWealthDataReport());
 		}
 

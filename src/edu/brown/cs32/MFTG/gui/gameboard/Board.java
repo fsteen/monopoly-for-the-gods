@@ -379,7 +379,7 @@ public class Board extends JPanel {
 		_player = null;
 	}
 	
-	public Player setHeuristics () {
+	public Player getHeuristics () {
 		Player player = new Player(_id);
 		
 		HashMap<String, Integer> propertyValues = new HashMap<>();
@@ -424,7 +424,7 @@ public class Board extends JPanel {
 	
 	public Player getPlayer () {
 		if(_player != null) return _player;
-		return setHeuristics();
+		return getHeuristics();
 	}
 	
 	public void setPlayerSpecificPropertyData(Map<String, PropertyDataReport> data) {
@@ -472,6 +472,24 @@ public class Board extends JPanel {
 	
 	public void setWealthData(List<PlayerWealthDataReport> data) {
 		_center.setWealthData(data);
+	}
+	
+	public void setHeuristics (Player player) {
+		HashMap<String, Integer> propertyValues = player.getPropertyValues();
+		HashMap<String, Double[]> colorValues = player.getColorValues();
+		
+		for(ColorGroup colorGroup: _colorGroups) {
+			colorGroup.setPropertyValues(propertyValues);
+			colorGroup.setColorValue(colorValues);
+		}
+		
+		_center.setSliderValues(player.getLiquidity(), player.getTimeChange(), player.getTradingFear());
+		_center.setMinCashValues(player.getMinBuyCash(), player.getMinBuildCash(), player.getMinUnmortgageCash());
+		_center.setButtonValues(player.getBuildingChoice(), player.getBuildingEvenness(), player.getBuildAggression(), player.getSellingChoice(), player.getHouseSelling(), player.getMortgageChoice());
+		
+		_jail.setWaits(player.getJailWait(), player.getJailPoor(), player.getJailRich());
+		
+		
 	}
 	
 	/*public static void main (String[] args) {

@@ -1,5 +1,7 @@
 package edu.brown.cs32.MFTG.tournament.data;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -23,6 +25,34 @@ public class GameDataReport {
 		_winner = winner;
 		_overallPlayerPropertyData = entireGameData;
 		_overallPropertyData = overallPropertyData;
+	}
+	
+	public GameDataAccumulator toGameDataAccumulator(){
+		GameDataAccumulator g = new GameDataAccumulator(_timeStamps.get(0).wealthData.size()); //the number of players
+		List<TimeStampAccumulator> stamps = new ArrayList<>();
+		for(TimeStampReport t: _timeStamps){
+			stamps.add(t.toTimeStampAccumulator());
+		}
+		
+		Map<String, PropertyDataAccumulator> tempOverallData = new HashMap<>();
+		for(PropertyDataReport p : _overallPropertyData.values()){
+			tempOverallData.put(p.propertyName, p.toPropertyDataAccumulator());
+		}
+		
+		Map<String,Map<Integer,PropertyDataAccumulator>> tempOverallPlayerData = new HashMap<>();
+		Map<Integer,PropertyDataAccumulator> tempPlayerData;
+		for(List<PropertyDataReport> l : _overallPlayerPropertyData.values()){
+			tempPlayerData = new HashMap<>();
+			for(PropertyDataReport p : l){
+				tempPlayerData.put(p.ownerID, p.toPropertyDataAccumulator());
+			}
+			tempOverallPlayerData.put(l.get(0).propertyName, tempPlayerData);
+		}
+		g.data = stamps;
+		g.entireGameData = tempOverallData;
+		g.playerEntireGameData = tempOverallPlayerData;
+		
+		return g;
 	}
 	
 	@Override

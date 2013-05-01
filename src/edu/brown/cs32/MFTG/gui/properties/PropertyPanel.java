@@ -83,5 +83,6 @@ public abstract class PropertyPanel extends JPanel {
 	
 	public abstract void setData (PropertyDataReport propertyDataReport);
 
-	
+	public abstract void setValue(int integer);
+
 }

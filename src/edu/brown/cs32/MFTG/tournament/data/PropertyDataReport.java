@@ -36,6 +36,17 @@ public class PropertyDataReport {
 		this.numDataPoints = numDataPoints;
 	}
 	
+	public PropertyDataAccumulator toPropertyDataAccumulator(){
+		PropertyDataAccumulator p = new PropertyDataAccumulator(propertyName, ownerID);
+		p.accNumHouses = accNumHouses;
+		p.accTotalRevenueWithHouses = accTotalRevenueWithHouses;
+		p.accTotalRevenueWithoutHouses = accTotalRevenueWithoutHouses;
+		p.accMortgaged = accMortgaged;
+		p.accTimeOwned = timeOwned;
+		p.numDataPoints = numDataPoints;
+		return p;
+	}
+	
 	@Override
 	public String toString(){
 		return String.format("{%s, ID: %d, houses: %f, revW: %f, revWO: %f, mort: %f, timeOwned: %f, #data: %d}",

@@ -54,6 +54,11 @@ public class ToggleButton extends JButton {
 		frame.setVisible(true);
 	}
 	
+	public void setValue (Toggle toggle) {
+		_toggle = toggle;
+		this.setIcon(_toggle.getIcon());
+	}
+	
 	public Toggle getValue() {
 		return _toggle;
 	}

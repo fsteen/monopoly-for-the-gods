@@ -1,5 +1,6 @@
 package edu.brown.cs32.MFTG.tournament.data;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -14,6 +15,19 @@ public class TimeStampReport {
 	public TimeStampReport(@JsonProperty("time") int time, @JsonProperty("wealthData") Map<Integer, PlayerWealthDataReport> wealthData){
 		this.wealthData = wealthData;
 		this.time = time;
+	}
+	
+	public TimeStampAccumulator toTimeStampAccumulator(){
+		TimeStampAccumulator t = new TimeStampAccumulator(time);
+		
+		Map<Integer, PlayerWealthDataAccumulator> tempMap = new HashMap<>();
+		for(PlayerWealthDataReport p : wealthData.values()){
+			tempMap.put(p.ownerID, p.toPlayerWealthDataAccumulator());
+		}
+		
+		t.setPlayerWealthData(tempMap);
+		
+		return t;
 	}
 	
 	@Override

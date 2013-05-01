@@ -72,7 +72,7 @@ public class ViewPanel extends JPanel{
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			_setHeuristics.setEnabled(false);
-			_board.setHeuristics();
+			_board.getHeuristics();
 		}
 		
 	}

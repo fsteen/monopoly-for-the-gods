@@ -114,8 +114,8 @@ public class DataProcessorTests {
 	@Test
 	public void createRandomGameData(){
 
-		int numGames = 10000;
-		int numTimestamps = 10000;
+		int numGames = 1000;
+		int numTimestamps = 100;
 		int numPlayers = 4;
 		
 		List<List<List<Double>>> totCash = new ArrayList<>();

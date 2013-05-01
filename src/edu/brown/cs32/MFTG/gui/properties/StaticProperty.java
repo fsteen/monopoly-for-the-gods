@@ -49,4 +49,7 @@ public class StaticProperty extends PropertyPanel {
 		throw new NullPointerException("Static Properties do not have values");
 	}
 
+	@Override
+	public void setValue(int integer) {}
+
 }
