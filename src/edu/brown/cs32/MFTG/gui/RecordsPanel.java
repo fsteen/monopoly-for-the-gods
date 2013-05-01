@@ -82,12 +82,13 @@ public class RecordsPanel extends JPanel{
 		}
 
 	}
-	
 	/**
 	 * grabs focus
 	 */
 	public void giveFocusToList() {
 		_profileList.grabFocus();
+		_profileList.setSelectedIndex(0);
+		_recordsSidePanel.setRecords(_main.getRecord(_profileList.getSelectedValue()));
 	}
 	
 	/**

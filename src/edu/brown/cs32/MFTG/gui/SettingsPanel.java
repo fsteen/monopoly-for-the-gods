@@ -111,6 +111,7 @@ public class SettingsPanel extends JPanel{
 	 */
 	public void giveFocusToList() {
 		_profileList.grabFocus();
+		_profileList.setSelectedIndex(0);
 	}
 	
 	/**

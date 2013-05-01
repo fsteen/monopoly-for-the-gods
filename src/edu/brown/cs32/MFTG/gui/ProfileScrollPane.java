@@ -42,7 +42,7 @@ public abstract class ProfileScrollPane extends JScrollPane{
 		if(listModel.size()>0)_profileList.setSelectedIndex(0);
 	}
 	
-
+	
 	/**
 	 * adds profile names to list
 	 */
