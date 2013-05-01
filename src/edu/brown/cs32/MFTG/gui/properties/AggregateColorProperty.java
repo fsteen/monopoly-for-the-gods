@@ -11,7 +11,7 @@ public class AggregateColorProperty extends NonstaticProperty {
 
 	private Color _color;
 	private Houses _houseRow;
-	private double _houses = 1;
+	private double _houses = 0;
 
 	
 	public AggregateColorProperty(ColorProperties color) {
