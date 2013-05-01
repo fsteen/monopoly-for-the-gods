@@ -65,8 +65,8 @@ public class ClientHandler {
 	 * @throws IOException
 	 */
 	private ClientRequestContainer readResponse() throws IOException{
-		System.out.println("started reading response");
 		//TODO: blocking on readline because I think that there is nothing to read
+
 		String json = _input.readLine();
 		System.out.println("got json");
 		ClientRequestContainer c = _oMapper.readValue(json, ClientRequestContainer.class);

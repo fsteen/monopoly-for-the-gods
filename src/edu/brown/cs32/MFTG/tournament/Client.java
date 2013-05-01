@@ -200,7 +200,6 @@ public abstract class Client {
 		}
 		
 		System.out.println("d");
->>>>>>> branch 'master' of https://github.com/fsteen/monopoly-for-the-gods.git
 		ClientRequestContainer response = new ClientRequestContainer(Method.SENDPLAYER, Arrays.asList(playerString));
 		try {
 			write(response);

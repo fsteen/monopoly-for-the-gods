@@ -9,8 +9,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class GameDataReport {
 
-	public final List<TimeStampReport> _timeStamps;
-	public final Map<String, List<PropertyDataReport>> _overallPlayerPropertyData; //TODO make list in order of player id
+	public final List<TimeStampReport> _timeStamps; //the average wealth data for players over these time stamps
+	public final Map<String, List<PropertyDataReport>> _overallPlayerPropertyData; //the 
 	public final Map<String, PropertyDataReport> _overallPropertyData;
 	public final int _winner;
 	
@@ -29,19 +29,26 @@ public class GameDataReport {
 	public String toString(){
 		StringBuilder b = new StringBuilder();
 		b.append("*****ALL TIMESTAMPS*****\n");
-		for(TimeStampReport t : _timeStamps){
-			b.append(t.toString() + "\n");
-		}
-		b.append("************************\n");
-		b.append("************************\n");
-		b.append("*****OVERALL DATA*****\n");
-		for(List<PropertyDataReport> l : _overallPlayerPropertyData.values()){
-			for(PropertyDataReport p : l){
-				b.append(p.toString() + "\n");
+		if(_timeStamps != null){
+			for(TimeStampReport t : _timeStamps){
+				b.append(t.toString() + "\n");
 			}
 		}
-		for(PropertyDataReport p : _overallPropertyData.values()){
-			b.append(p.toString() + "\n");
+		b.append("************************\n");
+		b.append("************************\n");
+		b.append("*****OVERALL PLAYER PROPERTY DATA*****\n");
+		if(_overallPlayerPropertyData != null){
+			for(List<PropertyDataReport> l : _overallPlayerPropertyData.values()){
+				for(PropertyDataReport p : l){
+					b.append(p.toString() + "\n");
+				}
+			}
+		}
+		b.append("*****OVERALL PROPERTY DATA*****\n");
+		if(_overallPropertyData != null){
+			for(PropertyDataReport p : _overallPropertyData.values()){
+				b.append(p.toString() + "\n");
+			}
 		}
 		b.append("*********************\n\n\n\n");
 		return b.toString();
