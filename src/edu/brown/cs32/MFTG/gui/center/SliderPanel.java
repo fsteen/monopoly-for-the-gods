@@ -113,4 +113,12 @@ public class SliderPanel extends JPanel {
 		return sliderInfo;
 	}
 
+	//TODO: don't force these to be integers
+	public void setValues(double liquidity, double timeChange,
+			double tradingFear) {
+		_liquidity.setValue((int) liquidity);
+		_timeChange.setValue((int) timeChange);
+		_tradingFear.setValue((int) tradingFear);
+	}
+
 }

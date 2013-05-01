@@ -36,6 +36,13 @@ public abstract class MyPropertyPanel extends NonstaticProperty{
 		initializeValueField();
 	}
 	
+	public void setValue(int value) {
+		_value = value;
+		NumberFormat numFormat = NumberFormat.getInstance();
+		numFormat.setMaximumFractionDigits(0);
+		_valueField.setText(numFormat.format(_value));
+	}
+	
 	protected void moveValueField (double x, double y) {
 		_valueField.setLocation((int) x, (int) y);
 	}

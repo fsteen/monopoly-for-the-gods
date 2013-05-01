@@ -9,6 +9,10 @@ import javax.swing.JPanel;
 import edu.brown.cs32.MFTG.gui.Constants;
 import edu.brown.cs32.MFTG.gui.gameboard.Board;
 import edu.brown.cs32.MFTG.monopoly.Player;
+import edu.brown.cs32.MFTG.monopoly.Player.Aggression;
+import edu.brown.cs32.MFTG.monopoly.Player.Amount;
+import edu.brown.cs32.MFTG.monopoly.Player.Balance;
+import edu.brown.cs32.MFTG.monopoly.Player.Expense;
 import edu.brown.cs32.MFTG.tournament.data.PlayerWealthDataReport;
 
 public class Center extends JPanel {
@@ -53,6 +57,25 @@ public class Center extends JPanel {
 
 	public void setButtonChoices(Player player) {
 		_buttonPanel.setButtonChoices(player);
+	}
+
+
+	public void setSliderValues(double liquidity, double timeChange,
+			double tradingFear) {
+		_sliderPanel.setValues(liquidity, timeChange, tradingFear);
+	}
+
+
+	public void setMinCashValues(int minBuyCash, int minBuildCash,
+			int minUnmortgageCash) {
+		_profitGraph.setMinCashValues(minBuyCash, minBuildCash, minUnmortgageCash);
+	}
+
+
+	public void setButtonValues(Expense buildingChoice,
+			Balance buildingEvenness, Aggression buildAggression,
+			Expense sellingChoice, Amount houseSelling, Expense mortgageChoice) {
+		_buttonPanel.setValues(buildingChoice, buildingEvenness, buildAggression, sellingChoice, houseSelling, mortgageChoice);
 	}
 	
 

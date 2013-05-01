@@ -224,7 +224,7 @@ public class ColorGroup extends JPanel {
 		public void mouseReleased(MouseEvent e) {
 			// TODO Auto-generated method stub
 		}
-
+		// TODO Auto-generated method stub
 		@Override
 		public void mouseEntered(MouseEvent e) {
 			// TODO Auto-generated method stub
@@ -262,5 +262,21 @@ public class ColorGroup extends JPanel {
 	public void setView(View view) {
 		_view = view;
 		update();
+	}
+
+	public void setPropertyValues(HashMap<String, Integer> propertyValues) {
+		for(String property: propertyValues.keySet()) {
+			if(_myPropertyName.containsKey(property)) {
+				_myPropertyName.get(property).setValue(propertyValues.get(property));
+			}
+		}
+	}
+
+	public void setColorValue(HashMap<String, Double[]> colorValues) {
+		for(String color: colorValues.keySet()) {
+			if(_color.equals(color)) {
+				_colorBlock.setValues(colorValues.get(color));
+			}
+		}
 	}
 }
