@@ -5,6 +5,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,26 +15,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
-import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 
 import edu.brown.cs32.MFTG.gui.Constants;
-import edu.brown.cs32.MFTG.gui.Constants.ColorProperties;
-import edu.brown.cs32.MFTG.gui.Constants.Colors;
 import edu.brown.cs32.MFTG.gui.Constants.Orientation;
 import edu.brown.cs32.MFTG.gui.Constants.Properties;
 import edu.brown.cs32.MFTG.gui.Constants.View;
-import edu.brown.cs32.MFTG.gui.properties.AggregateColorProperty;
-import edu.brown.cs32.MFTG.gui.properties.MyColorPropertyPanel;
+import edu.brown.cs32.MFTG.gui.Helper;
 import edu.brown.cs32.MFTG.gui.properties.PropertyPanel;
-import edu.brown.cs32.MFTG.tournament.data.PropertyDataAccumulator;
 import edu.brown.cs32.MFTG.tournament.data.PropertyDataReport;
 
 public class ColorGroup extends JPanel {
 	
 	private Map<Properties, PropertyPanel> _myPropertyName = new HashMap<>();
 	private Map<Properties, PropertyPanel> _aggregatePropertyName = new HashMap<>();
+	private List<BufferedImage> _deeds = new ArrayList<>();
 	private List<PropertyPanel> _myProperties;
 	private List<PropertyPanel> _aggregateProperties;
 	private ColorBlock _colorBlock;
@@ -45,6 +44,21 @@ public class ColorGroup extends JPanel {
 		super();
 		_orientation = orientation;
 		_color = colorBlock.getName();
+		
+		for(Properties p: properties) {
+			BufferedImage im;
+			try {
+				String deed = p.getDeed();
+				if(deed!=null) {
+					im = ImageIO.read(new File(p.getDeed()));
+					//im = Helper.resize(im, Constants.DEED_WIDTH, Constants.DEED_HEIGHT);
+					_deeds.add(im);
+				}
+			} catch (IOException e) {
+				System.out.println(p.getDeed());
+				e.printStackTrace();
+			}
+		}
 		
 		this.setLayout(new GridBagLayout());
 		
@@ -181,7 +195,23 @@ public class ColorGroup extends JPanel {
 				update();
 			}
 			if(e.getButton() == MouseEvent.BUTTON3) {
-
+				JFrame frame = new JFrame("Deed Cards");
+				
+				Dimension dimension;
+				if(_deeds.size() < 4)
+					dimension = new Dimension(Constants.DEED_WIDTH + 10,_deeds.size()*Constants.DEED_HEIGHT + 25);
+				else 
+					dimension = new Dimension(2*Constants.DEED_WIDTH + 10,2*Constants.DEED_HEIGHT + 25);
+				
+				frame.setSize(dimension);
+				frame.setPreferredSize(dimension);
+				frame.setMaximumSize(dimension);
+				frame.setMinimumSize(dimension);
+				frame.setResizable(false);
+				
+				frame.add(new DeedPopup(_deeds));
+				frame.pack();
+				frame.setVisible(true);
 			}
 		}
 
@@ -194,7 +224,7 @@ public class ColorGroup extends JPanel {
 		public void mouseReleased(MouseEvent e) {
 			// TODO Auto-generated method stub
 		}
-
+		// TODO Auto-generated method stub
 		@Override
 		public void mouseEntered(MouseEvent e) {
 			// TODO Auto-generated method stub
@@ -232,5 +262,21 @@ public class ColorGroup extends JPanel {
 	public void setView(View view) {
 		_view = view;
 		update();
+	}
+
+	public void setPropertyValues(HashMap<String, Integer> propertyValues) {
+		for(String property: propertyValues.keySet()) {
+			if(_myPropertyName.containsKey(property)) {
+				_myPropertyName.get(property).setValue(propertyValues.get(property));
+			}
+		}
+	}
+
+	public void setColorValue(HashMap<String, Double[]> colorValues) {
+		for(String color: colorValues.keySet()) {
+			if(_color.equals(color)) {
+				_colorBlock.setValues(colorValues.get(color));
+			}
+		}
 	}
 }

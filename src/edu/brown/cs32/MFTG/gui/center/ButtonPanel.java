@@ -13,6 +13,7 @@ import edu.brown.cs32.MFTG.gui.Constants.Price;
 import edu.brown.cs32.MFTG.gui.Constants.Quantity;
 import edu.brown.cs32.MFTG.gui.Constants.Toggle;
 import edu.brown.cs32.MFTG.monopoly.Player;
+import edu.brown.cs32.MFTG.monopoly.Player.Amount;
 import edu.brown.cs32.MFTG.monopoly.Player.Expense;
 
 public class ButtonPanel extends JPanel {
@@ -107,9 +108,58 @@ public class ButtonPanel extends JPanel {
 		else if (toggle == Quantity.MORE)
 			player.setHouseSelling(Player.Amount.MORE);
 
+		toggle = _mortgageExpense.getValue();
 		if(toggle == Price.CHEAP)
 			player.setMortgageChoice(Expense.CHEAP);
 		else if (toggle == Price.EXPENSIVE)
 			player.setMortgageChoice(Expense.EXPENSIVE);
+	}
+
+	public void setValues(Expense buildingChoice,
+			edu.brown.cs32.MFTG.monopoly.Player.Balance buildingEvenness,
+			edu.brown.cs32.MFTG.monopoly.Player.Aggression buildAggression,
+			Expense sellingChoice, Amount houseSelling, Expense mortgageChoice) {
+		
+		if(buildingChoice == Expense.CHEAP) {
+			_buildingExpense.setValue(Price.CHEAP);
+		}
+		else if(buildingChoice == Expense.EXPENSIVE) {
+			_buildingExpense.setValue(Price.EXPENSIVE);
+		}
+		
+		if(buildingEvenness == Player.Balance.EVEN) {
+			_buildingEvenness.setValue(Balance.EVEN);
+		}
+		else if(buildingEvenness == Player.Balance.UNEVEN) {
+			_buildingEvenness.setValue(Balance.UNEVEN);
+		}
+		
+		if(buildAggression == Player.Aggression.AGGRESSIVE) {
+			_buildingAggressiveness.setValue(Aggression.AGGRESSIVE);
+		}
+		else if(buildAggression == Player.Aggression.PASSIVE) {
+			_buildingAggressiveness.setValue(Aggression.PASSIVE);
+		}
+		
+		if(sellingChoice == Expense.CHEAP) {
+			_sellingExpense.setValue(Price.CHEAP);
+		}
+		else if(sellingChoice == Expense.EXPENSIVE) {
+			_sellingExpense.setValue(Price.EXPENSIVE);
+		}
+		
+		if(houseSelling == Amount.FEWER) {
+			_sellingAmount.setValue(Quantity.FEWER);
+		}
+		else if(houseSelling == Amount.MORE) {
+			_sellingAmount.setValue(Quantity.MORE);
+		}
+		
+		if(mortgageChoice == Expense.CHEAP) {
+			_mortgageExpense.setValue(Price.CHEAP);
+		}
+		else if(mortgageChoice == Expense.EXPENSIVE) {
+			_mortgageExpense.setValue(Price.EXPENSIVE);
+		}
 	}
 }

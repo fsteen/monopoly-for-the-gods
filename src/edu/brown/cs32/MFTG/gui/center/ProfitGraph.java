@@ -194,4 +194,12 @@ public class ProfitGraph extends JPanel {
 		return minCash;
 	}
 
+	public void setMinCashValues(int minBuyCash, int minBuildCash,
+			int minUnmortgageCash) {
+		_minBuyCash = minBuyCash;
+		_minBuildCash = minBuildCash;
+		_minMortgageCash = minUnmortgageCash;
+		update();
+	}
+
 }

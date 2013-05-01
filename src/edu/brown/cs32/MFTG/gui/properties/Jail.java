@@ -50,4 +50,10 @@ public class Jail extends CornerProperty{
 		return waits;
 	}
 
+	public void setWaits(int jailWait, int jailPoor, int jailRich) {
+		_jailWait.setSelectedIndex(jailWait);
+		_jailWait.setSelectedIndex(jailPoor);
+		_jailWait.setSelectedIndex(jailRich);
+	}
+
 }

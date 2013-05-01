@@ -297,4 +297,18 @@ public class ColorBlock extends JPanel {
 		colorValues[3] = _sameColorEffect;
 		return colorValues;
 	}
+
+	public void setValues(Double[] values) {
+		_monopolyValue = values[0];
+		_houseValue = values[1];
+		_breakMonopolyValue = values[2];
+		_sameColorEffect = values[3];
+		
+		NumberFormat numFormat = NumberFormat.getInstance();
+		numFormat.setMaximumFractionDigits(2);
+		_monopolyField.setText(numFormat.format(_monopolyValue));
+		_houseField.setText(numFormat.format(_houseValue));
+		_noMonopolyField.setText(numFormat.format(_breakMonopolyValue));
+		_twoField.setText(numFormat.format(_sameColorEffect));
+	}
 }

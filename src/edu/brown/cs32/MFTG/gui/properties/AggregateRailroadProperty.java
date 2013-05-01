@@ -49,4 +49,7 @@ public class AggregateRailroadProperty extends NonstaticProperty {
 	public int getValue() {
 		throw new NullPointerException("user cannot set value of aggregate property");
 	}
+
+	@Override
+	public void setValue(int integer) {}
 }

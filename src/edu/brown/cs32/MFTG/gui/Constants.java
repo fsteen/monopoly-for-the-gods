@@ -34,6 +34,9 @@ public class Constants {
 	public static String n = "_no_monopoly.jpg";
 	public static String f = "Deed_Cards/";
 	public static final Color CLEAR = new Color(0,0,0,0);
+	
+	public static int DEED_WIDTH = 245;
+	public static int DEED_HEIGHT = 294;
 
 	public static int BUTTON_DIMENSION = Constants.WIDTH;
 	
@@ -164,6 +167,7 @@ public class Constants {
 	public interface Properties {
 		public Orientation getOrientation();
 		public String getLowercaseName();
+		public String getDeed();
 	}
 	
 	public enum Colors {
@@ -215,23 +219,26 @@ public class Constants {
 	}
 	
 	public enum Utilities implements Properties{
-		ELECTRIC_COMPANY(Orientation.LEFT, "Electric Company", "Deed_Cards/lightbulb.jpg", "electric company"),
-		WATER_WORKS(Orientation.UP, "Water Works", "Deed_Cards/faucet.jpg", "water works");
+		ELECTRIC_COMPANY(Orientation.LEFT, "Electric Company", "Deed_Cards/lightbulb.jpg", "Deed_Cards/electric_company.jpg", "electric company"),
+		WATER_WORKS(Orientation.UP, "Water Works", "Deed_Cards/faucet.jpg", "Deed_Cards/water_works.jpg", "water works");
 		
 		private Orientation orientation;
 		private String name;
 		private String file;
 		private String lowercaseName;
-		Utilities(Orientation orientation, String name, String file, String lowercaseName) {
+		private String deed;
+		Utilities(Orientation orientation, String name, String file, String deed, String lowercaseName) {
 			this.orientation = orientation;
 			this.name = name;
 			this.file = file;
+			this.deed = deed;
 			this.lowercaseName = lowercaseName;
 		}
 		public Orientation getOrientation() { return orientation; }
 		public String getName() { return name; }
 		public String getFile() { return file; }
 		public String getLowercaseName() { return lowercaseName; }
+		public String getDeed() { return deed; }
 	}
 	
 	public enum StaticProperties implements Properties {
@@ -257,6 +264,7 @@ public class Constants {
 		public Orientation getOrientation() { return orientation; }
 		public String getFile() { return file; }
 		public String getLowercaseName() { return "static property"; }
+		public String getDeed () { return null; }
 	}
 	
 	public enum Railroads implements Properties {
@@ -267,17 +275,17 @@ public class Constants {
 		
 		private Orientation orientation;
 		private String name;
-		private String file;
+		private String deed;
 		private String lowercaseName;
-		Railroads(Orientation orientation, String name, String file, String lowercaseName) {
+		Railroads(Orientation orientation, String name, String deed, String lowercaseName) {
 			this.orientation = orientation;
 			this.name = name;
-			this.file = file;
+			this.deed = deed;
 			this.lowercaseName = lowercaseName;
 		}
 		public Orientation getOrientation() { return orientation; }
 		public String getName() { return name; }
-		public String getFile() { return file; }
+		public String getDeed() { return deed; }
 		public String getLowercaseName() { return lowercaseName; }
 	}
 	
@@ -287,7 +295,7 @@ public class Constants {
 		ORIENTAL_AVENUE(Orientation.DOWN, PropertyColor.LIGHT_BLUE, "Oriental Avenue", "Deed_Cards/oriental_avenue.jpg", "oriental avenue"),
 		VERMONT_AVENUE(Orientation.DOWN, PropertyColor.LIGHT_BLUE, "Vermont Avenue", "Deed_Cards/vermont_avenue.jpg", "vermont avenue"),
 		CONNECTICUT_AVENUE(Orientation.DOWN, PropertyColor.LIGHT_BLUE, "Connecticut Avenue", "Deed_Cards/connecticut_avenue.jpg", "connecticut avenue"),
-		ST_CHARLES_PLACE(Orientation.LEFT, PropertyColor.PINK, "St. Charles Place", "Deed_Cards/st_charles_places.jpg", "st. charles place"),
+		ST_CHARLES_PLACE(Orientation.LEFT, PropertyColor.PINK, "St. Charles Place", "Deed_Cards/st_charles_place.jpg", "st. charles place"),
 		STATES_AVENUE(Orientation.LEFT, PropertyColor.PINK, "States Avenue", "Deed_Cards/states_avenue.jpg", "states avenue"),
 		VIRGINIA_AVENUE(Orientation.LEFT, PropertyColor.PINK, "Virginia Avenue", "Deed_Cards/virginia_avenue.jpg", "virginia avenue"),
 		ST_JAMES_PLACE(Orientation.LEFT, PropertyColor.ORANGE, "St. James Place", "Deed_Cards/st_james_place.jpg", "st. james place"),
@@ -308,19 +316,19 @@ public class Constants {
 		private Orientation orientation;
 		private PropertyColor color;
 		private String name;
-		private String file;
+		private String deed;
 		private String lowercaseName;
-		ColorProperties(Orientation orientation, PropertyColor color, String name, String file, String lowercaseName) {
+		ColorProperties(Orientation orientation, PropertyColor color, String name, String deed, String lowercaseName) {
 			this.orientation = orientation;
 			this.color = color;
 			this.name = name;
-			this.file = file;
+			this.deed = deed;
 			this.lowercaseName = lowercaseName;
 		}
 		public Orientation getOrientation() { return orientation; }
 		public Color getColor() { return color.getColor(); }
 		public String getName() { return name; }
-		public String getFile() { return file; }
+		public String getDeed() { return deed; }
 		public String getLowercaseName() { return lowercaseName; }
 	}
 	
