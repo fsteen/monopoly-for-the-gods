@@ -9,11 +9,13 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -165,7 +167,7 @@ public abstract class Client {
 	 * @throws JsonMappingException
 	 * @throws IOException
 	 */
-	private void respondToGetPlayer(ClientRequestContainer request) throws JsonParseException, JsonMappingException, IOException{
+	private void respondToGetPlayer(ClientRequestContainer request) {
 		List<String> arguments = request._arguments;
 		
 		if (arguments == null){
@@ -176,9 +178,36 @@ public abstract class Client {
 		int time = Integer.parseInt(arguments.get(0));
 		
 		Player p = getPlayer(time);
-		String playerString = _oMapper.writeValueAsString(p); //TODO: the problem is this line
+
+		String playerString;
+		
+//		assert(!(p.getPropertyValues().keySet().contains(null)));
+//		assert(!(p.getColorValues().keySet().contains(null)));
+		
+		try {
+			for(Entry<String, Double[]> d : p.getColorValues().entrySet()){
+				System.out.println(d);
+			}
+			for(Entry<String, Integer> d : p.getPropertyValues().entrySet()){
+				System.out.println(d);
+			}
+			
+			playerString = _oMapper.writeValueAsString(p);  //TODO: the problem is this line
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+			assert(false);
+			return;
+		}
+		
+		System.out.println("d");
+>>>>>>> branch 'master' of https://github.com/fsteen/monopoly-for-the-gods.git
 		ClientRequestContainer response = new ClientRequestContainer(Method.SENDPLAYER, Arrays.asList(playerString));
-		write(response);
+		try {
+			write(response);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	/**

@@ -11,6 +11,9 @@ import org.junit.Test;
 import edu.brown.cs32.MFTG.monopoly.Game;
 import edu.brown.cs32.MFTG.monopoly.GameData;
 import edu.brown.cs32.MFTG.monopoly.Player;
+import edu.brown.cs32.MFTG.monopoly.PlayerWealthData;
+import edu.brown.cs32.MFTG.monopoly.PropertyData;
+import edu.brown.cs32.MFTG.monopoly.TimeStamp;
 
 
 public class DataProcessorTests {
@@ -80,7 +83,7 @@ public class DataProcessorTests {
 		System.out.println(DataProcessor.aggregate(data, 50).toString());
 	}
 	
-//	@Test
+	@Test
 	public void generateGameDataReportMany4Player(){
 		Random rand = new Random();
 		Player p0=new Player(0);
@@ -96,6 +99,69 @@ public class DataProcessorTests {
 			g.run();
 			data.add(g.getGameData());
 		}
+		
+		GameDataReport r = DataProcessor.aggregate(data, 50);
+		double totalGameWealth = 3000;
+		double actualGameWealth;
+//		for(int i = 0; i < r._timeStamps.size();i++){ //make sure the totalGameWealth is approx correct
+//			actualGameWealth = 0;
+//			for(PlayerWealthDataReport w : r._timeStamps.get(i).wealthData.values()){
+//				actualGameWealth += w.accTotalWealth;
+//				totalGameWealth += 200;
+//			}
+//			System.out.println(actualGameWealth + " " + totalGameWealth);
+////			assertTrue(actualGameWealth > totalGameWealth * .9 && actualGameWealth < totalGameWealth * 1.1);
+//		}
+//		
 		System.out.println(DataProcessor.aggregate(data, 50).toString());
 	}
+	
+	public List<GameData> createRandomGameData(){
+		int num = 100;
+		int numTimestamps = 100;
+		int numPlayers = 4;
+		int numProperties = 5; 
+		List<GameData> g = new ArrayList<>();
+		
+		List<List<Double>> cash = new ArrayList<>(); //for each timestamp for all playes
+		List<Double> cashAtT;
+		
+		List<List<Double>> wealth = new ArrayList<>(); //for each timestamp for all playes
+		List<Double> wealthAtT;
+		for(int i = 0; i < numTimestamps; i++){
+			cashAtT = new ArrayList<>();
+			wealthAtT = new ArrayList<>();
+			for(int j = 0; j < numPlayers; j++){
+				cashAtT.add(Math.random() * 200);
+				wealthAtT.add(Math.random() * 1000);
+			}
+			wealth.add(wealthAtT);
+			cash.add(cashAtT);
+		}
+		
+		return null;
+//		private ArrayList<TimeStamp> _data;
+//		private int _time;
+//		public final int _numPlayers;
+//		private int _winner;
+		
+//		List<PropertyData> _propertyData;
+//		List<PlayerWealthData> _wealthData;
+//		int _time;
+		
+//		public final String propertyName;
+//		public final int ownerID;
+//		public final double numHouses;
+//		public final double personalRevenueWithHouses;
+//		public final double personalRevenueWithoutHouses;
+//		public final double totalRevenueWithHouses;
+//		public final double totalRevenueWithoutHouses;
+//		public final boolean mortgaged;
+		
+//		public final int ownerID;
+//		public final double cash;
+//		public final double totalWealth;
+	}
+	
+
 }

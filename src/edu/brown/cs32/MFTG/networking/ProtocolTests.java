@@ -12,7 +12,13 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.SerializerProvider;
 
 import edu.brown.cs32.MFTG.monopoly.GameData;
 import edu.brown.cs32.MFTG.monopoly.Player;
@@ -59,15 +65,30 @@ public class ProtocolTests {
 		
 	}
 	
+	class MyNullKeySerializer extends JsonSerializer<Object>
+	{
+	  @Override
+	  public void serialize(Object nullKey, JsonGenerator jsonGenerator, SerializerProvider unused) 
+	      throws IOException, JsonProcessingException
+	  {
+	    jsonGenerator.writeFieldName("");
+	  }
+	}	
 
 	@Test
 	public void testPlayer() throws IOException {
 		ObjectMapper oMapper = new ObjectMapper();
+		
+//		oMapper.configure(SerializationFeature.WRITE_NULL_MAP_VALUES, false);
+//	    oMapper.setSerializationInclusion(Include.NON_NULL);
+//	    oMapper.getSerializerProvider().setNullKeySerializer(new MyNullKeySerializer());
+		
 		Player p = new Player(1);
 		Player p2 = new Player(1);
 		
 		// make sure that all necessary getters and setters exist
 		HashMap<String, Integer> propertyValues = p.getPropertyValues();
+		propertyValues.put(null, 76);
 		p2.setPropertyValues(propertyValues);
 		
 		HashMap<String, Double[]> colorValues = p.getColorValues();
