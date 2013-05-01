@@ -90,6 +90,24 @@ public class ProfileManager {
 	}
 	
 	/**
+	 * 
+	 * @param profile
+	 * @return set of player names
+	 */
+	public Set<String> getPlayerNames(String profile){
+		return _profiles.get(profile).getPlayerNames();
+	}
+	
+	/**
+	 * 
+	 * @param profile
+	 * @return set of settings names
+	 */
+	public Set<String> getSettingsNames(String profile){
+		return _profiles.get(profile).getSettingsNames();
+	}
+	
+	/**
 	 * Returns the number of profiles
 	 * @return the number of profiles
 	 */
