@@ -468,7 +468,7 @@ public class Board extends JPanel {
 		_center.setWealthData(data);
 	}
 	
-	public static void main (String[] args) {
+	/*public static void main (String[] args) {
 		JFrame frame = new JFrame();
 		frame.setPreferredSize(new Dimension(9*Constants.WIDTH + 2*Constants.HEIGHT, 9*Constants.WIDTH + 2*Constants.HEIGHT));
 		try {
@@ -536,7 +536,7 @@ public class Board extends JPanel {
 		}
 		frame.pack();
 		frame.setVisible(true);
-	}
+	}*/
 
 /* ----------------------------------------------------------------------------
  * ----------------------------- MENU LISTENERS -------------------------------

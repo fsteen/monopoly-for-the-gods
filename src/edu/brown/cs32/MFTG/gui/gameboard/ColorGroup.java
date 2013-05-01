@@ -210,48 +210,6 @@ public class ColorGroup extends JPanel {
  * ----------------------------- CHANGE VIEW ----------------------------------
  * ----------------------------------------------------------------------------
  */
-	
-	/*public static void main (String[] args) {
-		JFrame frame = new JFrame();
-		frame.setPreferredSize(new Dimension(Constants.FULL_WIDTH, Constants.FULL_HEIGHT));
-		JMenuBar menu = new JMenuBar();
-		
-		List<PropertyPanel> myProperties = new ArrayList<>();
-		List<PropertyPanel> aggregateProperties = new ArrayList<>();
-		List<Properties> properties = new ArrayList<>();
-		myProperties.add(new MyColorPropertyPanel(ColorProperties.KENTUCKY_AVENUE));
-		aggregateProperties.add(new AggregateColorProperty(ColorProperties.KENTUCKY_AVENUE));
-		properties.add(ColorProperties.KENTUCKY_AVENUE);
-		myProperties.add(new MyColorPropertyPanel(ColorProperties.KENTUCKY_AVENUE));
-		aggregateProperties.add(new AggregateColorProperty(ColorProperties.KENTUCKY_AVENUE));
-		properties.add(ColorProperties.KENTUCKY_AVENUE);
-		myProperties.add(new MyColorPropertyPanel(ColorProperties.INDIANA_AVENUE));
-		aggregateProperties.add(new AggregateColorProperty(ColorProperties.INDIANA_AVENUE));
-		properties.add(ColorProperties.INDIANA_AVENUE);
-		myProperties.add(new MyColorPropertyPanel(ColorProperties.ILLINOIS_AVENUE));
-		aggregateProperties.add(new AggregateColorProperty(ColorProperties.ILLINOIS_AVENUE));
-		properties.add(ColorProperties.ILLINOIS_AVENUE);
-		ColorGroup red;
-		try {
-			red = new ColorGroup(Orientation.UP, properties, myProperties, aggregateProperties, new ColorBlock(Colors.RED));
-			frame.add(red);
-			
-			
-			PropertyDataAccumulator d = new PropertyDataAccumulator("hi");
-			d.accNumHouses = 2.5;
-			d.accTotalRevenueWithHouses = 100;
-			d.accTotalRevenueWithoutHouses= 50;
-			
-			red.setAggregateData("indiana avenue", d);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		frame.setJMenuBar(menu);
-		frame.pack();
-		frame.setVisible(true);
-	}*/
 
 	public HashMap<String, Integer> getPropertyValues() {
 		HashMap<String, Integer> propertyValues = new HashMap<>();
