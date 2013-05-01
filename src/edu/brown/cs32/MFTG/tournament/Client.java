@@ -78,7 +78,10 @@ public abstract class Client {
 	 * @throws IOException
 	 */
 	protected void write(ClientRequestContainer request) throws IOException{
+		System.out.println("about to turn request into JSON");
+		System.out.println("request: " + request);
 		String json = _oMapper.writeValueAsString(request);
+		System.out.println("about to write: " + json);
 		_output.write(json);
 		_output.write("\n");
 		_output.flush();
@@ -199,11 +202,11 @@ public abstract class Client {
 			return;
 		}
 		
-		System.out.println("d");
 		ClientRequestContainer response = new ClientRequestContainer(Method.SENDPLAYER, Arrays.asList(playerString));
 		try {
 			write(response);
 		} catch (IOException e) {
+			System.out.println("nooooooooooooooo!!!!!!!!!!!!!!!!!!!1");
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -232,11 +235,14 @@ public abstract class Client {
 		Settings settings = _oMapper.readValue(arguments.get(2), Settings.class);
 
 		List<GameData> gameData = playGames(players, seeds, settings);
-		String gameDataString = _oMapper.writeValueAsString(gameData);
+		
+		String gameDataString = _oMapper.writeValueAsString(gameData); //TODO this is the current problem line
 
 		ClientRequestContainer response = new ClientRequestContainer(Method.SENDGAMEDATA, Arrays.asList(gameDataString));
 
+		System.out.println("about to write the response for respondToPlayGames()");
 		write(response);
+		System.out.println("response for respondToPlayGames() written");
 	}
 	
 	public void launchTournament(int numPlayers, Settings settings, int port){
@@ -281,7 +287,7 @@ public abstract class Client {
 			}
 		}
 
-		//System.out.println("sending data back");
+		System.out.println("sending data back");
 		//System.out.println(_data);
 		return _data;
 	}

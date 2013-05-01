@@ -194,6 +194,22 @@ public class GameDataAccumulator {
 		return playerID;
 	}
 	
+	public void average(){
+		for(TimeStampAccumulator t : data){
+			t.average();
+		}
+		
+		for(PropertyDataAccumulator d : entireGameData.values()){
+			d.average();
+		}
+		
+		for(Map<Integer,PropertyDataAccumulator> m : playerEntireGameData.values()){
+			for(PropertyDataAccumulator p : m.values()){
+				p.average();
+			}
+		}
+	}
+	
 	/**
 	 * Converts a GameDataAccumulator to a GameData
 	 * @return
@@ -210,14 +226,12 @@ public class GameDataAccumulator {
 		Map<String,PropertyDataReport> overallPropertyData = new HashMap<>();
 		for(PropertyDataAccumulator p : entireGameData.values()){
 //			overallPlayerPropertyData.put(p.propertyName, p.toPlayerPropertyDataReport(p.numDataPoints));
-			p.average();
 			overallPropertyData.put(p.propertyName, p.toPropertyDataReport());
 		}
 		
 		for(Map<Integer,PropertyDataAccumulator> m : playerEntireGameData.values()){
 			tempList = new ArrayList<>();			
 			for(PropertyDataAccumulator p : m.values()){
-				p.average();
 				tempList.add(p.toPropertyDataReport());
 			}
 			overallPlayerPropertyData.put(tempList.get(0).propertyName, tempList);

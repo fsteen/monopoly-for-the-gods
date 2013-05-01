@@ -126,6 +126,7 @@ public class HumanClient extends Client{
 //		_dummyGui.setWealthData(getPlayerWealthData(combinedData._timeStamps));
 		_gui.getBoard().roundCompleted();
 		displayMessage("Time to choose heuristics!");
+		
 	}
 	
 	/**
@@ -137,7 +138,7 @@ public class HumanClient extends Client{
 		_data.add(gameData);
 		
 		if(_data.size() >= _nextDisplaySize){
-			GameDataReport r = DataProcessor.aggregate(_data, NUM_DATA_POINTS);
+			GameDataReport r = DataProcessor.aggregate(_data, NUM_DATA_POINTS).toGameDataReport();
 			
 //			System.out.println("**************************\n"+r.toString()+"\n**************************\n");
 			

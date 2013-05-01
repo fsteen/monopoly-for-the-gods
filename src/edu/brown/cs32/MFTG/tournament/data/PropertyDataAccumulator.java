@@ -88,7 +88,7 @@ public class PropertyDataAccumulator{
 	}
 	
 	public void averageWith(PropertyDataAccumulator p){
-		if(numDataPoints != 0 && p.numDataPoints != 0){
+		if(p != null && numDataPoints != 0 && p.numDataPoints != 0){
 			int newNumDataPoints = p.numDataPoints + numDataPoints;
 			accNumHouses = ((accNumHouses * numDataPoints) + (p.accNumHouses * p.numDataPoints))/newNumDataPoints;
 			accTotalRevenueWithHouses = ((accTotalRevenueWithHouses * numDataPoints) + (p.accTotalRevenueWithHouses * p.numDataPoints))/newNumDataPoints;
