@@ -65,7 +65,9 @@ public class ClientHandler {
 	 * @throws IOException
 	 */
 	private ClientRequestContainer readResponse() throws IOException{
+		System.out.println("A");
 		String json = _input.readLine();
+		System.out.println("B");
 		return _oMapper.readValue(json, ClientRequestContainer.class);
 	}
 
