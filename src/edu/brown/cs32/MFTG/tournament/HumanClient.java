@@ -126,6 +126,7 @@ public class HumanClient extends Client{
 //		_dummyGui.setWealthData(getPlayerWealthData(combinedData._timeStamps));
 		_gui.getBoard().roundCompleted();
 		displayMessage("Time to choose heuristics!");
+		
 	}
 	
 	/**

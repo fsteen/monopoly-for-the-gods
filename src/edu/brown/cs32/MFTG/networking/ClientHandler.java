@@ -69,6 +69,7 @@ public class ClientHandler {
 
 		String json = _input.readLine();
 		System.out.println("got json");
+		System.out.println(json);
 		ClientRequestContainer c = _oMapper.readValue(json, ClientRequestContainer.class);
 		return c;
 	}

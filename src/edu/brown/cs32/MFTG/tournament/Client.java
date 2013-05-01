@@ -232,10 +232,11 @@ public abstract class Client {
 		Settings settings = _oMapper.readValue(arguments.get(2), Settings.class);
 
 		List<GameData> gameData = playGames(players, seeds, settings);
-		String gameDataString = _oMapper.writeValueAsString(gameData);
+		
+		String gameDataString = _oMapper.writeValueAsString(gameData); //TODO this is the current problem line
+		
 
 		ClientRequestContainer response = new ClientRequestContainer(Method.SENDGAMEDATA, Arrays.asList(gameDataString));
-
 		write(response);
 	}
 	
@@ -281,7 +282,7 @@ public abstract class Client {
 			}
 		}
 
-		//System.out.println("sending data back");
+		System.out.println("sending data back");
 		//System.out.println(_data);
 		return _data;
 	}

@@ -30,7 +30,7 @@ public class Tournament implements Runnable{
 	private final int _numPlayers;
 	
 	public static final double CONFIRMATION_PERCENTAGE = 0.1; //confirm 10% of games
-	public static final int NUM_DATA_POINTS = 100;
+	public static final int NUM_DATA_POINTS = 10;
 	private List<ClientHandler> _clientHandlers;
 	private ServerSocket _socket;
 	private Settings _settings;
@@ -78,10 +78,13 @@ public class Tournament implements Runnable{
 			
 			// generate which seeds will be used for integrity validation
 			confirmationIndices = DataProcessor.generateConfirmationIndices(gamesPerModule, CONFIRMATION_PERCENTAGE);
-			
+			System.out.println("awaiting data from clients");
+
 			
 			// play a round of games
 			data = playRoundOfGames(players, DataProcessor.generateSeeds(players.size(),gamesPerModule, confirmationIndices));
+			
+			System.out.println("recieved data from clients");
 			
 			// make sure nobody cheated
 			if(DataProcessor.isCorrupted(data, confirmationIndices)){
