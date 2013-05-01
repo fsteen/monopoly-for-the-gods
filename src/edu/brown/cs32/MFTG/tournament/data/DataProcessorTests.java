@@ -113,7 +113,8 @@ public class DataProcessorTests {
 	
 	@Test
 	public void createRandomGameData(){
-		int numGames = 100000;
+
+		int numGames = 10000;
 		int numTimestamps = 10000;
 		int numPlayers = 4;
 		

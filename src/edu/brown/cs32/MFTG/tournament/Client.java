@@ -178,6 +178,7 @@ public abstract class Client {
 		int time = Integer.parseInt(arguments.get(0));
 		
 		Player p = getPlayer(time);
+
 		String playerString;
 		
 //		assert(!(p.getPropertyValues().keySet().contains(null)));
@@ -280,8 +281,8 @@ public abstract class Client {
 			}
 		}
 
-		System.out.println("sending data back");
-		System.out.println(_data);
+		//System.out.println("sending data back");
+		//System.out.println(_data);
 		return _data;
 	}
 
