@@ -124,7 +124,7 @@ public class ProfitGraph extends JPanel {
 	
 	public void createChart () {
 		
-		_chart = ChartFactory.createXYLineChart("Profit and Cash", "Time", "Money", _dataset, PlotOrientation.VERTICAL, false, true, false);
+		_chart = ChartFactory.createXYLineChart("      ", "Time", "Money", _dataset, PlotOrientation.VERTICAL, false, true, false);
 		
 		_chart.setBackgroundPaint(Constants.BACKGROUND_COLOR);
 		

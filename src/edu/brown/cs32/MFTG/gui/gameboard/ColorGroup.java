@@ -215,7 +215,7 @@ public class ColorGroup extends JPanel {
 		HashMap<String, Integer> propertyValues = new HashMap<>();
 		for(Properties p: _myPropertyName.keySet()) {
 			String name = p.getLowercaseName();
-			if(! name.equals("static property")) {
+			if(name != null && !name.equals("static property")) {
 				PropertyPanel property = _myPropertyName.get(p);
 				int i = property.getValue();
 				propertyValues.put(name, i);

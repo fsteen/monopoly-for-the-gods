@@ -386,13 +386,16 @@ public class Board extends JPanel {
 		HashMap<String, Double[]> colorValues = new HashMap<>();
 		for(ColorGroup c: _colorGroups) {
 			HashMap<String, Integer> properties = c.getPropertyValues();
-			Double[] colors = c.getColorValues();
-			colorValues.put(c.getName(), colors);
 			propertyValues.putAll(properties);
+			Double[] colors = c.getColorValues();
+			if(c.getName()!=null)
+				colorValues.put(c.getName(), colors);
 		}
 		for(Railroad r: _railroads) {
-			propertyValues.put(r.getName(), r.getValue());
+			if(r.getLowercaseName()!=null)
+				propertyValues.put(r.getLowercaseName(), r.getValue());
 		}
+		
 		player.setPropertyValues(propertyValues);
 		player.setColorValues(colorValues);
 		
@@ -412,6 +415,9 @@ public class Board extends JPanel {
 		player.setJailRich(waits.get(2));
 		
 		_center.setButtonChoices(player);		
+		
+		//System.out.println("Property Values: " + propertyValues);
+		//System.out.println("Color Values: " + colorValues);
 		
 		return player;
 	}

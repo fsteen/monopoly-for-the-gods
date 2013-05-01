@@ -69,7 +69,6 @@ public class HumanClient extends Client{
 		
 		Callable<Void> worker = new RequestCallable(this);
 		_executor.submit(worker);
-		System.out.println("ending connect and run");
 	}
 
 	/***************Networking Methods*************************/
@@ -119,7 +118,6 @@ public class HumanClient extends Client{
 	 */
 	public void displayGameData(GameDataReport combinedData) {
 		System.out.println("displaying end of round data");
-
 		_gui.getBoard().setPlayerSpecificPropertyData(getPlayerPropertyData(combinedData._overallPlayerPropertyData));
 		_gui.getBoard().setPropertyData(combinedData._overallPropertyData);
 		_gui.getBoard().setWealthData(getPlayerWealthData(combinedData._timeStamps));
@@ -139,8 +137,6 @@ public class HumanClient extends Client{
 		_data.add(gameData);
 		
 		if(_data.size() >= _nextDisplaySize){
-			System.out.println("client " + _id + "displaying intermediate data");
-			//TODO display some data
 			GameDataReport r = DataProcessor.aggregate(_data, NUM_DATA_POINTS);
 			
 //			System.out.println("**************************\n"+r.toString()+"\n**************************\n");
