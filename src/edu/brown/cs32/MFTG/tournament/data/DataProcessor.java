@@ -168,4 +168,5 @@ public class DataProcessor {
 		Collections.sort(confirmationIndices);
 		return confirmationIndices;
 	}
+	 
 }
