@@ -94,7 +94,7 @@ public class Tournament implements Runnable{
 				dataToSend.addAll(d);
 			}
 			
-			sendEndOfRoundData(DataProcessor.aggregate(dataToSend, NUM_DATA_POINTS));
+			sendEndOfRoundData(DataProcessor.aggregate(dataToSend, NUM_DATA_POINTS).toGameDataReport());
 		}
 		sendEndOfGameData();
 	}

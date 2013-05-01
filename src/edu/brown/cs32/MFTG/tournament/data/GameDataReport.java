@@ -73,6 +73,8 @@ public class GameDataReport {
 					b.append(p.toString() + "\n");
 				}
 			}
+		} else {
+			System.out.println("null");
 		}
 		b.append("*****OVERALL PROPERTY DATA*****\n");
 		if(_overallPropertyData != null){
@@ -92,7 +94,7 @@ public class GameDataReport {
 		
 		GameDataReport that = (GameDataReport) o;
 		
-		return Objects.equals(_timeStamps, that._timeStamps) && Objects.equals(_overallPlayerPropertyData, that._overallPlayerPropertyData)
-				&& _winner == that._winner; 
+		return Objects.equals(_timeStamps, that._timeStamps) && Objects.equals(_overallPlayerPropertyData, that._overallPlayerPropertyData);
+				//&& _winner == that._winner;  //TODO add back in
 	}
 }

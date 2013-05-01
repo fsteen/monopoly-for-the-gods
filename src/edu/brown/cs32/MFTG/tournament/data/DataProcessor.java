@@ -19,7 +19,7 @@ public class DataProcessor {
 	 * @param numDataPoints should be less than # of timestamps
 	 * @return
 	 */
-	public static GameDataReport aggregate(List<GameData> data, int numDataPoints){
+	public static GameDataAccumulator aggregate(List<GameData> data, int numDataPoints){
 		GameDataAccumulator overall = new GameDataAccumulator(numDataPoints);
 		for(GameData d : data){
 			//TODO later ?? : for games that are repeats of each other, exclude all but one
@@ -29,7 +29,8 @@ public class DataProcessor {
 				overall.addPlayerWin(d.getWinner());
 			}
 		}
-		return overall.toGameDataReport();
+		overall.average();
+		return overall;
 	}
 	
 	/**
@@ -69,19 +70,12 @@ public class DataProcessor {
 		}
 	}
 	
-	public static GameDataReport aggregate(GameDataReport...reports){
-		List<TimeStampReport> combinedTimeStamps = reports[0]._timeStamps;
-		Map<String,PropertyDataReport> combinedPropertyData = reports[0]._overallPropertyData;
-		Map<String,List<PropertyDataReport>> combinedPlayerPropertyData = reports[0]._overallPlayerPropertyData;
-		
+	public static GameDataAccumulator aggregate(GameDataAccumulator...reports){
+		GameDataAccumulator first = reports[0];
 		for(int i = 1; i < reports.length; i++){
-			
-			
+			first.averageWith(reports[i]);
 		}
-		
-		
-		return null;
-		
+		return first;
 	}
 
 	

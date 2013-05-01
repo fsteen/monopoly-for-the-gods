@@ -30,14 +30,12 @@ public class DataProcessorTests {
 		for(int i = 1; i < confirmationIndices1.size(); i++){
 			assertTrue(confirmationIndices1.get(i-1) < confirmationIndices1.get(i));
 		}
-//		System.out.println(confirmationIndices1);
 		
 		List<Integer> confirmationIndices2 = DataProcessor.generateConfirmationIndices(10, .09);
 		assertTrue(confirmationIndices2.size() == 1);
 		for(int i = 1; i < confirmationIndices2.size(); i++){
 			assertTrue(confirmationIndices2.get(i-1) < confirmationIndices2.get(i));
 		}
-//		System.out.println(confirmationIndices2);
 	}
 	
 //	@Test
@@ -54,7 +52,6 @@ public class DataProcessorTests {
 				assertTrue(seeds1.get(confirmationIndices1.get(i)).get(j) == seed1);
 			}
 		}
-//		System.out.println(seeds1);
 	}
 	
 //	@Test
@@ -104,16 +101,86 @@ public class DataProcessorTests {
 			g.run();
 			data.add(g.getGameData());
 		}
-		
-		GameDataReport r = DataProcessor.aggregate(data, 50);
-		double totalGameWealth = 3000;
-		double actualGameWealth;
 		System.out.println(DataProcessor.aggregate(data, 50).toString());
 	}
 	
 	@Test
-	public void createRandomGameData(){
-		int numGames = 1000;
+	public void propertyConversionTest(){
+		PropertyDataReport prop = new PropertyDataReport("name", -1, 5, 10, 20, 30, 40, 50);
+		assertTrue(prop.toPropertyDataAccumulator().toPropertyDataReport().equals(prop));
+	}
+	
+	@Test
+	public void wealthDataConversionTest(){
+		PlayerWealthDataReport w = new PlayerWealthDataReport(-1,200,300,50);
+		assertTrue(w.toPlayerWealthDataAccumulator().toPlayerWealthDataReport().equals(w));
+	}
+	
+	@Test
+	public void timeStampConversionTest(){
+		Map<Integer,PlayerWealthDataReport> m = new HashMap<>();
+		for(int i = 0; i < 25; i++){
+			m.put(i, new PlayerWealthDataReport(i,Math.random()*200,Math.random()*300,(int)(Math.random()*50)));
+		}
+		TimeStampReport t = new TimeStampReport(5,m);
+		assertTrue(t.toTimeStampAccumulator().toTimeStampReport().equals(t));
+	}
+	
+	@Test
+	public void gameDataConversionTests(){
+		
+		Random rand = new Random();
+		Player p0=new Player(0);
+		Player p1=new Player(1);
+		Player p2=new Player(2);
+		Player p3=new Player(3);
+
+		List<GameData> data = new ArrayList<>();
+		Game g;
+		
+		for(int i = 0; i < 5; i++){ //play 400 games
+			g = new Game(rand.nextLong(),1000,500, false, false, p0, p1, p2, p3);
+			g.run();
+			data.add(g.getGameData());
+		}
+		GameDataReport report = DataProcessor.aggregate(data, 1).toGameDataReport();	
+		assertTrue(report.toGameDataAccumulator().toGameDataReport().equals(report));
+	}
+	
+	@Test
+	public void differentAggregationMethodsTest(){
+		
+		int size = 5;
+		Random rand = new Random();
+		Player p0=new Player(0);
+		Player p1=new Player(1);
+		Player p2=new Player(2);
+		Player p3=new Player(3);
+
+		List<GameData> data = new ArrayList<>();
+		GameDataAccumulator[] reports = new GameDataAccumulator[size];
+		Game g;
+		
+		List<GameData> tempList = new ArrayList<>();
+		for(int i = 0; i < size; i++){ //play 400 games
+			g = new Game(rand.nextLong(),1000,500, false, false, p0, p1, p2, p3);
+			g.run();
+			data.add(g.getGameData());
+			tempList.add(g.getGameData());
+			reports[i] = (DataProcessor.aggregate(tempList,1));
+			tempList.clear();
+		}
+		GameDataReport report1 = DataProcessor.aggregate(data, 1).toGameDataReport();
+		GameDataReport report2 = DataProcessor.aggregate(reports).toGameDataReport();
+		
+		assertTrue(report1.equals(report2));
+		
+		
+	}
+	
+	@Test
+	public void wealthAccumulationTest(){
+		int numGames = 100;
 		int numTimestamps = 100;
 		int numPlayers = 4;
 		
@@ -160,7 +227,7 @@ public class DataProcessorTests {
 			totWealth.add(wealth);
 		}
 		
-		GameDataReport calculated = DataProcessor.aggregate(gameData, numTimestamps);
+		GameDataReport calculated = DataProcessor.aggregate(gameData, numTimestamps).toGameDataReport();
 		
 		GameDataReport actual = createGDR(totCash,totWealth);
 		
@@ -184,7 +251,7 @@ public class DataProcessorTests {
 		}
 	}
 	
-	public GameDataReport createGDR(List<List<List<Double>>> cash, List<List<List<Double>>> wealth){ 
+	private GameDataReport createGDR(List<List<List<Double>>> cash, List<List<List<Double>>> wealth){ 
 		double cashSum;
 		double wealthSum;
 		PlayerWealthDataReport w;
