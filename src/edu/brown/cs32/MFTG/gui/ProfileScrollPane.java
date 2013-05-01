@@ -28,6 +28,7 @@ public abstract class ProfileScrollPane extends JScrollPane{
 	protected JList<String> _profileList;
 	protected MonopolyGui _main;
 
+
 	public ProfileScrollPane(JList<String> profileList, DefaultListModel<String> listModel, MonopolyGui main) {
 		super(profileList);
 		_main=main;
@@ -40,6 +41,7 @@ public abstract class ProfileScrollPane extends JScrollPane{
 		 addProfileNames();
 	}
 	
+
 	/**
 	 * adds profile names to list
 	 */

@@ -14,6 +14,7 @@ import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import edu.brown.cs32.MFTG.gui.gameboard.Board;
+import edu.brown.cs32.MFTG.monopoly.Player;
 import edu.brown.cs32.MFTG.networking.ProfileManager;
 import edu.brown.cs32.MFTG.tournament.Client;
 import edu.brown.cs32.MFTG.tournament.Profile;
@@ -68,6 +69,7 @@ public class MonopolyGui extends JFrame{
 		_panels.put("create", create);
 		JoinGamePanel join = new JoinGamePanel(this);
 		_panels.put("join", join);
+		Board board = new Board(-1);
 		_end = new EndGamePanel(this);
 		_panels.put("end", _end);
 
@@ -77,7 +79,7 @@ public class MonopolyGui extends JFrame{
 		try {
 			board = new Board(1);
 
-			_currentPanel=lobby;
+			_currentPanel=settings;
 			this.add(_currentPanel);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -114,10 +116,36 @@ public class MonopolyGui extends JFrame{
 
 	/**
 	 * 
-	 * @return profile manager
+	 * @return set of profiles names
 	 */
 	public Set<String> getProfileNames() {
 		return _profileManager.getProfileNames();
+	}
+	
+	/**
+	 * 
+	 * @return set of player names
+	 */
+	public Set<String> getPlayerNames(String profile) {
+		return _profileManager.getProfile(profile).getPlayerNames();
+	}
+	
+	/**
+	 * 
+	 * @return set of settings names
+	 */
+	public Set<String> getSettingsNames(String profile) {
+		return _profileManager.getProfile(profile).getSettingsNames();
+	}
+	
+	/**
+	 * 
+	 * @param profile
+	 * @param playerName
+	 * @return player
+	 */
+	public Player getPlayer(String profile, String playerName) {
+		return _profileManager.getProfile(profile).getPlayer(playerName);
 	}
 
 	/**
