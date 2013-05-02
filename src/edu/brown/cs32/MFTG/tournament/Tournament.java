@@ -12,9 +12,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import edu.brown.cs32.MFTG.monopoly.GameData;
 import edu.brown.cs32.MFTG.monopoly.Player;
 import edu.brown.cs32.MFTG.networking.ClientCommunicationException;
 import edu.brown.cs32.MFTG.networking.ClientHandler;
@@ -22,8 +19,6 @@ import edu.brown.cs32.MFTG.networking.ClientLostException;
 import edu.brown.cs32.MFTG.networking.InvalidResponseException;
 import edu.brown.cs32.MFTG.networking.PlayGamesCallable;
 import edu.brown.cs32.MFTG.networking.getPlayerCallable;
-import edu.brown.cs32.MFTG.tournament.Settings.Turns;
-import edu.brown.cs32.MFTG.tournament.Settings.WinningCondition;
 import edu.brown.cs32.MFTG.tournament.data.DataProcessor;
 import edu.brown.cs32.MFTG.tournament.data.GameDataAccumulator;
 import edu.brown.cs32.MFTG.tournament.data.GameDataReport;
@@ -84,10 +79,7 @@ public class Tournament implements Runnable{
 			confirmationIndices = DataProcessor.generateConfirmationIndices(gamesPerModule, CONFIRMATION_PERCENTAGE);
 			
 			// play a round of games
-			System.out.println("about to play a round of games");
 			data = playRoundOfGames(players, DataProcessor.generateSeeds(players.size(),gamesPerModule, confirmationIndices));
-			
-			System.out.println("whooooooooo!!!!!!!!!!");
 			
 			// make sure nobody cheated
 			if(DataProcessor.isCorrupted(data, confirmationIndices)){
@@ -100,7 +92,9 @@ public class Tournament implements Runnable{
 				accumulators[j] = data.get(j).toGameDataAccumulator();
 			}
 
+			System.out.println("sending the end of round data");
 			sendEndOfRoundData(DataProcessor.combineAccumulators(accumulators).toGameDataReport());
+			System.out.println("sent");
 		}
 		sendEndOfGameData();
 	}
@@ -179,13 +173,10 @@ public class Tournament implements Runnable{
 	 * @throws ClientLostException 
 	 */
 	
-	//TODO
-	//TODO Alex : please change this method to deal with List<GameDataReport> instead of List<List<GameData>>
-	//TODO
-	private List<List<GameData>> playRoundOfGames(List<Player> players, List<List<Long>> seeds) {
+	private List<GameDataReport> playRoundOfGames(List<Player> players, List<List<Long>> seeds) {
 
-		List<Future<List<GameData>>> gameDataFutures = new ArrayList<>();
-		List<List<GameData>> gameData = new ArrayList<>();
+		List<Future<GameDataReport>> gameDataFutures = new ArrayList<>();
+		List<GameDataReport> gameData = new ArrayList<>();
 		
 		if (_clientHandlers.size() != seeds.size()){
 			// throw an error or something
@@ -194,8 +185,8 @@ public class Tournament implements Runnable{
 		}
 		
 		for (int i = 0; i < _clientHandlers.size(); i++){
-			Callable<List<GameData>> worker = new PlayGamesCallable(_clientHandlers.get(i), players, seeds.get(i), _settings);
-			Future<List<GameData>> future = _executor.submit(worker);
+			Callable<GameDataReport> worker = new PlayGamesCallable(_clientHandlers.get(i), players, seeds.get(i), _settings);
+			Future<GameDataReport> future = _executor.submit(worker);
 			gameDataFutures.add(future);
 		}
 
@@ -203,10 +194,9 @@ public class Tournament implements Runnable{
 		
 		for (int i = 0; i < gameDataFutures.size(); i++){
 			try {
-				Future<List<GameData>> future = gameDataFutures.get(i);
+				Future<GameDataReport> future = gameDataFutures.get(i);
 				future.get();
 				gameData.add(gameDataFutures.get(i).get());
-				gameDataFutures.get(i).get().get(0).printData();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 				numFails++;

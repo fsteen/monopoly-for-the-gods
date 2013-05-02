@@ -3,11 +3,11 @@ package edu.brown.cs32.MFTG.networking;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-import edu.brown.cs32.MFTG.monopoly.GameData;
 import edu.brown.cs32.MFTG.monopoly.Player;
 import edu.brown.cs32.MFTG.tournament.Settings;
+import edu.brown.cs32.MFTG.tournament.data.GameDataReport;
 
-public class PlayGamesCallable implements Callable<List<GameData>>{
+public class PlayGamesCallable implements Callable<GameDataReport>{
 	
 	private final ClientHandler _clientHandler;
 	private final List<Player> _players;
@@ -21,8 +21,8 @@ public class PlayGamesCallable implements Callable<List<GameData>>{
 		_settings = settings;
 	}
 	
-	public List<GameData> call() throws Exception {
-		List<GameData> gameData =  _clientHandler.playGames(_players, _seeds, _settings);
+	public GameDataReport call() throws Exception {
+		GameDataReport gameData =  _clientHandler.playGames(_players, _seeds, _settings);
 		return gameData;
 	}
 

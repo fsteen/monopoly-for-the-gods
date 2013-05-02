@@ -235,11 +235,11 @@ public abstract class Client {
 
 		GameDataReport gameData = playGames(players, seeds, settings);
 		
-		try {
-		sendGameResponse(gameData);
-		} catch (Exception e){
-			e.printStackTrace();
-		}
+		String gameDataJson = _oMapper.writeValueAsString(gameData);
+		
+		ClientRequestContainer response = new ClientRequestContainer(Method.SENDGAMEDATA, Arrays.asList(gameDataJson));
+		
+		write(response);
 	}
 	
 	/**
@@ -247,18 +247,18 @@ public abstract class Client {
 	 * @param gameData
 	 * @throws IOException
 	 */
-	private void sendGameResponse(List<GameData> gameData) throws IOException{
-		for (GameData g : gameData){
-			System.out.println("writing g as a string");
-			String gameDataString = _oMapper.writeValueAsString(g);
-			System.out.println("written");
-			_output.write(gameDataString);
-			_output.write("\n");
-		}
-		_output.write("DONE\n");
-		_output.flush();
-		System.out.println("entire response written");
-	}
+//	private void sendGameResponse(List<GameData> gameData) throws IOException{
+//		for (GameData g : gameData){
+//			System.out.println("writing g as a string");
+//			String gameDataString = _oMapper.writeValueAsString(g);
+//			System.out.println("written");
+//			_output.write(gameDataString);
+//			_output.write("\n");
+//		}
+//		_output.write("DONE\n");
+//		_output.flush();
+//		System.out.println("entire response written");
+//	}
 	
 	public void launchTournament(int numPlayers, Settings settings, int port){
 		try {

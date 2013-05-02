@@ -132,7 +132,7 @@ public class ClientHandler {
 	 * @throws ClientLostException 
 	 * @throws InvalidResponseException 
 	 */
-	public List<GameData> playGames(List<Player> players, List<Long> seeds, Settings settings) throws ClientCommunicationException, ClientLostException, InvalidResponseException{
+	public GameDataReport playGames(List<Player> players, List<Long> seeds, Settings settings) throws ClientCommunicationException, ClientLostException, InvalidResponseException{
 		try {
 			String playerList = _oMapper.writeValueAsString(players);
 			String seedList = _oMapper.writeValueAsString(seeds);
@@ -142,9 +142,13 @@ public class ClientHandler {
 			ClientRequestContainer request = new ClientRequestContainer(Method.PLAYGAMES, arguments);
 			// request that the client play the games
 			write(request);
+			
+			ClientRequestContainer response = readResponse();
 
-			List<GameData> gameData = readPlayGamesResponse();
-
+//			List<GameData> gameData = readPlayGamesResponse();
+			
+			GameDataReport gameData= _oMapper.readValue(response._arguments.get(0), GameDataReport.class);
+			
 			return gameData;
 
 		} catch (IOException e){

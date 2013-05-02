@@ -73,10 +73,13 @@ public class DataProcessor {
 	}
 	
 	public static GameDataAccumulator combineAccumulators(GameDataAccumulator...accumulators){
+		assert(accumulators != null);
+		assert(accumulators[0] != null);
 		GameDataAccumulator first = accumulators[0];
 		for(int i = 1; i < accumulators.length; i++){
 			first.averageWith(accumulators[i]);
 		}
+		assert(first != null);
 		return first;
 	}
 
