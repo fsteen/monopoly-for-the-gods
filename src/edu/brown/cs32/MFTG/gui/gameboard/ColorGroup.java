@@ -189,7 +189,11 @@ public class ColorGroup extends JPanel {
 		Set<Properties> properties = _myPropertyName.keySet();
 		for(Properties p: properties) {
 			if(p.getLowercaseName().equals(name)) {
+				System.out.println("setting: " + name);
 				_myPropertyName.get(p).setData(propertyDataReport);
+			}
+			else {
+				System.out.println("NOT SETTING: " + name);
 			}
 		}
 	}

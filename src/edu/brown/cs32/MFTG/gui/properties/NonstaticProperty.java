@@ -34,7 +34,6 @@ public abstract class NonstaticProperty extends PropertyPanel {
 	
 	public NonstaticProperty(Properties myProperty) {
 		super(myProperty);
-		//TODO: take out preassignment
 		_timeOwned = .25;
 		_profit = 1000;
 		

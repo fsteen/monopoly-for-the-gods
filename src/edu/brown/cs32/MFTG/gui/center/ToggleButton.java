@@ -28,7 +28,10 @@ public class ToggleButton extends JButton {
 		this.addActionListener(new MyListener(this));
 		
 		_toggle = toggle;
-		this.setIcon(_toggle.getIcon());
+	//	this.setIcon(_toggle.getIcon());
+		this.setText(_toggle.getText());
+		this.setVerticalTextPosition(CENTER);
+		this.setHorizontalTextPosition(CENTER);
 	}
 	
 	private class MyListener implements ActionListener {
@@ -41,7 +44,8 @@ public class ToggleButton extends JButton {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			_toggle = _toggle.next();
-			_button.setIcon(_toggle.getIcon());
+			//_button.setIcon(_toggle.getIcon());
+			_button.setText(_toggle.getText());
 		}
 		
 	}
