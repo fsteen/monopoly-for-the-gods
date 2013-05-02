@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.MenuBar;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -23,6 +24,7 @@ import javax.swing.JPanel;
 import javax.swing.ToolTipManager;
 
 import edu.brown.cs32.MFTG.gui.Constants;
+import edu.brown.cs32.MFTG.gui.MonopolyGui;
 import edu.brown.cs32.MFTG.gui.Constants.ColorProperties;
 import edu.brown.cs32.MFTG.gui.Constants.Colors;
 import edu.brown.cs32.MFTG.gui.Constants.Orientation;
@@ -53,11 +55,15 @@ public class Board extends JPanel {
 	private Center _center;
 	private int _id;
 	private Player _player = null;
+	private MonopolyGui _main;
+	private String _profile;
 	
-	public Board (int id) throws IOException {
+	public Board (int id, MonopolyGui main, String profile) throws IOException {
 		super();
 		//_menu = menu;
+		_main=main;
 		_id = id;
+		_profile = profile;
 		
 		/* Set the dimension */
 		Dimension dimension = new Dimension(Constants.FULL_WIDTH, Constants.FULL_HEIGHT);
@@ -79,7 +85,7 @@ public class Board extends JPanel {
 		
 		this.setToolTipText(null);
 	
-		//initializeMenu();
+		initializeMenu();
 		
 		this.setVisible(true);
 		this.repaint();
@@ -90,21 +96,8 @@ public class Board extends JPanel {
 	}
 	
 	public void initializeMenu () {
-		JMenu boardView = new JMenu("Board View");
-		
-		JMenuItem myProperty = new JMenuItem("My Properties");
-		myProperty.addActionListener(new MyPropertyListener());
-		boardView.add(myProperty);
-		
-		JMenuItem aggregateProperty = new JMenuItem("Aggregate Properties");
-		aggregateProperty.addActionListener(new AggregatePropertyListener());
-		boardView.add(aggregateProperty);
-		
-		JMenuItem colorGroup = new JMenuItem("Color Groups");
-		colorGroup.addActionListener(new ColorListener());
-		boardView.add(colorGroup);
-		
-		_menu.add(boardView);
+		JMenuBar menu = new InGameMenu(this,_main, _profile);
+		_main.setJMenuBar(menu);
 	}
 	
 	public void initializeTop () throws IOException {

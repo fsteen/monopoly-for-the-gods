@@ -90,6 +90,45 @@ public class Profile {
 	public Player getPlayer(String s) {
 		return _players.get(s);
 	}
+	
+	/**
+	 * 
+	 * @param p
+	 * @param name
+	 * @return if it happened
+	 */
+	public boolean addPlayer(Player p, String name) {
+		if(_players.get(name)!=null) {
+			return false;
+		}
+		_players.put(name,p);
+		return true;
+	}
+	
+	/**
+	 * remove a player
+	 * @param name
+	 * @return if it happened
+	 */
+	public boolean removePlayer(String name) {
+		if(_players.get(name)==null) {
+			return false;
+		}
+		_players.remove(name);
+		return true;
+	}
+	
+	/**
+	 * adds a player or replaces previous if it exists
+	 * @param p
+	 * @param name
+	 */
+	public void replacePlayer(Player p, String name) {
+		if(_players.get(name)!=null) {
+			_players.remove(name);
+		}
+		_players.put(name,p);
+	}
 
 	/**
 	 * Setter for the players attribute
