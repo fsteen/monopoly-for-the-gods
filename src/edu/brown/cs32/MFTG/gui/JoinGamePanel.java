@@ -31,15 +31,15 @@ public class JoinGamePanel extends JPanel{
 	private JoinBottomPanel _bottomPanel;
 	private MonopolyGui _main;
 
-	private final int BUTTON_HEIGHT=Constants.FULL_HEIGHT/8;
-	private final int BUTTON_WIDTH=2*Constants.FULL_HEIGHT/3;
-	private final int START_HEIGHT=Constants.FULL_HEIGHT/8;
+	private final int BUTTON_HEIGHT=Constants.FULL_PANEL_HEIGHT/8;
+	private final int BUTTON_WIDTH=2*Constants.FULL_PANEL_HEIGHT/3;
+	private final int START_HEIGHT=Constants.FULL_PANEL_HEIGHT/8;
 	private final int START_WIDTH=Constants.FULL_WIDTH/6;
 
 	public JoinGamePanel(MonopolyGui main) {
 		try {
 			_main=main;
-			java.awt.Dimension size = new java.awt.Dimension(Constants.FULL_WIDTH,Constants.FULL_HEIGHT);
+			java.awt.Dimension size = new java.awt.Dimension(Constants.FULL_WIDTH,Constants.FULL_PANEL_HEIGHT);
 			this.setPreferredSize(size);
 			this.setSize(size);
 			this.setBackground(Color.GRAY);

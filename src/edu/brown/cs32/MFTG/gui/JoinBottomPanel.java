@@ -21,7 +21,7 @@ import javax.swing.text.PlainDocument;
 
 public class JoinBottomPanel extends JPanel {
 	private BufferedImage _whiteBack, _foodler;
-	private final int BOTTOM_HEIGHT=Constants.FULL_HEIGHT*3/5;
+	private final int BOTTOM_HEIGHT=Constants.FULL_PANEL_HEIGHT*3/5;
 	private final int BOTTOM_WIDTH=Constants.FULL_WIDTH*15/16;
 	private JTextField _port, _hostName;
 	private JLabel _portLabel, _hostLabel;

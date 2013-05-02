@@ -30,15 +30,15 @@ public class GreetingPanel extends JPanel{
 	private BufferedImage _background;
 	private Point _playLoc, _settingsLoc, _recordsLoc;
 	private MonopolyGui _main;
-	private final int BUTTON_HEIGHT=Constants.FULL_HEIGHT/10;
-	private final int BUTTON_WIDTH=3*Constants.FULL_HEIGHT/5;
-	private final int START_HEIGHT=3*Constants.FULL_HEIGHT/7;
+	private final int BUTTON_HEIGHT=Constants.FULL_PANEL_HEIGHT/10;
+	private final int BUTTON_WIDTH=3*Constants.FULL_PANEL_HEIGHT/5;
+	private final int START_HEIGHT=3*Constants.FULL_PANEL_HEIGHT/7;
 	private final int START_WIDTH=Constants.FULL_WIDTH/4;
 	public GreetingPanel(MonopolyGui main) {
 		try {
 			_main=main;
 			
-			java.awt.Dimension size = new java.awt.Dimension(Constants.FULL_WIDTH,Constants.FULL_HEIGHT);
+			java.awt.Dimension size = new java.awt.Dimension(Constants.FULL_WIDTH,Constants.FULL_PANEL_HEIGHT);
 			this.setPreferredSize(size);
 			this.setSize(size);
 			this.setBackground(Color.BLACK);

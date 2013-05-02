@@ -27,23 +27,28 @@ public class Jail extends CornerProperty{
 		
 		this.setLayout(null);
 		
+		this.setToolTipText("<html>How many turns do you want to wait in jail?<br/>Turns: the default number of turn to wait<br/>Poor: if i'm poor<br/>Rich: if i'm rich<html/>");
+		
 		String [] wait = {"Turns", "1", "2", "3"};
 		_jailWait = new JComboBox<String>(wait);
 		_jailWait.setSelectedIndex(0);
 		_jailWait.setSize(68, 23);
 		_jailWait.setLocation(30, 75);
+		_jailWait.setToolTipText("Default number of turns to wait");
 		
 		String[] poor = {"Poor", "1", "2", "3"};
 		_poorWait = new JComboBox<String>(poor);
 		_poorWait.setSelectedIndex(0);
 		_poorWait.setSize(62, 23);
 		_poorWait.setLocation(-2, 97);
+		_poorWait.setToolTipText("Number of turns to wait if i'm poor");
 		
 		String [] rich = {"Rich", "1", "2", "3"};
 		_richWait = new JComboBox<String>(rich);
 		_richWait.setSelectedIndex(0);
 		_richWait.setSize(59, 23);
 		_richWait.setLocation(60, 97);
+		_richWait.setToolTipText("Number of turns to wait if i'm rich");
 		
 		_jailWait.addActionListener(new JailListener(_wait));
 		_poorWait.addActionListener(new JailListener(_poor));

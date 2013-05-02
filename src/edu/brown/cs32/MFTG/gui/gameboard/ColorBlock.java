@@ -18,14 +18,18 @@ import java.text.ParseException;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.JFormattedTextField;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import edu.brown.cs32.MFTG.gui.Constants;
 import edu.brown.cs32.MFTG.gui.Helper;
+import edu.brown.cs32.MFTG.gui.Constants.ColorProperties;
 import edu.brown.cs32.MFTG.gui.Constants.Colors;
 import edu.brown.cs32.MFTG.gui.Constants.Orientation;
+import edu.brown.cs32.MFTG.gui.properties.MyColorPropertyPanel;
 import edu.brown.cs32.MFTG.gui.House;
+import edu.brown.cs32.MFTG.tournament.data.PropertyDataReport;
 
 public class ColorBlock extends JPanel {
 
@@ -310,5 +314,34 @@ public class ColorBlock extends JPanel {
 		_houseField.setText(numFormat.format(_houseValue));
 		_noMonopolyField.setText(numFormat.format(_breakMonopolyValue));
 		_twoField.setText(numFormat.format(_sameColorEffect));
+	}
+	
+	public static void main (String[] args) throws IOException {
+		JFrame frame = new JFrame("Example");
+		frame.setSize(300, 300);
+		frame.setPreferredSize(new Dimension(300, 300));
+		frame.setLayout(null);
+		
+		ColorBlock example = new ColorBlock(Colors.LIGHT_BLUE);
+		Double[] values = {new Double(4.5), new Double(50), new Double(3.1), new Double(3.5)};
+		example.setValues(values);
+		
+		example.setLocation(50, 50);
+		example.setSize(4*Constants.WIDTH, Constants.HEIGHT);
+		
+
+		ColorBlock example2 = new ColorBlock(Colors.LIGHT_BLUE);
+		Double[] values2 = {new Double(4.5), new Double(50), new Double(3.1), new Double(3.5)};
+		example2.setValues(values2);
+		
+		example2.setLocation(500, 500);
+		example2.setSize(4*Constants.WIDTH, Constants.HEIGHT);
+
+		
+		frame.add(example);
+		frame.add(example2);
+		frame.pack();
+		frame.setVisible(true);
+		
 	}
 }

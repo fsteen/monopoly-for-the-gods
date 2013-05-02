@@ -53,6 +53,15 @@ public class ButtonPanel extends JPanel {
 		_sellingAmount.setSize(dim);
 		_mortgageExpense.setSize(dim);
 		
+		_buildingExpense.setToolTipText("<html>Do you prefer to build houses on:<br/>CHEAP: more cheap properties<br/>EXPENSIVE: fewer expensive properties</html>");
+		_buildingEvenness.setToolTipText("<html>Do you prefer to build houses:<br/>EVEN: evenly across different monopolies<br/>UNEVEN: focus on one monopoly</html>");
+		_buildingAggressiveness.setToolTipText("<html>Do you prefer to build houses:<br/>PASSIVE: slowly and only when you have extra money<br/>AGGRESSIVE: whenever possible</html>");
+		
+		_sellingExpense.setToolTipText("<html>When you sell houses do you prefer to sell:<br/>CHEAP: more cheap houses<br/>EXPENSIVE: fewer expensive houses</html>");
+		_sellingAmount.setToolTipText("<html>When you sell houses do you prefer to sell from:<br/>FEWER: properties that don't have many houses<br/>MORE: properties that have many houses</html>");
+		
+		_mortgageExpense.setToolTipText("<html>WHen you mortgage do you prefer to mortgage:<br/>CHEAP: more cheaper properties<br/>EXPENSIVE: fewer more expensive properties</html>");
+		
 		double x = ((9*Constants.WIDTH/7));
 		int y = (int) (2*Constants.WIDTH/2 - dim.getHeight()/2) + 10;
 		

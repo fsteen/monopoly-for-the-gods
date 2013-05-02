@@ -64,7 +64,7 @@ public class HumanClient extends Client{
 		}
 		try {
 			_id = respondToSendID();
-			_gui.createBoard(_id);
+			_gui.createBoard(_id, _gui.getCurrentProfile()._name);
 		} catch (IOException | InvalidRequestException e1) {
 			displayMessage("Unable to retrieve a unique ID from the server :(");
 			return;

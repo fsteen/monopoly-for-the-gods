@@ -57,6 +57,10 @@ public class SliderPanel extends JPanel {
 		_timeChange.setLocation((int) (.25*Constants.WIDTH), (int) (4*Constants.WIDTH/4 - _timeChange.getHeight()/2 - 10));
 		_tradingFear.setLocation((int) (.25*Constants.WIDTH), (int) (6*Constants.WIDTH/4 - _tradingFear.getHeight()/2 - 10));
 		
+		_liquidity.setToolTipText("<html>How much more are you willing to pay for properties:<br/>LEFT: not much more<br/>RIGHT: lots more<html/>");
+		_timeChange.setToolTipText("<html>Do you prefer buying earlier or later in the game:<br/LEFT: earlier in the game<br/>RIGHT: later in the game<html/>");
+		_tradingFear.setToolTipText("<html>How much of a markup do you demand when you trade:<br/>LEFT: no markup, I'll trade a lot<br/>RIGHT: a high markup, I don't like trading<html/>");
+		
 		this.add(_liquidity);
 		this.add(_timeChange);
 		this.add(_tradingFear);
@@ -64,6 +68,11 @@ public class SliderPanel extends JPanel {
 		JLabel liquidity = new JLabel("Liquidity");
 		JLabel timeChange = new JLabel("Time Change");
 		JLabel tradingFear = new JLabel("Trading Fear");
+		
+		liquidity.setToolTipText("<html>How much more are you willing to pay for properties:<br/>LEFT: not much more<br/>RIGHT: lots more<html/>");
+		timeChange.setToolTipText("<html>Do you prefer buying earlier or later in the game:<br/LEFT: earlier in the game<br/>RIGHT: later in the game<html/>");
+		tradingFear.setToolTipText("<html>How much of a markup do you demand when you trade:<br/>LEFT: no markup, I'll trade a lot<br/>RIGHT: a high markup, I don't like trading<html/>");
+		
 		
 		liquidity.setSize(100, 40);
 		timeChange.setSize(100, 40);

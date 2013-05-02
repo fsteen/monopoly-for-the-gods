@@ -17,16 +17,16 @@ public class IconToolTip extends JToolTip {
 	private int _width;
 	private int _height;
 	
-	public IconToolTip(String file, int width, int height) throws IOException {
-		super();
-		Dimension dimension = new Dimension(width, height);
+	public IconToolTip(String file) throws IOException {
+		super();		
+		_icon = ImageIO.read(new File(file));
+		
+		Dimension dimension = new Dimension(_icon.getWidth(), _icon.getHeight());
 		setSize(dimension);
 		setPreferredSize(dimension);
 		setMaximumSize(dimension);
 		setMinimumSize(dimension);
-		
-		_icon = ImageIO.read(new File(file));
-		_icon = Helper.resize(_icon, width, height);
+
 	}
 	
 	@Override

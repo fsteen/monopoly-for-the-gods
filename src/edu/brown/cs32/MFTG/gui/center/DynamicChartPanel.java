@@ -43,6 +43,7 @@ public class DynamicChartPanel extends ChartPanel {
 		_renderer = renderer;
 		this.setMouseWheelEnabled(true);
 		_chart = chart;
+		
 		this.addChartMouseListener(new MinCashListener());
 		
 		this.setLayout(null);
@@ -53,7 +54,6 @@ public class DynamicChartPanel extends ChartPanel {
 		this.setMinimumSize(dim);
 		
 		this.setLocation(0, 0);
-		
 		initializeButtons();
 	}
 	
@@ -63,6 +63,10 @@ public class DynamicChartPanel extends ChartPanel {
 		_buyCash = new JToggleButton("Buy");
 		_buildCash = new JToggleButton("Build");
 		_unmortgageCash = new JToggleButton("Unmortgage");
+		
+		_buyCash.setToolTipText("<html>Set the minimum amount of cash needed in order to buy properties<br/>click this then drag the line in the graph<html/");
+		_buildCash.setToolTipText("<html>Set the minimum amount of cash needed in order to build houses<br/>click this then drag the line in the graph<html/");
+		_unmortgageCash.setToolTipText("<html>Set the minimum amount of cash needed in order to unmortgage properties<br/>click this then drag the line in the graph<html/");
 		
 		_buyCash.setLocation(370, 5);
 		_buildCash.setLocation(421, 5);
@@ -139,7 +143,10 @@ public class DynamicChartPanel extends ChartPanel {
 	}
 	
 	public void mouseDragged(MouseEvent e) {
-		if(_moving == -1) super.mouseDragged(e);
+		if(_moving == -1) {
+			System.out.println("super drag");
+			super.mouseDragged(e);
+		}
 		else {
 			double newHeight = e.getY();
 			if(Math.abs(newHeight - _currHeight) < 10) {
