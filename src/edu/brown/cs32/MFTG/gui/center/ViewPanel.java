@@ -34,9 +34,9 @@ public class ViewPanel extends JPanel{
 		JToggleButton aggregateProperty = new JToggleButton("Aggregate Property");
 		JToggleButton colorGroup = new JToggleButton("Color Group");
 		
-		myProperty.addActionListener(new ViewListener(View.ME));
-		aggregateProperty.addActionListener(new ViewListener(View.AGGREGATE));
-		colorGroup.addActionListener(new ViewListener(View.COLOR));
+		myProperty.addActionListener(new ViewListener(View.ME,_board));
+		aggregateProperty.addActionListener(new ViewListener(View.AGGREGATE,_board));
+		colorGroup.addActionListener(new ViewListener(View.COLOR,_board));
 		
 		ButtonGroup viewGroup = new ButtonGroup();
 		viewGroup.add(myProperty);
@@ -76,19 +76,6 @@ public class ViewPanel extends JPanel{
 		}
 		
 	}
-	
-	public class ViewListener implements ActionListener {
 
-		private View _view;
-		public ViewListener (View view) {
-			_view = view;
-		}
-		
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			_board.setView(_view);
-		}
-		
-	}
 
 }

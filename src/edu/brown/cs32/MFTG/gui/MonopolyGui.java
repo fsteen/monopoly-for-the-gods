@@ -81,15 +81,15 @@ public class MonopolyGui extends JFrame{
 		/* DO NOT ACTUALLY USE THE BOARD PLEASE */
 		Board board;
 		try {
-			board = new Board(1);
+			board = new Board(1, this, null);
 
-			_currentPanel=lobby;
+			_currentPanel=greet;
 			this.add(_currentPanel);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+		this.setJMenuBar(null);
 		
 		this.pack();
 		this.setVisible(true);
@@ -122,6 +122,9 @@ public class MonopolyGui extends JFrame{
 		else if(_currentPanel==_records) {
 			_records.resetProfileList();
 			_records.giveFocusToList();
+		}
+		if(panel.equals("board")==false) {
+			this.setJMenuBar(null);
 		}
 		revalidate();
 		repaint();
@@ -194,6 +197,14 @@ public class MonopolyGui extends JFrame{
 	public void setCurrentProfile(String profileName) {
 		_currentProfile = _profileManager.getProfile(profileName);
 	}
+	
+	/**
+	 * 
+	 * @return currentProfile
+	 */
+	public Profile getCurrentProfile() {
+		return _currentProfile;
+	}
 
 	/**
 	 * adds a profile
@@ -212,10 +223,10 @@ public class MonopolyGui extends JFrame{
 		return (Board) _panels.get("board"); //TODO get rid of casting
 	}
 
-	public void createBoard(int id) {
+	public void createBoard(int id, String profile) {
 		Board board;
 		try {
-			board = new Board(id);
+			board = new Board(id, this, profile);
 			_panels.put("board", board);
 			switchPanels("board");
 		} catch (IOException e) {

@@ -2,6 +2,7 @@ package edu.brown.cs32.MFTG.gui;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -15,12 +16,15 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
 import javax.swing.DefaultListModel;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.MouseInputAdapter;
@@ -45,7 +49,7 @@ public class SettingsPanel extends JPanel{
 
 	private final int BUTTON_HEIGHT=Constants.FULL_HEIGHT/8;
 	private final int BUTTON_WIDTH=2*Constants.FULL_HEIGHT/3;
-	private final int START_HEIGHT=Constants.FULL_HEIGHT/8;
+	private final int START_HEIGHT=Constants.FULL_HEIGHT/32;
 	private final int START_WIDTH=Constants.FULL_WIDTH/6;
 	private final int BOTTOM_HEIGHT=Constants.FULL_HEIGHT*3/5;
 	private final int BOTTOM_WIDTH=Constants.FULL_WIDTH*15/16;
@@ -60,6 +64,19 @@ public class SettingsPanel extends JPanel{
 			this.setLayout(null);
 			_background = Helper.resize(ImageIO.read(new File("images/mountain2.png")),this.getWidth(),this.getHeight());
 
+			JPanel topPanel = new JPanel();
+			topPanel.setBackground(Color.WHITE);
+			Dimension topSize = new Dimension(BOTTOM_WIDTH-6, 50);
+			topPanel.setSize(topSize);
+			topPanel.setPreferredSize(topSize);
+			topPanel.setLocation(Constants.FULL_WIDTH/32+3, START_HEIGHT+BUTTON_HEIGHT*6/5);
+			
+			JCheckBox music = new JCheckBox("Music: ");
+			music.setFont(new Font("musicFont",Font.PLAIN, 30));
+			music.setHorizontalTextPosition(SwingConstants.LEADING);
+			topPanel.add(music);
+			
+			
 			_settingsLite = new ImagePanel(Helper.resize(ImageIO.read(new File("images/SettingsLite.png")), BUTTON_WIDTH-40, BUTTON_HEIGHT));
 			_settingsLoc= new Point(START_WIDTH, START_HEIGHT);
 			_settingsLite.setLocation(_settingsLoc);
@@ -96,6 +113,7 @@ public class SettingsPanel extends JPanel{
 			add(_editDark);
 			add(_removeLite);
 			add(_removeDark);
+			add(topPanel);
 			
 			addProfileList();
 			//addPlayerList();
@@ -128,7 +146,7 @@ public class SettingsPanel extends JPanel{
 		_settingsScrollPane = new SettingsProfileScrollPane(_profileList, _profileListModel, _main);
 		_settingsScrollPane.setup();
 
-		_settingsScrollPane.setLocation(Constants.FULL_WIDTH/32, START_HEIGHT+BUTTON_HEIGHT*6/5);
+		_settingsScrollPane.setLocation(Constants.FULL_WIDTH/32, START_HEIGHT+BUTTON_HEIGHT*6/5+50);
 		Dimension listSize = new Dimension(BOTTOM_WIDTH, BOTTOM_HEIGHT);
 		_settingsScrollPane.setSize(listSize);
 		_settingsScrollPane.setPreferredSize(listSize);
