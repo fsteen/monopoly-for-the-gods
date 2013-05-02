@@ -26,7 +26,7 @@ class GameRunner implements Runnable{
 			_game.run();
 			_module.addGameData(_game.getGameData());
 		} catch (Exception e){
-			e.printStackTrace();
+			//swallow
 			_module.addGameData(null);
 		}
 				

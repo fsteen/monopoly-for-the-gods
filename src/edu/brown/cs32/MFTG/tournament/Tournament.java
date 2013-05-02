@@ -5,6 +5,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -24,6 +25,7 @@ import edu.brown.cs32.MFTG.networking.getPlayerCallable;
 import edu.brown.cs32.MFTG.tournament.Settings.Turns;
 import edu.brown.cs32.MFTG.tournament.Settings.WinningCondition;
 import edu.brown.cs32.MFTG.tournament.data.DataProcessor;
+import edu.brown.cs32.MFTG.tournament.data.GameDataAccumulator;
 import edu.brown.cs32.MFTG.tournament.data.GameDataReport;
 
 public class Tournament implements Runnable{
@@ -35,6 +37,9 @@ public class Tournament implements Runnable{
 	private ServerSocket _socket;
 	private Settings _settings;
 	private ExecutorService _executor; 
+	
+	private Map<Integer,Integer> _setPlayerWins;
+	
 	/**
 	 * Creates a tournament for the specified number of players and games
 	 * @param numPlayers
@@ -63,7 +68,7 @@ public class Tournament implements Runnable{
 		int gamesPerModule = (int)Math.ceil(_settings.getNumGamesPerRound()/_numPlayers);
 		
 		List<Player> players = null;
-		List<List<GameData>> data;
+		List<GameDataReport> data;
 		List<Integer> confirmationIndices;
 		
 		for(int i = 0; i < _settings.getNumRounds(); i++){
@@ -86,16 +91,16 @@ public class Tournament implements Runnable{
 			
 			// make sure nobody cheated
 			if(DataProcessor.isCorrupted(data, confirmationIndices)){
-				//System.out.println("Tournament : WOOHOO ... SOMEONE IS CHEATING!!!!!"); //TODO change this
+				//System.out.println("Tournament : WOOHOO ... SOMEONE IS CHEATING!!!!!");
 				//TODO FIGURE THIS OUT FRANCES!!!!!!!!!!!!!!!
 			}
 			
-			List<GameData> dataToSend = new ArrayList<>();
-			for(List<GameData> d : data){
-				dataToSend.addAll(d);
+			GameDataAccumulator[] accumulators = new GameDataAccumulator[data.size()];
+			for(int j = 0; j < data.size(); j++){
+				accumulators[j] = data.get(j).toGameDataAccumulator();
 			}
 
-			sendEndOfRoundData(DataProcessor.aggregate(dataToSend, NUM_DATA_POINTS).toGameDataReport());
+			sendEndOfRoundData(DataProcessor.combineAccumulators(accumulators).toGameDataReport());
 		}
 		sendEndOfGameData();
 	}
@@ -173,6 +178,10 @@ public class Tournament implements Runnable{
 	 * @throws InvalidResponseException 
 	 * @throws ClientLostException 
 	 */
+	
+	//TODO
+	//TODO Alex : please change this method to deal with List<GameDataReport> instead of List<List<GameData>>
+	//TODO
 	private List<List<GameData>> playRoundOfGames(List<Player> players, List<List<Long>> seeds) {
 
 		List<Future<List<GameData>>> gameDataFutures = new ArrayList<>();

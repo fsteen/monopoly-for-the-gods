@@ -34,9 +34,9 @@ public class PlayerWealthDataReport {
 			return false;
 		
 		PlayerWealthDataReport that = (PlayerWealthDataReport) o;
-		
-		return (this.ownerID == that.ownerID) && (this.accCash == that.accCash) 
-				&& (this.accTotalWealth == that.accTotalWealth) && (this.numDataPoints == that.numDataPoints);
+
+		return (this.ownerID == that.ownerID) && Math.round(this.accCash) == Math.round(that.accCash) && 
+				Math.round(this.accTotalWealth) == Math.round(that.accTotalWealth) && (this.numDataPoints == that.numDataPoints);
 	}
 	
 	@Override

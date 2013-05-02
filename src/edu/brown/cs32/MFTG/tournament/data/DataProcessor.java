@@ -25,7 +25,7 @@ public class DataProcessor {
 			//TODO later ?? : for games that are repeats of each other, exclude all but one
 			if(d != null){
 				combineGameData(overall, d);
-				overall.gameFinished(d);
+				overall.gameFinished();
 				overall.addPlayerWin(d.getWinner());
 			}
 		}
@@ -54,7 +54,9 @@ public class DataProcessor {
 		//overall game data
 		for(TimeStamp t : specific.getData()){
 			for(PropertyData p : t.getPropertyData()){
-				overall.putPropertyData(p);
+				if(p.ownerID != -1){ //TODO what are the -1s from ????
+					overall.putPropertyData(p);
+				}
 			}
 		}
 	}
@@ -70,10 +72,10 @@ public class DataProcessor {
 		}
 	}
 	
-	public static GameDataAccumulator aggregate(GameDataAccumulator...reports){
-		GameDataAccumulator first = reports[0];
-		for(int i = 1; i < reports.length; i++){
-			first.averageWith(reports[i]);
+	public static GameDataAccumulator combineAccumulators(GameDataAccumulator...accumulators){
+		GameDataAccumulator first = accumulators[0];
+		for(int i = 1; i < accumulators.length; i++){
+			first.averageWith(accumulators[i]);
 		}
 		return first;
 	}
@@ -86,31 +88,36 @@ public class DataProcessor {
 	 * @param confirmationIndices the indices of games that should be identical
 	 * @return whether the game data is corrupted
 	 */
-	public static boolean isCorrupted(List<List<GameData>> data, List<Integer> confirmationIndices){
+	public static boolean isCorrupted(List<GameDataReport> data, List<Integer> confirmationIndices){
 		boolean corrupted = false;
 		
-		System.out.println(data.size() + "\t" + confirmationIndices.size());
-		
-		if(data.size() != confirmationIndices.size()){
-			return true;
-		}
-		
-		GameData previous;
-		GameData current;
-		List<GameData> setData;
+		GameDataReport current = data.get(0);
 		for(Integer i : confirmationIndices){
-			setData = data.get(i);
-			previous = setData.get(0);
-			for(int j = 1; j < setData.size(); j++){
-				current = setData.get(j);
-				if(current != null && previous != null){ //because games might have expections
-					if(!current.equals(previous)){
-						corrupted = true;
-					}
+			for(GameDataReport d : data){
+				if(i >= d._winList.size() || i >= current._winList.size() || 
+						d._winList.get(i) != current._winList.get(i)){ //TODO null indices???!
+					corrupted = true;
 				}
-				previous = current;
+				current = d;
 			}
 		}
+//		
+//		GameData previous;
+//		GameData current;
+//		List<GameData> setData;
+//		for(Integer i : confirmationIndices){
+//			setData = data.get(i);
+//			previous = setData.get(0);
+//			for(int j = 1; j < setData.size(); j++){
+//				current = setData.get(j);
+//				if(current != null && previous != null){ //because games might have expections
+//					if(!current.equals(previous)){
+//						corrupted = true;
+//					}
+//				}
+//				previous = current;
+//			}
+//		}
 		
 		return corrupted;
 	}
@@ -132,7 +139,7 @@ public class DataProcessor {
 		List<Long> seedValues;
 		List<List<Long>> allSeedValues = new ArrayList<>();
 		
-		for(int i = 0; i < numGames; i++){ // TODO change to numGames
+		for(int i = 0; i < numGames; i++){
 			seedValues = new ArrayList<>();
 			
 			if(confirmationListIndex < confirmationListSize && i == confirmationIndices.get(confirmationListIndex)){

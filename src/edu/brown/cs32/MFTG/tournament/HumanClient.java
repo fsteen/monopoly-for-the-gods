@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -17,6 +18,7 @@ import javax.swing.JOptionPane;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.google.common.collect.Lists;
 
 import edu.brown.cs32.MFTG.gui.MonopolyGui;
 import edu.brown.cs32.MFTG.monopoly.GameData;
@@ -25,6 +27,7 @@ import edu.brown.cs32.MFTG.networking.ClientRequestContainer;
 import edu.brown.cs32.MFTG.networking.InvalidRequestException;
 import edu.brown.cs32.MFTG.networking.getPlayerCallable;
 import edu.brown.cs32.MFTG.tournament.data.DataProcessor;
+import edu.brown.cs32.MFTG.tournament.data.GameDataAccumulator;
 import edu.brown.cs32.MFTG.tournament.data.GameDataReport;
 
 public class HumanClient extends Client{
@@ -118,15 +121,19 @@ public class HumanClient extends Client{
 	 */
 	public void displayGameData(GameDataReport combinedData) {
 		System.out.println("displaying end of round data");
+		displayDataToGui(combinedData);
+		_gui.getBoard().roundCompleted();
+		displayMessage("Time to choose heuristics!");
+		
+	}
+	
+	private void displayDataToGui(GameDataReport combinedData){
 		_gui.getBoard().setPlayerSpecificPropertyData(getPlayerPropertyData(combinedData._overallPlayerPropertyData));
 		_gui.getBoard().setPropertyData(combinedData._overallPropertyData);
 		_gui.getBoard().setWealthData(getPlayerWealthData(combinedData._timeStamps));
 //		_dummyGui.setPlayerSpecificPropertyData(getPlayerPropertyData(combinedData._overallPlayerPropertyData));
 //		_dummyGui.setPropertyData(combinedData._overallPropertyData);
 //		_dummyGui.setWealthData(getPlayerWealthData(combinedData._timeStamps));
-		_gui.getBoard().roundCompleted();
-		displayMessage("Time to choose heuristics!");
-		
 	}
 	
 	/**
@@ -135,20 +142,17 @@ public class HumanClient extends Client{
 	 * @param gameData
 	 */
 	public synchronized void addGameData(GameData gameData){
-		_data.add(gameData);
-		
-		if(_data.size() >= _nextDisplaySize){
-			GameDataReport r = DataProcessor.aggregate(_data, NUM_DATA_POINTS).toGameDataReport();
-			
-//			System.out.println("**************************\n"+r.toString()+"\n**************************\n");
-			
-//			_dummyGui.setPlayerSpecificPropertyData(getPlayerPropertyData(r._overallPlayerPropertyData));
-//			_dummyGui.setPropertyData(r._overallPropertyData);
-//			_dummyGui.setWealthData(getPlayerWealthData(r._timeStamps));
-			
-			_gui.getBoard().setPlayerSpecificPropertyData(getPlayerPropertyData(r._overallPlayerPropertyData));
-			_gui.getBoard().setPropertyData(r._overallPropertyData);
-			_gui.getBoard().setWealthData(getPlayerWealthData(r._timeStamps));
+		List<GameData> temp = new ArrayList<>();
+		temp.add(gameData);
+		GameDataAccumulator a = DataProcessor.aggregate(temp,NUM_DATA_POINTS);
+		if(_data == null){
+			_data = a;
+		} else {
+			DataProcessor.combineAccumulators(_data, DataProcessor.aggregate(temp,NUM_DATA_POINTS));
+		}
+		_numGamesPlayed++;
+		if(_numGamesPlayed >= _nextDisplaySize){
+			displayDataToGui(_data.toGameDataReport());
 			_nextDisplaySize += DATA_PACKET_SIZE; //set next point at which to display
 		}
 	}
@@ -172,29 +176,4 @@ public class HumanClient extends Client{
 	}
 
 	/*******************************************************/
-
-	/*
-	public static void main (String[] args){
-		int port;
-
-		if(args.length == 1){
-			port = DEFAULT_PORT;
-		} else if (args.length == 2){
-			try {
-				port = Integer.parseInt(args[1]);
-			} catch (NumberFormatException e){
-				System.out.println("ERROR: please enter a valid number");
-				System.out.println("Usage: <hostname> [serverport]");
-				return;
-			}
-		} else {
-			System.out.println("Usage: <hostname> [serverport]");
-			return;
-		}
-
-		Client pm = new HumanClient(args[0], port);
-
-		pm.connectAndRun();
-	}
-	*/
 }

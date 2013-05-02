@@ -2,6 +2,7 @@ package edu.brown.cs32.MFTG.tournament.data;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -42,7 +43,7 @@ public class TimeStampReport {
 	
 	public String toString(){
 		StringBuilder b = new StringBuilder();
-		b.append("-----TIME STAMPS-----\n");
+		b.append("-----TIME STAMP " + time + "-----\n");
 		for(PlayerWealthDataReport w : wealthData.values()){
 			b.append(w.toString() + "\n");
 		}
