@@ -54,9 +54,7 @@ public class DataProcessor {
 		//overall game data
 		for(TimeStamp t : specific.getData()){
 			for(PropertyData p : t.getPropertyData()){
-				if(p.ownerID != -1){ //TODO what are the -1s from ????
-					overall.putPropertyData(p);
-				}
+				overall.putPropertyData(p);
 			}
 		}
 	}

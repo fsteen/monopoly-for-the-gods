@@ -45,21 +45,17 @@ public class GameDataAccumulator {
 			System.out.println("cannot merge gamedata with different numbers of timestamps");
 		}
 		for(int i = 0; i < data.size(); i++){
-			data.get(i).averageWith(g.data.get(i));
+			data.get(i).averageWith(g.data.get(i)); //average all of the timestamps
 		}
-
-		for(PropertyDataAccumulator p : entireGameData.values()){
+		for(PropertyDataAccumulator p : entireGameData.values()){ //average all of the overall property values
 			p.averageWith(g.entireGameData.get(p.ownerID));
 		}
-
 		PropertyDataAccumulator temp;
 		for(Map<Integer,PropertyDataAccumulator> m : playerEntireGameData.values()){
 			for(PropertyDataAccumulator p : m.values()){
-
 				// NULL CHECK
 				if (p != null && g.playerEntireGameData.get(p.propertyName) != null){
 					temp = g.playerEntireGameData.get(p.propertyName).get(p.ownerID);
-
 					if(temp != null){
 						p.averageWith(temp);
 					} 
@@ -161,7 +157,8 @@ public class GameDataAccumulator {
 	 * @param data
 	 */
 	public void putPropertyData(PropertyData data){ //this goes through all time stamps in a game
-		//finds the max so far
+		
+		/* Add the overall property information */
 		PropertyDataAccumulator accData = currentMaxValues.get(data.propertyName);
 		if(accData == null){
 			accData = new PropertyDataAccumulator(data.propertyName, -1);
@@ -173,8 +170,12 @@ public class GameDataAccumulator {
 		accData.accTotalRevenueWithoutHouses = Math.max(accData.accTotalRevenueWithoutHouses, data.totalRevenueWithoutHouses);
 		accData.numDataPoints += 1;
 
-		////////////////////////////////////////////////////
+		/* Add the player specific property information */
 
+		if(data.ownerID == -1){
+			return;
+		}
+		
 		Map<Integer,PropertyDataAccumulator> allPlayers = playerCurrentMaxValues.get(data.propertyName);
 		if(allPlayers == null){
 			allPlayers = new HashMap<>();
@@ -206,7 +207,7 @@ public class GameDataAccumulator {
 
 	}
 
-	private int getPlayerWithMostWins(){
+	public int getPlayerWithMostWins(){
 		int playerID = -1;
 		int maxWins = -1;
 
