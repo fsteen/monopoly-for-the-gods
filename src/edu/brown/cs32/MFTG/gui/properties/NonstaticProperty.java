@@ -26,7 +26,7 @@ public abstract class NonstaticProperty extends PropertyPanel {
 	private double _timeOwned;
 	private JLabel _profitField;
 	private double _profit;
-	private double _profitFactor = 200.;
+	public static double _profitFactor = 100.;
 	
 	/* Percentage owned and profit rectangle */
 	protected Rectangle _profitBlock;

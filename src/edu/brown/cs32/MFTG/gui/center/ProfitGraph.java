@@ -50,6 +50,8 @@ public class ProfitGraph extends JPanel {
 		this.setMinimumSize(dim);
 		this.setPreferredSize(dim);
 		this.setSize(dim);
+
+		setToolTipText("<html>Set the minimum amount of cash you need in order to perform different transactions<br/>Click on a colored button above and then drag the highlighted line in the chart<html/>");
 		
 		this.setLocation(0, 2*Constants.WIDTH);
 	
@@ -158,11 +160,13 @@ public class ProfitGraph extends JPanel {
 		
 		NumberAxis rangeAxis = (NumberAxis) _plot.getRangeAxis();
 		rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+		rangeAxis.setAutoRangeMinimumSize(3000);
+		rangeAxis.setLowerBound(0);
 		
 		NumberAxis domainAxis = (NumberAxis) _plot.getDomainAxis();
 		domainAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+		domainAxis.setAutoRange(false);
 		domainAxis.setRange(0, 100);
-		domainAxis.setUpperBound(100);
 	}
 	
 	public static void main (String [] args) {

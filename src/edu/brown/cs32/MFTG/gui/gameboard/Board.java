@@ -20,6 +20,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.ToolTipManager;
 
 import edu.brown.cs32.MFTG.gui.Constants;
 import edu.brown.cs32.MFTG.gui.Constants.ColorProperties;
@@ -75,11 +76,17 @@ public class Board extends JPanel {
 		initializeLeft();
 		initializeRight();
 		initializeCenter();
+		
+		this.setToolTipText(null);
 	
 		//initializeMenu();
 		
 		this.setVisible(true);
 		this.repaint();
+	}
+	
+	public void enableToolTips(boolean enabled) {
+		ToolTipManager.sharedInstance().setEnabled(enabled);
 	}
 	
 	public void initializeMenu () {
@@ -428,6 +435,13 @@ public class Board extends JPanel {
 	}
 	
 	public void setPlayerSpecificPropertyData(Map<String, PropertyDataReport> data) {
+		System.out.println("Number of MY PROPERTIES i set: " + data.size());
+		for(ColorProperties property: ColorProperties.values()) {
+			if(data.containsKey(property.getLowercaseName()) == false) {
+				System.out.println("MY PROPERTIES doesnt contain: " + property.getLowercaseName());
+			}
+		}
+		
 		for(ColorGroup colorGroup: _colorGroups) {
 			Set<String> names = colorGroup.getNames();
 			for(String name: names) {
@@ -449,6 +463,13 @@ public class Board extends JPanel {
 	}
 	
 	public void setPropertyData(Map<String, PropertyDataReport> data) {
+		System.out.println("Number of AGGREGATE PROPERTIES i set: " + data.size());
+		for(ColorProperties property: ColorProperties.values()) {
+			if(data.containsKey(property.getLowercaseName()) == false) {
+				System.out.println("AGGREGATE PROPERTIES doesnt contain: " + property.getLowercaseName());
+			}
+		}
+		
 		for(ColorGroup colorGroup: _colorGroups) {
 			Set<String> names = colorGroup.getNames();
 			for(String name: names) {

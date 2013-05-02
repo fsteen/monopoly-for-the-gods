@@ -6,6 +6,7 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
 import edu.brown.cs32.MFTG.gui.Constants;
+import edu.brown.cs32.MFTG.gui.properties.NonstaticProperty;
 
 
 public class Houses {
@@ -18,7 +19,6 @@ public class Houses {
 	private Rectangle _cover;
 	private Rectangle _colorCover;
 	private Color _color;
-	private double _profitFactor = 200.;
 	
 	private double _timeOwned;
 	private double _profit;
@@ -77,7 +77,7 @@ public class Houses {
 		g2.setColor(Color.WHITE);
 		g2.fill(_colorCover);
 		
-		int alpha = (int) (255*_profit/_profitFactor);
+		int alpha = (int) (255*_profit/NonstaticProperty._profitFactor);
 		if(alpha < 0) alpha = 0;
 		if(alpha > 255) alpha = 255;
 		Color c = new Color(_color.getRed(), _color.getGreen(), _color.getBlue(), alpha);

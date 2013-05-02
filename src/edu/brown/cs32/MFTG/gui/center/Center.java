@@ -32,6 +32,7 @@ public class Center extends JPanel {
 		_buttonPanel = new ButtonPanel();
 		this.add(_buttonPanel);
 		_profitGraph = new ProfitGraph();
+		_profitGraph.setToolTipText("<html>Set the minimum amount of cash you need in order to perform different transactions<br/>Click on a colored button above and then drag the highlighted line in the chart<html/>");
 		this.add(_profitGraph);
 		_sliderPanel = new SliderPanel();
 		this.add(_sliderPanel);

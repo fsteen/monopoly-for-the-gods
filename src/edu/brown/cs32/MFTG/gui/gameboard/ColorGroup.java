@@ -19,6 +19,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JToolTip;
+import javax.swing.ToolTipManager;
 
 import edu.brown.cs32.MFTG.gui.Constants;
 import edu.brown.cs32.MFTG.gui.Constants.Orientation;
@@ -40,7 +41,9 @@ public class ColorGroup extends JPanel {
 	private String _color;
 	private GridBagConstraints _c = new GridBagConstraints();
 	
-	private JToolTip _toolTip;
+	private JToolTip _myPropertyToolTip;
+	private JToolTip _aggregatePropertyToolTip;
+	private JToolTip _colorBlockToolTip;
 	
 	public ColorGroup (Orientation orientation, List<Properties> properties, List<PropertyPanel> myPanel, List<PropertyPanel> aggregatePanel, ColorBlock colorBlock) {
 		super();
@@ -48,14 +51,20 @@ public class ColorGroup extends JPanel {
 		_color = colorBlock.getName();
 		
 		try {
-			_toolTip = new IconToolTip("Deed_Cards/railroad.jpg", 20, 20);
-			_toolTip.setComponent(this);
+			_myPropertyToolTip = new IconToolTip("Deed_Cards/property_instructions.jpg");
+			_myPropertyToolTip.setComponent(this);
+			
+			_aggregatePropertyToolTip = new IconToolTip("Deed_Cards/aggregate_property_instructions.jpg");
+			_aggregatePropertyToolTip.setComponent(this);
+			
+			_colorBlockToolTip = new IconToolTip("Deed_Cards/color_block_instructions.jpg");
+			_colorBlockToolTip.setComponent(this);
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		
-		setToolTipText("hello, can you see this");
+		setToolTipText("");
 		
 		for(Properties p: properties) {
 			BufferedImage im;
@@ -107,8 +116,13 @@ public class ColorGroup extends JPanel {
 		update();
 	}
 	
+
 	public JToolTip createToolTip () {
-		return _toolTip;
+		if(_view == View.ME)
+			return _myPropertyToolTip;
+		else if(_view == View.AGGREGATE)
+			return _aggregatePropertyToolTip;
+		return _colorBlockToolTip;
 	}
 	
 	public String getName() {
@@ -189,11 +203,11 @@ public class ColorGroup extends JPanel {
 		Set<Properties> properties = _myPropertyName.keySet();
 		for(Properties p: properties) {
 			if(p.getLowercaseName().equals(name)) {
-				System.out.println("setting: " + name);
+				//System.out.println("setting: " + name);
 				_myPropertyName.get(p).setData(propertyDataReport);
 			}
 			else {
-				System.out.println("NOT SETTING: " + name);
+			//	System.out.println("NOT SETTING: " + name);
 			}
 		}
 	}

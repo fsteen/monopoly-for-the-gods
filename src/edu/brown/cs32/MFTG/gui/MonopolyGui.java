@@ -83,7 +83,7 @@ public class MonopolyGui extends JFrame{
 		try {
 			board = new Board(1);
 
-			_currentPanel=lobby;
+			_currentPanel=board;
 			this.add(_currentPanel);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

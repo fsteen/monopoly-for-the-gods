@@ -9,6 +9,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
+import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
 
 import edu.brown.cs32.MFTG.gui.Constants;
@@ -18,6 +19,9 @@ import edu.brown.cs32.MFTG.gui.gameboard.Board;
 public class ViewPanel extends JPanel{
 
 	private Board _board;
+	private JToggleButton _myProperty;
+	private JToggleButton _aggregateProperty;
+	private JToggleButton _colorGroup;
 	private JToggleButton _setHeuristics;
 	
 	public ViewPanel(Board board) {
@@ -29,41 +33,47 @@ public class ViewPanel extends JPanel{
 		
 		UIManager.put("Button.focus", new Color(0,0,0,0));
 		
-		JToggleButton myProperty = new JToggleButton("My Properties");
-		myProperty.setSelected(true);
-		JToggleButton aggregateProperty = new JToggleButton("Aggregate Property");
-		JToggleButton colorGroup = new JToggleButton("Color Group");
+		_myProperty = new JToggleButton("My Properties");
+		_myProperty.setSelected(true);
+		_aggregateProperty = new JToggleButton("Aggregate Property");
+		_colorGroup = new JToggleButton("Color Group");
 		
-		myProperty.addActionListener(new ViewListener(View.ME));
-		aggregateProperty.addActionListener(new ViewListener(View.AGGREGATE));
-		colorGroup.addActionListener(new ViewListener(View.COLOR));
+		_myProperty.addActionListener(new ViewListener(View.ME));
+		_aggregateProperty.addActionListener(new ViewListener(View.AGGREGATE));
+		_colorGroup.addActionListener(new ViewListener(View.COLOR));
 		
 		ButtonGroup viewGroup = new ButtonGroup();
-		viewGroup.add(myProperty);
-		viewGroup.add(aggregateProperty);
-		viewGroup.add(colorGroup);
+		viewGroup.add(_myProperty);
+		viewGroup.add(_aggregateProperty);
+		viewGroup.add(_colorGroup);
+		
+		_myProperty.setToolTipText("My invidivual property information");
+		_aggregateProperty.setToolTipText("All player property informatoin");
+		_colorGroup.setToolTipText("My color information");
 
 		_setHeuristics = new JToggleButton("<html><center>Set<br/>Heuristics</center></html>");
 		_setHeuristics.addActionListener(new SetHeuristicsListener());
 
 		Dimension size = new Dimension((int) (2.5*Constants.WIDTH), 30);
-		myProperty.setSize(size);
-		aggregateProperty.setSize(size);
-		colorGroup.setSize(size);
+		_myProperty.setSize(size);
+		_aggregateProperty.setSize(size);
+		_colorGroup.setSize(size);
 		
 		
-		double x = (9*Constants.WIDTH/2) - .25*Constants.WIDTH - myProperty.getWidth();
+		double x = (9*Constants.WIDTH/2) - .25*Constants.WIDTH - _myProperty.getWidth();
 		double y = 2*Constants.WIDTH/4;
-		myProperty.setLocation((int) (x), (int) (y-myProperty.getHeight()/2) - 10);
-		aggregateProperty.setLocation((int) (x), (int) (2*y-myProperty.getHeight()/2) - 10);
-		colorGroup.setLocation((int) (x), (int) (3*y-myProperty.getHeight()/2) - 10);
+		_myProperty.setLocation((int) (x), (int) (y-_myProperty.getHeight()/2) - 10);
+		_aggregateProperty.setLocation((int) (x), (int) (2*y-_myProperty.getHeight()/2) - 10);
+		_colorGroup.setLocation((int) (x), (int) (3*y-_myProperty.getHeight()/2) - 10);
 		
 		_setHeuristics.setSize(100, 100);
 		_setHeuristics.setLocation(0, Constants.WIDTH - _setHeuristics.getHeight()/2 - 10);
 		
-		this.add(myProperty);
-		this.add(aggregateProperty);
-		this.add(colorGroup);
+		_setHeuristics.setToolTipText("<html>Commit to these heuristics<br/>Make sure to set property heuristics (My Properties), color heuristics (Color Group)<br/>and general heuristics (Center panel - buttons, graph, sliders)</html>");
+		
+		this.add(_myProperty);
+		this.add(_aggregateProperty);
+		this.add(_colorGroup);
 		this.add(_setHeuristics);
 	}
 	
