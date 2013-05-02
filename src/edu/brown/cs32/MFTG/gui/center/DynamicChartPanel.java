@@ -5,8 +5,10 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.ButtonGroup;
+import javax.swing.JButton;
 import javax.swing.JToggleButton;
 
 import org.jfree.chart.ChartMouseEvent;
@@ -82,9 +84,18 @@ public class DynamicChartPanel extends ChartPanel {
 		_buttons.add(_buildCash);
 		_buttons.add(_unmortgageCash);
 		
+		_buyCash.addMouseListener(new RolloverListener(_buyCash));
+		_buildCash.addMouseListener(new RolloverListener(_buildCash));
+		_unmortgageCash.addMouseListener(new RolloverListener(_unmortgageCash));
+		
+		_buildCash.setForeground(Color.DARK_GRAY);
+		_buyCash.setForeground(Color.DARK_GRAY);
+		_unmortgageCash.setForeground(Color.DARK_GRAY);
+		
 		_buildCash.setBackground(Color.GREEN);
 		_buyCash.setBackground(Color.BLUE);
 		_unmortgageCash.setBackground(Color.RED);
+		
 		
 		this.add(_buyCash);
 		this.add(_buildCash);
@@ -190,7 +201,7 @@ public class DynamicChartPanel extends ChartPanel {
 				_renderer.setSeriesPaint(0, Color.BLUE);
 				_renderer.setSeriesPaint(1, Color.GREEN);
 				_renderer.setSeriesPaint(2, Color.RED);
-				_renderer.setSeriesPaint(3, Color.BLACK);
+				_renderer.setSeriesPaint(3JButton, Color.BLACK);
 				_renderer.setSeriesPaint(4, Color.GRAY);
 				return;
 			}
@@ -208,6 +219,43 @@ public class DynamicChartPanel extends ChartPanel {
 				_renderer.setSeriesPaint(3, Color.BLACK);
 				_renderer.setSeriesPaint(4, Color.GRAY);
 			}*/
+		}
+		
+	}
+	
+	public class RolloverListener implements MouseListener {
+
+		private JToggleButton _button;
+		public RolloverListener (JToggleButton button) {
+			_button = button;
+		}
+		
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			_button.setForeground(Color.DARK_GRAY);
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			_button.setForeground(Color.BLACK);
 		}
 		
 	}

@@ -2,7 +2,6 @@ package edu.brown.cs32.MFTG.gui.center;
 
 import java.awt.Dimension;
 
-import javax.swing.GroupLayout.Alignment;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -35,6 +34,15 @@ public class ButtonPanel extends JPanel {
 		
 		setup();
 	}
+	
+	/*public void setup() {
+		JButton _buildingChoice = new JButton("", Price.CHEAP.getIcon(), false);
+		_buildingChoice.setSelectedIcon(Price.EXPENSIVE.getIcon());
+		_buildingChoice.setRolloverSelectedIcon(Price.EXPENSIVE.getIcon());
+		_buildingChoice.setRolloverIcon(Price.CHEAP.getIcon());
+		_buildingChoice.setText("hello");
+		this.add(_buildingChoice);
+	}*/
 	
 	public void setup() {
 		Dimension dim = new Dimension(Constants.BUTTON_DIMENSION, Constants.BUTTON_DIMENSION);
@@ -161,5 +169,5 @@ public class ButtonPanel extends JPanel {
 		else if(mortgageChoice == Expense.EXPENSIVE) {
 			_mortgageExpense.setValue(Price.EXPENSIVE);
 		}
-	}
+	} 
 }

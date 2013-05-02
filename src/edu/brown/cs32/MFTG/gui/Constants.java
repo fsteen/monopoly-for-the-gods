@@ -2,6 +2,7 @@ package edu.brown.cs32.MFTG.gui;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -38,28 +39,32 @@ public class Constants {
 	public static int DEED_WIDTH = 245;
 	public static int DEED_HEIGHT = 294;
 
-	public static int BUTTON_DIMENSION = Constants.WIDTH;
+	public static int BUTTON_DIMENSION = (int) (1.2*Constants.WIDTH);
 	
 	public interface Toggle {
 		public ImageIcon getIcon();
 		public Toggle next();
+		public String getText();
 	}
 	
 	public enum Price implements Toggle {
-		CHEAP("Deed_Cards/cheap.jpg"), EXPENSIVE("Deed_Cards/expensive.jpg");
+		CHEAP("Deed_Cards/cheap.jpg", "CHEAP"), EXPENSIVE("Deed_Cards/expensive.jpg", "EXPENSIVE");
 		
-		private ImageIcon _icon;
-		private Price (String path) {
+		private ImageIcon icon;
+		private String text;
+		private Price (String path, String text) {
 			try {
 				BufferedImage i = ImageIO.read(new File(path));
 				i = Helper.resize(i, BUTTON_DIMENSION, BUTTON_DIMENSION);
-				_icon = new ImageIcon(i);
+				icon = new ImageIcon(i);
+				this.text = text;
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-		public ImageIcon getIcon() { return _icon; }
+		public ImageIcon getIcon() { return icon; }
+		public String getText() { return text; }
 		public Toggle next() {
 			if(this == CHEAP) return EXPENSIVE;
 			return CHEAP;
@@ -67,20 +72,23 @@ public class Constants {
 	}
 	
 	public enum Quantity implements Toggle {
-		FEWER("Deed_Cards/fewer.jpg"), MORE("Deed_Cards/more.jpg");
+		FEWER("Deed_Cards/fewer.jpg", "FEWER"), MORE("Deed_Cards/more.jpg", "MORE");
 		
-		private ImageIcon _icon;
-		private Quantity (String path) {
+		private ImageIcon icon;
+		private String text;
+		private Quantity (String path, String text) {
 			try {
 				BufferedImage i = ImageIO.read(new File(path));
 				i = Helper.resize(i, BUTTON_DIMENSION, BUTTON_DIMENSION);
-				_icon = new ImageIcon(i);
+				icon = new ImageIcon(i);
+				this.text = text;
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-		public ImageIcon getIcon() { return _icon; }
+		public String getText() { return text; }
+		public ImageIcon getIcon() { return icon; }
 		public Toggle next() {
 			if(this == FEWER) return MORE;
 			return FEWER;
@@ -88,20 +96,23 @@ public class Constants {
 	}
 	
 	public enum Aggression implements Toggle {
-		PASSIVE("Deed_Cards/passive.jpg"), AGGRESSIVE("Deed_Cards/aggressive.jpg");
+		PASSIVE("Deed_Cards/passive.jpg", "PASSIVE"), AGGRESSIVE("Deed_Cards/aggressive.jpg", "AGGRESSIVE");
 		
-		private ImageIcon _icon;
-		private Aggression (String path) {
+		private ImageIcon icon;
+		private String text;
+		private Aggression (String path, String text) {
 			try {
 				BufferedImage i = ImageIO.read(new File(path));
 				i = Helper.resize(i, BUTTON_DIMENSION, BUTTON_DIMENSION);
-				_icon = new ImageIcon(i);
+				icon = new ImageIcon(i);
+				this.text = text;
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-		public ImageIcon getIcon() { return _icon; }
+		public String getText() { return text; }
+		public ImageIcon getIcon() { return icon; }
 		public Toggle next() {
 			if(this == PASSIVE) return AGGRESSIVE;
 			return PASSIVE;
@@ -109,20 +120,24 @@ public class Constants {
 	}
 	
 	public enum Balance implements Toggle {
-		EVEN("Deed_Cards/balanced.jpg"), UNEVEN("Deed_Cards/uneven.jpg");
+		EVEN("Deed_Cards/balanced.jpg", "EVEN"), UNEVEN("Deed_Cards/uneven.jpg", "UNEVEN");
 		
-		private ImageIcon _icon;
-		private Balance (String path) {
+		private ImageIcon icon;
+		private String text;
+		private Balance (String path, String text) {
 			try {
 				BufferedImage i = ImageIO.read(new File(path));
 				i = Helper.resize(i, BUTTON_DIMENSION, BUTTON_DIMENSION);
-				_icon = new ImageIcon(i);
+				Image im = Helper.transparent(ImageIO.read(new File("Deed_Cards/railroad.jpg")));
+				icon = new ImageIcon(im);
+				this.text = text;
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-		public ImageIcon getIcon() { return _icon; }
+		public String getText() { return text; }
+		public ImageIcon getIcon() { return icon; }
 		public Toggle next() {
 			if(this == EVEN) return UNEVEN;
 			return EVEN;

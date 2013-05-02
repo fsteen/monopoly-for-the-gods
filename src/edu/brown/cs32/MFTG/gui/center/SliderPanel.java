@@ -40,9 +40,9 @@ public class SliderPanel extends JPanel {
 
 		this.setLayout(null);
 		
-		_liquidity = new JSlider(JSlider.HORIZONTAL, 0, 10, 5);
-		_timeChange = new JSlider(JSlider.HORIZONTAL, 0, 10, 5);
-		_tradingFear = new JSlider(JSlider.HORIZONTAL, 0, 3, 2);	
+		_liquidity = new JSlider(JSlider.HORIZONTAL, 0, 100, 50);
+		_timeChange = new JSlider(JSlider.HORIZONTAL, 0, 100, 50);
+		_tradingFear = new JSlider(JSlider.HORIZONTAL, 0, 90, 15);	
 		
 		_liquidity.setBackground(Constants.BACKGROUND_COLOR);
 		_timeChange.setBackground(Constants.BACKGROUND_COLOR);
@@ -107,18 +107,18 @@ public class SliderPanel extends JPanel {
 	
 	public List<Double> getSliderInfo() {
 		List<Double> sliderInfo = new ArrayList<>();
-		sliderInfo.add(new Double(_liquidity.getValue()));
-		sliderInfo.add(new Double(_timeChange.getValue()));
-		sliderInfo.add(new Double(_tradingFear.getValue()));
+		sliderInfo.add(new Double(_liquidity.getValue()/10.));
+		sliderInfo.add(new Double(_timeChange.getValue()/10.));
+		sliderInfo.add(new Double(_tradingFear.getValue()/20.));
 		return sliderInfo;
 	}
 
 	//TODO: don't force these to be integers
 	public void setValues(double liquidity, double timeChange,
 			double tradingFear) {
-		_liquidity.setValue((int) liquidity);
-		_timeChange.setValue((int) timeChange);
-		_tradingFear.setValue((int) tradingFear);
+		_liquidity.setValue((int) (10*liquidity));
+		_timeChange.setValue((int) (10*timeChange));
+		_tradingFear.setValue((int) (30*tradingFear));
 	}
 
 }
