@@ -25,6 +25,8 @@ import edu.brown.cs32.MFTG.monopoly.Player;
 import edu.brown.cs32.MFTG.networking.ClientRequestContainer;
 import edu.brown.cs32.MFTG.networking.ClientRequestContainer.Method;
 import edu.brown.cs32.MFTG.networking.InvalidRequestException;
+import edu.brown.cs32.MFTG.tournament.data.GameDataAccumulator;
+import edu.brown.cs32.MFTG.tournament.data.GameDataReport;
 import edu.brown.cs32.MFTG.tournament.data.PlayerWealthDataReport;
 import edu.brown.cs32.MFTG.tournament.data.PropertyDataReport;
 import edu.brown.cs32.MFTG.tournament.data.TimeStampReport;
@@ -46,7 +48,8 @@ public abstract class Client {
 	protected final int NUM_DATA_POINTS=100;	
 	protected final int MAX_NUM_TURNS=1000;
 	protected int _nextDisplaySize;
-	protected List<GameData> _data;
+	protected int _numGamesPlayed;
+	protected GameDataAccumulator _data;
 	protected AtomicInteger _numThreadsDone;
 	protected ExecutorService _pool;
 	protected int _id;
@@ -58,7 +61,6 @@ public abstract class Client {
 		_lastRequest = Method.DISPLAYGAMEDATA;
 
 		_pool = Executors.newFixedThreadPool(NUM_THREADS);
-		_data = new ArrayList<>();
 		_numThreadsDone = new AtomicInteger(0);
 	}
 	
@@ -199,11 +201,11 @@ public abstract class Client {
 			return;
 		}
 		
-		System.out.println("d");
 		ClientRequestContainer response = new ClientRequestContainer(Method.SENDPLAYER, Arrays.asList(playerString));
 		try {
 			write(response);
 		} catch (IOException e) {
+			System.out.println("nooooooooooooooo!!!!!!!!!!!!!!!!!!!1");
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -231,12 +233,31 @@ public abstract class Client {
 		List<Long> seeds = _oMapper.readValue(arguments.get(1), listOfSeeds);
 		Settings settings = _oMapper.readValue(arguments.get(2), Settings.class);
 
-		List<GameData> gameData = playGames(players, seeds, settings);
-		String gameDataString = _oMapper.writeValueAsString(gameData);
-
-		ClientRequestContainer response = new ClientRequestContainer(Method.SENDGAMEDATA, Arrays.asList(gameDataString));
-
-		write(response);
+		GameDataReport gameData = playGames(players, seeds, settings);
+		
+		try {
+		sendGameResponse(gameData);
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Writes a list of of gameData to the server
+	 * @param gameData
+	 * @throws IOException
+	 */
+	private void sendGameResponse(List<GameData> gameData) throws IOException{
+		for (GameData g : gameData){
+			System.out.println("writing g as a string");
+			String gameDataString = _oMapper.writeValueAsString(g);
+			System.out.println("written");
+			_output.write(gameDataString);
+			_output.write("\n");
+		}
+		_output.write("DONE\n");
+		_output.flush();
+		System.out.println("entire response written");
 	}
 	
 	public void launchTournament(int numPlayers, Settings settings, int port){
@@ -256,8 +277,9 @@ public abstract class Client {
 	 * @param seeds the game seeds
 	 * @return the data collected from the games
 	 */
-	public List<GameData> playGames(List<Player> players, List<Long> seeds, Settings settings){
-		_data.clear();
+	public GameDataReport playGames(List<Player> players, List<Long> seeds, Settings settings){
+		_numGamesPlayed = 0;
+		_data = null;
 		_nextDisplaySize = DATA_PACKET_SIZE;
 		_numThreadsDone.set(0);
 
@@ -266,9 +288,7 @@ public abstract class Client {
 				MAX_NUM_TURNS,settings.freeParking,settings.doubleOnGo,
 				settings.auctions,players.toArray(new Player[players.size()]));
 
-		int i = 0;
 		for(Long seed : seeds){
-//			System.out.println("launching game #" + (i++) + "/" + seeds.size());
 			_pool.execute(gameRunnerFactory.build(seed)); //launch games
 //			gameRunnerFactory.build(seed).run();
 		}
@@ -281,9 +301,7 @@ public abstract class Client {
 			}
 		}
 
-		//System.out.println("sending data back");
-		//System.out.println(_data);
-		return _data;
+		return _data.toGameDataReport();
 	}
 
 	/**

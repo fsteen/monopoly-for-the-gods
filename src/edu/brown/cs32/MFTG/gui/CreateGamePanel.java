@@ -63,7 +63,7 @@ public class CreateGamePanel extends JPanel{
 			_goLite = new ImagePanel(Helper.resize(ImageIO.read(new File("images/GoLite.png")), 100, 50));
 			_goDark = new ImagePanel(Helper.resize(ImageIO.read(new File("images/GoDark.png")), 100, 50));
 			//_goLoc= new Point(_whiteLoc.getLocation().x+_bottomPanel.getWidth()-_goLite.getWidth()-30, _whiteLoc.getLocation().y+_goDark.getHeight()-20);
-			_goLoc = new Point(this.getWidth()-_goLite.getWidth()-30, this.getHeight()-_goLite.getHeight()-20);
+			_goLoc = new Point(this.getWidth()-_goLite.getWidth()-30, this.getHeight()-_goLite.getHeight()-40);
 			_goLite.setLocation(_goLoc);
 			_goDark.setLocation(_goLoc);
 			_goDark.setVisible(false);

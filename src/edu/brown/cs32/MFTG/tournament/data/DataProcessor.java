@@ -19,17 +19,18 @@ public class DataProcessor {
 	 * @param numDataPoints should be less than # of timestamps
 	 * @return
 	 */
-	public static GameDataReport aggregate(List<GameData> data, int numDataPoints){
+	public static GameDataAccumulator aggregate(List<GameData> data, int numDataPoints){
 		GameDataAccumulator overall = new GameDataAccumulator(numDataPoints);
 		for(GameData d : data){
 			//TODO later ?? : for games that are repeats of each other, exclude all but one
 			if(d != null){
 				combineGameData(overall, d);
-				overall.gameFinished(d);
+				overall.gameFinished();
 				overall.addPlayerWin(d.getWinner());
 			}
 		}
-		return overall.toGameDataReport();
+		overall.average();
+		return overall;
 	}
 	
 	/**
@@ -53,7 +54,9 @@ public class DataProcessor {
 		//overall game data
 		for(TimeStamp t : specific.getData()){
 			for(PropertyData p : t.getPropertyData()){
-				overall.putPropertyData(p);
+				if(p.ownerID != -1){ //TODO what are the -1s from ????
+					overall.putPropertyData(p);
+				}
 			}
 		}
 	}
@@ -69,19 +72,12 @@ public class DataProcessor {
 		}
 	}
 	
-	public static GameDataReport aggregate(GameDataReport...reports){
-		List<TimeStampReport> combinedTimeStamps = reports[0]._timeStamps;
-		Map<String,PropertyDataReport> combinedPropertyData = reports[0]._overallPropertyData;
-		Map<String,List<PropertyDataReport>> combinedPlayerPropertyData = reports[0]._overallPlayerPropertyData;
-		
-		for(int i = 1; i < reports.length; i++){
-			
-			
+	public static GameDataAccumulator combineAccumulators(GameDataAccumulator...accumulators){
+		GameDataAccumulator first = accumulators[0];
+		for(int i = 1; i < accumulators.length; i++){
+			first.averageWith(accumulators[i]);
 		}
-		
-		
-		return null;
-		
+		return first;
 	}
 
 	
@@ -92,31 +88,36 @@ public class DataProcessor {
 	 * @param confirmationIndices the indices of games that should be identical
 	 * @return whether the game data is corrupted
 	 */
-	public static boolean isCorrupted(List<List<GameData>> data, List<Integer> confirmationIndices){
+	public static boolean isCorrupted(List<GameDataReport> data, List<Integer> confirmationIndices){
 		boolean corrupted = false;
 		
-		System.out.println(data.size() + "\t" + confirmationIndices.size());
-		
-		if(data.size() != confirmationIndices.size()){
-			return true;
-		}
-		
-		GameData previous;
-		GameData current;
-		List<GameData> setData;
+		GameDataReport current = data.get(0);
 		for(Integer i : confirmationIndices){
-			setData = data.get(i);
-			previous = setData.get(0);
-			for(int j = 1; j < setData.size(); j++){
-				current = setData.get(j);
-				if(current != null && previous != null){ //because games might have expections
-					if(!current.equals(previous)){
-						corrupted = true;
-					}
+			for(GameDataReport d : data){
+				if(i >= d._winList.size() || i >= current._winList.size() || 
+						d._winList.get(i) != current._winList.get(i)){ //TODO null indices???!
+					corrupted = true;
 				}
-				previous = current;
+				current = d;
 			}
 		}
+//		
+//		GameData previous;
+//		GameData current;
+//		List<GameData> setData;
+//		for(Integer i : confirmationIndices){
+//			setData = data.get(i);
+//			previous = setData.get(0);
+//			for(int j = 1; j < setData.size(); j++){
+//				current = setData.get(j);
+//				if(current != null && previous != null){ //because games might have expections
+//					if(!current.equals(previous)){
+//						corrupted = true;
+//					}
+//				}
+//				previous = current;
+//			}
+//		}
 		
 		return corrupted;
 	}

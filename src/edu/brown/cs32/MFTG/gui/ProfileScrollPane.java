@@ -28,6 +28,7 @@ public abstract class ProfileScrollPane extends JScrollPane{
 	protected JList<String> _profileList;
 	protected MonopolyGui _main;
 
+
 	public ProfileScrollPane(JList<String> profileList, DefaultListModel<String> listModel, MonopolyGui main) {
 		super(profileList);
 		_main=main;
@@ -38,12 +39,15 @@ public abstract class ProfileScrollPane extends JScrollPane{
 		 _profileList.addMouseListener(new MyClickListener());
 		 _profileList.setFont(new Font("itemFont", Font.PLAIN, 30));
 		 addProfileNames();
+		if(listModel.size()>0)_profileList.setSelectedIndex(0);
 	}
+	
 	
 	/**
 	 * adds profile names to list
 	 */
 	protected void addProfileNames() {
+		_listModel.clear();
 		for(String s: _main.getProfileNames()) {
 			_listModel.addElement(s);
 		}

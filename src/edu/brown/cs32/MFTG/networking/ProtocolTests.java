@@ -159,6 +159,7 @@ public class ProtocolTests {
 		List<TimeStampReport> timeStamps = new ArrayList<>();
 		Map<String, List<PropertyDataReport>> entireGameData = new HashMap<>();
 		Map<String, PropertyDataReport> overallPropertyData = new HashMap<>();
+		Map<Integer,Integer> playerWins = new HashMap<>();
 		
 		Map<Integer, PlayerWealthDataReport> wealthData = new HashMap<>();
 		wealthData.put(1, new PlayerWealthDataReport(1, 2, 3, 4));
@@ -171,7 +172,12 @@ public class ProtocolTests {
 		
 		overallPropertyData.put("test", p);
 		
-		GameDataReport gdr = new GameDataReport(timeStamps, 1, entireGameData, overallPropertyData);
+		playerWins.put(3, 4);
+		playerWins.put(9, 12);
+		List<Integer> winList = new ArrayList<>();
+		winList.add(3);
+		
+		GameDataReport gdr = new GameDataReport(timeStamps, playerWins,winList, entireGameData, overallPropertyData);
 		
 		ObjectMapper oMapper = new ObjectMapper();
 		

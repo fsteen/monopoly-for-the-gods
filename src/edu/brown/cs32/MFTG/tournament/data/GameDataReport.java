@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -14,15 +15,18 @@ public class GameDataReport {
 	public final List<TimeStampReport> _timeStamps; //the average wealth data for players over these time stamps
 	public final Map<String, List<PropertyDataReport>> _overallPlayerPropertyData; //the 
 	public final Map<String, PropertyDataReport> _overallPropertyData;
-	public final int _winner;
+	public final Map<Integer, Integer> _playerWins;
+	public final List<Integer> _winList;
 	
 	@JsonCreator
 	public GameDataReport(@JsonProperty("timeStamps") List<TimeStampReport> timeStamps,
-						  @JsonProperty("winner") int winner, 
+						  @JsonProperty("playerWins") Map<Integer, Integer> playerWins,
+						  @JsonProperty("winList") List<Integer> winList, 
 						  @JsonProperty("entireGameData") Map<String, List<PropertyDataReport>> entireGameData,
 						  @JsonProperty("overallPropertyData") Map<String, PropertyDataReport> overallPropertyData){
 		_timeStamps = timeStamps;
-		_winner = winner;
+		_playerWins = playerWins;
+		_winList = winList;
 		_overallPlayerPropertyData = entireGameData;
 		_overallPropertyData = overallPropertyData;
 	}
@@ -48,6 +52,8 @@ public class GameDataReport {
 			}
 			tempOverallPlayerData.put(l.get(0).propertyName, tempPlayerData);
 		}
+		g._playerWins = _playerWins;
+		g._winList = _winList;
 		g.data = stamps;
 		g.entireGameData = tempOverallData;
 		g.playerEntireGameData = tempOverallPlayerData;
@@ -67,12 +73,15 @@ public class GameDataReport {
 		b.append("************************\n");
 		b.append("************************\n");
 		b.append("*****OVERALL PLAYER PROPERTY DATA*****\n");
+//		b.append(_overallPlayerPropertyData.entrySet().size() == 0);
 		if(_overallPlayerPropertyData != null){
 			for(List<PropertyDataReport> l : _overallPlayerPropertyData.values()){
 				for(PropertyDataReport p : l){
 					b.append(p.toString() + "\n");
 				}
 			}
+		} else {
+			System.out.println("null");
 		}
 		b.append("*****OVERALL PROPERTY DATA*****\n");
 		if(_overallPropertyData != null){
@@ -81,6 +90,10 @@ public class GameDataReport {
 			}
 		}
 		b.append("*********************\n\n\n\n");
+		
+		for(Entry<Integer, Integer> e : _playerWins.entrySet()){
+			b.append(String.format("Player %d has %d wins\n",e.getKey(),e.getValue()));
+		}
 		return b.toString();
 	}
 	
@@ -93,6 +106,6 @@ public class GameDataReport {
 		GameDataReport that = (GameDataReport) o;
 		
 		return Objects.equals(_timeStamps, that._timeStamps) && Objects.equals(_overallPlayerPropertyData, that._overallPlayerPropertyData)
-				&& _winner == that._winner; 
+				&& Objects.equals(_playerWins, that._playerWins);  //TODO add back in
 	}
 }

@@ -27,7 +27,7 @@ public class Constants {
 	public final static int FULL_WIDTH= 9*Constants.WIDTH + 2*Constants.HEIGHT + 11;
 	public final static int FULL_HEIGHT= 9*Constants.WIDTH + 2*Constants.HEIGHT + 11;
 	
-	public final static int BACK_Y=740;
+	public final static int BACK_Y=790;
 	public final static int BACK_X=20;
 	
 	public static String t = "_two.jpg";

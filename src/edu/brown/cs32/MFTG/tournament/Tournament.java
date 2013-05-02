@@ -5,6 +5,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -24,17 +25,21 @@ import edu.brown.cs32.MFTG.networking.getPlayerCallable;
 import edu.brown.cs32.MFTG.tournament.Settings.Turns;
 import edu.brown.cs32.MFTG.tournament.Settings.WinningCondition;
 import edu.brown.cs32.MFTG.tournament.data.DataProcessor;
+import edu.brown.cs32.MFTG.tournament.data.GameDataAccumulator;
 import edu.brown.cs32.MFTG.tournament.data.GameDataReport;
 
 public class Tournament implements Runnable{
 	private final int _numPlayers;
 	
 	public static final double CONFIRMATION_PERCENTAGE = 0.1; //confirm 10% of games
-	public static final int NUM_DATA_POINTS = 100;
+	public static final int NUM_DATA_POINTS = 10;
 	private List<ClientHandler> _clientHandlers;
 	private ServerSocket _socket;
 	private Settings _settings;
 	private ExecutorService _executor; 
+	
+	private Map<Integer,Integer> _setPlayerWins;
+	
 	/**
 	 * Creates a tournament for the specified number of players and games
 	 * @param numPlayers
@@ -63,11 +68,10 @@ public class Tournament implements Runnable{
 		int gamesPerModule = (int)Math.ceil(_settings.getNumGamesPerRound()/_numPlayers);
 		
 		List<Player> players = null;
-		List<List<GameData>> data;
+		List<GameDataReport> data;
 		List<Integer> confirmationIndices;
 		
 		for(int i = 0; i < _settings.getNumRounds(); i++){
-			System.out.println("entering rounds loop: " + i);
 			// request a Player from each client
 			List<Player> newPlayers = getNewPlayers();
 			
@@ -79,22 +83,24 @@ public class Tournament implements Runnable{
 			// generate which seeds will be used for integrity validation
 			confirmationIndices = DataProcessor.generateConfirmationIndices(gamesPerModule, CONFIRMATION_PERCENTAGE);
 			
-			
 			// play a round of games
+			System.out.println("about to play a round of games");
 			data = playRoundOfGames(players, DataProcessor.generateSeeds(players.size(),gamesPerModule, confirmationIndices));
+			
+			System.out.println("whooooooooo!!!!!!!!!!");
 			
 			// make sure nobody cheated
 			if(DataProcessor.isCorrupted(data, confirmationIndices)){
-				//System.out.println("Tournament : WOOHOO ... SOMEONE IS CHEATING!!!!!"); //TODO change this
+				//System.out.println("Tournament : WOOHOO ... SOMEONE IS CHEATING!!!!!");
 				//TODO FIGURE THIS OUT FRANCES!!!!!!!!!!!!!!!
 			}
-						
-			List<GameData> dataToSend = new ArrayList<>();
-			for(List<GameData> d : data){
-				dataToSend.addAll(d);
-			}
 			
-			sendEndOfRoundData(DataProcessor.aggregate(dataToSend, NUM_DATA_POINTS));
+			GameDataAccumulator[] accumulators = new GameDataAccumulator[data.size()];
+			for(int j = 0; j < data.size(); j++){
+				accumulators[j] = data.get(j).toGameDataAccumulator();
+			}
+
+			sendEndOfRoundData(DataProcessor.combineAccumulators(accumulators).toGameDataReport());
 		}
 		sendEndOfGameData();
 	}
@@ -134,11 +140,9 @@ public class Tournament implements Runnable{
 			Future<Player> future = _executor.submit(worker);
 			playerFutures.add(future);
 		}
-		System.out.println("1");
 		
 		for (int i = 0; i < playerFutures.size(); i++){
 			try {
-				System.out.println("iteration: " + i);
 				players.add(playerFutures.get(i).get());
 			} catch (InterruptedException e) {
 				sendErrorMessage("Unable to retrieve heuristic information from client " + i + 
@@ -174,8 +178,11 @@ public class Tournament implements Runnable{
 	 * @throws InvalidResponseException 
 	 * @throws ClientLostException 
 	 */
+	
+	//TODO
+	//TODO Alex : please change this method to deal with List<GameDataReport> instead of List<List<GameData>>
+	//TODO
 	private List<List<GameData>> playRoundOfGames(List<Player> players, List<List<Long>> seeds) {
-		System.out.println("play round of games");
 
 		List<Future<List<GameData>>> gameDataFutures = new ArrayList<>();
 		List<List<GameData>> gameData = new ArrayList<>();
@@ -186,52 +193,32 @@ public class Tournament implements Runnable{
 			System.out.println("seeds size " + seeds.size() + " clients size " + _clientHandlers.size());
 		}
 		
-		System.out.println("getting games");
-		
 		for (int i = 0; i < _clientHandlers.size(); i++){
-			System.out.println("getting games for client : " + i);
 			Callable<List<GameData>> worker = new PlayGamesCallable(_clientHandlers.get(i), players, seeds.get(i), _settings);
 			Future<List<GameData>> future = _executor.submit(worker);
 			gameDataFutures.add(future);
 		}
-		
-		
-		System.out.println("got all games" + gameDataFutures);
 
 		int numFails = 0;
 		
-		System.out.println("game data future size: " + gameDataFutures.size());
 		for (int i = 0; i < gameDataFutures.size(); i++){
 			try {
-				System.out.println("adding game future: " + i);
-				System.out.println(gameDataFutures.get(i));
-				
 				Future<List<GameData>> future = gameDataFutures.get(i);
-				
-				System.out.println("see if it printed");
 				future.get();
-				System.out.println("hi");
 				gameData.add(gameDataFutures.get(i).get());
-				System.out.println("add game data futures");
 				gameDataFutures.get(i).get().get(0).printData();
-				System.out.println("printing data");
 			} catch (InterruptedException e) {
 				e.printStackTrace();
-				System.out.println("interrupted!");
 				numFails++;
 			} catch (ExecutionException e) {
 				e.getStackTrace();
-				System.out.println("execution exception");
 				numFails++;
 			}
 		}
-		
-		System.out.println("After data futurs stuff");
-		
+				
 		if (numFails > 0)
 			sendErrorMessage("Unable to use game data from " + numFails + " of the " + _clientHandlers.size() + " clients");
 		
-		System.out.println("returning game data");
 		return gameData;
 	}
 

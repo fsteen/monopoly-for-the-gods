@@ -75,6 +75,12 @@ public class TimeStampAccumulator {
 		}
 	}
 	
+	public void average(){
+		for(PlayerWealthDataAccumulator w : _wealthData.values()){
+			w.average();
+		}
+	}
+	
 	/**
 	 * Converts a TimeStampAccumulator to a TimeStamp
 	 * @return
@@ -82,7 +88,6 @@ public class TimeStampAccumulator {
 	public TimeStampReport toTimeStampReport(){		
 		Map<Integer,PlayerWealthDataReport> wData = new HashMap<>();
 		for(PlayerWealthDataAccumulator w : _wealthData.values()){
-			w.average();
 			wData.put(w.ownerID, w.toPlayerWealthDataReport());
 		}
 

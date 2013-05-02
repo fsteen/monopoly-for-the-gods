@@ -10,6 +10,7 @@ import java.io.Writer;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -65,10 +66,7 @@ public class ClientHandler {
 	 * @throws IOException
 	 */
 	private ClientRequestContainer readResponse() throws IOException{
-		//TODO: blocking on readline because I think that there is nothing to read
-
 		String json = _input.readLine();
-		System.out.println("got json");
 		ClientRequestContainer c = _oMapper.readValue(json, ClientRequestContainer.class);
 		return c;
 	}
@@ -89,9 +87,7 @@ public class ClientHandler {
 			
 			// read in the response
 			ClientRequestContainer response = readResponse();
-			
-			System.out.println("past where Alex had doubts");
-			
+						
 			// check for bad responses
 			if (response._method != Method.SENDPLAYER){
 				throw new InvalidResponseException(Method.SENDPLAYER, response._method);
@@ -99,7 +95,6 @@ public class ClientHandler {
 				throw new InvalidResponseException("Not enough arguments");
 			}
 
-			System.out.println("got here");
 			// set the timeout and attempt to read the response from the client
 			try {
 //				_client.setSoTimeout((GET_PLAYER_TIME + 10) * 1000);
@@ -116,6 +111,18 @@ public class ClientHandler {
 		}
 		
 	}
+	
+	public List<GameData> readPlayGamesResponse() throws IOException {
+		List<GameData> toRet = new ArrayList<>();
+		
+		String line;
+		while(!(line = _input.readLine()).equals("DONE")){
+			GameData g = _oMapper.readValue(line, GameData.class);
+			toRet.add(g);
+		}
+		
+		return toRet;
+	}
 
 	/**
 	 * Sends an encoding of the players to the client and a request to play numGame games
@@ -127,39 +134,21 @@ public class ClientHandler {
 	 */
 	public List<GameData> playGames(List<Player> players, List<Long> seeds, Settings settings) throws ClientCommunicationException, ClientLostException, InvalidResponseException{
 		try {
-			System.out.println("start games");
 			String playerList = _oMapper.writeValueAsString(players);
 			String seedList = _oMapper.writeValueAsString(seeds);
 			String settingsString = _oMapper.writeValueAsString(settings);
-			System.out.println("wrote informatoin");
 			List<String> arguments = Arrays.asList(playerList, seedList, settingsString);
 
 			ClientRequestContainer request = new ClientRequestContainer(Method.PLAYGAMES, arguments);
-			System.out.println("before write");
 			// request that the client play the games
 			write(request);
-			System.out.println("after write");
 
-			// read in the response
-			ClientRequestContainer response = readResponse();
-			System.out.println("mid games");
-			// check for bad response
-			if (response._method != Method.SENDGAMEDATA){
-				throw new InvalidResponseException(Method.SENDGAMEDATA, response._method);
-			} else if (response._arguments == null || response._arguments.size() < 1){
-				throw new InvalidResponseException("Not enough arguments");
-			}
-			System.out.println("now here");
-			// construct the JavaType that will be read in
-			JavaType listOfGameData = _oMapper.getTypeFactory().constructCollectionType(List.class, GameData.class);
+			List<GameData> gameData = readPlayGamesResponse();
 
-			// set the timeout and attempt to read the response from the client
-			List<GameData> gameData = _oMapper.readValue(response._arguments.get(0), listOfGameData);
-			
-			System.out.println("returning games");
 			return gameData;
 
 		} catch (IOException e){
+			e.printStackTrace();
 			throw new ClientCommunicationException(_id);
 		}
 	}
