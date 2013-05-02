@@ -25,7 +25,9 @@ public class Constants {
 	public static final Font FONT = new Font("sansserif", Font.BOLD, FONT_SIZE);
 
 	public final static int FULL_WIDTH= 9*Constants.WIDTH + 2*Constants.HEIGHT + 11;
-	public final static int FULL_HEIGHT= 9*Constants.WIDTH + 2*Constants.HEIGHT + 11;
+	public final static int FULL_PANEL_HEIGHT= 9*Constants.WIDTH + 2*Constants.HEIGHT + 11;
+	public final static int MENU_HEIGHT = 31;
+	public final static int FULL_FRAME_HEIGHT = FULL_PANEL_HEIGHT + MENU_HEIGHT;
 	
 	public final static int BACK_Y=790;
 	public final static int BACK_X=20;

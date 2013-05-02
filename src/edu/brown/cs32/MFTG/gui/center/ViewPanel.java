@@ -77,6 +77,10 @@ public class ViewPanel extends JPanel{
 		this.add(_setHeuristics);
 	}
 	
+	public void removeSetHeuristicsButton() {
+		this.remove(_setHeuristics);
+	}
+	
 	private class SetHeuristicsListener implements ActionListener {
 
 		@Override

@@ -55,7 +55,7 @@ public class CreateBottomPanel extends JPanel {
 	private int DEFAULT_PORT=3232;
 		
 	private BufferedImage _whiteBack;
-	private final int BOTTOM_HEIGHT=Constants.FULL_HEIGHT*3/5;
+	private final int BOTTOM_HEIGHT=Constants.FULL_PANEL_HEIGHT*3/5;
 	private final int BOTTOM_WIDTH=Constants.FULL_WIDTH*15/16;
 	private final int PLAYER_WIDTH=100;
 	private JPanel _extraPanel, _fpPanel;

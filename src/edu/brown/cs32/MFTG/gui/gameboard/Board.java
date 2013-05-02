@@ -66,7 +66,7 @@ public class Board extends JPanel {
 		_profile = profile;
 		
 		/* Set the dimension */
-		Dimension dimension = new Dimension(Constants.FULL_WIDTH, Constants.FULL_HEIGHT);
+		Dimension dimension = new Dimension(Constants.FULL_WIDTH, Constants.FULL_PANEL_HEIGHT);
 		this.setMaximumSize(dimension);
 		this.setMinimumSize(dimension);
 		this.setPreferredSize(dimension);
@@ -89,6 +89,10 @@ public class Board extends JPanel {
 		
 		this.setVisible(true);
 		this.repaint();
+	}
+	
+	public void removeSetHeuristicsButton() {
+		_center.removeSetHeuristicsButton();
 	}
 	
 	public void enableToolTips(boolean enabled) {

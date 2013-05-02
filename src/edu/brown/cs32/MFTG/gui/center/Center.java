@@ -20,6 +20,7 @@ public class Center extends JPanel {
 	public ProfitGraph _profitGraph;
 	public SliderPanel _sliderPanel;
 	public ButtonPanel _buttonPanel;
+	public ViewPanel _viewPanel;
 	private Board _board;
 	
 	public Center(Board board) {
@@ -37,8 +38,8 @@ public class Center extends JPanel {
 		_sliderPanel = new SliderPanel();
 		this.add(_sliderPanel);
 		
-		ViewPanel viewPanel = new ViewPanel(board);
-		this.add(viewPanel);
+		_viewPanel = new ViewPanel(board);
+		this.add(_viewPanel);
 	}
 	
 	
@@ -49,6 +50,10 @@ public class Center extends JPanel {
 	public List<Double> getSliderInfo () {
 		return _sliderPanel.getSliderInfo();
 	} 
+	
+	public void removeSetHeuristicsButton() {
+		_viewPanel.removeSetHeuristicsButton();
+	}
 
 
 	public List<Integer> getMinCash() {

@@ -47,17 +47,17 @@ public class SettingsPanel extends JPanel{
 	private DefaultListModel<String> _profileListModel;
 	private boolean _selectActivated;
 
-	private final int BUTTON_HEIGHT=Constants.FULL_HEIGHT/8;
-	private final int BUTTON_WIDTH=2*Constants.FULL_HEIGHT/3;
-	private final int START_HEIGHT=Constants.FULL_HEIGHT/32;
+	private final int BUTTON_HEIGHT=Constants.FULL_PANEL_HEIGHT/8;
+	private final int BUTTON_WIDTH=2*Constants.FULL_PANEL_HEIGHT/3;
+	private final int START_HEIGHT=Constants.FULL_PANEL_HEIGHT/32;
 	private final int START_WIDTH=Constants.FULL_WIDTH/6;
-	private final int BOTTOM_HEIGHT=Constants.FULL_HEIGHT*3/5;
+	private final int BOTTOM_HEIGHT=Constants.FULL_PANEL_HEIGHT*3/5;
 	private final int BOTTOM_WIDTH=Constants.FULL_WIDTH*15/16;
 
 	public SettingsPanel(MonopolyGui main) {
 		try {
 			_main=main;
-			java.awt.Dimension size = new java.awt.Dimension(Constants.FULL_WIDTH,Constants.FULL_HEIGHT);
+			java.awt.Dimension size = new java.awt.Dimension(Constants.FULL_WIDTH,Constants.FULL_PANEL_HEIGHT);
 			this.setPreferredSize(size);
 			this.setSize(size);
 			this.setBackground(Color.GRAY);

@@ -47,7 +47,7 @@ public class MonopolyGui extends JFrame{
 				}
 			}
 		
-		Dimension dimension = new Dimension(Constants.FULL_WIDTH, Constants.FULL_HEIGHT);
+		Dimension dimension = new Dimension(Constants.FULL_WIDTH, Constants.FULL_FRAME_HEIGHT);
 		this.setSize(dimension);		
 		this.setPreferredSize(dimension);
 		this.setMaximumSize(dimension);
