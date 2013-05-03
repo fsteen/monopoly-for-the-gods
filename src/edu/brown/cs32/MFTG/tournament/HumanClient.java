@@ -1,5 +1,7 @@
 package edu.brown.cs32.MFTG.tournament;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -15,6 +17,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import javax.swing.JOptionPane;
+import javax.swing.Timer;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -36,6 +39,7 @@ public class HumanClient extends Client{
 	
 	private MonopolyGui _gui;
 	private ExecutorService _executor = Executors.newCachedThreadPool();
+	private Timer _timer;
 //	private DummyGUI _dummyGui;
 
 	public HumanClient(/*String host, int port*/){
@@ -123,7 +127,6 @@ public class HumanClient extends Client{
 		System.out.println("displaying end of round data");
 		displayDataToGui(combinedData);
 		_gui.getBoard().roundCompleted();
-		displayMessage("Time to choose heuristics!");
 		
 	}
 	
@@ -157,13 +160,22 @@ public class HumanClient extends Client{
 		}
 	}
 	
+	public void startGetPlayer(int time){
+		System.out.println(time);
+		displayMessage("Time to choose heuristics!");
+		_timer = new Timer(100*time, new GetPlayerActionListener(this));
+		_timer.setRepeats(false);
+		_timer.start();
+	}
+	
 	/**
 	 * Gets the player associated with this object
 	 * @param the time, in seconds, to wait before requesting the player
 	 * @return
 	 */
-	public Player getPlayer(int time){
-		System.out.println(_gui.getBoard().getPlayer());
+	public Player finishGetPlayer(){
+		_timer.stop();
+		displayMessage("Time's up!");
 		return _gui.getBoard().getPlayer();
 	}
 
@@ -176,4 +188,16 @@ public class HumanClient extends Client{
 	}
 
 	/*******************************************************/
+	
+	
+	private class GetPlayerActionListener implements ActionListener{
+		HumanClient _client;
+		public GetPlayerActionListener(HumanClient client){
+			_client = client;
+		}
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			_client.finishRespondToGetPlayer();
+		}
+	}
 }

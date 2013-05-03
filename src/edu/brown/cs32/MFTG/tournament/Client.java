@@ -70,7 +70,9 @@ public abstract class Client {
 	
 	protected abstract void respondToDisplayData(ClientRequestContainer request) throws JsonParseException, JsonMappingException, IOException;
 	
-	public abstract Player getPlayer(int time);
+	public abstract void startGetPlayer(int time);
+	
+	public abstract Player finishGetPlayer();
 	
 	public abstract void addGameData(GameData gameData);
 
@@ -179,7 +181,11 @@ public abstract class Client {
 		}
 		int time = Integer.parseInt(arguments.get(0));
 		
-		Player p = getPlayer(time);
+		startGetPlayer(time);
+	}
+		
+	protected void finishRespondToGetPlayer(){
+		Player p = finishGetPlayer();
 
 		String playerString;
 		
@@ -210,6 +216,7 @@ public abstract class Client {
 			e.printStackTrace();
 		}
 	}
+	
 	
 	/**
 	 * Responds to a request sent over the socket to play games, and sends the game data back in response

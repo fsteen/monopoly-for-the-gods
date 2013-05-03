@@ -244,7 +244,7 @@ public class Tournament implements Runnable{
 		
 		while(connectionsMade < _numPlayers){
 			Socket clientConnection = _socket.accept();
-			ClientHandler cHandler = new ClientHandler(clientConnection, connectionsMade);
+			ClientHandler cHandler = new ClientHandler(clientConnection, connectionsMade,_settings);
 			connectionsMade++;
 			_clientHandlers.add(cHandler);
 			try {

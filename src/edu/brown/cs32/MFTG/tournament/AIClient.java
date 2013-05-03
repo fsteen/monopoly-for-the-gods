@@ -87,8 +87,12 @@ public class AIClient extends Client{
 	public synchronized void addGameData(GameData gameData){
 		// do nothing -- there is no gui
 	}
+	
+	public void startGetPlayer(int time){
+		finishRespondToGetPlayer();
+	}
 
-	public Player getPlayer(int time){
+	public Player finishGetPlayer(){
 		Player temp = new Player(_player);
 		for(String key: _currentGameData._overallPlayerPropertyData.keySet()) {
 			PropertyDataReport others =  _currentGameData._overallPropertyData.get(key);

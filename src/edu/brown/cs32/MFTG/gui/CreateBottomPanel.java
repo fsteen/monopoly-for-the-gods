@@ -367,7 +367,7 @@ public class CreateBottomPanel extends JPanel {
 	public Settings getSettings(){
 		WinningCondition winCond;
 		if(_mostMoney.isSelected()){
-			winCond = WinningCondition.MOST_MONEY_MIDWAY;
+			winCond = WinningCondition.MOST_MONEY;
 		} else if(_mostSets.isSelected()) {
 			winCond = WinningCondition.MOST_SETS_WON;
 		} else {

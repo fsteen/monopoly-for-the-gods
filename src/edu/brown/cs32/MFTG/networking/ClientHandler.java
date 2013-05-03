@@ -23,27 +23,25 @@ import edu.brown.cs32.MFTG.networking.ClientRequestContainer.Method;
 import edu.brown.cs32.MFTG.tournament.Settings;
 import edu.brown.cs32.MFTG.tournament.data.GameDataReport;
 
-public class ClientHandler {
-
-	private final int GET_PLAYER_TIME = 180;
-	private final int PLAY_GAMES_TIME = 15;
-	
+public class ClientHandler {	
 	public final int _id;
 
 	final Socket _client;
 	private BufferedReader _input;
 	private BufferedWriter _output;
 	private ObjectMapper _oMapper;
+	private Settings _settings;
 
 	JavaType _listOfPlayers;
 
-	public ClientHandler(Socket client, int id) throws IOException{
+	public ClientHandler(Socket client, int id, Settings settings) throws IOException{
 		_id = id;
 		
 		_client = client;
 		_input = new BufferedReader(new InputStreamReader(_client.getInputStream()));
 		_output = new BufferedWriter(new OutputStreamWriter(_client.getOutputStream()));
 		_oMapper = new ObjectMapper();
+		_settings = settings;
 
 		_listOfPlayers = _oMapper.getTypeFactory().constructCollectionType(List.class, Player.class);
 	}
@@ -78,7 +76,7 @@ public class ClientHandler {
 	 * @throws InvalidResponseException 
 	 */
 	public Player getPlayer() throws ClientCommunicationException, ClientLostException, InvalidResponseException{
-		String time = String.valueOf(GET_PLAYER_TIME);
+		String time = String.valueOf(_settings.duringTimeout);
 		ClientRequestContainer request = new ClientRequestContainer(Method.GETPLAYER, Arrays.asList(time));
 
 		// ask the client for gameData

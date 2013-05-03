@@ -87,7 +87,7 @@ public class DataProcessor {
 		GameDataAccumulator first = accumulators[0];
 		for(int i = 1; i < accumulators.length; i++){
 			try{
-				first.averageWith(accumulators[i]);				
+				first.combineWith(accumulators[i]);				
 			} catch (Exception e){
 				System.out.println(first.toGameDataReport().toString() + "\n\n" + accumulators[i].toGameDataReport().toString());
 				e.printStackTrace();

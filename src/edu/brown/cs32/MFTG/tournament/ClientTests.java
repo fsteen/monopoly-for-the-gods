@@ -117,7 +117,7 @@ public class ClientTests {
 		int numGames = 10000;
 		//TODO get exception when numGames gets large
 		Client p = new HumanClient();
-		Player player = p.getPlayer(0);
+		Player player = p.finishGetPlayer();
 		
 		List<Player> players = new ArrayList<>();
 		players.add(new Player(0));

@@ -33,10 +33,12 @@ public class GameDataAccumulator {
 		_winList = new ArrayList<>();
 		_numPlayers = numPlayers;
 
+		/* initialize timestamps */
 		for(int i = 0; i < numTimeStamps; i++){
 			data.add(new TimeStampAccumulator(i));
 		}
 		
+		/* initialize winners */
 		for(int i = -1; i < numPlayers; i++){
 			_playerWins.put(i, 0);
 		}
@@ -47,7 +49,7 @@ public class GameDataAccumulator {
 	 * Averages this and g, appending g's winList to this's
 	 * @param g
 	 */
-	public void averageWith(GameDataAccumulator g){
+	public void combineWith(GameDataAccumulator g){
 		if(g.data.size() != data.size()){
 			System.out.println("cannot merge gamedata with different numbers of timestamps");
 		}

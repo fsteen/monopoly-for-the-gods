@@ -10,7 +10,7 @@ public class Settings {
 		STAGGERED, BUNCHED
 	}
 	public enum WinningCondition {
-		MOST_SETS_WON, LAST_SET_WON, MOST_MONEY_MIDWAY
+		MOST_SETS_WON, LAST_SET_WON, MOST_MONEY
 	}
 	
 	public final int gamesPerRound, numRounds,beginningTimeout, duringTimeout, freeParking;
