@@ -420,10 +420,6 @@ public class Board extends JPanel {
 		player.setJailRich(waits.get(2));
 		
 		_center.setButtonChoices(player);		
-		
-		//System.out.println("Property Values: " + propertyValues);
-		//System.out.println("Color Values: " + colorValues);
-		
 		return player;
 	}
 	
@@ -433,13 +429,6 @@ public class Board extends JPanel {
 	}
 	
 	public void setPlayerSpecificPropertyData(Map<String, PropertyDataReport> data) {
-		System.out.println("Number of MY PROPERTIES i set: " + data.size());
-		for(ColorProperties property: ColorProperties.values()) {
-			if(data.containsKey(property.getLowercaseName()) == false) {
-				System.out.println("MY PROPERTIES doesnt contain: " + property.getLowercaseName());
-			}
-		}
-		
 		for(ColorGroup colorGroup: _colorGroups) {
 			Set<String> names = colorGroup.getNames();
 			for(String name: names) {
@@ -461,13 +450,6 @@ public class Board extends JPanel {
 	}
 	
 	public void setPropertyData(Map<String, PropertyDataReport> data) {
-		System.out.println("Number of AGGREGATE PROPERTIES i set: " + data.size());
-		for(ColorProperties property: ColorProperties.values()) {
-			if(data.containsKey(property.getLowercaseName()) == false) {
-				System.out.println("AGGREGATE PROPERTIES doesnt contain: " + property.getLowercaseName());
-			}
-		}
-		
 		for(ColorGroup colorGroup: _colorGroups) {
 			Set<String> names = colorGroup.getNames();
 			for(String name: names) {
@@ -490,6 +472,7 @@ public class Board extends JPanel {
 
 	
 	public void setWealthData(List<PlayerWealthDataReport> data) {
+		System.out.println("Player wealth data: " + data);
 		_center.setWealthData(data);
 	}
 	
@@ -500,6 +483,10 @@ public class Board extends JPanel {
 		for(ColorGroup colorGroup: _colorGroups) {
 			colorGroup.setPropertyValues(propertyValues);
 			colorGroup.setColorValue(colorValues);
+		}
+		
+		for(Railroad railroad: _railroads) {
+			railroad.setPropertyValues(propertyValues);
 		}
 		
 		_center.setSliderValues(player.getLiquidity(), player.getTimeChange(), player.getTradingFear());

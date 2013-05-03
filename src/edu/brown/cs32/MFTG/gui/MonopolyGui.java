@@ -3,7 +3,9 @@ package edu.brown.cs32.MFTG.gui;
 import java.awt.Dimension;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 
 import javax.swing.JFrame;
@@ -32,6 +34,9 @@ public class MonopolyGui extends JFrame{
 	private RecordsPanel _records;
 	private Client _client;
 	private EmptyMenuBar _empty;
+	private List<String> _outSongNames, _inSongNames;
+	private int _currentOutSongNumber, _currentInSongNumber;
+	private Music _currentSong;
 
 	public MonopolyGui(Client client) {
 		super("Monopoly for the GODS");
@@ -98,6 +103,47 @@ public class MonopolyGui extends JFrame{
 		
 		this.pack();
 		this.setVisible(true);
+		
+		_outSongNames = new ArrayList<>(2);
+		_outSongNames.add("music/NoChurchInTheWild.mp3");
+		_outSongNames.add("music/SwaggerLikeUs.mp3");
+		
+		_inSongNames = new ArrayList<>(2);
+		_inSongNames.add("music/Asutobots.mp3");		
+		_currentOutSongNumber=(int) Math.floor(Math.random()*_outSongNames.size());
+		_currentInSongNumber=(int) Math.floor(Math.random()*_inSongNames.size());
+
+		_currentSong=new Music(_outSongNames.get(_currentOutSongNumber), this, false);
+		_currentSong.play();
+	}
+	
+	/**
+	 * stops music
+	 */
+	public void stopMusic(){
+		_currentSong.close();
+	}
+	
+	/**
+	 * plays the next song out of game
+	 */
+	public void playNextOutOfGameSong(){
+		_currentSong.close();
+		_currentOutSongNumber = (_currentOutSongNumber+1)%_outSongNames.size();
+		String newSongName = _outSongNames.get(_currentOutSongNumber);
+		_currentSong = new Music(newSongName, this, false);
+		_currentSong.play();
+	}
+	
+	/**
+	 * play song in game
+	 */
+	public void playNextInGameSong(){
+		_currentSong.close();
+		_currentInSongNumber = (_currentInSongNumber+1)%_inSongNames.size();
+		String newSongName = _inSongNames.get(_currentInSongNumber);
+		_currentSong = new Music(newSongName, this, true);
+		_currentSong.play();
 	}
 
 	/**

@@ -44,7 +44,7 @@ public class Constants {
 	public static int BUTTON_DIMENSION = (int) (1.2*Constants.WIDTH);
 	
 	public interface Toggle {
-		public ImageIcon getIcon();
+		//public ImageIcon getIcon();
 		public Toggle next();
 		public String getText();
 	}

@@ -60,7 +60,7 @@ public class ToggleButton extends JButton {
 	
 	public void setValue (Toggle toggle) {
 		_toggle = toggle;
-		this.setIcon(_toggle.getIcon());
+		this.setText(toggle.getText());
 	}
 	
 	public Toggle getValue() {

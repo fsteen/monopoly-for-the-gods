@@ -153,4 +153,8 @@ public class Railroad extends JPanel {
 		}
 	}
 
+	public void setPropertyValues(HashMap<String, Integer> propertyValues) {
+		_myProperty.setValue(propertyValues.get(_railroad.getLowercaseName()));
+	}
+
 }
