@@ -20,7 +20,7 @@ public class DataProcessor {
 	 * @return
 	 */
 	public static GameDataAccumulator aggregate(List<GameData> data, int numDataPoints){
-		GameDataAccumulator overall = new GameDataAccumulator(numDataPoints);
+		GameDataAccumulator overall = new GameDataAccumulator(numDataPoints, data.get(0)._numPlayers);
 		for(GameData d : data){
 			//TODO later ?? : for games that are repeats of each other, exclude all but one
 			if(d != null){
@@ -43,19 +43,30 @@ public class DataProcessor {
 		int specificIndex = specific.getData().size() - 1;
 		int numDataPoints = overall.data.size();
 		int stepSize;
-		
-		//we go backwards so that we ensure that we always get the last time stamp
-		//we don't care so much about getting the first stamp		
-		for(int i = numDataPoints - 1; i >= 0; i--){	
-			combineData(overall.data.get(i), specific.getData().get(specificIndex));
-			stepSize = (int)Math.round(((double)specificIndex)/i); //improve this
-			specificIndex -= stepSize;			
-		}
-		//overall game data
-		for(TimeStamp t : specific.getData()){
-			for(PropertyData p : t.getPropertyData()){
-				overall.putPropertyData(p);
+
+		try{
+			
+			//we go backwards so that we ensure that we always get the last time stamp
+			//we don't care so much about getting the first stamp		
+			for(int i = numDataPoints - 1; i >= 0; i--){	
+				combineData(overall.data.get(i), specific.getData().get(specificIndex));
+				stepSize = (int)Math.round(((double)specificIndex)/i); //improve this
+				specificIndex -= stepSize;			
 			}
+			//overall game data
+			for(TimeStamp t : specific.getData()){
+				for(PropertyData p : t.getPropertyData()){
+					try{
+						overall.putPropertyData(p);
+					} catch (Exception e){
+						
+					}
+				}
+			}
+		} catch (Exception e){
+			System.out.println("ALERT!!!!!!!");
+			e.printStackTrace();
+			specific.printData();
 		}
 	}
 	
@@ -75,7 +86,12 @@ public class DataProcessor {
 		assert(accumulators[0] != null);
 		GameDataAccumulator first = accumulators[0];
 		for(int i = 1; i < accumulators.length; i++){
-			first.averageWith(accumulators[i]);
+			try{
+				first.averageWith(accumulators[i]);				
+			} catch (Exception e){
+				System.out.println(first.toGameDataReport().toString() + "\n\n" + accumulators[i].toGameDataReport().toString());
+				e.printStackTrace();
+			}
 		}
 		assert(first != null);
 		return first;

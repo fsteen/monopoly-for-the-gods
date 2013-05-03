@@ -32,7 +32,7 @@ public class GameDataReport {
 	}
 	
 	public GameDataAccumulator toGameDataAccumulator(){
-		GameDataAccumulator g = new GameDataAccumulator(_timeStamps.get(0).wealthData.size()); //the number of players
+		GameDataAccumulator g = new GameDataAccumulator(_timeStamps.get(0).wealthData.size(),_playerWins.size()); //the number of players
 		List<TimeStampAccumulator> stamps = new ArrayList<>();
 		for(TimeStampReport t: _timeStamps){
 			stamps.add(t.toTimeStampAccumulator());
@@ -75,9 +75,13 @@ public class GameDataReport {
 		b.append("*****OVERALL PLAYER PROPERTY DATA*****\n");
 //		b.append(_overallPlayerPropertyData.entrySet().size() == 0);
 		if(_overallPlayerPropertyData != null){
-			for(List<PropertyDataReport> l : _overallPlayerPropertyData.values()){
-				for(PropertyDataReport p : l){
-					b.append(p.toString() + "\n");
+			for(Entry<String,List<PropertyDataReport>> e : _overallPlayerPropertyData.entrySet()){
+				for(PropertyDataReport p : e.getValue()){
+					if(p == null){
+						b.append("{"+e.getKey()+", null}\n");
+					} else {
+						b.append(p.toString() + "\n");
+					}
 				}
 			}
 		} else {
@@ -85,8 +89,12 @@ public class GameDataReport {
 		}
 		b.append("*****OVERALL PROPERTY DATA*****\n");
 		if(_overallPropertyData != null){
-			for(PropertyDataReport p : _overallPropertyData.values()){
-				b.append(p.toString() + "\n");
+			for(Entry<String,PropertyDataReport> e : _overallPropertyData.entrySet()){
+				if(e.getValue() == null){
+					b.append("{"+e.getKey()+", null}\n");
+				} else {
+					b.append(e.getValue().toString() + "\n");
+				}
 			}
 		}
 		b.append("*********************\n\n\n\n");
@@ -94,6 +102,7 @@ public class GameDataReport {
 		for(Entry<Integer, Integer> e : _playerWins.entrySet()){
 			b.append(String.format("Player %d has %d wins\n",e.getKey(),e.getValue()));
 		}
+		b.append("winList\n" + _winList + "\n");
 		return b.toString();
 	}
 	

@@ -24,8 +24,7 @@ public class Main {
 //			}
 //			new MonopolyGui();
 //		} catch (UnsupportedLookAndFeelException|ClassNotFoundException|InstantiationException|IllegalAccessException e) {}
-
-
+		
 		@SuppressWarnings("unused")
 		//Client pm = new HumanClient("localhost", 3232);
 		Client pm = new HumanClient();

@@ -69,6 +69,43 @@ public class DataProcessorTests {
 		System.out.println(DataProcessor.aggregate(data, 500).toString());
 	}
 	
+	@Test
+	public void combineAccumulatorsTest(){
+		Random rand = new Random();
+		Player p0=new Player(0);
+		Player p1=new Player(1);
+		Player p2=new Player(2);
+		Player p3=new Player(3);
+
+		List<GameData> data = new ArrayList<>();
+		List<GameData> data2 = new ArrayList<>();
+
+		Game g;
+		
+		for(int i = 0; i < 400; i++){ //play 400 games
+			g = new Game(rand.nextLong(),1000,500, false, false, p0, p1, p2, p3);
+			g.run();
+			data.add(g.getGameData());
+		}
+		
+		for(int i = 0; i < 400; i++){ //play 400 games
+			g = new Game(rand.nextLong(),1000,500, false, false, p0, p1, p2, p3);
+			g.run();
+			data2.add(g.getGameData());
+		}
+		
+		
+		GameDataAccumulator r = DataProcessor.aggregate(data, 50);
+		GameDataAccumulator r2 = DataProcessor.aggregate(data2, 50);
+		data.addAll(data2);
+		GameDataReport c = DataProcessor.aggregate(data, 50).toGameDataReport();
+		GameDataReport c2 = DataProcessor.combineAccumulators(r,r2).toGameDataReport();
+		System.out.println(c);
+		System.out.println(c2);
+		
+		assertTrue(c2.equals(c));
+	}
+	
 //	@Test
 	public void generateGameDataReportMany(){
 		Random rand = new Random();
@@ -86,7 +123,7 @@ public class DataProcessorTests {
 		System.out.println(DataProcessor.aggregate(data, 50).toString());
 	}
 	
-	@Test
+//	@Test
 	public void generateGameDataReportMany4Player(){
 		Random rand = new Random();
 		Player p0=new Player(0);

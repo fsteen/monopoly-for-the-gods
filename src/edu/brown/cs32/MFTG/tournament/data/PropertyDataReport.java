@@ -64,10 +64,10 @@ public class PropertyDataReport {
 		return Objects.equals(this.propertyName, that.propertyName) 
 			   && (this.ownerID == that.ownerID)
 			   && (this.accNumHouses == that.accNumHouses) 
-			   && (this.accTotalRevenueWithHouses == that.accTotalRevenueWithHouses)
-			   && (this.accTotalRevenueWithoutHouses == that.accTotalRevenueWithoutHouses)
-			   && (this.accMortgaged == that.accMortgaged)
-			   && (this.timeOwned == that.timeOwned)
+			   && Math.round(this.accTotalRevenueWithHouses) == Math.round(that.accTotalRevenueWithHouses)
+			   && Math.round(this.accTotalRevenueWithoutHouses) == Math.round(that.accTotalRevenueWithoutHouses)
+			   && Math.round(this.accMortgaged) == Math.round(that.accMortgaged)
+			   && Math.round(this.timeOwned) == Math.round(that.timeOwned)
 			   && (this.numDataPoints == that.numDataPoints);
 	}
 }

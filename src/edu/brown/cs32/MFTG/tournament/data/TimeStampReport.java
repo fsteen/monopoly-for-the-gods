@@ -44,8 +44,12 @@ public class TimeStampReport {
 	public String toString(){
 		StringBuilder b = new StringBuilder();
 		b.append("-----TIME STAMP " + time + "-----\n");
-		for(PlayerWealthDataReport w : wealthData.values()){
-			b.append(w.toString() + "\n");
+		for(Entry<Integer,PlayerWealthDataReport> e : wealthData.entrySet()){
+			if(e.getValue() == null){
+				b.append("{"+e.getKey() +", null}\n");
+			}else{
+				b.append(e.getValue().toString() + "\n");
+			}
 		}
 		b.append("---------------------\n");
 		return b.toString();
