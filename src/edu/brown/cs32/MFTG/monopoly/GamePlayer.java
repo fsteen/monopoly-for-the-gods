@@ -156,20 +156,20 @@ public class GamePlayer {
 		GamePlayer otherOwner=property.getCloseToMonopoly();
 		if(otherOwner==null) {
 			if(property.getSibling1()!=null && property.getSibling1().getOwner()==this) {
-				finalValue=_player.getSameColorEffect(property.Color);
+				finalValue=initialValue*_player.getSameColorEffect(property.Color);
 			}
 			else if(property.getSibling2()!=null && property.getSibling2().getOwner()==this) {
-				finalValue=_player.getSameColorEffect(property.Color);
+				finalValue=initialValue*=_player.getSameColorEffect(property.Color);
 			}
 			else {
 				finalValue=initialValue;
 			}
 		}
 		else if(otherOwner==this) {
-			finalValue=_player.getMonopolyValue(property.Color);
+			finalValue=initialValue*_player.getMonopolyValue(property.Color);
 		}
 		else {
-			finalValue=_player.getBreakingOpponentMonopolyValue(property.Color);
+			finalValue=initialValue*_player.getBreakingOpponentMonopolyValue(property.Color);
 		}
 		finalValue*=timeEffect*=liquidEffect;
 		//System.out.println(property.Name+" value: "+finalValue+" TimeEffect: "+timeEffect+" LiquidEffect: "+liquidEffect);
@@ -485,20 +485,20 @@ public class GamePlayer {
 		GamePlayer otherOwner=property.getCloseToMonopoly();
 		if(otherOwner==null) {
 			if(property.getSibling1()!=null && property.getSibling1().getOwner()==this) {
-				finalValue=_player.getSameColorEffect(property.Color);
+				finalValue=initialValue*_player.getSameColorEffect(property.Color);
 			}
 			else if(property.getSibling2()!=null && property.getSibling2().getOwner()==this) {
-				finalValue=_player.getSameColorEffect(property.Color);
+				finalValue=initialValue*_player.getSameColorEffect(property.Color);
 			}
 			else {
 				finalValue=initialValue;
 			}
 		}
 		else if(otherOwner==this) {
-			finalValue=_player.getMonopolyValue(property.Color);
+			finalValue=initialValue*_player.getMonopolyValue(property.Color);
 		}
 		else {
-			finalValue=_player.getBreakingOpponentMonopolyValue(property.Color);
+			finalValue=initialValue*_player.getBreakingOpponentMonopolyValue(property.Color);
 		}
 		if(property.getOwner()==this) {
 			if(liquidEffect<1) {

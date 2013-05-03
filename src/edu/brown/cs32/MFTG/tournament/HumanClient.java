@@ -73,7 +73,6 @@ public class HumanClient extends Client{
 			displayMessage("Unable to retrieve a unique ID from the server :(");
 			return;
 		}
-		
 		Callable<Void> worker = new RequestCallable(this);
 		_executor.submit(worker);
 	}
@@ -163,7 +162,7 @@ public class HumanClient extends Client{
 	public void startGetPlayer(int time){
 		System.out.println(time);
 		displayMessage("Time to choose heuristics!");
-		_timer = new Timer(100*time, new GetPlayerActionListener(this));
+		_timer = new Timer(1000*time, new GetPlayerActionListener(this));
 		_timer.setRepeats(false);
 		_timer.start();
 	}

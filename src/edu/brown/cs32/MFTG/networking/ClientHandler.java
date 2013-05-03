@@ -31,11 +31,13 @@ public class ClientHandler {
 	private BufferedWriter _output;
 	private ObjectMapper _oMapper;
 	private Settings _settings;
+	private boolean _isFirstRound;
 
 	JavaType _listOfPlayers;
 
 	public ClientHandler(Socket client, int id, Settings settings) throws IOException{
 		_id = id;
+		_isFirstRound = true;
 		
 		_client = client;
 		_input = new BufferedReader(new InputStreamReader(_client.getInputStream()));
@@ -76,7 +78,9 @@ public class ClientHandler {
 	 * @throws InvalidResponseException 
 	 */
 	public Player getPlayer() throws ClientCommunicationException, ClientLostException, InvalidResponseException{
-		String time = String.valueOf(_settings.duringTimeout);
+		String time = String.valueOf(_isFirstRound ? _settings.beginningTimeout : _settings.duringTimeout);
+		_isFirstRound = false;
+		
 		ClientRequestContainer request = new ClientRequestContainer(Method.GETPLAYER, Arrays.asList(time));
 
 		// ask the client for gameData

@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -19,21 +21,22 @@ import edu.brown.cs32.MFTG.networking.ClientLostException;
 import edu.brown.cs32.MFTG.networking.InvalidResponseException;
 import edu.brown.cs32.MFTG.networking.PlayGamesCallable;
 import edu.brown.cs32.MFTG.networking.getPlayerCallable;
+import edu.brown.cs32.MFTG.tournament.Settings.WinningCondition;
 import edu.brown.cs32.MFTG.tournament.data.DataProcessor;
 import edu.brown.cs32.MFTG.tournament.data.GameDataAccumulator;
 import edu.brown.cs32.MFTG.tournament.data.GameDataReport;
 
 public class Tournament implements Runnable{
-	private final int _numPlayers;
+	private final List<Integer> _players;
 	
 	public static final double CONFIRMATION_PERCENTAGE = 0.1; //confirm 10% of games
 	public static final int NUM_DATA_POINTS = 10;
 	private List<ClientHandler> _clientHandlers;
 	private ServerSocket _socket;
 	private Settings _settings;
-	private ExecutorService _executor; 
-	
-	private Map<Integer,Integer> _setPlayerWins;
+	private ExecutorService _executor;
+	private Map<Integer,Integer> _roundWinners;
+	private Random _rand;
 	
 	/**
 	 * Creates a tournament for the specified number of players and games
@@ -41,16 +44,24 @@ public class Tournament implements Runnable{
 	 * @param numGames
 	 * @throws IOException 
 	 */
-	public Tournament(int numPlayers, Settings settings, int port) throws IOException{
+	public Tournament(List<Integer> players, Settings settings, int port) throws IOException{
 		if (port <= 1024){
 			throw new IllegalArgumentException("Ports under 1024 are reserved!");
 		}
-		
-		_numPlayers = numPlayers;
+		_players = players;
+		_roundWinners = new HashMap<>();
+		resetRoundWinners();
+		_rand = new Random();
 		_socket = new ServerSocket(port);
 		_clientHandlers = new ArrayList<>();
 		_settings = settings;
-		_executor = Executors.newFixedThreadPool(numPlayers);
+		_executor = Executors.newFixedThreadPool(_players.size());
+	}
+	
+	private void resetRoundWinners(){
+		for(int i = -1; i < _players.size(); i++){ //-1 is a tie
+			_roundWinners.put(i, 0);
+		}
 	}
 	
 	public void run() {
@@ -60,13 +71,13 @@ public class Tournament implements Runnable{
 			System.out.println("you are fucked");
 			return;
 		}
-		int gamesPerModule = (int)Math.ceil(_settings.getNumGamesPerRound()/_numPlayers);
+		int gamesPerModule = (int)Math.ceil(_settings.getNumGamesPerRound()/_players.size());
 		
 		List<Player> players = null;
 		List<GameDataReport> data;
 		List<Integer> confirmationIndices;
 		
-		for(int i = 0; i < _settings.getNumRounds(); i++){
+		for(int roundNum = 0; roundNum < _settings.getNumRounds(); roundNum++){
 			// request a Player from each client
 			List<Player> newPlayers = getNewPlayers();
 			
@@ -76,26 +87,41 @@ public class Tournament implements Runnable{
 				continue;
 			
 			// generate which seeds will be used for integrity validation
-			confirmationIndices = DataProcessor.generateConfirmationIndices(gamesPerModule, CONFIRMATION_PERCENTAGE);
+			confirmationIndices = DataProcessor.generateConfirmationIndices(gamesPerModule, CONFIRMATION_PERCENTAGE,_rand);
 			
 			// play a round of games
-			data = playRoundOfGames(players, DataProcessor.generateSeeds(players.size(),gamesPerModule, confirmationIndices));
+			data = playRoundOfGames(players, DataProcessor.generateSeeds(players.size(),gamesPerModule, confirmationIndices,_rand));
 			
 			// make sure nobody cheated
 			if(DataProcessor.isCorrupted(data, confirmationIndices)){
-				//System.out.println("Tournament : WOOHOO ... SOMEONE IS CHEATING!!!!!");
-				//TODO FIGURE THIS OUT FRANCES!!!!!!!!!!!!!!!
+				System.out.println("someone is cheating"); //TODO what to do in this case
 			}
 			
 			GameDataAccumulator[] accumulators = new GameDataAccumulator[data.size()];
 			for(int j = 0; j < data.size(); j++){
 				accumulators[j] = data.get(j).toGameDataAccumulator();
 			}
-
-			System.out.println("sending the end of round data");
-			sendEndOfRoundData(DataProcessor.combineAccumulators(accumulators).toGameDataReport());
-			System.out.println("sent");
+			GameDataAccumulator combined = DataProcessor.combineAccumulators(accumulators);
+			int winnerID;
+			
+			if(_settings.winType == WinningCondition.MOST_MONEY){
+				winnerID = combined.getGreatestAverageWealthPlayer().getLeft();
+				_roundWinners.put(winnerID, _roundWinners.get(winnerID) + 1);
+			} else {
+				winnerID = combined.getMostGamesWonPlayer().getLeft();
+				_roundWinners.put(winnerID, _roundWinners.get(winnerID) + 1);
+			}
+			
+			if(_settings.winType == WinningCondition.LAST_SET_WON && roundNum == _settings.getNumRounds()-1){
+				resetRoundWinners();
+				winnerID = combined.getMostGamesWonPlayer().getLeft();
+				_roundWinners.put(winnerID, _roundWinners.get(winnerID) + 1);
+			}
+			combined._playerWins = _roundWinners;
+			
+			sendEndOfRoundData(combined.toGameDataReport());
 		}
+		
 		sendEndOfGameData();
 	}
 	
@@ -148,8 +174,6 @@ public class Tournament implements Runnable{
 				return null;
 			}
 		}
-		
-		
 		return players;
 	}
 	
@@ -240,9 +264,9 @@ public class Tournament implements Runnable{
 	 */
 	public void getPlayerConnections() throws IOException{
 		int connectionsMade = 0;
-		System.out.println("player connections: " + _numPlayers);
+		System.out.println("player connections: " + _players.size());
 		
-		while(connectionsMade < _numPlayers){
+		while(connectionsMade < _players.size()){
 			Socket clientConnection = _socket.accept();
 			ClientHandler cHandler = new ClientHandler(clientConnection, connectionsMade,_settings);
 			connectionsMade++;

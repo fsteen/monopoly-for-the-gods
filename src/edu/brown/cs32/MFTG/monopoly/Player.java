@@ -45,10 +45,10 @@ public class Player {
 		initializePropertyValues();
 		
 		//a hashmap of values for each color. for each color there is an array such that;
-		//T[0]=value of monopoly
-		//T[1]=value of houses for the color
-		//T[2]=value of breaking an opponent's monopoly
-		//T[3]=how much value is if you have 1 other property of the same color, but this would not give you a monopoly
+		//T[0]=value of monopoly, relative
+		//T[1]=value of houses for the color, absolute
+		//T[2]=value of breaking an opponent's monopoly, relative
+		//T[3]=how much value is if you have 1 other property of the same color, but this would not give you a monopoly, relative
 		_colorValues = new HashMap<>();
 		initializeColorValues();
 		
@@ -478,36 +478,36 @@ public class Player {
 		_jailRich = jailRich;
 	}
 	
-	//T[0]=value of monopoly
-	//T[1]=value of houses for the color
+	//T[0]=value of monopoly, relative
+	//T[1]=value of houses for the color, relative
 	//T[2]=value of breaking an opponent's monopoly
-	//T[3]=how much value is affected by how many other properties of the same color you have
+	//T[3]=how much value is affected by how many other properties of the same color you have, relative
 	/**
 	 * Sets color value defaults
 	 */
 	private void initializeColorValues() {
-		Double[] purple={200.0,50.0,150.0,100.0};
+		Double[] purple={1.0,50.0,1.0,1.0};
 		_colorValues.put("purple", purple);
 		
-		Double[] lightblue={250.0,50.0,200.0,200.0};
+		Double[] lightblue={1.0,50.0,1.0,1.0};
 		_colorValues.put("light blue", lightblue);
 		
-		Double[] pink={275.0,100.0,225.0,250.0};
+		Double[] pink={1.0,100.0,1.0,1.0};
 		_colorValues.put("pink", pink);
 		
-		Double[] orange={300.0,100.0,250.0,275.0};
+		Double[] orange={1.0,100.0,1.0,1.0};
 		_colorValues.put("orange", orange);
 		
-		Double[] red={325.0,150.0,275.0,300.0};
+		Double[] red={1.0,150.0,1.0,1.0};
 		_colorValues.put("red", red);
 		
-		Double[] yellow={350.0,150.0,300.0,325.0};
+		Double[] yellow={1.0,150.0,1.0,1.0};
 		_colorValues.put("yellow", yellow);
 		
-		Double[] green={375.0,200.0,325.0,350.0};
+		Double[] green={1.0,200.0,1.0,1.0};
 		_colorValues.put("green", green);
 		
-		Double[] darkblue={500.0,200.0,400.0,450.0};
+		Double[] darkblue={1.0,200.0,1.0,1.0};
 		_colorValues.put("dark blue", darkblue);
 		
 	}

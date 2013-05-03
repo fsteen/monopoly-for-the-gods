@@ -26,13 +26,14 @@ public class DataProcessorTests {
 
 //	@Test
 	public void generateConfirmationIndicesTest(){
-		List<Integer> confirmationIndices1 = DataProcessor.generateConfirmationIndices(100, .10);
+		Random rand = new Random();
+		List<Integer> confirmationIndices1 = DataProcessor.generateConfirmationIndices(100, .10,rand);
 		assertTrue(confirmationIndices1.size() == 10);
 		for(int i = 1; i < confirmationIndices1.size(); i++){
 			assertTrue(confirmationIndices1.get(i-1) < confirmationIndices1.get(i));
 		}
 		
-		List<Integer> confirmationIndices2 = DataProcessor.generateConfirmationIndices(10, .09);
+		List<Integer> confirmationIndices2 = DataProcessor.generateConfirmationIndices(10, .09,rand);
 		assertTrue(confirmationIndices2.size() == 1);
 		for(int i = 1; i < confirmationIndices2.size(); i++){
 			assertTrue(confirmationIndices2.get(i-1) < confirmationIndices2.get(i));
@@ -41,10 +42,11 @@ public class DataProcessorTests {
 	
 //	@Test
 	public void generateSeedsTest(){
+		Random rand = new Random();
 		int numGames1 = 1;
 		int numPlayers1 = 4;
-		List<Integer> confirmationIndices1 = DataProcessor.generateConfirmationIndices(numGames1, .10);
-		List<List<Long>> seeds1 = DataProcessor.generateSeeds(numGames1, numPlayers1, confirmationIndices1);
+		List<Integer> confirmationIndices1 = DataProcessor.generateConfirmationIndices(numGames1, .10,rand);
+		List<List<Long>> seeds1 = DataProcessor.generateSeeds(numGames1, numPlayers1, confirmationIndices1,rand);
 		
 		long seed1;
 		for(int i = 0; i < confirmationIndices1.size(); i++){

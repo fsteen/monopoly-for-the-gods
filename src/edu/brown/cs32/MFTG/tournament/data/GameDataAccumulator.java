@@ -9,11 +9,12 @@ import java.util.Map.Entry;
 import com.google.common.collect.ArrayListMultimap;
 
 import edu.brown.cs32.MFTG.monopoly.GameData;
+import edu.brown.cs32.MFTG.monopoly.PlayerWealthData;
 import edu.brown.cs32.MFTG.monopoly.PropertyData;
 
 public class GameDataAccumulator {
 
-	public List<TimeStampAccumulator> data;
+	public List<TimeStampAccumulator> timeStamps;
 	public Map<String, PropertyDataAccumulator> entireGameData;
 	private Map<String, PropertyDataAccumulator> currentMaxValues;
 
@@ -29,13 +30,13 @@ public class GameDataAccumulator {
 		currentMaxValues = new HashMap<>();
 		playerEntireGameData = new HashMap<>();
 		playerCurrentMaxValues = new HashMap<>();
-		data = new ArrayList<>();
+		timeStamps = new ArrayList<>();
 		_winList = new ArrayList<>();
 		_numPlayers = numPlayers;
 
 		/* initialize timestamps */
 		for(int i = 0; i < numTimeStamps; i++){
-			data.add(new TimeStampAccumulator(i));
+			timeStamps.add(new TimeStampAccumulator(i));
 		}
 		
 		/* initialize winners */
@@ -49,15 +50,19 @@ public class GameDataAccumulator {
 	 * Averages this and g, appending g's winList to this's
 	 * @param g
 	 */
-	public void combineWith(GameDataAccumulator g){
-		if(g.data.size() != data.size()){
-			System.out.println("cannot merge gamedata with different numbers of timestamps");
+	public void combineWith(GameDataAccumulator g) throws DataAccumulationException {
+		if(g == null){
+			throw new DataAccumulationException("Cannot merge GameDataAcumulators with a null GameDataAccumulator.");
 		}
-		for(int i = 0; i < data.size(); i++){
-			data.get(i).averageWith(g.data.get(i)); //average all of the timestamps
+		if(g.timeStamps.size() != timeStamps.size()){
+			throw new DataAccumulationException("Cannot merge GameDataAcumulators with different numbers of timestamps.");
 		}
-		for(PropertyDataAccumulator p : entireGameData.values()){ //average all of the overall property values
-			p.averageWith(g.entireGameData.get(p.propertyName)); //TODO CHANGED
+		
+		for(int i = 0; i < timeStamps.size(); i++){
+			timeStamps.get(i).averageWith(g.timeStamps.get(i));
+		}
+		for(PropertyDataAccumulator p : entireGameData.values()){
+			p.averageWith(g.entireGameData.get(p.propertyName));
 		}
 		for(Map<Integer,PropertyDataAccumulator> m : playerEntireGameData.values()){
 			for(PropertyDataAccumulator p : m.values()){
@@ -74,36 +79,35 @@ public class GameDataAccumulator {
 	 * puts all the current max values into the entireGameData and playerEntireGameData
 	 */
 	public void gameFinished(){
+		PropertyDataAccumulator temp;
+		Map<Integer,PropertyDataAccumulator> playerEntireGameTemp;
 		/* initialize everything */
 		for(String s : currentMaxValues.keySet()){
 			initializeEntireGameData(s);
 		}
 		
 		/* Add the overall property information */
-		PropertyDataAccumulator entireGameTemp;
 		for(PropertyDataAccumulator p : currentMaxValues.values()){ //for all of the current maxes
-			entireGameTemp = entireGameData.get(p.propertyName); //add to the overall property data
-			entireGameTemp.accNumHouses += p.accNumHouses;
-			entireGameTemp.accTotalRevenueWithHouses += p.accTotalRevenueWithHouses;
-			entireGameTemp.accTotalRevenueWithoutHouses += p.accTotalRevenueWithoutHouses;
-			entireGameTemp.numDataPoints += 1;
+			temp = entireGameData.get(p.propertyName); //add to the overall property data
+			temp.accNumHouses += p.accNumHouses;
+			temp.accTotalRevenueWithHouses += p.accTotalRevenueWithHouses;
+			temp.accTotalRevenueWithoutHouses += p.accTotalRevenueWithoutHouses;
+			temp.numDataPoints += 1;
 			p.reset(); //reset the currentMaxes
 		}
 		
 		/* Add the player specific property information */
-		Map<Integer,PropertyDataAccumulator> playerEntireGameTemp;
-		PropertyDataAccumulator playerTemp;
 		for(Entry<String,Map<Integer,PropertyDataAccumulator>> e : playerCurrentMaxValues.entrySet()){
 			playerEntireGameTemp = playerEntireGameData.get(e.getKey());
 			for(PropertyDataAccumulator p : e.getValue().values()){
-				playerTemp = playerEntireGameTemp.get(p.ownerID);
-				playerTemp.accNumHouses += p.accNumHouses;
-				playerTemp.accTotalRevenueWithHouses += p.accTotalRevenueWithHouses;
-				playerTemp.accTotalRevenueWithoutHouses += p.accTotalRevenueWithoutHouses;
-				int divideBy = currentMaxValues.get(playerTemp.propertyName).numDataPoints;
+				temp = playerEntireGameTemp.get(p.ownerID);
+				temp.accNumHouses += p.accNumHouses;
+				temp.accTotalRevenueWithHouses += p.accTotalRevenueWithHouses;
+				temp.accTotalRevenueWithoutHouses += p.accTotalRevenueWithoutHouses;
+				int divideBy = currentMaxValues.get(temp.propertyName).numDataPoints;
 				divideBy = divideBy == 0 ? 1 : divideBy;
-				playerTemp.accTimeOwned += p.numDataPoints/divideBy;
-				playerTemp.numDataPoints += 1;
+				temp.accTimeOwned += p.numDataPoints/divideBy;
+				temp.numDataPoints += 1;
 				p.reset();
 			}
 		}
@@ -138,19 +142,18 @@ public class GameDataAccumulator {
 	 * @param propertyName
 	 */
 	private void initializeCurrentMaxValues(String propertyName){
-		PropertyDataAccumulator accData = currentMaxValues.get(propertyName);
-		if(accData == null){
-			accData = new PropertyDataAccumulator(propertyName, -1);
-			currentMaxValues.put(propertyName, accData);
+		PropertyDataAccumulator temp = currentMaxValues.get(propertyName);
+		if(temp == null){
+			temp = new PropertyDataAccumulator(propertyName, -1);
+			currentMaxValues.put(propertyName, temp);
 		}
 		
 		Map<Integer,PropertyDataAccumulator> playerProperties = playerCurrentMaxValues.get(propertyName);
-		PropertyDataAccumulator playerData;
 		if(playerProperties == null){
 			playerProperties = new HashMap<>();
 			for(int i = 0; i < _numPlayers; i++){
-				playerData = new PropertyDataAccumulator(propertyName,i);
-				playerProperties.put(i, playerData);
+				temp = new PropertyDataAccumulator(propertyName,i);
+				playerProperties.put(i, temp);
 			}
 			playerCurrentMaxValues.put(propertyName,playerProperties); //add the hashmap if it doesn't yet exist
 		}
@@ -194,22 +197,44 @@ public class GameDataAccumulator {
 		_winList.add(playerID);
 
 	}
-
-	public int getPlayerWithMostWins(){
-		int playerID = -1;
-		int maxWins = -1;
-
+	
+	/**
+	 * 
+	 * @return a pair of the winner id and the number of wins
+	 */
+	public Pair<Integer,Integer> getMostGamesWonPlayer(){
+		Pair<Integer,Integer> winner = new Pair<>(-2,-2);
 		for(Entry<Integer, Integer> current : _playerWins.entrySet()){
-			if(current.getValue() > maxWins){
-				playerID = current.getKey();
-				maxWins = current.getValue();
+			if(current.getValue() > winner.getRight()){
+				winner.setLeft(current.getKey());
+				winner.setRight(current.getValue());
 			}
 		}
-		return playerID;
+		return winner;
+	}
+	
+	public Pair<Integer,Double> getGreatestAverageWealthPlayer(){
+		Pair<Integer,Double> winner = new Pair<>(-2,-2.);
+		for(PlayerWealthDataAccumulator p : timeStamps.get(timeStamps.size()-1).getAllPlayerWealthData()){
+			if(p.accTotalWealth > winner.getRight()){
+				winner.setLeft(p.ownerID);
+				winner.setRight(p.accTotalWealth);
+			}
+		}
+		return winner;
+	}
+	
+	public Map<Integer,Double> getEndOfGameWealth(){
+		List<PlayerWealthDataAccumulator> wealth = timeStamps.get(timeStamps.size()-1).getAllPlayerWealthData();
+		Map<Integer,Double> wealthMap = new HashMap<>();
+		for(PlayerWealthDataAccumulator w : wealth){
+			wealthMap.put(w.ownerID, w.accTotalWealth);
+		}
+		return wealthMap;
 	}
 
 	public void average(){
-		for(TimeStampAccumulator t : data){
+		for(TimeStampAccumulator t : timeStamps){
 			t.average();
 		}
 
@@ -232,7 +257,7 @@ public class GameDataAccumulator {
 		System.out.println("here");
 		List<TimeStampReport> times = new ArrayList<>();
 
-		for(TimeStampAccumulator t : data){
+		for(TimeStampAccumulator t : timeStamps){
 			times.add(t.toTimeStampReport());
 		}
 
