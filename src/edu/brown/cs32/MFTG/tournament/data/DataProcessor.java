@@ -10,19 +10,16 @@ import edu.brown.cs32.MFTG.monopoly.PlayerWealthData;
 import edu.brown.cs32.MFTG.monopoly.PropertyData;
 import edu.brown.cs32.MFTG.monopoly.TimeStamp;
 
-public class DataProcessor {
-	//TODO for security, should we be keeping the same Random throughout the tournament?
-	
+public class DataProcessor {	
 	/**
-	 * 
-	 * @param data
-	 * @param numDataPoints should be less than # of timestamps
-	 * @return
+	 * Aggregates the GameData into a GameDataAccumulator, mostly by averaging fields
+	 * @param data the GameData to combine
+	 * @param numDataPoints should be less than the number of TimeStamps //TODO fix
+	 * @return the GameDataAccumulator 
 	 */
 	public static GameDataAccumulator aggregate(List<GameData> data, int numDataPoints){
 		GameDataAccumulator overall = new GameDataAccumulator(numDataPoints, data.get(0)._numPlayers);
 		for(GameData d : data){
-			//TODO later ?? : for games that are repeats of each other, exclude all but one
 			if(d != null){
 				combineGameData(overall, d);
 				overall.gameFinished();
@@ -41,62 +38,41 @@ public class DataProcessor {
 	 */
 	private static void combineGameData(GameDataAccumulator overall, GameData specific){
 		int specificIndex = specific.getData().size() - 1;
-		int numDataPoints = overall.data.size();
+		int numDataPoints = overall.timeStamps.size();
 		int stepSize;
+		
+		//we go backwards so that we ensure that we always get the last time stamp
+		//we don't care so much about getting the first stamp		
+		TimeStampAccumulator overallTimeStamp;
+		for(int i = numDataPoints - 1; i >= 0; i--){	
+			overallTimeStamp = overall.timeStamps.get(i);
+			for(PlayerWealthData w : specific.getData().get(specificIndex).getWealthData()){
+				overallTimeStamp.putWealthData(w);
+			}
+			stepSize = (int)Math.round(((double)specificIndex)/i);
+			specificIndex -= stepSize;
+		}
+		//overall game data
+		for(TimeStamp t : specific.getData()){
+			for(PropertyData p : t.getPropertyData()){
+				overall.putPropertyData(p);
+			}
+		}
+	}
 
-		try{
-			
-			//we go backwards so that we ensure that we always get the last time stamp
-			//we don't care so much about getting the first stamp		
-			for(int i = numDataPoints - 1; i >= 0; i--){	
-				combineData(overall.data.get(i), specific.getData().get(specificIndex));
-				stepSize = (int)Math.round(((double)specificIndex)/i); //improve this
-				specificIndex -= stepSize;			
-			}
-			//overall game data
-			for(TimeStamp t : specific.getData()){
-				for(PropertyData p : t.getPropertyData()){
-					try{
-						overall.putPropertyData(p);
-					} catch (Exception e){
-						
-					}
-				}
-			}
-		} catch (Exception e){
-			System.out.println("ALERT!!!!!!!");
-			e.printStackTrace();
-			specific.printData();
-		}
-	}
-	
 	/**
-	 * For a given time stamp, add all of the property and wealth data to the running sum
-	 * @param overall the running sum of property and wealth data for a given time
-	 * @param specific the specific property and wealth data for a given time in a given game
+	 * Combines all of the accumulators by combining them into the first
+	 * Note that because some of the combining is not transitive (ie appending) order DOES matter
+	 * @param accumulators
+	 * @return the combined accumulator
 	 */
-	private static void combineData(TimeStampAccumulator overall, TimeStamp specific){	
-		for(PlayerWealthData w : specific.getWealthData()){
-			overall.putWealthData(w);
-		}
-	}
-	
 	public static GameDataAccumulator combineAccumulators(GameDataAccumulator...accumulators){
-		assert(accumulators != null);
-		assert(accumulators[0] != null);
 		GameDataAccumulator first = accumulators[0];
 		for(int i = 1; i < accumulators.length; i++){
-			try{
-				first.combineWith(accumulators[i]);				
-			} catch (Exception e){
-				System.out.println(first.toGameDataReport().toString() + "\n\n" + accumulators[i].toGameDataReport().toString());
-				e.printStackTrace();
-			}
+			first.combineWith(accumulators[i]);				
 		}
-		assert(first != null);
 		return first;
 	}
-
 	
 	/**
 	 * Checks to make sure that the games at confirmationIndices are identical
@@ -111,31 +87,14 @@ public class DataProcessor {
 		GameDataReport current = data.get(0);
 		for(Integer i : confirmationIndices){
 			for(GameDataReport d : data){
-				if(i >= d._winList.size() || i >= current._winList.size() || 
-						d._winList.get(i) != current._winList.get(i)){ //TODO null indices???!
+				if((current == null && d != null) || (d == null && current != null)
+						|| i >= d._winList.size() || i >= current._winList.size() || 
+						d._winList.get(i) != current._winList.get(i)){
 					corrupted = true;
 				}
 				current = d;
 			}
 		}
-//		
-//		GameData previous;
-//		GameData current;
-//		List<GameData> setData;
-//		for(Integer i : confirmationIndices){
-//			setData = data.get(i);
-//			previous = setData.get(0);
-//			for(int j = 1; j < setData.size(); j++){
-//				current = setData.get(j);
-//				if(current != null && previous != null){ //because games might have expections
-//					if(!current.equals(previous)){
-//						corrupted = true;
-//					}
-//				}
-//				previous = current;
-//			}
-//		}
-		
 		return corrupted;
 	}
 	
@@ -148,8 +107,7 @@ public class DataProcessor {
 	 * @param confirmationIndices the indices where seeds should be the same
 	 * @return a list of seeds for each module
 	 */
-	public static List<List<Long>> generateSeeds(int numGames, int numPlayers, List<Integer> confirmationIndices){
-		Random rand = new Random();
+	public static List<List<Long>> generateSeeds(int numGames, int numPlayers, List<Integer> confirmationIndices, Random rand){
 		int confirmationListIndex = 0;
 		int confirmationListSize = confirmationIndices.size();
 		long seed;
@@ -158,7 +116,6 @@ public class DataProcessor {
 		
 		for(int i = 0; i < numGames; i++){
 			seedValues = new ArrayList<>();
-			
 			if(confirmationListIndex < confirmationListSize && i == confirmationIndices.get(confirmationListIndex)){
 				//all games at this index should have the same seed
 				confirmationListIndex++;
@@ -166,7 +123,6 @@ public class DataProcessor {
 				for(int j = 0; j < numPlayers; j++){
 					seedValues.add(seed);
 				}
-				
 			} else {
 				//all games at this index should have different seeds
 				for(int j = 0; j < numPlayers; j++){
@@ -174,10 +130,8 @@ public class DataProcessor {
 					seedValues.add(seed);
 				}
 			}
-
 			allSeedValues.add(seedValues);
 		}
-		
 		return allSeedValues;
 	}
 	
@@ -187,10 +141,9 @@ public class DataProcessor {
 	 * @param confirmationPercentage value between 0 and 1, % of each module's games to check
 	 * @return an in order list of game indices to check
 	 */
-	public static List<Integer> generateConfirmationIndices(int numGames, double confirmationPercentage){
+	public static List<Integer> generateConfirmationIndices(int numGames, double confirmationPercentage, Random rand){
 		int numConfirmationGames = (int)(Math.ceil(numGames * confirmationPercentage)); //round up
 		List<Integer> confirmationIndices = new ArrayList<>();
-		Random rand = new Random();
 		int i = 0;
 		int index;
 		while(i < numConfirmationGames){
@@ -203,5 +156,4 @@ public class DataProcessor {
 		Collections.sort(confirmationIndices);
 		return confirmationIndices;
 	}
-	 
 }

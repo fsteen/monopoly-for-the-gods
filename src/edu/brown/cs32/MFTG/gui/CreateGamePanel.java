@@ -11,6 +11,7 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.ButtonGroup;
@@ -135,14 +136,15 @@ public class CreateGamePanel extends JPanel{
 				if(_goDark.isVisible()) {
 					fixPanels();					
 					Settings settings = _bottomPanel.getSettings();
-					int numPlayers = 2; //TODO change later
+					List<Integer> players = _bottomPanel.getPlayers();
+//					int numPlayers = 2; //TODO change later
 					int port = _bottomPanel.getPort();
 					//_main.switchPanels("board");
 					//System.out.println("switching to board");
 					//_main.createBoard(1);
 					//_main.switchPanels("board");
 					
-					_main.getClient().launchTournament(numPlayers, settings,port);
+					_main.getClient().launchTournament(players, settings,port);
 					_main.getClient().connectAndRun(_bottomPanel.getPort(), "localhost");
 				}
 				else {
