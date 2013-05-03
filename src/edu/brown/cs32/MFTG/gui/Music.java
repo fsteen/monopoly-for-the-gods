@@ -1,37 +1,65 @@
-//import javax.media.*;
-//import java.net.URL;
-//  
-////need java media framework (don't know how to get it)http://www3.ntu.edu.sg/home/ehchua/programming/java/J8c_PlayingSound.html
-//public class Music extends Thread {
-//   
-//   private String filename;
-//   Player player;
-//   
-//   public Music(String mp3Filename) {
-//      this.filename = mp3Filename;
-//   }
-//   
-//   public void run() {
-//      try {
-//         URL url = this.getClass().getClassLoader().getResource(filename);
-//         MediaLocator locator = new MediaLocator(url);
-//         player = Manager.createPlayer(locator);
-//         player.addControllerListener(new ControllerListener() {
-//            public void controllerUpdate(ControllerEvent event) {
-//               if (event instanceof EndOfMediaEvent) {
-//                  player.stop();
-//                  player.close();
-//               }
-//            }
-//         });
-//         player.realize();
-//         player.start();
-//      } catch (Exception e) {
-//         e.printStackTrace();
-//      }
-//   }
-//   
-//   public static void main(String[] args) {
-//      new Mp3PlayerDemo("song.mp3").start();
-//   }
-//}
+package edu.brown.cs32.MFTG.gui;
+
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+
+import javazoom.jl.player.FactoryRegistry;
+import javazoom.jl.player.Player;
+
+
+public class Music {
+	private String _filename;
+	private Player _player; 
+
+	// constructor that takes the name of an MP3 file
+	public Music(String filename) {
+		_filename = filename;
+		_player = null;
+	}
+
+	public void close() { 
+		if (_player != null) 
+			_player.close(); 
+	}
+
+	// play the MP3 file to the sound card
+	public void play() {
+		try {
+			FileInputStream fis     = new FileInputStream(_filename);
+			BufferedInputStream bis = new BufferedInputStream(fis);
+			System.out.println("hi");
+			FactoryRegistry.systemRegistry().createAudioDevice();
+			_player = new Player(bis);
+		}
+		catch (Exception e) {
+			System.out.println("Problem playing file " + _filename);
+			System.out.println(e);
+		}
+
+		// run in new thread to play in background
+		new Thread() {
+			public void run() {
+				try { 
+					_player.play(); 
+				}
+				catch (Exception e) {
+					System.out.println(e); 
+				}
+			}
+		}.start();
+
+	}
+
+
+	// test client
+	public static void main(String[] args) {
+		String filename = args[0];
+		Music mp3 = new Music(filename);
+		mp3.play();
+
+		// when the computation is done, stop playing it
+		mp3.close();
+
+	}
+
+}
