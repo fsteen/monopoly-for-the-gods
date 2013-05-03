@@ -101,5 +101,4 @@ public class Jail extends CornerProperty{
 			}	
 		}
 	}
-
 }

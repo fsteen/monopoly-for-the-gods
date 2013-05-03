@@ -69,7 +69,12 @@ public class DataProcessor {
 	public static GameDataAccumulator combineAccumulators(GameDataAccumulator...accumulators){
 		GameDataAccumulator first = accumulators[0];
 		for(int i = 1; i < accumulators.length; i++){
-			first.combineWith(accumulators[i]);				
+			try {
+				first.combineWith(accumulators[i]);
+			} catch (DataAccumulationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}				
 		}
 		return first;
 	}
