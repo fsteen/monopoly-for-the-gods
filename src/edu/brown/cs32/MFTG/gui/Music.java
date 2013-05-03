@@ -7,6 +7,7 @@ import javazoom.jl.player.FactoryRegistry;
 import javazoom.jl.player.Player;
 
 
+
 public class Music {
 	private String _filename;
 	private Player _player; 
