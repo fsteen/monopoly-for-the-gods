@@ -403,8 +403,13 @@ public class CreateBottomPanel extends JPanel {
 	 * ... this is not very robust though
 	 * @return
 	 */
-	public Integer[] getPlayers(){
-		return new Integer[]{0,_p2Curr,_p3Curr,_p4Curr};
+	public List<Integer> getPlayers(){
+		List<Integer> l = new ArrayList<>();
+		l.add(0);
+		if(_p2Curr != 2){ l.add(_p2Curr); }
+		if(_p3Curr != 2){ l.add(_p3Curr); }
+		if(_p4Curr != 2){ l.add(_p4Curr); }
+		return l;
 	}
 	
 	//@Override

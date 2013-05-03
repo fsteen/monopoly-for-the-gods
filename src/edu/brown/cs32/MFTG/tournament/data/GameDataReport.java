@@ -54,7 +54,7 @@ public class GameDataReport {
 		}
 		g._playerWins = _playerWins;
 		g._winList = _winList;
-		g.data = stamps;
+		g.timeStamps = stamps;
 		g.entireGameData = tempOverallData;
 		g.playerEntireGameData = tempOverallPlayerData;
 		

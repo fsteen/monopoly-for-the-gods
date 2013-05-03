@@ -267,9 +267,9 @@ public abstract class Client {
 //		System.out.println("entire response written");
 //	}
 	
-	public void launchTournament(int numPlayers, Settings settings, int port){
+	public void launchTournament(List<Integer> players, Settings settings, int port){
 		try {
-			_pool.execute((new Tournament(numPlayers, settings, port)));
+			_pool.execute((new Tournament(players, settings, port)));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

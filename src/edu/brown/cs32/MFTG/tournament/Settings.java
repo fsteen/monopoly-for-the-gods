@@ -10,13 +10,15 @@ public class Settings {
 		STAGGERED, BUNCHED
 	}
 	public enum WinningCondition {
-		MOST_SETS_WON, LAST_SET_WON, MOST_MONEY
+		MOST_SETS_WON, //win a round of games by winning the most games in that round, win the entire game by winning the most rounds
+		LAST_SET_WON, //win the entire game by winning the most games in the last round
+		MOST_MONEY //win a round of games by having the greatest average wealth at the last timestamp, with the entire game by winning the most rounds
 	}
 	
-	public final int gamesPerRound, numRounds,beginningTimeout, duringTimeout, freeParking;
-	public final boolean doubleOnGo, auctions;
+	public final int gamesPerRound, numRounds, beginningTimeout, duringTimeout, freeParking; //all implemented
+	public final boolean doubleOnGo, auctions; //all implemented
 	public final Turns turnFlow;
-	public final WinningCondition winType;
+	public final WinningCondition winType; //implemented
 	
 	@JsonCreator
 	public Settings(@JsonProperty("numGamesPerRound") int gamesPerRound,
