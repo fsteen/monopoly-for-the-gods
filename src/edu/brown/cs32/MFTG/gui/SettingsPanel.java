@@ -8,6 +8,8 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -71,9 +73,10 @@ public class SettingsPanel extends JPanel{
 			topPanel.setPreferredSize(topSize);
 			topPanel.setLocation(Constants.FULL_WIDTH/32+3, START_HEIGHT+BUTTON_HEIGHT*6/5);
 			
-			JCheckBox music = new JCheckBox("Music: ");
+			JCheckBox music = new JCheckBox("Music: ", true);
 			music.setFont(new Font("musicFont",Font.PLAIN, 30));
 			music.setHorizontalTextPosition(SwingConstants.LEADING);
+			music.addItemListener(new MusicListener());
 			topPanel.add(music);
 			
 			
@@ -269,6 +272,22 @@ public class SettingsPanel extends JPanel{
 			return false;
 		}
 
+	}
+	
+	private class MusicListener implements ItemListener{
+
+		@Override
+		public void itemStateChanged(ItemEvent e) {
+			if(e.getStateChange()==ItemEvent.SELECTED){
+				_main.playNextOutOfGameSong();
+
+			}
+			else{
+				_main.stopMusic();
+			}
+			
+		}
+		
 	}
 }
 

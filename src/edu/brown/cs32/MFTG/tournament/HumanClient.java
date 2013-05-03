@@ -73,7 +73,6 @@ public class HumanClient extends Client{
 			displayMessage("Unable to retrieve a unique ID from the server :(");
 			return;
 		}
-		
 		Callable<Void> worker = new RequestCallable(this);
 		_executor.submit(worker);
 	}

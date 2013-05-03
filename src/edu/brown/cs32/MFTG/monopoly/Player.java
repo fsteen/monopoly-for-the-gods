@@ -45,10 +45,10 @@ public class Player {
 		initializePropertyValues();
 		
 		//a hashmap of values for each color. for each color there is an array such that;
-		//T[0]=value of monopoly
-		//T[1]=value of houses for the color
-		//T[2]=value of breaking an opponent's monopoly
-		//T[3]=how much value is if you have 1 other property of the same color, but this would not give you a monopoly
+		//T[0]=value of monopoly, absolute or relative
+		//T[1]=value of houses for the color, absolute
+		//T[2]=value of breaking an opponent's monopoly, absolute or relative
+		//T[3]=how much value is if you have 1 other property of the same color, but this would not give you a monopoly, absolute or relative
 		_colorValues = new HashMap<>();
 		initializeColorValues();
 		
