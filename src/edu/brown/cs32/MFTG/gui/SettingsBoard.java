@@ -7,14 +7,13 @@ import javax.swing.JMenuBar;
 import edu.brown.cs32.MFTG.gui.gameboard.Board;
 import edu.brown.cs32.MFTG.gui.gameboard.InGameMenu;
 import edu.brown.cs32.MFTG.gui.gameboard.SettingsMenu;
+import edu.brown.cs32.MFTG.tournament.Profile;
 
 public class SettingsBoard extends Board {
-	private MonopolyGui _main;
-	private String _profile;
-	public SettingsBoard(MonopolyGui main, String profile) throws IOException {
+	public SettingsBoard(MonopolyGui main, Profile profile) throws IOException {
 		super(-1, main, profile);
-		_main=main;
-		_profile=profile;
+		super.removeSetHeuristicsButton();
+		
 		
 	}
 	

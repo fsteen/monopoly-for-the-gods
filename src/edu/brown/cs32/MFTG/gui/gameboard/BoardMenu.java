@@ -23,14 +23,12 @@ public class BoardMenu extends JMenuBar {
 	protected JMenu _players;
 	protected List<JMenuItem> _playerItems;
 	protected String _currentPlayer;
-	protected String _profileName;
 	protected Profile _profile;
-	public BoardMenu(Board board, MonopolyGui main, String profile) {
+	public BoardMenu(Board board, MonopolyGui main, Profile profile) {
 		super();
 		_board=board;
 		_main=main;
-		_profileName=profile;
-		_profile=_main.getProfile(_profileName);
+		_profile=profile;
 
 		JMenu boardView = new JMenu("Board View");
 
@@ -76,7 +74,7 @@ public class BoardMenu extends JMenuBar {
 
 	}
 	
-	public void resetPlayerMenu(String profile) {
+	public void resetPlayerMenu() {
 		_players.removeAll();
 		_playerItems.clear();
 		
@@ -95,6 +93,7 @@ public class BoardMenu extends JMenuBar {
 		
 		_currentPlayer=_playerItems.get(0).getText();
 		_players.setText(_currentPlayer);
+		_board.setHeuristics(_profile.getPlayer(_currentPlayer));
 		
 	}
 
@@ -140,6 +139,11 @@ public class BoardMenu extends JMenuBar {
 					}
 					newPlayerName=JOptionPane.showInputDialog("Please choose an unused name: ");
 				}
+				resetPlayerMenu();
+				_currentPlayer=newPlayerName;
+				_players.setText(_currentPlayer);
+				_board.setHeuristics(_profile.getPlayer(_currentPlayer));
+				
 			}
 			else {
 				_profile.replacePlayer(newPlayer, _currentPlayer);

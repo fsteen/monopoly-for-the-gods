@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Set;
 
 import javax.swing.JFrame;
+import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -30,6 +31,7 @@ public class MonopolyGui extends JFrame{
 	private SettingsPanel _settings;
 	private RecordsPanel _records;
 	private Client _client;
+	private EmptyMenuBar _empty;
 
 	public MonopolyGui(Client client) {
 		super("Monopoly for the GODS");
@@ -76,20 +78,23 @@ public class MonopolyGui extends JFrame{
 		_panels.put("join", join);
 		_end = new EndGamePanel(this);
 		_panels.put("end", _end);
-
+		
+		_empty = new EmptyMenuBar();
 		
 		/* DO NOT ACTUALLY USE THE BOARD PLEASE */
 		Board board;
 		try {
 			board = new Board(1, this, null);
-
+			
 			_currentPanel=greet;
 			this.add(_currentPanel);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		this.setJMenuBar(null);
+		this.setJMenuBar(_empty);
+		
+		this.switchPanels("settings");
 		
 		this.pack();
 		this.setVisible(true);
@@ -123,8 +128,8 @@ public class MonopolyGui extends JFrame{
 			_records.resetProfileList();
 			_records.giveFocusToList();
 		}
-		if(panel.equals("board")==false) {
-			this.setJMenuBar(null);
+		if(panel.equals("board")==false&&panel.equals("settingsboard")==false) {
+			this.setJMenuBar(_empty);
 		}
 		revalidate();
 		repaint();
@@ -223,12 +228,24 @@ public class MonopolyGui extends JFrame{
 		return (Board) _panels.get("board"); //TODO get rid of casting
 	}
 
-	public void createBoard(int id, String profile) {
+	public void createBoard(int id, Profile profile) {
 		Board board;
 		try {
 			board = new Board(id, this, profile);
 			_panels.put("board", board);
 			switchPanels("board");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void createSettingsBoard(Profile profile) {
+		SettingsBoard board;
+		try {
+			board = new SettingsBoard(this, profile);
+			_panels.put("settingsboard", board);
+			switchPanels("settingsboard");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

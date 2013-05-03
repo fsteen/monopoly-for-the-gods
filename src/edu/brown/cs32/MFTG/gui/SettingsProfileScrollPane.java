@@ -4,6 +4,8 @@ import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 
+import edu.brown.cs32.MFTG.tournament.Profile;
+
 public class SettingsProfileScrollPane extends ProfileScrollPane {
 	private PlayersScrollPane _playerList;
 	
@@ -28,8 +30,9 @@ public class SettingsProfileScrollPane extends ProfileScrollPane {
 	@Override
 	public void processClick() {
 		int index=_profileList.getSelectedIndex();
+		String newProfile=_listModel.get(index);
 		if(index==_listModel.size()-1) {
-			String newProfile=JOptionPane.showInputDialog("New profile name: ");
+			newProfile=JOptionPane.showInputDialog("New profile name: ");
 			while(true) {
 				if(newProfile==null) {
 					_profileList.setSelectedIndex(_listModel.size()-1);
@@ -45,7 +48,8 @@ public class SettingsProfileScrollPane extends ProfileScrollPane {
 			_profileList.clearSelection();
 			_profileList.setSelectedIndex(index);
 		}
-		//TODO: spawn board
+		Profile p = _main.getProfile(newProfile);
+		_main.createSettingsBoard(p);
 		
 		
 	}

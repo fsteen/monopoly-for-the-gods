@@ -43,6 +43,7 @@ import edu.brown.cs32.MFTG.gui.properties.MyUtilityProperty;
 import edu.brown.cs32.MFTG.gui.properties.PropertyPanel;
 import edu.brown.cs32.MFTG.gui.properties.StaticProperty;
 import edu.brown.cs32.MFTG.monopoly.Player;
+import edu.brown.cs32.MFTG.tournament.Profile;
 import edu.brown.cs32.MFTG.tournament.data.PlayerWealthDataReport;
 import edu.brown.cs32.MFTG.tournament.data.PropertyDataReport;
 
@@ -55,10 +56,10 @@ public class Board extends JPanel {
 	private Center _center;
 	private int _id;
 	private Player _player = null;
-	private MonopolyGui _main;
-	private String _profile;
+	protected MonopolyGui _main;
+	protected Profile _profile;
 	
-	public Board (int id, MonopolyGui main, String profile) throws IOException {
+	public Board (int id, MonopolyGui main, Profile profile) throws IOException {
 		super();
 		//_menu = menu;
 		_main=main;
