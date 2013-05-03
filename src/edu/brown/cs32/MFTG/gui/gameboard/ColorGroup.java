@@ -30,8 +30,8 @@ import edu.brown.cs32.MFTG.tournament.data.PropertyDataReport;
 
 public class ColorGroup extends JPanel {
 	
-	private Map<Properties, PropertyPanel> _myPropertyName = new HashMap<>();
-	private Map<Properties, PropertyPanel> _aggregatePropertyName = new HashMap<>();
+	private Map<String, PropertyPanel> _myPropertyName = new HashMap<>();
+	private Map<String, PropertyPanel> _aggregatePropertyName = new HashMap<>();
 	private List<BufferedImage> _deeds = new ArrayList<>();
 	private List<PropertyPanel> _myProperties;
 	private List<PropertyPanel> _aggregateProperties;
@@ -100,8 +100,8 @@ public class ColorGroup extends JPanel {
 		this.addMouseListener(new ButtonMouseListener());
 		
 		for(int i=0; i<properties.size(); i++) {
-			_myPropertyName.put(properties.get(i), myPanel.get(i));
-			_aggregatePropertyName.put(properties.get(i), aggregatePanel.get(i));
+			_myPropertyName.put(properties.get(i).getLowercaseName(), myPanel.get(i));
+			_aggregatePropertyName.put(properties.get(i).getLowercaseName(), aggregatePanel.get(i));
 		}
 		_myProperties = myPanel;
 		_aggregateProperties = aggregatePanel;
@@ -182,32 +182,28 @@ public class ColorGroup extends JPanel {
 	}
 	
 	public Set<String> getNames() {
-		Set<Properties> properties = _myPropertyName.keySet();
+		Set<String> properties = _myPropertyName.keySet();
 		Set<String> names = new HashSet<>();
-		for(Properties p: properties) {
-			names.add(p.getLowercaseName());
+		for(String p: properties) {
+			names.add(p);
 		}
 		return names;
 	}
 	
 	public void setAggregateData (String name, PropertyDataReport data) {
-		Set<Properties> properties = _aggregatePropertyName.keySet();
-		for(Properties p: properties) {
-			if(p.getLowercaseName().equals(name)) {
+		Set<String> properties = _aggregatePropertyName.keySet();
+		for(String p: properties) {
+			if(p.equals(name)) {
 				_aggregatePropertyName.get(p).setData(data);
 			}
 		}
 	}
 	
 	public void setMyData (String name, PropertyDataReport propertyDataReport) {
-		Set<Properties> properties = _myPropertyName.keySet();
-		for(Properties p: properties) {
-			if(p.getLowercaseName().equals(name)) {
-				//System.out.println("setting: " + name);
+		Set<String> properties = _myPropertyName.keySet();
+		for(String p: properties) {
+			if(p.equals(name)) {
 				_myPropertyName.get(p).setData(propertyDataReport);
-			}
-			else {
-			//	System.out.println("NOT SETTING: " + name);
 			}
 		}
 	}
@@ -277,10 +273,9 @@ public class ColorGroup extends JPanel {
 
 	public HashMap<String, Integer> getPropertyValues() {
 		HashMap<String, Integer> propertyValues = new HashMap<>();
-		for(Properties p: _myPropertyName.keySet()) {
-			String name = p.getLowercaseName();
+		for(String name: _myPropertyName.keySet()) {
 			if(name != null && !name.equals("static property")) {
-				PropertyPanel property = _myPropertyName.get(p);
+				PropertyPanel property = _myPropertyName.get(name);
 				int i = property.getValue();
 				propertyValues.put(name, i);
 			}

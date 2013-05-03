@@ -175,5 +175,4 @@ public abstract class NonstaticProperty extends PropertyPanel {
 
 		g.drawImage(image, 0, 0, null);
 	}
-
 }
