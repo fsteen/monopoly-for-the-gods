@@ -65,16 +65,12 @@ public class DataProcessor {
 	 * Note that because some of the combining is not transitive (ie appending) order DOES matter
 	 * @param accumulators
 	 * @return the combined accumulator
+	 * @throws DataAccumulationException 
 	 */
 	public static GameDataAccumulator combineAccumulators(GameDataAccumulator...accumulators){
 		GameDataAccumulator first = accumulators[0];
 		for(int i = 1; i < accumulators.length; i++){
-			try {
-				first.combineWith(accumulators[i]);
-			} catch (DataAccumulationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}				
+			first.combineWith(accumulators[i]);
 		}
 		return first;
 	}

@@ -45,17 +45,16 @@ public class GameDataAccumulator {
 		}
 	}
 
-
 	/**
 	 * Averages this and g, appending g's winList to this's
 	 * @param g
 	 */
-	public void combineWith(GameDataAccumulator g) throws DataAccumulationException {
+	public void combineWith(GameDataAccumulator g){
 		if(g == null){
-			throw new DataAccumulationException("Cannot merge GameDataAcumulators with a null GameDataAccumulator.");
+			System.out.println("Cannot merge GameDataAcumulators with a null GameDataAccumulator.");
 		}
 		if(g.timeStamps.size() != timeStamps.size()){
-			throw new DataAccumulationException("Cannot merge GameDataAcumulators with different numbers of timestamps.");
+			System.out.println("Cannot merge GameDataAcumulators with different numbers of timestamps.");
 		}
 		
 		for(int i = 0; i < timeStamps.size(); i++){

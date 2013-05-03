@@ -137,6 +137,7 @@ public class CreateGamePanel extends JPanel{
 					fixPanels();					
 					Settings settings = _bottomPanel.getSettings();
 					List<Integer> players = _bottomPanel.getPlayers();
+					System.out.println("num players " + players.size());
 //					int numPlayers = 2; //TODO change later
 					int port = _bottomPanel.getPort();
 					//_main.switchPanels("board");
@@ -170,9 +171,6 @@ public class CreateGamePanel extends JPanel{
 			}
 			return false;
 		}
-
 	}
-
-
 }
 

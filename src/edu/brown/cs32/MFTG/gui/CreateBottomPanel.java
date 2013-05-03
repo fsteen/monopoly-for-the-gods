@@ -67,9 +67,15 @@ public class CreateBottomPanel extends JPanel {
 	private ImagePanel _p1h,_p1c,_p2h,_p2c,_p3h,_p3c,_p3x,_p4h,_p4c,_p4x;
 	private Integer _p2Curr, _p3Curr, _p4Curr; //0 is human, 1 is computer, 2 is none
 	private Font _headerFont, _sideFont;
+	private List<Integer> _players;
 	public CreateBottomPanel() {
 		super();
 		try {
+			_players = new ArrayList<>();
+			for(int i = 0; i < 4; i++){ //initialize players
+				_players.add(0);
+			}
+			
 			_whiteBack = Helper.resize(ImageIO.read(new File("images/WhiteBack.png")), BOTTOM_WIDTH, BOTTOM_HEIGHT);
 			this.setLayout(new BorderLayout());
 			setBackground(Constants.CLEAR);
@@ -288,7 +294,7 @@ public class CreateBottomPanel extends JPanel {
 			p2Panel.add(_p2h);
 			p2Panel.add(_p2c);
 			_p2Curr=0;
-			p2Panel.addMouseListener(new PlayerListener(_p2Curr, _p2h,_p2c));
+			p2Panel.addMouseListener(new PlayerListener(1,_p2Curr, _p2h,_p2c));
 			_p2c.setVisible(false);
 			
 			JPanel p3Panel = new JPanel();
@@ -315,7 +321,7 @@ public class CreateBottomPanel extends JPanel {
 			p3Panel.add(_p3c);
 			p3Panel.add(_p3x);
 			_p3Curr=0;
-			p3Panel.addMouseListener(new PlayerListener(_p3Curr, _p3h,_p3c, _p3x));
+			p3Panel.addMouseListener(new PlayerListener(2,_p3Curr, _p3h,_p3c, _p3x));
 			_p3c.setVisible(false);
 			_p3x.setVisible(false);
 			
@@ -343,7 +349,7 @@ public class CreateBottomPanel extends JPanel {
 			p4Panel.add(_p4c);
 			p4Panel.add(_p4x);
 			_p4Curr=0;
-			p4Panel.addMouseListener(new PlayerListener(_p4Curr, _p4h,_p4c, _p4x));
+			p4Panel.addMouseListener(new PlayerListener(3, _p4Curr, _p4h,_p4c, _p4x));
 			_p4c.setVisible(false);
 			_p4x.setVisible(false);
 			
@@ -404,12 +410,14 @@ public class CreateBottomPanel extends JPanel {
 	 * @return
 	 */
 	public List<Integer> getPlayers(){
-		List<Integer> l = new ArrayList<>();
-		l.add(0);
-		if(_p2Curr != 2){ l.add(_p2Curr); }
-		if(_p3Curr != 2){ l.add(_p3Curr); }
-		if(_p4Curr != 2){ l.add(_p4Curr); }
-		return l;
+		List<Integer> players = new ArrayList<>();
+		for(Integer i : _players){
+			if(i != 2){
+				players.add(i);
+			}
+		}
+		System.out.println(players);
+		return players;
 	}
 	
 	//@Override
@@ -486,10 +494,12 @@ public class CreateBottomPanel extends JPanel {
 	private class PlayerListener extends MouseInputAdapter{
 		List<ImagePanel> _imgs = new ArrayList<>();
 		Integer _curr;
-		public PlayerListener(Integer curr, ImagePanel ...imgs) {
+		int _id; //this listener's place in the list;
+		public PlayerListener(int id, Integer curr, ImagePanel ...imgs) {
 			super();
 			_imgs=Arrays.asList(imgs);
 			_curr=curr;
+			_id = id;
 		}
 
 		@Override
@@ -498,6 +508,7 @@ public class CreateBottomPanel extends JPanel {
 			_imgs.get(newCurr).setVisible(true);
 			_imgs.get(_curr).setVisible(false);
 			_curr=newCurr;
+			_players.set(_id, _curr);
 		}
 		
 	}

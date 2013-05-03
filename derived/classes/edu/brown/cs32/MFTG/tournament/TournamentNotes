@@ -32,6 +32,9 @@ TODO
 AI player communication
 catch game exceptions
 testing ... data aggregating and stuff
+fix time owned
+send end of game data to GUI (winners)
+button listener
 
 -------------
 Thoughts : we need a heuristic timer
