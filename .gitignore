@@ -1,0 +1,11 @@
+.project
+.classpath
+.settings
+.metadata
+org.eclipse.core.resources.prefs
+build.xml
+
+*.war
+*.ear
+*.class
+*.mp3
