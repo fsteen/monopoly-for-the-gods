@@ -6,6 +6,7 @@ import java.util.Objects;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import edu.brown.cs32.MFTG.monopoly.Player;
@@ -14,14 +15,12 @@ import edu.brown.cs32.MFTG.tournament.Settings.WinningCondition;
 public class Profile {
 	public final String _name;
 	Map<String, Player> _players;
-	Map<String, Settings> _settings;
 	private Record _record;
 
 	@JsonCreator
 	public Profile(@JsonProperty("name") String name){
 		_name = name;
 		buildPlayersMap();
-		buildSettingsMap();
 		_record = new Record();
 	}
 	
@@ -29,16 +28,9 @@ public class Profile {
 	 * 
 	 * @return palyer names
 	 */
+	@JsonIgnore
 	public Set<String> getPlayerNames(){
 		return _players.keySet();
-	}
-	
-	/**
-	 * 
-	 * @return get settings names
-	 */
-	public Set<String> getSettingsNames(){
-		return _settings.keySet();
 	}
 	
 	/**
@@ -58,19 +50,6 @@ public class Profile {
 		_players = players;
 	}
 	
-	/**
-	 * Builds the settings that are included in every profile
-	 */
-	private void buildSettingsMap(){
-		Map<String, Settings> settings = new HashMap<>();
-		
-		Settings defaultSettings = new Settings(10000, 10, false, -1, false, WinningCondition.MOST_SETS_WON, 300, 180);
-		
-		settings.put("default", defaultSettings);
-		
-		_settings = settings;
-	}
-	
 	@Override
 	public boolean equals(Object o){
 		if (o == null || !(o instanceof Profile))
@@ -79,13 +58,14 @@ public class Profile {
 		Profile that = (Profile) o;
 		
 		return Objects.equals(_name, that._name) && Objects.equals(_players, that._players) 
-			&& Objects.equals(_settings, that._settings);
+			   && Objects.equals(_record, that.getRecord()); 
 	}
 
 	/**
 	 * 
 	 * @return player
 	 */
+	@JsonIgnore
 	public Player getPlayer(String s) {
 		return _players.get(s);
 		
@@ -137,22 +117,6 @@ public class Profile {
 	 */
 	public void setPlayers(Map<String, Player> players) {
 		_players = players;
-	}
-
-	/**
-	 * 
-	 * @return _settings;
-	 */
-	public Map<String, Settings> getSettings() {
-		return _settings;
-	}
-
-	/**
-	 * Setter for the settings attribute
-	 * @param _settings
-	 */
-	public void setSettings(Map<String, Settings> settings) {
-		_settings = settings;
 	}
 
 	/**

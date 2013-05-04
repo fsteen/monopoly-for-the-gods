@@ -133,15 +133,6 @@ public class ProfileManager {
 	}
 
 	/**
-	 * 
-	 * @param profile
-	 * @return set of settings names
-	 */
-	public Set<String> getSettingsNames(String profile){
-		return _profiles.get(profile).getSettingsNames();
-	}
-
-	/**
 	 * Returns the number of profiles
 	 * @return the number of profiles
 	 */
