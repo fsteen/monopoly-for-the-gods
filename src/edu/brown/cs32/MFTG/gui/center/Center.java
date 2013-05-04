@@ -1,7 +1,5 @@
 package edu.brown.cs32.MFTG.gui.center;
 
-import java.awt.BorderLayout;
-import java.awt.GridLayout;
 import java.util.List;
 
 import javax.swing.JPanel;
@@ -22,7 +20,7 @@ public class Center extends JPanel {
 	public ButtonPanel _buttonPanel;
 	public ViewPanel _viewPanel;
 	private Board _board;
-	private WinnerPanel _winnerPanel;
+	private WinnerPanelVertical _winnerPanel;
 	
 	public Center(Board board, int id) {
 		super();
@@ -35,7 +33,7 @@ public class Center extends JPanel {
 		this.add(_buttonPanel);
 		_profitGraph = new ProfitGraph();
 		_profitGraph.setToolTipText("<html>Set the minimum amount of cash you need in order to perform different transactions<br/>Click on a colored button above and then drag the highlighted line in the chart<html/>");
-		_winnerPanel = new WinnerPanel(id);
+		_winnerPanel = new WinnerPanelVertical(id);
 		this.add(_winnerPanel);
 		this.add(_profitGraph);
 		_sliderPanel = new SliderPanel();

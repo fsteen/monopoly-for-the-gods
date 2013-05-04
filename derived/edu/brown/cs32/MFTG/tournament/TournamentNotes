@@ -26,16 +26,15 @@ Concerns
 -in player module i return data without synchronizing on it,
 	this should be fine since all threads should be done messing with it
 	but it makes me nervous and should probably be changed
-	
-
-------------------------
-TODO
--fix data processing
--fix threading issues
--catch game exceptions
-
-
 
 ----------------------
 TODO
------WINNIER CALCULATION!!!!!!!!
+catch game exceptions
+testing ... data aggregating and stuff
+fix time owned
+send end of game data to GUI (winners)
+add records information
+
+-------------
+Thoughts : we need a count of who the winner is
+		   we to be able to send end of game data

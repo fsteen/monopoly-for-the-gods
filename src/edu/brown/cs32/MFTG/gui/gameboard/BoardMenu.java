@@ -63,7 +63,7 @@ public class BoardMenu extends JMenuBar {
 		
 		_currentPlayer=_playerItems.get(0).getText();
 		_players.setText(_currentPlayer);
-
+		_board.setHeuristics(_profile.getPlayer(_currentPlayer));
 
 		JButton save = new JButton("Save");
 		save.addActionListener(new SaveListener());
@@ -131,7 +131,7 @@ public class BoardMenu extends JMenuBar {
 			if(_currentPlayer==null) {
 				String newPlayerName=JOptionPane.showInputDialog("New player name: ");
 				while(true) {
-					if(newPlayer==null) {
+					if(newPlayerName==null) {
 						return;
 					}
 					if(_profile.addPlayer(newPlayer, newPlayerName)) {
@@ -147,6 +147,7 @@ public class BoardMenu extends JMenuBar {
 			}
 			else {
 				_profile.replacePlayer(newPlayer, _currentPlayer);
+				
 			}
 
 		}

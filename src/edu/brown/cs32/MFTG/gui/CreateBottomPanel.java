@@ -197,6 +197,9 @@ public class CreateBottomPanel extends JPanel {
 			gameLengthPanel.add(_numGamesLabel);
 			gameLengthPanel.add(_numGames);
 			
+			JPanel gameFlowPanel = new JPanel();
+			gameFlowPanel.setBackground(Color.WHITE);
+			
 			
 			_extraPanel = new JPanel(new GridLayout(0,1));
 			_extraPanel.setBackground(Color.WHITE);
@@ -232,6 +235,7 @@ public class CreateBottomPanel extends JPanel {
 			lowerPanel.add(timePanel);
 			lowerPanel.add(gameLengthPanel);
 			lowerPanel.add(_extraPanel);
+			lowerPanel.add(gameFlowPanel);
 			
 			
 			JPanel playerChoicePanel = new JPanel( new GridLayout(1,0));
