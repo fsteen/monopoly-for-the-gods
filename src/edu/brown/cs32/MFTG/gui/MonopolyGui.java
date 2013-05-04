@@ -199,6 +199,14 @@ public class MonopolyGui extends JFrame{
 	public Profile getProfile(String name) {
 		return _profileManager.getProfile(name);
 	}
+	
+	/**
+	 * Saves the current profiles to disk
+	 * @return true if it was possible to save the profiles, and false otherwise
+	 */
+	public boolean saveProfiles(){
+		return _profileManager.saveProfiles();
+	}
 
 	/**
 	 * 
@@ -223,14 +231,6 @@ public class MonopolyGui extends JFrame{
 	 */
 	public Set<String> getPlayerNames(String profile) {
 		return _profileManager.getProfile(profile).getPlayerNames();
-	}
-
-	/**
-	 * 
-	 * @return set of settings names
-	 */
-	public Set<String> getSettingsNames(String profile) {
-		return _profileManager.getProfile(profile).getSettingsNames();
 	}
 
 	/**

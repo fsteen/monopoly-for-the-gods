@@ -5,6 +5,9 @@ from Chizu:
 	- Verify that game results make sense
 	- make passive and aggressive players have different property valuations
 
+from Alex:
+	- make the save button on the settings screen call saveProfiles() in the monopolyGUI	
+
 
 ===Chizu===
 - Format the winner graph
@@ -36,6 +39,10 @@ from Judah:
 	- only average the number of houses of games when we have a monopoly on the property.
 	- when AI player is playing, only 1 set is every played
 	
+=======
+from Chizu:
+	-time owned is not updating correctly
+
 
 ===Alex===
 - Profile persistence
