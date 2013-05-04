@@ -94,11 +94,8 @@ public class MonopolyGui extends JFrame{
 		this.setJMenuBar(_empty);
 
 		this.switchPanels("settings");
-		System.out.println("2");
-
 		this.pack();
 		this.setVisible(true);
-		System.out.println("3");
 
 
 		if(_musicOn){
@@ -113,7 +110,6 @@ public class MonopolyGui extends JFrame{
 			_currentSong=new Music(_outSongNames.get(_currentOutSongNumber), this, false);
 			_currentSong.play();
 		}
-		System.out.println("4");
 
 
 	}
