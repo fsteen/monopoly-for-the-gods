@@ -42,7 +42,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import edu.brown.cs32.MFTG.monopoly.GamePlayer;
 import edu.brown.cs32.MFTG.monopoly.Player;
 import edu.brown.cs32.MFTG.tournament.Settings;
-import edu.brown.cs32.MFTG.tournament.Settings.Turns;
 import edu.brown.cs32.MFTG.tournament.Settings.WinningCondition;
 
 public class CreateBottomPanel extends JPanel {
@@ -362,13 +361,6 @@ public class CreateBottomPanel extends JPanel {
 			winCond = WinningCondition.LAST_SET_WON;
 		}
 		
-		Turns turnFlow = Turns.STAGGERED;
-		/*if(_chooseTogether.isSelected()){
-			turnFlow = Turns.BUNCHED;
-		} else {
-			turnFlow = Turns.STAGGERED;
-		}*/
-		
 		int beginningTimeout = _timeBegin.getText().equals("") ? DEFAULT_TIME_BEGIN : Integer.parseInt(_timeBegin.getText());
 		int betweenTimeout = _timeBetween.getText().equals("") ? DEFAULT_TIME_BETWEEN : Integer.parseInt(_timeBetween.getText());
 		int numSets = _numSets.getText().equals("") ? DEFAULT_NUM_SETS : Integer.parseInt(_numSets.getText());
@@ -379,7 +371,7 @@ public class CreateBottomPanel extends JPanel {
 		
 		return new Settings(
 				gamesPerRound,numSets, doubleOnGo, freeParking, auctions,
-				turnFlow, winCond, beginningTimeout, betweenTimeout);
+				winCond, beginningTimeout, betweenTimeout);
 	}
 	
 	public int getPort(){

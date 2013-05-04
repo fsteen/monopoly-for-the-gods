@@ -31,7 +31,6 @@ import edu.brown.cs32.MFTG.monopoly.PropertyData;
 import edu.brown.cs32.MFTG.monopoly.TimeStamp;
 import edu.brown.cs32.MFTG.tournament.Profile;
 import edu.brown.cs32.MFTG.tournament.Settings;
-import edu.brown.cs32.MFTG.tournament.Settings.Turns;
 import edu.brown.cs32.MFTG.tournament.Settings.WinningCondition;
 import edu.brown.cs32.MFTG.tournament.data.GameDataReport;
 import edu.brown.cs32.MFTG.tournament.data.PlayerWealthDataReport;
@@ -213,7 +212,7 @@ public class ProtocolTests {
 	public void testSettings() throws IOException {
 		ObjectMapper oMapper = new ObjectMapper();
 		
-		Settings settings = new Settings(5, 10, false, 10, false, Turns.BUNCHED, WinningCondition.MOST_SETS_WON, 100, 100);
+		Settings settings = new Settings(5, 10, false, 10, false, WinningCondition.MOST_SETS_WON, 100, 100);
 		String settingsJson = oMapper.writeValueAsString(settings);
 		Settings newSettings = oMapper.readValue(settingsJson, Settings.class);
 		

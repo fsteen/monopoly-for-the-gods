@@ -29,14 +29,12 @@ Concerns
 
 ----------------------
 TODO
-AI player communication
 catch game exceptions
 testing ... data aggregating and stuff
 fix time owned
 send end of game data to GUI (winners)
-button listener
+add records information
 
 -------------
-Thoughts : we need a heuristic timer
-		   we need a count of who the winner is
+Thoughts : we need a count of who the winner is
 		   we to be able to send end of game data

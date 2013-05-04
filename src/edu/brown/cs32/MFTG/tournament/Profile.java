@@ -9,7 +9,6 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import edu.brown.cs32.MFTG.monopoly.Player;
-import edu.brown.cs32.MFTG.tournament.Settings.Turns;
 import edu.brown.cs32.MFTG.tournament.Settings.WinningCondition;
 
 public class Profile {
@@ -65,7 +64,7 @@ public class Profile {
 	private void buildSettingsMap(){
 		Map<String, Settings> settings = new HashMap<>();
 		
-		Settings defaultSettings = new Settings(10000, 10, false, -1, false, Turns.BUNCHED, WinningCondition.MOST_SETS_WON, 300, 180);
+		Settings defaultSettings = new Settings(10000, 10, false, -1, false, WinningCondition.MOST_SETS_WON, 300, 180);
 		
 		settings.put("default", defaultSettings);
 		

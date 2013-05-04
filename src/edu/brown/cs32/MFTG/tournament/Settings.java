@@ -6,9 +6,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Settings {
 
-	public enum Turns {
-		STAGGERED, BUNCHED
-	}
 	public enum WinningCondition {
 		MOST_SETS_WON, //win a round of games by winning the most games in that round, win the entire game by winning the most rounds
 		LAST_SET_WON, //win the entire game by winning the most games in the last round
@@ -17,7 +14,6 @@ public class Settings {
 	
 	public final int gamesPerRound, numRounds, beginningTimeout, duringTimeout, freeParking; //all implemented
 	public final boolean doubleOnGo, auctions; //all implemented
-	public final Turns turnFlow;
 	public final WinningCondition winType; //implemented
 	
 	@JsonCreator
@@ -26,14 +22,12 @@ public class Settings {
 					@JsonProperty("doubleOnGo") boolean doubleOnGo,
 					@JsonProperty("freeParking") int freeParking,
 					@JsonProperty("auctions") boolean auctions,
-					@JsonProperty("turnFlow") Turns turnFlow, 
 					@JsonProperty("winType") WinningCondition winType, 
 					@JsonProperty("beginningTimeout") int beginningTimeout, 
 					@JsonProperty("duringTimeout") int duringTimeout){
 		
 		this.gamesPerRound = gamesPerRound;
 		this.numRounds = numRounds;
-		this.turnFlow = turnFlow;
 		this.winType = winType;
 		this.beginningTimeout = beginningTimeout;
 		this.duringTimeout = duringTimeout;
@@ -70,7 +64,6 @@ public class Settings {
 		
 		return (this.gamesPerRound == that.gamesPerRound)
 			&& (this.numRounds == that.numRounds)
-			&& (this.turnFlow == that.turnFlow)
 			&& (this.winType == that.winType)
 			&& (this.beginningTimeout == that.beginningTimeout)
 			&& (this.duringTimeout == that.duringTimeout)

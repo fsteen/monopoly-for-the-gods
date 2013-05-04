@@ -73,7 +73,7 @@ public class ClientTests {
 		players.add(new Player(3));
 		
 		Client p = new HumanClient(false);
-		p.playGames(players, seeds, new Settings(0, 0, false, -1, false, null, null, -1, -1));
+		p.playGames(players, seeds, new Settings(0, 0, false, -1, false, null, -1, -1));
 	}
 	
 	@Test
@@ -100,7 +100,7 @@ public class ClientTests {
 		Client p = new HumanClient(false);
 
 		GameDataAccumulator g = null;
-		Settings settings = new Settings(0, 0, false, -1, false, null, null, -1, -1);
+		Settings settings = new Settings(0, 0, false, -1, false, null, -1, -1);
 		
 //		for(int i = 0; i < seeds.size(); i++){
 //			if(g == null){
