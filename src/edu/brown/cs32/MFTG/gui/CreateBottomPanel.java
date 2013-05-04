@@ -60,11 +60,11 @@ public class CreateBottomPanel extends JPanel {
 	private final int PLAYER_WIDTH=100;
 	private JPanel _extraPanel, _fpPanel;
 	private JTextField _port, _timeBegin, _timeBetween, _numSets, _numGames, _freeParkingJackpot;
-	private JLabel _portLabel,_winCondLabel, _timeBeginLabel, _timeBetweenLabel, _numSetsLabel, _numGamesLabel, _gameFlowLabel, _extraLabel, _fpLabel;
-	private JRadioButton _mostMoney, _mostSets, _lastMatch;// _chooseTogether, _rotateChoosing;
+	private JLabel _portLabel,_winCondLabel, _timeBeginLabel, _timeBetweenLabel, _numSetsLabel, _numGamesLabel, _extraLabel, _fpLabel;
+	private JRadioButton _mostMoney, _mostSets, _lastMatch;
 	private JCheckBox _freeParking, _auctions, _doubleOnGo;
-	private ButtonGroup _winCond, _gameFlow;
-	private ImagePanel _p1h,_p1c,_p2h,_p2c,_p3h,_p3c,_p3x,_p4h,_p4c,_p4x;
+	private ButtonGroup _winCond;
+	private ImagePanel _p1h,_p2h,_p2c,_p3h,_p3c,_p3x,_p4h,_p4c,_p4x;
 	private Integer _p2Curr, _p3Curr, _p4Curr; //0 is human, 1 is computer, 2 is none
 	private Font _headerFont, _sideFont;
 	private List<Integer> _players;
@@ -198,23 +198,6 @@ public class CreateBottomPanel extends JPanel {
 			gameLengthPanel.add(_numGamesLabel);
 			gameLengthPanel.add(_numGames);
 			
-			JPanel gameFlowPanel = new JPanel(new GridLayout(0,1));
-			gameFlowPanel.setAlignmentX(LEFT_ALIGNMENT);
-			gameFlowPanel.setBackground(Color.WHITE);
-			_gameFlowLabel = new JLabel("Game Flow:");
-			_gameFlowLabel.setFont(_headerFont);
-			//_chooseTogether=new JRadioButton("Choose Heuristics Together", true);
-			//_rotateChoosing=new JRadioButton("Rotate Choosing Heuristics");
-			//_chooseTogether.setBackground(Color.WHITE);
-			//_rotateChoosing.setBackground(Color.WHITE);
-			
-			//_gameFlow = new ButtonGroup();
-			//_gameFlow.add(_chooseTogether);
-			//_gameFlow.add(_rotateChoosing);
-			
-			//gameFlowPanel.add(_gameFlowLabel);
-			//gameFlowPanel.add(_chooseTogether);
-			//gameFlowPanel.add(_rotateChoosing);
 			
 			_extraPanel = new JPanel(new GridLayout(0,1));
 			_extraPanel.setBackground(Color.WHITE);
@@ -249,7 +232,6 @@ public class CreateBottomPanel extends JPanel {
 			lowerPanel.add(winCondPanel);
 			lowerPanel.add(timePanel);
 			lowerPanel.add(gameLengthPanel);
-			lowerPanel.add(gameFlowPanel);
 			lowerPanel.add(_extraPanel);
 			
 			

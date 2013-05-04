@@ -42,10 +42,9 @@ public class HumanClient extends Client{
 	private Timer _timer;
 //	private DummyGUI _dummyGui;
 
-	public HumanClient(/*String host, int port*/){
-		//super(host, port);
+	public HumanClient(boolean music){
 		super();
-		_gui = new MonopolyGui(this);
+		_gui = new MonopolyGui(this, music);
 //		_dummyGui = new DummyGUI();
 	}
 	
@@ -56,7 +55,6 @@ public class HumanClient extends Client{
 	public void connectAndRun(int port, String host){
 		try {
 			_server = new Socket(host, port);
-			//_server = new Socket(_host, _port);
 			_input = new BufferedReader(new InputStreamReader(_server.getInputStream()));
 			_output = new BufferedWriter(new OutputStreamWriter(_server.getOutputStream()));
 		} catch (UnknownHostException e) {

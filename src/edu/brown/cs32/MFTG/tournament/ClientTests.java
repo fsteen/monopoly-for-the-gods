@@ -28,7 +28,7 @@ public class ClientTests {
 		seeds.add((long) 1);
 		seeds.add((long) 1);
 
-		Client p = new HumanClient();
+		Client p = new HumanClient(false);
 		p.playGames(new ArrayList<Player>(), seeds, null);
 		
 	}
@@ -48,7 +48,7 @@ public class ClientTests {
 		seeds.add((long) 98989);
 		seeds.add((long) 77733);
 		
-		Client p = new HumanClient();
+		Client p = new HumanClient(false);
 //		List<GameData> data = p.playGames(players, seeds, null);
 //		
 //		assertTrue(data.size() == seeds.size());
@@ -72,7 +72,7 @@ public class ClientTests {
 		players.add(new Player(2));
 		players.add(new Player(3));
 		
-		Client p = new HumanClient();
+		Client p = new HumanClient(false);
 		p.playGames(players, seeds, new Settings(0, 0, false, -1, false, null, null, -1, -1));
 	}
 	
@@ -97,7 +97,7 @@ public class ClientTests {
 		players.add(new Player(2));
 		players.add(new Player(3));
 		
-		Client p = new HumanClient();
+		Client p = new HumanClient(false);
 
 		GameDataAccumulator g = null;
 		Settings settings = new Settings(0, 0, false, -1, false, null, null, -1, -1);
@@ -116,7 +116,7 @@ public class ClientTests {
 	public void playManyGamesTest(){
 		int numGames = 10000;
 		//TODO get exception when numGames gets large
-		Client p = new HumanClient();
+		Client p = new HumanClient(false);
 		Player player = p.finishGetPlayer();
 		
 		List<Player> players = new ArrayList<>();

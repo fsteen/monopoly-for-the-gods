@@ -59,26 +59,24 @@ public class SettingsPanel extends JPanel{
 	public SettingsPanel(MonopolyGui main) {
 		try {
 			_main=main;
-			java.awt.Dimension size = new java.awt.Dimension(Constants.FULL_WIDTH,Constants.FULL_PANEL_HEIGHT);
+			Dimension size = new Dimension(Constants.FULL_WIDTH,Constants.FULL_PANEL_HEIGHT);
 			this.setPreferredSize(size);
 			this.setSize(size);
 			this.setBackground(Color.GRAY);
 			this.setLayout(null);
 			_background = Helper.resize(ImageIO.read(new File("images/mountain2.png")),this.getWidth(),this.getHeight());
-
 			JPanel topPanel = new JPanel();
 			topPanel.setBackground(Color.WHITE);
 			Dimension topSize = new Dimension(BOTTOM_WIDTH-6, 50);
 			topPanel.setSize(topSize);
 			topPanel.setPreferredSize(topSize);
 			topPanel.setLocation(Constants.FULL_WIDTH/32+3, START_HEIGHT+BUTTON_HEIGHT*6/5);
-			
+
 			JCheckBox music = new JCheckBox("Music: ", true);
 			music.setFont(new Font("musicFont",Font.PLAIN, 30));
 			music.setHorizontalTextPosition(SwingConstants.LEADING);
 			music.addItemListener(new MusicListener());
 			topPanel.add(music);
-			
 			
 			_settingsLite = new ImagePanel(Helper.resize(ImageIO.read(new File("images/SettingsLite.png")), BUTTON_WIDTH-40, BUTTON_HEIGHT));
 			_settingsLoc= new Point(START_WIDTH, START_HEIGHT);
@@ -119,7 +117,6 @@ public class SettingsPanel extends JPanel{
 			add(topPanel);
 			
 			addProfileList();
-			//addPlayerList();
 		} catch (IOException e) {
 			System.out.println("ERROR: "+e.getMessage());
 			System.exit(1);
@@ -155,21 +152,6 @@ public class SettingsPanel extends JPanel{
 		_settingsScrollPane.setPreferredSize(listSize);
 		add(_settingsScrollPane);
 	}
-	
-	/*private void addPlayerList(){
-		_playerListModel = new DefaultListModel<>();
-		_playerList = new JList<>(_playerListModel);
-		
-		_playersScrollPane = new PlayersScrollPane(_playerList, _playerListModel, _main, _profileListModel.get(_profileList.getSelectedIndex()));
-		_settingsScrollPane.setPlayerScrollPane(_playersScrollPane);
-		_playersScrollPane.setup();
-
-		_playersScrollPane.setLocation(Constants.FULL_WIDTH/32+BOTTOM_WIDTH/2, START_HEIGHT+BUTTON_HEIGHT*6/5);
-		Dimension listSize = new Dimension(BOTTOM_WIDTH/2, BOTTOM_HEIGHT);
-		_playersScrollPane.setSize(listSize);
-		_playersScrollPane.setPreferredSize(listSize);
-		add(_playersScrollPane);
-	}*/
 	
 
 	@Override

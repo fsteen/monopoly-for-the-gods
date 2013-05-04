@@ -1,4 +1,4 @@
-/*package edu.brown.cs32.MFTG.gui;
+package edu.brown.cs32.MFTG.gui;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
@@ -59,4 +59,4 @@ public class Music {
 
 	}
 
-}*/
+}
