@@ -167,7 +167,7 @@ public class ProtocolTests {
 		List<Integer> winList = new ArrayList<>();
 		winList.add(3);
 		
-		GameDataReport gdr = new GameDataReport(timeStamps, playerWins,winList, entireGameData, overallPropertyData);
+		GameDataReport gdr = new GameDataReport(timeStamps, playerWins,winList, entireGameData, overallPropertyData,false);
 		
 		ObjectMapper oMapper = new ObjectMapper();
 		

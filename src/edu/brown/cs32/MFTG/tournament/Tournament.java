@@ -111,7 +111,7 @@ public class Tournament implements Runnable{
 			if(DataProcessor.isCorrupted(data, confirmationIndices)){
 				System.out.println("someone is cheating"); //TODO what to do in this case
 			}
-			sendEndOfMatchData(accumulateEndOfGameData(data, roundNum));
+			sendEndOfRoundData(accumulateEndOfGameData(data, roundNum));
 		}
 	}
 	
@@ -137,6 +137,10 @@ public class Tournament implements Runnable{
 			_roundWinners.put(winnerID, _roundWinners.get(winnerID) + 1);
 		}
 		combined._playerWins = _roundWinners;
+		
+		if(roundNum == _settings.getNumRounds()-1){
+			combined.matchIsOver = true;
+		}
 		return combined.toGameDataReport();
 	}
 	

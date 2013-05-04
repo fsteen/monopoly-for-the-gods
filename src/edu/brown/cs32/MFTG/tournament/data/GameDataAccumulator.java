@@ -24,6 +24,7 @@ public class GameDataAccumulator {
 	public List<Integer> _winList;
 	public final int _numPlayers;
 	public final int MAX_NUM_PLAYERS=4;
+	public boolean matchIsOver;
 
 	public GameDataAccumulator(int numTimeStamps, int numPlayers){
 		_playerWins = new HashMap<>();
@@ -34,6 +35,7 @@ public class GameDataAccumulator {
 		timeStamps = new ArrayList<>();
 		_winList = new ArrayList<>();
 		_numPlayers = numPlayers;
+		matchIsOver = false;
 
 		/* initialize timestamps */
 		for(int i = 0; i < numTimeStamps; i++){
@@ -275,6 +277,6 @@ public class GameDataAccumulator {
 			overallPlayerPropertyData.put(tempList.get(0).propertyName, tempList);
 		}
 
-		return new GameDataReport(times, _playerWins,_winList, overallPlayerPropertyData, overallPropertyData);		
+		return new GameDataReport(times, _playerWins,_winList, overallPlayerPropertyData, overallPropertyData,matchIsOver);		
 	}
 }

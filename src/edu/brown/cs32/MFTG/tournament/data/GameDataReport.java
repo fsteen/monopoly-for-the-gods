@@ -17,18 +17,21 @@ public class GameDataReport {
 	public final Map<String, PropertyDataReport> _overallPropertyData;
 	public final Map<Integer, Double> _playerWins;
 	public final List<Integer> _winList;
+	public final boolean _matchIsOver;
 	
 	@JsonCreator
 	public GameDataReport(@JsonProperty("timeStamps") List<TimeStampReport> timeStamps,
 						  @JsonProperty("playerWins") Map<Integer, Double> playerWins,
 						  @JsonProperty("winList") List<Integer> winList, 
 						  @JsonProperty("entireGameData") Map<String, List<PropertyDataReport>> entireGameData,
-						  @JsonProperty("overallPropertyData") Map<String, PropertyDataReport> overallPropertyData){
+						  @JsonProperty("overallPropertyData") Map<String, PropertyDataReport> overallPropertyData,
+						  @JsonProperty("matchIsOver") boolean matchIsOver){
 		_timeStamps = timeStamps;
 		_playerWins = playerWins;
 		_winList = winList;
 		_overallPlayerPropertyData = entireGameData;
 		_overallPropertyData = overallPropertyData;
+		_matchIsOver = matchIsOver;
 	}
 	
 	public GameDataAccumulator toGameDataAccumulator(){
@@ -103,6 +106,7 @@ public class GameDataReport {
 			b.append(String.format("Player %d has %d wins\n",e.getKey(),e.getValue()));
 		}
 		b.append("winList\n" + _winList + "\n");
+		b.append("matchIsOver " + _matchIsOver + "\n");
 		return b.toString();
 	}
 	
@@ -115,6 +119,6 @@ public class GameDataReport {
 		GameDataReport that = (GameDataReport) o;
 		
 		return Objects.equals(_timeStamps, that._timeStamps) && Objects.equals(_overallPlayerPropertyData, that._overallPlayerPropertyData)
-				&& Objects.equals(_playerWins, that._playerWins);  //TODO add back in
+				&& Objects.equals(_playerWins, that._playerWins) && Objects.equals(_winList, that._winList) && _matchIsOver == that._matchIsOver;  //TODO add back in
 	}
 }
