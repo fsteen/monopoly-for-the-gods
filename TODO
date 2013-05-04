@@ -5,8 +5,6 @@ from Chizu:
 	- Verify that game results make sense
 	- make passive and aggressive players have different property valuations
 
-from Frances:
-	- debug the AI player (gets stuck in getPlayer())
 
 ===Chizu===
 - Format the winner graph
@@ -20,7 +18,7 @@ from Frances:
 from Judah:
 	- add the removeAggregateButton() method
 	- fix up the connection between the menubar and "those buttons"
-
+	
 from Frances:
 	- implement the setWinnerData() method
 
@@ -37,6 +35,7 @@ from Alex:
 from Judah:
 	- only average the number of houses of games when we have a monopoly on the property.
 	- when AI player is playing, only 1 set is every played
+	
 
 ===Alex===
 - Profile persistence
