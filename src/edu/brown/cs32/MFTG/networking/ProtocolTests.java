@@ -79,7 +79,6 @@ public class ProtocolTests {
 		
 		// make sure that all necessary getters and setters exist
 		HashMap<String, Integer> propertyValues = p.getPropertyValues();
-		propertyValues.put(null, 76);
 		p2.setPropertyValues(propertyValues);
 		
 		HashMap<String, Double[]> colorValues = p.getColorValues();
