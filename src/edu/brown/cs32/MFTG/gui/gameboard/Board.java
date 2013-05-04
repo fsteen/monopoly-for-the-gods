@@ -48,7 +48,6 @@ public class Board extends JPanel {
 	private Set<ColorGroup> _colorGroups = new HashSet<>();
 	private Set<Railroad> _railroads = new HashSet<>();
 	private Jail _jail;
-	private JMenuBar _menu;
 	private Center _center;
 	private int _id;
 	private Player _player = null;
@@ -92,6 +91,11 @@ public class Board extends JPanel {
 	
 	public void removeSetHeuristicsButton() {
 		_center.removeSetHeuristicsButton();
+	}
+	
+	public void switchToEndGameMenu() {
+		JMenuBar menu = new EndGameMenu(this,_main, _profile);
+		_main.setJMenuBar(menu);
 	}
 	
 	public void enableToolTips(boolean enabled) {
