@@ -93,7 +93,6 @@ public class MonopolyGui extends JFrame{
 
 		this.setJMenuBar(_empty);
 
-		this.switchPanels("settings");
 		this.pack();
 		this.setVisible(true);
 
