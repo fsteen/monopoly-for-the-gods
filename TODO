@@ -1,15 +1,9 @@
 ===JUDAH===
-- remove the game flow option
 - make sure that nothing falls through the cracks
 
 from Chizu:
 	- Verify that game results make sense
 	- make passive and aggressive players have different property valuations
-	- Make sure that  the default player is stored somewhere
-	- Figure out best way for the board to load the default player
-	- Make sure that the places to set the number of games and sets are in the
-	  correct places in the settings page (Chizu thinks they may have gotten
-	  moved accidently) 
 
 from Frances:
 	- debug the AI player (gets stuck in getPlayer())

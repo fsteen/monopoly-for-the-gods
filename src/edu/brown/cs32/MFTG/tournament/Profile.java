@@ -88,6 +88,7 @@ public class Profile {
 	 */
 	public Player getPlayer(String s) {
 		return _players.get(s);
+		
 	}
 	
 	/**
@@ -127,6 +128,7 @@ public class Profile {
 			_players.remove(name);
 		}
 		_players.put(name,p);
+
 	}
 
 	/**
@@ -165,6 +167,11 @@ public class Profile {
 	 */
 	public void setRecord(Record record) {
 		_record = record;
+	}
+	
+	@Override
+	public String toString() {
+		return _name;
 	}
 	
 }
