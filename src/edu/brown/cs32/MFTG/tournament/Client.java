@@ -73,8 +73,6 @@ public abstract class Client implements Runnable{
 	
 	protected abstract void respondToDisplayData(ClientRequestContainer request) throws JsonParseException, JsonMappingException, IOException;
 	
-	protected abstract void respondToDisplayMatchData(ClientRequestContainer request);
-	
 	public abstract void startGetPlayer(int time);
 	
 	public abstract Player finishGetPlayer();
@@ -139,17 +137,8 @@ public abstract class Client implements Runnable{
 			} else {
 				throw new InvalidRequestException();
 			}
-
-		} else if (method == Method.DISPLAYMATCHDATA){
-			if (_lastRequest == Method.PLAYGAMES){
-				respondToDisplayMatchData(request);
-				_lastRequest = Method.DISPLAYGAMEDATA;
-			} else {
-				throw new InvalidRequestException();
-			}
-		}
 		
-		else if (method == Method.DISPLAYERROR){
+		} else if (method == Method.DISPLAYERROR){
 			respondToDisplayError(request);
 		}
 	}

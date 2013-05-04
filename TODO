@@ -1,13 +1,6 @@
 ===JUDAH===
 - make sure that nothing falls through the cracks
 
-from Chizu:
-	- Verify that game results make sense
-	- make passive and aggressive players have different property valuations
-
-from Alex:
-	- make the save button on the settings screen call saveProfiles() in the monopolyGUI	
-
 
 ===Chizu===
 - Format the winner graph
@@ -44,10 +37,8 @@ from Chizu:
 
 
 ===Alex===
-- Profile persistence
 - Make sure that verification data is being sent back to the server
 - Properly implement timeouts server-side
 - Properly implement timeouts client-side
 - Make everything close properly upon shutdown
 - Make sure that errors are thrown and handled properly
-- make sure that setting the last request to DISPLAYGAMEDATA on line 143 of Client.java makes sense
