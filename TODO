@@ -37,6 +37,9 @@ from Alex:
 from Judah:
 	- only average the number of houses of games when we have a monopoly on the property.
 	- when AI player is playing, only 1 set is every played
+	
+from Chizu:
+	-time owned is not updating correctly
 
 ===Alex===
 - Profile persistence
