@@ -31,16 +31,16 @@ import edu.brown.cs32.MFTG.tournament.data.PlayerWealthDataReport;
 import edu.brown.cs32.MFTG.tournament.data.PropertyDataReport;
 import edu.brown.cs32.MFTG.tournament.data.TimeStampReport;
 
-public abstract class Client {
+public abstract class Client implements Runnable{
 
 	/* Networking variables */
-	//final String _host;
-	//final int _port;
 	protected Socket _server;
 	protected BufferedReader _input;
 	protected BufferedWriter _output;
 	protected final ObjectMapper _oMapper;
 	protected Method _lastRequest;
+	protected int _port;
+	protected String _host;
 
 	/* Module variables */
 	protected final int NUM_THREADS=10;
@@ -54,17 +54,20 @@ public abstract class Client {
 	protected ExecutorService _pool;
 	protected int _id;
 
-	public Client(/*String host, int port*/) {
+	public Client() {
 		_oMapper = new ObjectMapper();
-		//_host = host;
-		//_port = port;
 		_lastRequest = Method.DISPLAYGAMEDATA;
 
 		_pool = Executors.newFixedThreadPool(NUM_THREADS);
 		_numThreadsDone = new AtomicInteger(0);
 	}
 	
-	public abstract void connectAndRun(int port, String host);
+	public void connect(int port, String host){
+		_port = port;
+		_host = host;
+	}
+	
+	public abstract void run();
 
 	protected abstract void respondToDisplayError(ClientRequestContainer request);
 	
@@ -213,8 +216,6 @@ public abstract class Client {
 		try {
 			write(response);
 		} catch (IOException e) {
-			System.out.println("nooooooooooooooo!!!!!!!!!!!!!!!!!!!1");
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -291,17 +292,13 @@ public abstract class Client {
 		_data = null;
 		_nextDisplaySize = DATA_PACKET_SIZE;
 		_numThreadsDone.set(0);
-
-		GameRunnerFactory gameRunnerFactory = new GameRunnerFactory(
-				_numThreadsDone, this, 
-				MAX_NUM_TURNS,settings.freeParking,settings.doubleOnGo,
-				settings.auctions,players.toArray(new Player[players.size()]));
-
+		
+		GameRunnerFactory gameRunnerFactory = new GameRunnerFactory(_numThreadsDone, this, MAX_NUM_TURNS,
+				settings.freeParking,settings.doubleOnGo,settings.auctions,players.toArray(new Player[players.size()]));
+		
 		for(Long seed : seeds){
 			_pool.execute(gameRunnerFactory.build(seed)); //launch games
-//			gameRunnerFactory.build(seed).run();
 		}
-
 		synchronized (this){
 			while(_numThreadsDone.get() < seeds.size()){
 				try{
@@ -309,7 +306,6 @@ public abstract class Client {
 				} catch (InterruptedException e){}
 			}
 		}
-
 		return _data.toGameDataReport();
 	}
 
@@ -343,5 +339,4 @@ public abstract class Client {
 		}
 		return playerWealthData;
 	}
-
 }

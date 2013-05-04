@@ -75,7 +75,7 @@ public class SettingsPanel extends JPanel{
 			JCheckBox music = new JCheckBox("Music: ", true);
 			music.setFont(new Font("musicFont",Font.PLAIN, 30));
 			music.setHorizontalTextPosition(SwingConstants.LEADING);
-			music.addItemListener(new MusicListener());
+//			music.addItemListener(new MusicListener());
 			topPanel.add(music);
 			
 			_settingsLite = new ImagePanel(Helper.resize(ImageIO.read(new File("images/SettingsLite.png")), BUTTON_WIDTH-40, BUTTON_HEIGHT));
@@ -256,20 +256,20 @@ public class SettingsPanel extends JPanel{
 
 	}
 	
-	private class MusicListener implements ItemListener{
-
-		@Override
-		public void itemStateChanged(ItemEvent e) {
-			if(e.getStateChange()==ItemEvent.SELECTED){
-				_main.playNextOutOfGameSong();
-
-			}
-			else{
-				_main.stopMusic();
-			}
-			
-		}
-		
-	}
+//	private class MusicListener implements ItemListener{
+//
+//		@Override
+//		public void itemStateChanged(ItemEvent e) {
+//			if(e.getStateChange()==ItemEvent.SELECTED){
+//				_main.playNextOutOfGameSong();
+//
+//			}
+//			else{
+//				_main.stopMusic();
+//			}
+//			
+//		}
+//		
+//	}
 }
 

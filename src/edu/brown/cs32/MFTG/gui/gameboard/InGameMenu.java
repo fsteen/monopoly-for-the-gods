@@ -25,7 +25,7 @@ public class InGameMenu extends BoardMenu {
 		
 		JCheckBox music = new JCheckBox("Music: ", true);
 		music.setHorizontalTextPosition(SwingConstants.LEADING);
-		music.addItemListener(new MusicListener());
+//		music.addItemListener(new MusicListener());
 		
 		JButton quit = new JButton("Quit Game");
 		quit.addActionListener(new QuitListener());
@@ -48,19 +48,19 @@ public class InGameMenu extends BoardMenu {
 			
 	}
 	
-	private class MusicListener implements ItemListener{
-
-		@Override
-		public void itemStateChanged(ItemEvent e) {
-			if(e.getStateChange()==ItemEvent.SELECTED){
-				_main.playNextInGameSong();
-			}
-			else{
-				_main.stopMusic();
-			}
-			
-		}
-		
-	}
+//	private class MusicListener implements ItemListener{
+//
+//		@Override
+//		public void itemStateChanged(ItemEvent e) {
+//			if(e.getStateChange()==ItemEvent.SELECTED){
+//				_main.playNextInGameSong();
+//			}
+//			else{
+//				_main.stopMusic();
+//			}
+//			
+//		}
+//		
+//	}
 
 }

@@ -34,7 +34,6 @@ import edu.brown.cs32.MFTG.tournament.Settings;
 import edu.brown.cs32.MFTG.tournament.Settings.Turns;
 import edu.brown.cs32.MFTG.tournament.Settings.WinningCondition;
 import edu.brown.cs32.MFTG.tournament.data.GameDataReport;
-import edu.brown.cs32.MFTG.tournament.data.PlayerPropertyDataAccumulator;
 import edu.brown.cs32.MFTG.tournament.data.PlayerWealthDataReport;
 import edu.brown.cs32.MFTG.tournament.data.PropertyDataAccumulator;
 import edu.brown.cs32.MFTG.tournament.data.PropertyDataReport;
@@ -43,7 +42,6 @@ import edu.brown.cs32.MFTG.tournament.data.TimeStampReport;
 public class ProtocolTests {
 	PlayerWealthDataReport _playerWealthDataReport;
 	TimeStampReport _timeStampReport;
-	PlayerPropertyDataAccumulator _playerPropertyData;
 	PropertyDataAccumulator _propertyDataAccumulator;
 	
 	@Before
@@ -55,12 +53,6 @@ public class ProtocolTests {
 		
 		_timeStampReport = new TimeStampReport(1, wealthData);
 		
-		_playerPropertyData = new PlayerPropertyDataAccumulator("test", 1);
-		_playerPropertyData.setPlayerNumHouses(2);
-		_playerPropertyData.setPlayerPersonalRevenueWithHouses(3);
-		_playerPropertyData.setPlayerPersonalRevenueWithoutHouses(4);
-		_playerPropertyData.setPlayerMortgaged(5);
-		_playerPropertyData.setNumDataPoints(6);
 		
 		
 	}

@@ -35,26 +35,22 @@ import edu.brown.cs32.MFTG.tournament.data.GameDataReport;
 
 public class HumanClient extends Client{
 
-	private static final int DEFAULT_PORT = 8080;
-	
 	private MonopolyGui _gui;
 	private ExecutorService _executor = Executors.newCachedThreadPool();
 	private Timer _timer;
-//	private DummyGUI _dummyGui;
 
 	public HumanClient(boolean music){
 		super();
 		_gui = new MonopolyGui(this, music);
-//		_dummyGui = new DummyGUI();
 	}
 	
 	/**
 	 * Connects the Client to a socket
 	 * @throws IOException
 	 */
-	public void connectAndRun(int port, String host){
+	public void run(){		
 		try {
-			_server = new Socket(host, port);
+			_server = new Socket(_host, _port);
 			_input = new BufferedReader(new InputStreamReader(_server.getInputStream()));
 			_output = new BufferedWriter(new OutputStreamWriter(_server.getOutputStream()));
 		} catch (UnknownHostException e) {
@@ -123,6 +119,7 @@ public class HumanClient extends Client{
 	public void displayGameData(GameDataReport combinedData) {
 		System.out.println("displaying end of round data");
 		displayDataToGui(combinedData);
+		_gui.getBoard().setWinnerData(combinedData._playerWins);
 		//_gui.getBoard().newRound();
 		
 	}
@@ -131,9 +128,6 @@ public class HumanClient extends Client{
 		_gui.getBoard().setPlayerSpecificPropertyData(getPlayerPropertyData(combinedData._overallPlayerPropertyData));
 		_gui.getBoard().setPropertyData(combinedData._overallPropertyData);
 		_gui.getBoard().setWealthData(getPlayerWealthData(combinedData._timeStamps));
-//		_dummyGui.setPlayerSpecificPropertyData(getPlayerPropertyData(combinedData._overallPlayerPropertyData));
-//		_dummyGui.setPropertyData(combinedData._overallPropertyData);
-//		_dummyGui.setWealthData(getPlayerWealthData(combinedData._timeStamps));
 	}
 	
 	/**
@@ -159,7 +153,6 @@ public class HumanClient extends Client{
 	
 	public void startGetPlayer(int time){
 		System.out.println(time);
-		//displayMessage("Time to choose heuristics!");
 		_timer = new Timer(1000*(time+1), new GetPlayerActionListener(this));
 		_gui.getBoard().newRound(time);
 		_timer.setRepeats(false);
@@ -167,13 +160,14 @@ public class HumanClient extends Client{
 	}
 	
 	/**
-	 * Gets the player associated with this object
+	 * Gets the player associated with this object	private void sendEndOfGameData(){
+		//TODO implement
+	}
 	 * @param the time, in seconds, to wait before requesting the player
 	 * @return
 	 */
 	public Player finishGetPlayer(){
 		if(_timer!= null) _timer.stop();
-		//displayMessage("Time's up!");
 		return _gui.getBoard().getPlayer();
 	}
 

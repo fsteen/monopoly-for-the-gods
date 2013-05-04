@@ -36,7 +36,7 @@ public class MonopolyGui extends JFrame{
 	private EmptyMenuBar _empty;
 	private List<String> _outSongNames, _inSongNames;
 	private int _currentOutSongNumber, _currentInSongNumber;
-	private Music _currentSong;
+//	private Music _currentSong;
 	private boolean _musicOn;
 
 	public MonopolyGui(Client client, boolean music) {
@@ -107,45 +107,45 @@ public class MonopolyGui extends JFrame{
 			_inSongNames.add("music/Asutobots.mp3");		
 			_currentOutSongNumber=(int) Math.floor(Math.random()*_outSongNames.size());
 			_currentInSongNumber=(int) Math.floor(Math.random()*_inSongNames.size());
-			_currentSong=new Music(_outSongNames.get(_currentOutSongNumber), this, false);
-			_currentSong.play();
+//			_currentSong=new Music(_outSongNames.get(_currentOutSongNumber), this, false);
+//			_currentSong.play();
 		}
 
 
 	}
 
-	/**
-	 * stops music
-	 */
-	public void stopMusic(){
-		if(_musicOn)_currentSong.close();
-	}
-
-	/**
-	 * plays the next song out of game
-	 */
-	public void playNextOutOfGameSong(){
-		if(_musicOn){
-			_currentSong.close();
-			_currentOutSongNumber = (_currentOutSongNumber+1)%_outSongNames.size();
-			String newSongName = _outSongNames.get(_currentOutSongNumber);
-			_currentSong = new Music(newSongName, this, false);
-			_currentSong.play();
-		}
-	}
-
-	/**
-	 * play song in game
-	 */
-	public void playNextInGameSong(){
-		if(_musicOn){
-			_currentSong.close();
-			_currentInSongNumber = (_currentInSongNumber+1)%_inSongNames.size();
-			String newSongName = _inSongNames.get(_currentInSongNumber);
-			_currentSong = new Music(newSongName, this, true);
-			_currentSong.play();
-		}
-	}
+//	/**
+//	 * stops music
+//	 */
+//	public void stopMusic(){
+//		if(_musicOn)_currentSong.close();
+//	}
+//
+//	/**
+//	 * plays the next song out of game
+//	 */
+//	public void playNextOutOfGameSong(){
+//		if(_musicOn){
+//			_currentSong.close();
+//			_currentOutSongNumber = (_currentOutSongNumber+1)%_outSongNames.size();
+//			String newSongName = _outSongNames.get(_currentOutSongNumber);
+//			_currentSong = new Music(newSongName, this, false);
+//			_currentSong.play();
+//		}
+//	}
+//
+//	/**
+//	 * play song in game
+//	 */
+//	public void playNextInGameSong(){
+//		if(_musicOn){
+//			_currentSong.close();
+//			_currentInSongNumber = (_currentInSongNumber+1)%_inSongNames.size();
+//			String newSongName = _inSongNames.get(_currentInSongNumber);
+//			_currentSong = new Music(newSongName, this, true);
+//			_currentSong.play();
+//		}
+//	}
 
 	/**
 	 * sets winner of game

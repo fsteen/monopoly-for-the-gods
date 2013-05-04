@@ -29,8 +29,9 @@ import edu.brown.cs32.MFTG.tournament.data.GameDataReport;
 public class Tournament implements Runnable{
 	private final List<Integer> _players;
 	
-	public static final double CONFIRMATION_PERCENTAGE = 0.1; //confirm 10% of games
-	public static final int NUM_DATA_POINTS = 10;
+	public final double CONFIRMATION_PERCENTAGE = 0.1; //confirm 10% of games
+	public final int NUM_DATA_POINTS = 10;
+	public final int MAX_NUM_PLAYERS = 4;
 	private List<ClientHandler> _clientHandlers;
 	private ServerSocket _socket;
 	private Settings _settings;
@@ -55,11 +56,25 @@ public class Tournament implements Runnable{
 		_socket = new ServerSocket(port);
 		_clientHandlers = new ArrayList<>();
 		_settings = settings;
-		_executor = Executors.newFixedThreadPool(_players.size());
+		
+		int numAIPlayers = 0;
+		for(Integer i : players){
+			if(i == 1){ //AIClient
+				numAIPlayers++;
+			}
+		}
+		_executor = Executors.newFixedThreadPool(numAIPlayers+_players.size());
+		
+		AIClient tempClient;
+		for(int i = 0; i < numAIPlayers; i++){
+			tempClient = new AIClient();
+			tempClient.connect(port, "localhost");
+			_executor.execute(tempClient);
+		}
 	}
 	
 	private void resetRoundWinners(){
-		for(int i = -1; i < _players.size(); i++){ //-1 is a tie
+		for(int i = -1; i < MAX_NUM_PLAYERS; i++){ //-1 is a tie
 			_roundWinners.put(i, 0);
 		}
 	}
@@ -120,30 +135,28 @@ public class Tournament implements Runnable{
 			combined._playerWins = _roundWinners;
 			
 			sendEndOfRoundData(combined.toGameDataReport());
-		}
-		
-		sendEndOfGameData();
+		}		
 	}
 	
-	/**
-	 * Takes in a throwable that was received from a future and rethrows it as the appropriate method
-	 * @param cause the throwable to convert to a thrown Exception
-	 * @throws ClientLostException
-	 * @throws InvalidResponseException
-	 * @throws ClientCommunicationException
-	 */
-	private void handlePlayerExecutionException(Throwable cause, int culprit){
-		if (cause instanceof ClientLostException){
-			_clientHandlers.remove(culprit);
-			sendErrorMessage("Lost connection to client " + culprit +". Ejecting client from game and " +
-							 " advancing to the next round");
-		} else if (cause instanceof InvalidResponseException || cause instanceof ClientCommunicationException){
-			sendErrorMessage("Unable to retrieve heuristic information from client. Reusing old heuristics and " +
-							 "advancing to the next round");
-		} else {
-			sendErrorMessage("An error has occured retrieving heuristic information. Advancing to the next round");
-		}
-	}
+//	/**
+//	 * Takes in a throwable that was received from a future and rethrows it as the appropriate method
+//	 * @param cause the throwable to convert to a thrown Exception
+//	 * @throws ClientLostException
+//	 * @throws InvalidResponseException
+//	 * @throws ClientCommunicationException
+//	 */
+//	private void handlePlayerExecutionException(Throwable cause, int culprit){
+//		if (cause instanceof ClientLostException){
+//			_clientHandlers.remove(culprit);
+//			sendErrorMessage("Lost connection to client " + culprit +". Ejecting client from game and " +
+//							 " advancing to the next round");
+//		} else if (cause instanceof InvalidResponseException || cause instanceof ClientCommunicationException){
+//			sendErrorMessage("Unable to retrieve heuristic information from client. Reusing old heuristics and " +
+//							 "advancing to the next round");
+//		} else {
+//			sendErrorMessage("An error has occured retrieving heuristic information. Advancing to the next round");
+//		}
+//	}
 	
 	/**
 	 * Get rid of the old Players and get new Players from each client
@@ -177,14 +190,14 @@ public class Tournament implements Runnable{
 		return players;
 	}
 	
-	private void handlePlayGamesException (Throwable cause, int culprit){
-		if (cause instanceof ClientLostException){
-			_clientHandlers.remove(culprit);
-			sendErrorMessage("Lost connection to client " + culprit +". Ejecting client from game");
-		} else if (cause instanceof InvalidResponseException || cause instanceof ClientCommunicationException){
-			sendErrorMessage("Unable to retrieve game data from client " + culprit + ". Reusing old heuristics");
-		}
-	}
+//	private void handlePlayGamesException (Throwable cause, int culprit){
+//		if (cause instanceof ClientLostException){
+//			_clientHandlers.remove(culprit);
+//			sendErrorMessage("Lost connection to client " + culprit +". Ejecting client from game");
+//		} else if (cause instanceof InvalidResponseException || cause instanceof ClientCommunicationException){
+//			sendErrorMessage("Unable to retrieve game data from client " + culprit + ". Reusing old heuristics");
+//		}
+//	}
 	
 	/**
 	 * Splits the games between each of the clients and has them play
@@ -250,10 +263,6 @@ public class Tournament implements Runnable{
 		for (ClientHandler c : _clientHandlers){
 			c.sendErrorMessage(errorMessage);
 		}
-	}
-	
-	private void sendEndOfGameData(){
-		//TODO implement
 	}
 
 	/**

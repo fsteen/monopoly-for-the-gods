@@ -23,6 +23,7 @@ public class GameDataAccumulator {
 	public Map<Integer, Integer> _playerWins;
 	public List<Integer> _winList;
 	public final int _numPlayers;
+	public final int MAX_NUM_PLAYERS=4;
 
 	public GameDataAccumulator(int numTimeStamps, int numPlayers){
 		_playerWins = new HashMap<>();
@@ -40,7 +41,7 @@ public class GameDataAccumulator {
 		}
 		
 		/* initialize winners */
-		for(int i = -1; i < numPlayers; i++){
+		for(int i = -1; i < MAX_NUM_PLAYERS; i++){
 			_playerWins.put(i, 0);
 		}
 	}

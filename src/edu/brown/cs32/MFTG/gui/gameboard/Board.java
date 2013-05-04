@@ -463,6 +463,10 @@ public class Board extends JPanel {
 			}
 		}
 	}
+	
+	public void setWinnerData(Map<Integer,Integer> data){
+		//TODO Chizu can you implement this?
+	}
 
 	
 	public void sendHeuristics() {

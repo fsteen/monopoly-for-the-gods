@@ -30,17 +30,15 @@ public class AIClient extends Client{
 	Player _player;
 	Player _previousPlayer;
 
-	public AIClient(/*String host, int port*/) {
-		//super(host, port);
+	public AIClient() {
 		super();
 		_player = new Player(_id);
 		_previousPlayer=null;
 	}
 	
-	public void connectAndRun(int port, String host) {
+	public void run() {
 		try {
-			_server = new Socket(host,port);
-			//_server = new Socket(_host, _port);
+			_server = new Socket(_host,_port);
 			_input = new BufferedReader(new InputStreamReader(_server.getInputStream()));
 			_output = new BufferedWriter(new OutputStreamWriter(_server.getOutputStream()));
 		} catch (UnknownHostException e) {
@@ -93,6 +91,7 @@ public class AIClient extends Client{
 	}
 
 	public Player finishGetPlayer(){
+		System.out.println("AI starting to return player");
 		Player temp = new Player(_player);
 		for(String key: _currentGameData._overallPlayerPropertyData.keySet()) {
 			PropertyDataReport others =  _currentGameData._overallPropertyData.get(key);
@@ -125,6 +124,8 @@ public class AIClient extends Client{
 			else if(mine==null&&minePrev==null) {
 				continue;
 			}
+			System.out.println("AI partway thru get player");
+			
 			//If i'm doing better than previously, then I can value it more or less according to what i've previously done
 			if(mine.accTotalRevenueWithoutHouses+mine.accTotalRevenueWithHouses>minePrev.accTotalRevenueWithHouses+minePrev.accTotalRevenueWithoutHouses) {
 				int valDif = _player.getPropertyValue(key)-_previousPlayer.getPropertyValue(key);
@@ -210,6 +211,7 @@ public class AIClient extends Client{
 			}
 
 		}
+		System.out.println("AI in the middle of getting player");
 		double mycash=0;
 		double mywealth=0;
 		double othercash=0;
@@ -277,6 +279,7 @@ public class AIClient extends Client{
 			_player.setTradingFear(Math.min(Math.max(1,_previousPlayer.getTradingFear()-.9*(_previousPlayer.getTradingFear()-_player.getTradingFear())),10));
 		}
 		_previousPlayer=temp;
+		System.out.println("AI gave player");
 		return _player;
 	}
 
