@@ -133,14 +133,14 @@ public class Profile {
 	}
 
 	private void setTimidValues(Player p) {
-		p.setColorValue("purple", 2, 1.25, 1.75, 1.5);
-		p.setColorValue("light blue", 2, 1.25, 1.75, 1.5);
-		p.setColorValue("pink", 2, 1.25, 1.75, 1.5);
-		p.setColorValue("orange", 2, 1.25, 1.75, 1.5);
-		p.setColorValue("red", 2, 1.25, 1.75, 1.5);
-		p.setColorValue("yellow", 2, 1.25, 1.75, 1.5);
-		p.setColorValue("green", 2, 1.25, 1.75, 1.5);
-		p.setColorValue("dark blue", 2, 1.25, 1.75, 1.5);
+		p.setColorValue("purple", 1.2, 1.1, 1.1, 1.05);
+		p.setColorValue("light blue", 1.2, 1.1, 1.1, 1.05);
+		p.setColorValue("pink", 1.2, 1.1, 1.1, 1.05);
+		p.setColorValue("orange", 1.2, 1.1, 1.1, 1.05);
+		p.setColorValue("red", 1.2, 1.1, 1.1, 1.05);
+		p.setColorValue("yellow", 1.2, 1.1, 1.1, 1.05);
+		p.setColorValue("green", 1.2, 1.1, 1.1, 1.05);
+		p.setColorValue("dark blue", 1.2, 1.1, 1.1, 1.05);
 
 		p.setPropertyValue("oriental avenue", 150);
 		p.setPropertyValue("vermont place", 140);
