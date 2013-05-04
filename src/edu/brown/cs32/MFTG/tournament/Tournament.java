@@ -259,10 +259,6 @@ public class Tournament implements Runnable{
 		}
 	}
 	
-	private void sendEndOfMatchData(GameDataReport aggregatedData){
-		// TODO implement
-	}
-	
 	private void sendErrorMessage(String errorMessage){
 		for (ClientHandler c : _clientHandlers){
 			c.sendErrorMessage(errorMessage);

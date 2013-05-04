@@ -81,10 +81,6 @@ public class AIClient extends Client{
 		_previousGameData=_currentGameData;
 		_currentGameData = gameDataReport;
 	}
-	
-	protected void respondToDisplayMatchData(ClientRequestContainer request){
-		// TODO implement	
-	}
 
 	public synchronized void addGameData(GameData gameData){
 		// do nothing -- there is no gui
