@@ -5,8 +5,8 @@ from Chizu:
 	- Verify that game results make sense
 	- make passive and aggressive players have different property valuations
 
-from Frances:
-	- debug the AI player (gets stuck in getPlayer())
+from Alex:
+	- make the save button on the settings screen call saveProfiles() in the monopolyGUI	
 
 ===Chizu===
 - Format the winner graph
