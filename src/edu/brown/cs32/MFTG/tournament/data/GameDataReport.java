@@ -15,12 +15,12 @@ public class GameDataReport {
 	public final List<TimeStampReport> _timeStamps; //the average wealth data for players over these time stamps
 	public final Map<String, List<PropertyDataReport>> _overallPlayerPropertyData; //the 
 	public final Map<String, PropertyDataReport> _overallPropertyData;
-	public final Map<Integer, Integer> _playerWins;
+	public final Map<Integer, Double> _playerWins;
 	public final List<Integer> _winList;
 	
 	@JsonCreator
 	public GameDataReport(@JsonProperty("timeStamps") List<TimeStampReport> timeStamps,
-						  @JsonProperty("playerWins") Map<Integer, Integer> playerWins,
+						  @JsonProperty("playerWins") Map<Integer, Double> playerWins,
 						  @JsonProperty("winList") List<Integer> winList, 
 						  @JsonProperty("entireGameData") Map<String, List<PropertyDataReport>> entireGameData,
 						  @JsonProperty("overallPropertyData") Map<String, PropertyDataReport> overallPropertyData){
@@ -99,7 +99,7 @@ public class GameDataReport {
 		}
 		b.append("*********************\n\n\n\n");
 		
-		for(Entry<Integer, Integer> e : _playerWins.entrySet()){
+		for(Entry<Integer, Double> e : _playerWins.entrySet()){
 			b.append(String.format("Player %d has %d wins\n",e.getKey(),e.getValue()));
 		}
 		b.append("winList\n" + _winList + "\n");
