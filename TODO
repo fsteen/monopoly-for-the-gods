@@ -1,0 +1,44 @@
+===JUDAH===
+- make sure that nothing falls through the cracks
+
+from Chizu:
+	- Verify that game results make sense
+	- make passive and aggressive players have different property valuations
+
+from Frances:
+	- debug the AI player (gets stuck in getPlayer())
+
+===Chizu===
+- Format the winner graph
+- Decide whether or not to use pictures for buttons on the top
+- Integrate winner data with Frances
+- Ensure that timing is working correctly
+- Add a button to turn on/off tooltips
+- Make a board without aggregate property data for the settings page
+- Talk with Frances about using property ID's vs. using profiles to say "Player 1"
+
+from Judah:
+	- add the removeAggregateButton() method
+	- fix up the connection between the menubar and "those buttons"
+
+from Frances:
+	- implement the setWinnerData() method
+
+===Frances===
+- Set up the end of game flow
+	- call setWinner() in the monopolyGui
+- Figure out how to create AI players
+- Figure out how to handle catching exceptions thrown in games
+- Make sure that the "time owned" value is being calculated correctly
+
+from Alex:
+	- make sure that games, sets, and matches are saved by adding them to the profile
+
+===Alex===
+- Profile persistence
+- Make sure that verification data is being sent back to the server
+- Properly implement timeouts server-side
+- Properly implement timeouts client-side
+- Make everything close properly upon shutdown
+- Make sure that errors are thrown and handled properly
+
