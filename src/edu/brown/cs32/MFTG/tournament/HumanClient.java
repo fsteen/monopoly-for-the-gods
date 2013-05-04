@@ -109,11 +109,17 @@ public class HumanClient extends Client{
 
 		displayGameData(gameDataReport);
 	}
+	
+	protected void respondToDisplayMatchData(ClientRequestContainer request){
+		// do error checking and stuff
+		
+		displayMatchData(null);
+	}
 
 	/*******************************************************/
 
 	/**
-	 * Set and display the combined GameData
+	 * Set and display the combined GameData at the end of a set
 	 * @param combinedData
 	 */
 	public void displayGameData(GameDataReport combinedData) {
@@ -122,6 +128,14 @@ public class HumanClient extends Client{
 		_gui.getBoard().setWinnerData(combinedData._playerWins);
 		//_gui.getBoard().newRound();
 		
+	}
+	
+	/**
+	 * Set and display the combined GameData at the end of a match
+	 * @param combinedData
+	 */
+	public void displayMatchData(GameDataReport combinedData){
+		// TODO implement
 	}
 	
 	private void displayDataToGui(GameDataReport combinedData){

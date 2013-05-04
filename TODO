@@ -48,4 +48,4 @@ from Chizu:
 - Properly implement timeouts client-side
 - Make everything close properly upon shutdown
 - Make sure that errors are thrown and handled properly
-
+- make sure that setting the last request to DISPLAYGAMEDATA on line 143 of Client.java makes sense
