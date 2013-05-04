@@ -61,7 +61,7 @@ public class CreateBottomPanel extends JPanel {
 	private JPanel _extraPanel, _fpPanel;
 	private JTextField _port, _timeBegin, _timeBetween, _numSets, _numGames, _freeParkingJackpot;
 	private JLabel _portLabel,_winCondLabel, _timeBeginLabel, _timeBetweenLabel, _numSetsLabel, _numGamesLabel, _gameFlowLabel, _extraLabel, _fpLabel;
-	private JRadioButton _mostMoney, _mostSets, _lastMatch, _chooseTogether, _rotateChoosing;
+	private JRadioButton _mostMoney, _mostSets, _lastMatch;// _chooseTogether, _rotateChoosing;
 	private JCheckBox _freeParking, _auctions, _doubleOnGo;
 	private ButtonGroup _winCond, _gameFlow;
 	private ImagePanel _p1h,_p1c,_p2h,_p2c,_p3h,_p3c,_p3x,_p4h,_p4c,_p4x;
@@ -174,10 +174,10 @@ public class CreateBottomPanel extends JPanel {
 			_numGames= new JTextField(4);
 			_numSets.setDocument(new NumDocument(3));
 			_numSets.setText(DEFAULT_NUM_SETS +"");
-			_numGames.setDocument(new NumDocument(5));
+			_numGames.setDocument(new NumDocument(6));
 			_numGames.setText(DEFAULT_GAMES_PER_SET + "");
 			
-			Dimension numSize = new Dimension(60,30);
+			Dimension numSize = new Dimension(70,30);
 			Dimension numLabelSize = new Dimension(200,15);
 			_numSetsLabel.setSize(numLabelSize);
 			_numSetsLabel.setPreferredSize(numLabelSize);
@@ -203,18 +203,18 @@ public class CreateBottomPanel extends JPanel {
 			gameFlowPanel.setBackground(Color.WHITE);
 			_gameFlowLabel = new JLabel("Game Flow:");
 			_gameFlowLabel.setFont(_headerFont);
-			_chooseTogether=new JRadioButton("Choose Heuristics Together", true);
-			_rotateChoosing=new JRadioButton("Rotate Choosing Heuristics");
-			_chooseTogether.setBackground(Color.WHITE);
-			_rotateChoosing.setBackground(Color.WHITE);
+			//_chooseTogether=new JRadioButton("Choose Heuristics Together", true);
+			//_rotateChoosing=new JRadioButton("Rotate Choosing Heuristics");
+			//_chooseTogether.setBackground(Color.WHITE);
+			//_rotateChoosing.setBackground(Color.WHITE);
 			
-			_gameFlow = new ButtonGroup();
-			_gameFlow.add(_chooseTogether);
-			_gameFlow.add(_rotateChoosing);
+			//_gameFlow = new ButtonGroup();
+			//_gameFlow.add(_chooseTogether);
+			//_gameFlow.add(_rotateChoosing);
 			
-			gameFlowPanel.add(_gameFlowLabel);
-			gameFlowPanel.add(_chooseTogether);
-			gameFlowPanel.add(_rotateChoosing);
+			//gameFlowPanel.add(_gameFlowLabel);
+			//gameFlowPanel.add(_chooseTogether);
+			//gameFlowPanel.add(_rotateChoosing);
 			
 			_extraPanel = new JPanel(new GridLayout(0,1));
 			_extraPanel.setBackground(Color.WHITE);
@@ -380,12 +380,12 @@ public class CreateBottomPanel extends JPanel {
 			winCond = WinningCondition.LAST_SET_WON;
 		}
 		
-		Turns turnFlow;
-		if(_chooseTogether.isSelected()){
+		Turns turnFlow = Turns.STAGGERED;
+		/*if(_chooseTogether.isSelected()){
 			turnFlow = Turns.BUNCHED;
 		} else {
 			turnFlow = Turns.STAGGERED;
-		}
+		}*/
 		
 		int beginningTimeout = _timeBegin.getText().equals("") ? DEFAULT_TIME_BEGIN : Integer.parseInt(_timeBegin.getText());
 		int betweenTimeout = _timeBetween.getText().equals("") ? DEFAULT_TIME_BETWEEN : Integer.parseInt(_timeBetween.getText());

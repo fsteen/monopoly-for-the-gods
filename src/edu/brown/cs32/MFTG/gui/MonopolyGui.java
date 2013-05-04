@@ -36,32 +36,32 @@ public class MonopolyGui extends JFrame{
 	private EmptyMenuBar _empty;
 	private List<String> _outSongNames, _inSongNames;
 	private int _currentOutSongNumber, _currentInSongNumber;
-	private Music _currentSong;
+	//private Music _currentSong;
 
 	public MonopolyGui(Client client) {
 		super("Monopoly for the GODS");
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		
-			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-				if ("Nimbus".equals(info.getName())) {
-					try {
-						UIManager.setLookAndFeel(info.getClassName());
-					} catch (ClassNotFoundException | InstantiationException
-							| IllegalAccessException
-							| UnsupportedLookAndFeelException e) {
-					}
-					break;
+
+		for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+			if ("Nimbus".equals(info.getName())) {
+				try {
+					UIManager.setLookAndFeel(info.getClassName());
+				} catch (ClassNotFoundException | InstantiationException
+						| IllegalAccessException
+						| UnsupportedLookAndFeelException e) {
 				}
+				break;
 			}
-		
+		}
+
 		Dimension dimension = new Dimension(Constants.FULL_WIDTH, Constants.FULL_FRAME_HEIGHT);
 		this.setSize(dimension);		
 		this.setPreferredSize(dimension);
 		this.setMaximumSize(dimension);
 		this.setMinimumSize(dimension);
-		
+
 		this.setResizable(false);
-		
+
 		_panels = new HashMap<>();
 		_profileManager = new ProfileManager();
 
@@ -83,67 +83,60 @@ public class MonopolyGui extends JFrame{
 		_panels.put("join", join);
 		_end = new EndGamePanel(this);
 		_panels.put("end", _end);
-		
+
 		_empty = new EmptyMenuBar();
-		
-		/* DO NOT ACTUALLY USE THE BOARD PLEASE */
-		Board board;
-		try {
-			board = new Board(1, this, null);
-			
-			_currentPanel=greet;
-			this.add(_currentPanel);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
+
+		_currentPanel=greet;
+		this.add(_currentPanel);
+
 		this.setJMenuBar(_empty);
-		
+
 		this.switchPanels("settings");
-		
+
 		this.pack();
 		this.setVisible(true);
-		
+
 		_outSongNames = new ArrayList<>(2);
 		_outSongNames.add("music/NoChurchInTheWild.mp3");
 		_outSongNames.add("music/SwaggerLikeUs.mp3");
-		
+
 		_inSongNames = new ArrayList<>(2);
 		_inSongNames.add("music/Asutobots.mp3");		
 		_currentOutSongNumber=(int) Math.floor(Math.random()*_outSongNames.size());
 		_currentInSongNumber=(int) Math.floor(Math.random()*_inSongNames.size());
 
-		_currentSong=new Music(_outSongNames.get(_currentOutSongNumber), this, false);
-		_currentSong.play();
+		//_currentSong=new Music(_outSongNames.get(_currentOutSongNumber), this, false);
+		//_currentSong.play();
 	}
-	
+
 	/**
 	 * stops music
 	 */
 	public void stopMusic(){
-		_currentSong.close();
+		//_currentSong.close();
 	}
-	
+
 	/**
 	 * plays the next song out of game
 	 */
 	public void playNextOutOfGameSong(){
-		_currentSong.close();
+		//_currentSong.close();
 		_currentOutSongNumber = (_currentOutSongNumber+1)%_outSongNames.size();
 		String newSongName = _outSongNames.get(_currentOutSongNumber);
-		_currentSong = new Music(newSongName, this, false);
-		_currentSong.play();
+		//_currentSong = new Music(newSongName, this, false);
+		//_currentSong.play();
 	}
-	
+
 	/**
 	 * play song in game
 	 */
 	public void playNextInGameSong(){
-		_currentSong.close();
+		//_currentSong.close();
 		_currentInSongNumber = (_currentInSongNumber+1)%_inSongNames.size();
 		String newSongName = _inSongNames.get(_currentInSongNumber);
-		_currentSong = new Music(newSongName, this, true);
-		_currentSong.play();
+		//_currentSong = new Music(newSongName, this, true);
+		//_currentSong.play();
 	}
 
 	/**
@@ -188,7 +181,7 @@ public class MonopolyGui extends JFrame{
 	public Set<String> getProfileNames() {
 		return _profileManager.getProfileNames();
 	}
-	
+
 	/**
 	 * gets a profile
 	 * @param name
@@ -197,7 +190,7 @@ public class MonopolyGui extends JFrame{
 	public Profile getProfile(String name) {
 		return _profileManager.getProfile(name);
 	}
-	
+
 	/**
 	 * 
 	 * @param profileName
@@ -206,7 +199,7 @@ public class MonopolyGui extends JFrame{
 	public Record getRecord(String profileName) {
 		return (_profileManager.getProfile(profileName)==null)? null:_profileManager.getProfile(profileName).getRecord();
 	}
-	
+
 	/**
 	 * removes a profile
 	 * @param profileName
@@ -214,7 +207,7 @@ public class MonopolyGui extends JFrame{
 	public void removeProfile(String profileName) {
 		_profileManager.deleteProfile(profileName);
 	}
-	
+
 	/**
 	 * 
 	 * @return set of player names
@@ -222,7 +215,7 @@ public class MonopolyGui extends JFrame{
 	public Set<String> getPlayerNames(String profile) {
 		return _profileManager.getProfile(profile).getPlayerNames();
 	}
-	
+
 	/**
 	 * 
 	 * @return set of settings names
@@ -230,7 +223,7 @@ public class MonopolyGui extends JFrame{
 	public Set<String> getSettingsNames(String profile) {
 		return _profileManager.getProfile(profile).getSettingsNames();
 	}
-	
+
 	/**
 	 * 
 	 * @param profile
@@ -248,7 +241,7 @@ public class MonopolyGui extends JFrame{
 	public void setCurrentProfile(String profileName) {
 		_currentProfile = _profileManager.getProfile(profileName);
 	}
-	
+
 	/**
 	 * 
 	 * @return currentProfile
@@ -274,10 +267,10 @@ public class MonopolyGui extends JFrame{
 		return (Board) _panels.get("board"); //TODO get rid of casting
 	}
 
-	public void createBoard(int id, Profile profile) {
+	public void createBoard(int id, Profile profile, Client client) {
 		Board board;
 		try {
-			board = new Board(id, this, profile);
+			board = new Board(id, this, profile, client);
 			_panels.put("board", board);
 			switchPanels("board");
 		} catch (IOException e) {
@@ -285,7 +278,7 @@ public class MonopolyGui extends JFrame{
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void createSettingsBoard(Profile profile) {
 		SettingsBoard board;
 		try {

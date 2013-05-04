@@ -44,7 +44,7 @@ public abstract class Client {
 
 	/* Module variables */
 	protected final int NUM_THREADS=10;
-	protected final int DATA_PACKET_SIZE=100;
+	protected final int DATA_PACKET_SIZE=500;
 	protected final int NUM_DATA_POINTS=100;	
 	protected final int MAX_NUM_TURNS=1000;
 	protected int _nextDisplaySize;
@@ -184,8 +184,10 @@ public abstract class Client {
 		startGetPlayer(time);
 	}
 		
-	protected void finishRespondToGetPlayer(){
+	public void finishRespondToGetPlayer(){
+		System.out.println("finishing responding to get client");
 		Player p = finishGetPlayer();
+		System.out.println("player is : " + p);
 
 		String playerString;
 		

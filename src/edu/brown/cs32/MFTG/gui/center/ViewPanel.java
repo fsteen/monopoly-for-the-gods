@@ -6,10 +6,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.ButtonGroup;
-import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
-import javax.swing.ToolTipManager;
+import javax.swing.Timer;
 import javax.swing.UIManager;
 
 import edu.brown.cs32.MFTG.gui.Constants;
@@ -23,8 +23,11 @@ public class ViewPanel extends JPanel{
 	private JToggleButton _aggregateProperty;
 	private JToggleButton _colorGroup;
 	private JToggleButton _setHeuristics;
+	private Timer _timer;
+	private int _timeLeft;
+	private JLabel _timerLabel;
 	
-	public ViewPanel(Board board) {
+	public ViewPanel (Board board) {
 		_board = board;
 		this.setBackground(Constants.BACKGROUND_COLOR);
 		this.setLayout(null);
@@ -66,15 +69,21 @@ public class ViewPanel extends JPanel{
 		_aggregateProperty.setLocation((int) (x), (int) (2*y-_myProperty.getHeight()/2) - 10);
 		_colorGroup.setLocation((int) (x), (int) (3*y-_myProperty.getHeight()/2) - 10);
 		
-		_setHeuristics.setSize(100, 100);
-		_setHeuristics.setLocation(0, Constants.WIDTH - _setHeuristics.getHeight()/2 - 10);
+		_setHeuristics.setSize(100, 80);
+		_setHeuristics.setLocation(0, Constants.WIDTH - _setHeuristics.getHeight()/2 - 30);
 		
 		_setHeuristics.setToolTipText("<html>Commit to these heuristics<br/>Make sure to set property heuristics (My Properties), color heuristics (Color Group)<br/>and general heuristics (Center panel - buttons, graph, sliders)</html>");
+		
+		_timerLabel = new JLabel("Time: ", JLabel.CENTER);
+		_timerLabel.setToolTipText("<html>Amount of time left to set heuristics.<br/>When this reaches 0, your heuristics will be set to what is on the board<html/>");
+		_timerLabel.setSize(100, 20);
+		_timerLabel.setLocation(0, Constants.WIDTH - _setHeuristics.getHeight()/2 + 50);
 		
 		this.add(_myProperty);
 		this.add(_aggregateProperty);
 		this.add(_colorGroup);
 		this.add(_setHeuristics);
+		this.add(_timerLabel);
 	}
 	
 	public void removeSetHeuristicsButton() {
@@ -86,7 +95,35 @@ public class ViewPanel extends JPanel{
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			_setHeuristics.setEnabled(false);
-			_board.getHeuristics();
+			_board.sendHeuristics();
+			_timer.stop();
+			_timerLabel.setText("Heuristics Set");
+		}
+		
+	}
+
+	public void reenableSetHeuristics(int time) {
+		_setHeuristics.setEnabled(true);
+		_setHeuristics.setSelected(false);
+		_timeLeft = time;
+		_timerLabel.setForeground(Color.BLACK);
+		_timer = new Timer(1000, new DisplayListener());
+		_timer.start();
+	}
+	
+	public class DisplayListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if(_timeLeft < 30) {
+				_timerLabel.setForeground(Color.RED);
+			}
+			_timerLabel.setText("Time: " + Integer.toString(_timeLeft --));
+			if(_timeLeft < 0) {
+				_timer.stop();
+				_timerLabel.setText("Time Up");
+				_setHeuristics.setEnabled(false);
+			}
 		}
 		
 	}

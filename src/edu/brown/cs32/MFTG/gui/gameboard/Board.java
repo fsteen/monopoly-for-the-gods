@@ -2,10 +2,8 @@ package edu.brown.cs32.MFTG.gui.gameboard;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.MenuBar;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -16,15 +14,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.swing.JFrame;
-import javax.swing.JMenu;
 import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.ToolTipManager;
 
 import edu.brown.cs32.MFTG.gui.Constants;
-import edu.brown.cs32.MFTG.gui.MonopolyGui;
 import edu.brown.cs32.MFTG.gui.Constants.ColorProperties;
 import edu.brown.cs32.MFTG.gui.Constants.Colors;
 import edu.brown.cs32.MFTG.gui.Constants.Orientation;
@@ -33,6 +27,7 @@ import edu.brown.cs32.MFTG.gui.Constants.Railroads;
 import edu.brown.cs32.MFTG.gui.Constants.StaticProperties;
 import edu.brown.cs32.MFTG.gui.Constants.Utilities;
 import edu.brown.cs32.MFTG.gui.Constants.View;
+import edu.brown.cs32.MFTG.gui.MonopolyGui;
 import edu.brown.cs32.MFTG.gui.center.Center;
 import edu.brown.cs32.MFTG.gui.properties.AggregateColorProperty;
 import edu.brown.cs32.MFTG.gui.properties.AggregateUtilityProperty;
@@ -43,6 +38,7 @@ import edu.brown.cs32.MFTG.gui.properties.MyUtilityProperty;
 import edu.brown.cs32.MFTG.gui.properties.PropertyPanel;
 import edu.brown.cs32.MFTG.gui.properties.StaticProperty;
 import edu.brown.cs32.MFTG.monopoly.Player;
+import edu.brown.cs32.MFTG.tournament.Client;
 import edu.brown.cs32.MFTG.tournament.Profile;
 import edu.brown.cs32.MFTG.tournament.data.PlayerWealthDataReport;
 import edu.brown.cs32.MFTG.tournament.data.PropertyDataReport;
@@ -58,12 +54,14 @@ public class Board extends JPanel {
 	private Player _player = null;
 	protected MonopolyGui _main;
 	protected Profile _profile;
+	private Client _client;
 	
-	public Board (int id, MonopolyGui main, Profile profile) throws IOException {
+	public Board (int id, MonopolyGui main, Profile profile, Client client) throws IOException {
 		super();
 		//_menu = menu;
 		_main=main;
 		_id = id;
+		_client = client;
 		_profile = profile;
 		
 		/* Set the dimension */
@@ -376,11 +374,13 @@ public class Board extends JPanel {
 	}
 	
 	public void initializeCenter() {
-		_center = new Center(this);
+		_center = new Center(this, _id);
 		this.add(_center, BorderLayout.CENTER);
 	}
 	
-	public void roundCompleted() {
+	public void newRound(int time) {
+		//time in seconds
+		_center.reenableSetHeuristics(time);
 		_player = null;
 	}
 	
@@ -444,9 +444,6 @@ public class Board extends JPanel {
 				railroad.setMyData(data.get(name));
 			}
 		}
-		this.validate();
-		this.updateUI();
-		this.repaint();
 	}
 	
 	public void setPropertyData(Map<String, PropertyDataReport> data) {
@@ -465,15 +462,18 @@ public class Board extends JPanel {
 				railroad.setAggregateData(data.get(name));
 			}
 		}
-		this.validate();
-		this.updateUI();
-		this.repaint();
 	}
 
 	
+	public void sendHeuristics() {
+		_client.finishRespondToGetPlayer();
+	}
+	
 	public void setWealthData(List<PlayerWealthDataReport> data) {
-		System.out.println("Player wealth data: " + data);
 		_center.setWealthData(data);
+		this.validate();
+		this.updateUI();
+		this.repaint();
 	}
 	
 	public void setHeuristics (Player player) {
@@ -494,8 +494,6 @@ public class Board extends JPanel {
 		_center.setButtonValues(player.getBuildingChoice(), player.getBuildingEvenness(), player.getBuildAggression(), player.getSellingChoice(), player.getHouseSelling(), player.getMortgageChoice());
 		
 		_jail.setWaits(player.getJailWait(), player.getJailPoor(), player.getJailRich());
-		
-		
 	}
 	
 	/*public static void main (String[] args) {

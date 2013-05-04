@@ -22,8 +22,9 @@ public class Center extends JPanel {
 	public ButtonPanel _buttonPanel;
 	public ViewPanel _viewPanel;
 	private Board _board;
+	private WinnerPanel _winnerPanel;
 	
-	public Center(Board board) {
+	public Center(Board board, int id) {
 		super();
 		_board = board;
 		this.setSize(9*Constants.WIDTH, 9*Constants.WIDTH);
@@ -34,6 +35,8 @@ public class Center extends JPanel {
 		this.add(_buttonPanel);
 		_profitGraph = new ProfitGraph();
 		_profitGraph.setToolTipText("<html>Set the minimum amount of cash you need in order to perform different transactions<br/>Click on a colored button above and then drag the highlighted line in the chart<html/>");
+		_winnerPanel = new WinnerPanel(id);
+		this.add(_winnerPanel);
 		this.add(_profitGraph);
 		_sliderPanel = new SliderPanel();
 		this.add(_sliderPanel);
@@ -42,6 +45,9 @@ public class Center extends JPanel {
 		this.add(_viewPanel);
 	}
 	
+	public void reenableSetHeuristics(int time) {
+		_viewPanel.reenableSetHeuristics(time);
+	}
 	
 	public void setWealthData(List<PlayerWealthDataReport> data) {
 		_profitGraph.setWealthData(data);

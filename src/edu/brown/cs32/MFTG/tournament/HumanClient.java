@@ -68,7 +68,7 @@ public class HumanClient extends Client{
 		}
 		try {
 			_id = respondToSendID();
-			_gui.createBoard(_id, _gui.getCurrentProfile());
+			_gui.createBoard(_id, _gui.getCurrentProfile(), this);
 		} catch (IOException | InvalidRequestException e1) {
 			displayMessage("Unable to retrieve a unique ID from the server :(");
 			return;
@@ -125,7 +125,7 @@ public class HumanClient extends Client{
 	public void displayGameData(GameDataReport combinedData) {
 		System.out.println("displaying end of round data");
 		displayDataToGui(combinedData);
-		_gui.getBoard().roundCompleted();
+		//_gui.getBoard().newRound();
 		
 	}
 	
@@ -161,8 +161,9 @@ public class HumanClient extends Client{
 	
 	public void startGetPlayer(int time){
 		System.out.println(time);
-		displayMessage("Time to choose heuristics!");
-		_timer = new Timer(1000*time, new GetPlayerActionListener(this));
+		//displayMessage("Time to choose heuristics!");
+		_timer = new Timer(1000*(time+1), new GetPlayerActionListener(this));
+		_gui.getBoard().newRound(time);
 		_timer.setRepeats(false);
 		_timer.start();
 	}
@@ -173,8 +174,8 @@ public class HumanClient extends Client{
 	 * @return
 	 */
 	public Player finishGetPlayer(){
-		_timer.stop();
-		displayMessage("Time's up!");
+		if(_timer!= null) _timer.stop();
+		//displayMessage("Time's up!");
 		return _gui.getBoard().getPlayer();
 	}
 

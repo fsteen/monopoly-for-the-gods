@@ -11,7 +11,7 @@ import edu.brown.cs32.MFTG.tournament.Profile;
 
 public class SettingsBoard extends Board {
 	public SettingsBoard(MonopolyGui main, Profile profile) throws IOException {
-		super(-1, main, profile);
+		super(-1, main, profile, null);
 		super.removeSetHeuristicsButton();
 		
 		

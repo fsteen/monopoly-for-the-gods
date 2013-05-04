@@ -45,7 +45,7 @@ public class ProfitGraph extends JPanel {
 		
 		_chartPanel = new DynamicChartPanel(_chart, _renderer);
 		
-		Dimension dim = new Dimension(9*Constants.WIDTH, 5*Constants.WIDTH);
+		Dimension dim = new Dimension(6*Constants.WIDTH, 5*Constants.WIDTH);
 		this.setMaximumSize(dim);
 		this.setMinimumSize(dim);
 		this.setPreferredSize(dim);
@@ -53,7 +53,7 @@ public class ProfitGraph extends JPanel {
 
 		setToolTipText("<html>Set the minimum amount of cash you need in order to perform different transactions<br/>Click on a colored button above and then drag the highlighted line in the chart<html/>");
 		
-		this.setLocation(0, 2*Constants.WIDTH);
+		this.setLocation(3*Constants.WIDTH, 2*Constants.WIDTH);
 	
 		this.add(_chartPanel);
 	}

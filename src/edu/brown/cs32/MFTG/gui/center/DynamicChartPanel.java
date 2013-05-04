@@ -41,17 +41,17 @@ public class DynamicChartPanel extends ChartPanel {
 	public DynamicChartPanel(JFreeChart chart, XYLineAndShapeRenderer renderer) {
 		super(chart);
 		_renderer = renderer;
-		this.setMouseWheelEnabled(true);
+		//this.setMouseWheelEnabled(true);
 		_chart = chart;
 		
 		this.addChartMouseListener(new MinCashListener());
 		
 		this.setLayout(null);
-		Dimension dim = new Dimension(9*Constants.WIDTH, 5*Constants.WIDTH);
-		this.setSize(dim);
-		this.setPreferredSize(dim);
+		Dimension dim = new Dimension(6*Constants.WIDTH, 5*Constants.WIDTH);
 		this.setMaximumSize(dim);
 		this.setMinimumSize(dim);
+		this.setPreferredSize(dim);
+		this.setSize(dim);
 		
 		this.setLocation(0, 0);
 		initializeButtons();
@@ -68,18 +68,18 @@ public class DynamicChartPanel extends ChartPanel {
 		_buildCash.setToolTipText("<html>Set the minimum amount of cash needed in order to build houses<br/>click this then drag the line in the graph<html/");
 		_unmortgageCash.setToolTipText("<html>Set the minimum amount of cash needed in order to unmortgage properties<br/>click this then drag the line in the graph<html/");
 		
-		_buyCash.setLocation(370, 5);
-		_buildCash.setLocation(421, 5);
-		_unmortgageCash.setLocation(479, 5);
+		_buyCash.setLocation(180, 5);
+		_buildCash.setLocation(230, 5);
+		_unmortgageCash.setLocation(288, 5);
 		
 		_buyCash.setSize(50, 25);
 		_buildCash.setSize(58, 25);
 		_unmortgageCash.setSize(109, 25);
 		
 		_buyCash.addActionListener(new MinCashButton(0));
-		_buyCash.setSelected(true);
-		_moving = 0;
-		_renderer.setSeriesPaint(0, Color.YELLOW);
+		//_buyCash.setSelected(true);
+		//_moving = 0;
+		//_renderer.setSeriesPaint(0, Color.YELLOW);
 		
 		_buildCash.addActionListener(new MinCashButton(1));
 		_unmortgageCash.addActionListener(new MinCashButton(2));
@@ -100,20 +100,9 @@ public class DynamicChartPanel extends ChartPanel {
 		_buyCash.setBackground(Color.BLUE);
 		_unmortgageCash.setBackground(Color.RED);
 		
-		
 		this.add(_buyCash);
 		this.add(_buildCash);
 		this.add(_unmortgageCash);
-	}
-	
-	public void mousePressed (MouseEvent e) {
-		/* super.mousePressed(e);
-		_moving = _location;
-		if(_moving == 0) _buttons.setSelected(_buyCash.getModel(), true);
-		if(_moving == 1) _buttons.setSelected(_buildCash.getModel(), true);
-		if(_moving == 2) _buttons.setSelected(_unmortgageCash.getModel(), true);
-		_currHeight = e.getLocationOnScreen().getX();
-		_mousePressed = true;*/
 	}
 	
 	public void update (double change) {
@@ -132,19 +121,21 @@ public class DynamicChartPanel extends ChartPanel {
 	}
 	
 	public void mouseReleased(MouseEvent e) {
-		/* super.mouseReleased(e);
-		_location = -1;
-		//_moving = -1;
-		_mousePressed = false; */
-	}
-	
-	public void mouseClicked(MouseEvent e) {
-		super.mouseClicked(e);
+		super.mouseReleased(e);
+		_moving = -1;
+		_renderer.setSeriesPaint(0, Color.BLUE);
+		_renderer.setSeriesPaint(1, Color.GREEN);
+		_renderer.setSeriesPaint(2, Color.RED);
+		_renderer.setSeriesPaint(3, Color.BLACK);
+		_renderer.setSeriesPaint(4, Color.GRAY);
+		
+		_buyCash.setSelected(false);
+		_buildCash.setSelected(false);
+		_unmortgageCash.setSelected(false);
 	}
 	
 	public void mouseDragged(MouseEvent e) {
 		if(_moving == -1) {
-			System.out.println("super drag");
 			super.mouseDragged(e);
 		}
 		else {
@@ -155,7 +146,7 @@ public class DynamicChartPanel extends ChartPanel {
 			_currHeight = newHeight;
 		}
 	}
-	
+
 	
 	private class MinCashListener implements ChartMouseListener {
 		@Override
@@ -202,7 +193,7 @@ public class DynamicChartPanel extends ChartPanel {
 
 		@Override
 		public void chartMouseMoved(ChartMouseEvent e) {
-			/*ChartEntity entity = e.getEntity();
+		/*	ChartEntity entity = e.getEntity();
 			if(!(entity instanceof XYItemEntity)) {
 				_location = -1;
 				_renderer.setSeriesPaint(0, Color.BLUE);
@@ -225,7 +216,7 @@ public class DynamicChartPanel extends ChartPanel {
 				_renderer.setSeriesPaint(2, Color.RED);
 				_renderer.setSeriesPaint(3, Color.BLACK);
 				_renderer.setSeriesPaint(4, Color.GRAY);
-			}*/
+			} */
 		}
 		
 	}
