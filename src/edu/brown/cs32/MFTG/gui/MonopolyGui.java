@@ -227,14 +227,6 @@ public class MonopolyGui extends JFrame{
 
 	/**
 	 * 
-	 * @return set of settings names
-	 */
-	public Set<String> getSettingsNames(String profile) {
-		return _profileManager.getProfile(profile).getSettingsNames();
-	}
-
-	/**
-	 * 
 	 * @param profile
 	 * @param playerName
 	 * @return player

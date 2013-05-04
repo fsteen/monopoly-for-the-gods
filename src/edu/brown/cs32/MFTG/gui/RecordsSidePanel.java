@@ -102,19 +102,19 @@ public class RecordsSidePanel extends JPanel{
 		if(r==null) {
 			return;
 		}
-		_numMatchesRecord.setText(String.valueOf(r.get_numMatches()));
-		_numMatchesWonRecord.setText(String.valueOf(r.get_numMatchesWon()));
-		_matchWinningPercentageRecord.setText(String.valueOf(r.get_matchWinningPercentage()));
+		_numMatchesRecord.setText(String.valueOf(r.getNumMatches()));
+		_numMatchesWonRecord.setText(String.valueOf(r.getNumMatchesWon()));
+		_matchWinningPercentageRecord.setText(String.valueOf(r.getMatchWinningPercentage()));
 
-		_numSetsRecord.setText(String.valueOf(r.get_numSets()));
-		_numSetsWonRecord.setText(String.valueOf(r.get_numSets()));
-		_setWinningPercentageRecord.setText(String.valueOf(r.get_setWinningPercentage()));
+		_numSetsRecord.setText(String.valueOf(r.getNumSets()));
+		_numSetsWonRecord.setText(String.valueOf(r.getNumSets()));
+		_setWinningPercentageRecord.setText(String.valueOf(r.getSetWinningPercentage()));
 
-		_numGamesRecord.setText(String.valueOf(r.get_numGames()));
-		_numGamesWonRecord.setText(String.valueOf(r.get_numGamesWon()));
-		_gameWinningPercentageRecord.setText(String.valueOf(r.get_gameWinningPercentage()));
+		_numGamesRecord.setText(String.valueOf(r.getNumGames()));
+		_numGamesWonRecord.setText(String.valueOf(r.getNumGamesWon()));
+		_gameWinningPercentageRecord.setText(String.valueOf(r.getGameWinningPercentage()));
 
-		_secondsPlayedRecord.setText(String.valueOf(r.get_secondsPlayed()));
+		_secondsPlayedRecord.setText(String.valueOf(r.getSecondsPlayed()));
 	}
 
 }
