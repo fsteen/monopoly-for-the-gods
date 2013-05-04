@@ -57,6 +57,7 @@ public abstract class MyPropertyPanel extends NonstaticProperty{
 		_valueField.setBackground(new Color(0,0,0,0));
 		_valueField.setOpaque(false);
 		_valueField.setHorizontalAlignment(JTextField.CENTER);
+		_valueField.addPropertyChangeListener(new ValueChangeListener());
 		
 		
 		if(_orientation == Orientation.DOWN) {

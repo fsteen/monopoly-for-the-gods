@@ -96,6 +96,7 @@ public class ViewPanel extends JPanel{
 		public void actionPerformed(ActionEvent e) {
 			_setHeuristics.setEnabled(false);
 			_board.sendHeuristics();
+			if(_timer != null) _timer.stop();
 			_timer.stop();
 			_timerLabel.setText("Heuristics Set");
 		}
