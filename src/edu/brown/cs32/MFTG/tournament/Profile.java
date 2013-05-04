@@ -24,7 +24,7 @@ public class Profile {
 		buildSettingsMap();
 		_record = new Record();
 	}
-	
+
 	/**
 	 * 
 	 * @return palyer names
@@ -32,7 +32,7 @@ public class Profile {
 	public Set<String> getPlayerNames(){
 		return _players.keySet();
 	}
-	
+
 	/**
 	 * 
 	 * @return get settings names
@@ -40,7 +40,7 @@ public class Profile {
 	public Set<String> getSettingsNames(){
 		return _settings.keySet();
 	}
-	
+
 	/**
 	 * Builds the Players that are included in every profile 
 	 */
@@ -48,38 +48,38 @@ public class Profile {
 		Player timid = new Player(1);
 		Player balanced = new Player(2);
 		Player aggressive = new Player(3);
-		
+
 		Map<String, Player> players = new HashMap<>();
-		
+
 		players.put("timid", timid);
 		players.put("balanced", balanced);
 		players.put("aggressive", aggressive);
-		
+
 		_players = players;
 	}
-	
+
 	/**
 	 * Builds the settings that are included in every profile
 	 */
 	private void buildSettingsMap(){
 		Map<String, Settings> settings = new HashMap<>();
-		
+
 		Settings defaultSettings = new Settings(10000, 10, false, -1, false, WinningCondition.MOST_SETS_WON, 300, 180);
-		
+
 		settings.put("default", defaultSettings);
-		
+
 		_settings = settings;
 	}
-	
+
 	@Override
 	public boolean equals(Object o){
 		if (o == null || !(o instanceof Profile))
 			return false;
-		
+
 		Profile that = (Profile) o;
-		
+
 		return Objects.equals(_name, that._name) && Objects.equals(_players, that._players) 
-			&& Objects.equals(_settings, that._settings);
+				&& Objects.equals(_settings, that._settings);
 	}
 
 	/**
@@ -88,9 +88,9 @@ public class Profile {
 	 */
 	public Player getPlayer(String s) {
 		return _players.get(s);
-		
+
 	}
-	
+
 	/**
 	 * 
 	 * @param p
@@ -104,7 +104,7 @@ public class Profile {
 		_players.put(name,p);
 		return true;
 	}
-	
+
 	/**
 	 * remove a player
 	 * @param name
@@ -117,7 +117,7 @@ public class Profile {
 		_players.remove(name);
 		return true;
 	}
-	
+
 	/**
 	 * adds a player or replaces previous if it exists
 	 * @param p
@@ -168,10 +168,44 @@ public class Profile {
 	public void setRecord(Record record) {
 		_record = record;
 	}
-	
+
+	private void setTimidValues(Player p) {
+		p.setColorValue("purple", 2, 1.25, 1.75, 1.5);
+		p.setColorValue("light blue", 2, 1.25, 1.75, 1.5);
+		p.setColorValue("pink", 2, 1.25, 1.75, 1.5);
+		p.setColorValue("orange", 2, 1.25, 1.75, 1.5);
+		p.setColorValue("red", 2, 1.25, 1.75, 1.5);
+		p.setColorValue("yellow", 2, 1.25, 1.75, 1.5);
+		p.setColorValue("green", 2, 1.25, 1.75, 1.5);
+		p.setColorValue("dark blue", 2, 1.25, 1.75, 1.5);
+
+		p.setPropertyValue("oriental avenue", 150);
+		p.setPropertyValue("vermont place", 140);
+		p.setPropertyValue("connecticut avenue", 170);
+
+		p.setPropertyValue("tennessee avenue", 220);
+		p.setPropertyValue("st. james place", 220);
+		p.setPropertyValue("new york avenue", 240);
+
+		p.setJailWait(1);
+		p.setMinBuildCash(200);
+		p.setMinBuyCash(150);
+		p.setMinUnmortgageCash(300);
+		p.setTradingFear(1.3);
+		p.setLiquidity(7);
+	}
+
+	private void setAggressiveValues(Player p) {
+
+	}
+
+	private void setBalancedValues(Player p) {
+
+	}
+
 	@Override
 	public String toString() {
 		return _name;
 	}
-	
+
 }
