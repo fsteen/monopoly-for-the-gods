@@ -27,9 +27,8 @@ from Frances:
 ===Frances===
 - Set up the end of game flow
 	- call setWinner() in the monopolyGui
-- Figure out how to create AI players
+- Figure out how to create AI players -DONE
 - Figure out how to handle catching exceptions thrown in games
-- Make sure that the "time owned" value is being calculated correctly
 
 from Alex:
 	- make sure that games, sets, and matches are saved by adding them to the profile

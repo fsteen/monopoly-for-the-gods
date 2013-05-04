@@ -466,7 +466,7 @@ public class Board extends JPanel {
 		}
 	}
 	
-	public void setWinnerData(Map<Integer,Integer> data){
+	public void setWinnerData(Map<Integer,Double> data){
 		//TODO Chizu can you implement this?
 	}
 
