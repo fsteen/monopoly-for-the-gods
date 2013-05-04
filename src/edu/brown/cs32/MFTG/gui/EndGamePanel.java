@@ -24,12 +24,14 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.event.MouseInputAdapter;
 
+import edu.brown.cs32.MFTG.gui.gameboard.Board;
+
 
 
 public class EndGamePanel extends JPanel{
-	private ImagePanel  _backLite, _backDark;
+	private ImagePanel  _backLite, _backDark, _viewLite, _viewDark;
 	private BufferedImage _winner, _loser, _foreground;
-	private Point _backLoc, _goLoc;
+	private Point _backLoc, _goLoc, _viewLoc;
 	private MonopolyGui _main;
 	private List<String> _names;
 	private boolean _winning;
@@ -39,9 +41,11 @@ public class EndGamePanel extends JPanel{
 	private final int START_HEIGHT=Constants.FULL_PANEL_HEIGHT/8;
 	private final int START_WIDTH=Constants.FULL_WIDTH/6;
 	private Font _nameFont;
+	private Board _board;
 	
-	public EndGamePanel(MonopolyGui main) {
+	public EndGamePanel(MonopolyGui main, Board board) {
 		try {
+			_board=board;
 			_main=main;
 			java.awt.Dimension size = new java.awt.Dimension(Constants.FULL_WIDTH,Constants.FULL_PANEL_HEIGHT);
 			this.setPreferredSize(size);
@@ -58,6 +62,13 @@ public class EndGamePanel extends JPanel{
 			_backLite.setLocation(_backLoc);
 			_backDark.setLocation(_backLoc);
 			_backDark.setVisible(false);
+			
+			_viewLite = new ImagePanel(Helper.resize(ImageIO.read(new File("images/ViewLite.png")), 130, 50));
+			_viewDark = new ImagePanel(Helper.resize(ImageIO.read(new File("images/ViewDark.png")), 130, 50));
+			_viewLoc= new Point(this.getWidth()-_backLite.getWidth()-50, this.getHeight()-_viewLite.getHeight()-_backDark.getHeight()-50);
+			_viewLite.setLocation(_viewLoc);
+			_viewDark.setLocation(_viewLoc);
+			_viewDark.setVisible(false);
 			
 			_winning=false;
 			addMouseListener(new MyMouseListener());
@@ -141,6 +152,11 @@ public class EndGamePanel extends JPanel{
 				_backDark.setVisible(true);
 				repaint();
 			}
+			if(intersects(xloc,yloc,_viewLite,_viewLoc)) {
+				_viewLite.setVisible(false);
+				_viewDark.setVisible(true);
+				repaint();
+			}
 
 		}
 		
@@ -153,6 +169,17 @@ public class EndGamePanel extends JPanel{
 				if(_backDark.isVisible()) {
 					fixPanels();
 					_main.switchPanels("greet");
+				}
+				else {
+					fixPanels();
+				}
+
+			}
+			else if(intersects(xloc,yloc,_viewLite,_viewLoc)) {
+				if(_viewDark.isVisible()) {
+					fixPanels();
+					_board.switchToEndGameMenu();
+					_main.switchPanels("board");
 				}
 				else {
 					fixPanels();
