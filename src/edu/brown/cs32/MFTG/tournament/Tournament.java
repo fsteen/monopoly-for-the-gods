@@ -36,7 +36,7 @@ public class Tournament implements Runnable{
 	private ServerSocket _socket;
 	private Settings _settings;
 	private ExecutorService _executor;
-	private Map<Integer,Integer> _roundWinners;
+	private Map<Integer,Double> _roundWinners;
 	private Random _rand;
 	
 	/**
@@ -75,7 +75,7 @@ public class Tournament implements Runnable{
 	
 	private void resetRoundWinners(){
 		for(int i = -1; i < MAX_NUM_PLAYERS; i++){ //-1 is a tie
-			_roundWinners.put(i, 0);
+			_roundWinners.put(i, 0.);
 		}
 	}
 	

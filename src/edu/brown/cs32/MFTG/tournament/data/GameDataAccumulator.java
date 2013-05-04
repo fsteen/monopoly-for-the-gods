@@ -20,7 +20,7 @@ public class GameDataAccumulator {
 
 	public Map<String, Map<Integer,PropertyDataAccumulator>> playerEntireGameData;
 	private Map<String, Map<Integer,PropertyDataAccumulator>> playerCurrentMaxValues;
-	public Map<Integer, Integer> _playerWins;
+	public Map<Integer, Double> _playerWins;
 	public List<Integer> _winList;
 	public final int _numPlayers;
 	public final int MAX_NUM_PLAYERS=4;
@@ -42,7 +42,7 @@ public class GameDataAccumulator {
 		
 		/* initialize winners */
 		for(int i = -1; i < MAX_NUM_PLAYERS; i++){
-			_playerWins.put(i, 0);
+			_playerWins.put(i, 0.);
 		}
 	}
 
@@ -69,7 +69,7 @@ public class GameDataAccumulator {
 				p.averageWith(g.playerEntireGameData.get(p.propertyName).get(p.ownerID));
 			}
 		}
-		for(Entry<Integer,Integer> e : _playerWins.entrySet()){
+		for(Entry<Integer,Double> e : _playerWins.entrySet()){
 			e.setValue(e.getValue() + g._playerWins.get(e.getKey()));
 		}
 		this._winList.addAll(g._winList);
@@ -189,9 +189,9 @@ public class GameDataAccumulator {
 	 * @param playerID
 	 */
 	public void addPlayerWin(int playerID){
-		Integer wins = _playerWins.get(playerID);
+		Double wins = _playerWins.get(playerID);
 		if(wins == null){
-			wins = 0;
+			wins = 0.;
 		}
 		_playerWins.put(playerID, ++wins);
 		_winList.add(playerID);
@@ -202,9 +202,9 @@ public class GameDataAccumulator {
 	 * 
 	 * @return a pair of the winner id and the number of wins
 	 */
-	public Pair<Integer,Integer> getMostGamesWonPlayer(){
-		Pair<Integer,Integer> winner = new Pair<>(-2,-2);
-		for(Entry<Integer, Integer> current : _playerWins.entrySet()){
+	public Pair<Integer,Double> getMostGamesWonPlayer(){
+		Pair<Integer,Double> winner = new Pair<>(-2,-2.);
+		for(Entry<Integer, Double> current : _playerWins.entrySet()){
 			if(current.getValue() > winner.getRight()){
 				winner.setLeft(current.getKey());
 				winner.setRight(current.getValue());

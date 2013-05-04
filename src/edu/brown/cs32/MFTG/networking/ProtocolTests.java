@@ -149,7 +149,7 @@ public class ProtocolTests {
 		List<TimeStampReport> timeStamps = new ArrayList<>();
 		Map<String, List<PropertyDataReport>> entireGameData = new HashMap<>();
 		Map<String, PropertyDataReport> overallPropertyData = new HashMap<>();
-		Map<Integer,Integer> playerWins = new HashMap<>();
+		Map<Integer,Double> playerWins = new HashMap<>();
 		
 		Map<Integer, PlayerWealthDataReport> wealthData = new HashMap<>();
 		wealthData.put(1, new PlayerWealthDataReport(1, 2, 3, 4));
@@ -162,8 +162,8 @@ public class ProtocolTests {
 		
 		overallPropertyData.put("test", p);
 		
-		playerWins.put(3, 4);
-		playerWins.put(9, 12);
+		playerWins.put(3, 4.);
+		playerWins.put(9, 12.);
 		List<Integer> winList = new ArrayList<>();
 		winList.add(3);
 		
