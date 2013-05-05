@@ -55,3 +55,6 @@ Completed:
 
 from Chizu:
 	- Ensure that timing is working correctly
+
+from Frances:
+	-fix client timeouts ... they do not work for small #s of games (like 5) so I turned them off
