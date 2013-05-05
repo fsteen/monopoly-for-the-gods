@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
 import edu.brown.cs32.MFTG.monopoly.GameData;
 import edu.brown.cs32.MFTG.monopoly.PlayerWealthData;
@@ -18,13 +19,11 @@ public class DataProcessor {
 	 * @return the GameDataAccumulator 
 	 */
 	public static GameDataAccumulator aggregate(List<GameData> data, int numDataPoints){
-		GameDataAccumulator overall = new GameDataAccumulator(numDataPoints, data.get(0)._numPlayers);
+		GameDataAccumulator overall = new GameDataAccumulator(numDataPoints/*, data.get(0)._numPlayers*/);
 		for(GameData d : data){
-			if(d != null){
-				combineGameData(overall, d);
-				overall.gameFinished();
-				overall.addPlayerWin(d.getWinner());
-			}
+			combineGameData(overall, d);
+			overall.gameFinished();
+			overall.addPlayerWin(d._gameNum,d.getWinner());
 		}
 		overall.average();
 		return overall;
@@ -84,16 +83,18 @@ public class DataProcessor {
 	 */
 	public static boolean isCorrupted(List<GameDataReport> data, List<Integer> confirmationIndices){
 		boolean corrupted = false;
-		
-		GameDataReport current = data.get(0);
-		for(Integer i : confirmationIndices){
-			for(GameDataReport d : data){
-				if((current == null && d != null) || (d == null && current != null)
-						|| i >= d._winList.size() || i >= current._winList.size() || 
-						d._winList.get(i) != current._winList.get(i)){
+		Map<Integer,Integer> first = data.get(0)._winList;
+		for(GameDataReport d : data){			
+			for(Integer gameNum : confirmationIndices){
+				if(d._winList.get(gameNum) != first.get(gameNum)){
 					corrupted = true;
 				}
-				current = d;
+			}
+		}
+		
+		if(corrupted){
+			for(GameDataReport d : data){
+				System.out.println(d._winList);
 			}
 		}
 		return corrupted;
@@ -111,27 +112,23 @@ public class DataProcessor {
 	public static List<List<Long>> generateSeeds(int numGames, int numPlayers, List<Integer> confirmationIndices, Random rand){
 		int confirmationListIndex = 0;
 		int confirmationListSize = confirmationIndices.size();
-		long seed;
-		List<Long> seedValues;
-		List<List<Long>> allSeedValues = new ArrayList<>();
 		
-		for(int i = 0; i < numGames; i++){
-			seedValues = new ArrayList<>();
-			if(confirmationListIndex < confirmationListSize && i == confirmationIndices.get(confirmationListIndex)){
-				//all games at this index should have the same seed
-				confirmationListIndex++;
-				seed = rand.nextLong();
-				for(int j = 0; j < numPlayers; j++){
-					seedValues.add(seed);
-				}
-			} else {
-				//all games at this index should have different seeds
-				for(int j = 0; j < numPlayers; j++){
-					seed = rand.nextLong();
-					seedValues.add(seed);
-				}
+		List<List<Long>> allSeedValues = new ArrayList<>(); //a list of size numGames for each player
+		for(int i = 0; i < numPlayers; i++){
+			allSeedValues.add(new ArrayList<Long>());
+		}
+		
+		long constantSeed;
+		long changingSeed;
+		boolean confirmationGame;
+		for(int game = 0; game < numGames; game++){
+			constantSeed = rand.nextLong();
+			confirmationGame = confirmationListIndex < confirmationListSize && game == confirmationIndices.get(confirmationListIndex);
+			for(int player = 0; player < numPlayers; player++){
+				changingSeed = rand.nextLong();
+				allSeedValues.get(player).add(confirmationGame ? constantSeed : changingSeed);
 			}
-			allSeedValues.add(seedValues);
+			confirmationListIndex++;
 		}
 		return allSeedValues;
 	}

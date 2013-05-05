@@ -123,7 +123,6 @@ public class HumanClient extends Client{
 		}
 		displayDataToGui(combinedData);
 		_gui.getBoard().setWinnerData(combinedData._playerWins);
-		System.out.println(_id + " " + combinedData.getPlayerWithMostWins());
 		_gui.getCurrentProfile().getRecord().addSet(combinedData.getPlayerWithMostWins() == _id); //update records
 	}
 	
@@ -150,9 +149,13 @@ public class HumanClient extends Client{
 	 * @param gameData
 	 */
 	public synchronized void addGameData(GameData gameData){
+		/* update records */
+		if(gameData != null){
+			_gui.getCurrentProfile().getRecord().addGame(gameData.getWinner() == _id, gameData.getData().size());
+		}
+		
 		List<GameData> temp = new ArrayList<>();
 		temp.add(gameData);
-		_gui.getCurrentProfile().getRecord().addGame(gameData.getWinner() == _id, gameData.getData().size()); //set record
 		GameDataAccumulator a = DataProcessor.aggregate(temp,BackendConstants.NUM_DATA_POINTS);
 		if(_data == null){
 			_data = a;

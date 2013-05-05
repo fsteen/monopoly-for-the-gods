@@ -15,15 +15,16 @@ public class GameData {
 	private int _time;
 	public final int _numPlayers;
 	private int _winner;
+	public final int _gameNum;
 	
 	/**
 	 * Constructs the game data objects
 	 * @param numPlayers
 	 */
 	@JsonCreator
-	public GameData(@JsonProperty("numPlayers") int numPlayers){
+	public GameData(@JsonProperty("gameNum") int gameNum, @JsonProperty("numPlayers") int numPlayers){
 		_numPlayers=numPlayers;
-		
+		_gameNum = gameNum;
 		//this is a list of players, each player has a list 
 		_data = new ArrayList<>();
 		_time=-1;
@@ -134,7 +135,8 @@ public class GameData {
 		
 		GameData that = (GameData) o;
 		
-		return java.util.Objects.equals(_data, that.getData()) && _time == that.getTime() && _numPlayers == that._numPlayers && _winner == that.getWinner();
+		return _gameNum == that._gameNum && java.util.Objects.equals(_data, that.getData()) 
+				&& _time == that.getTime() && _numPlayers == that._numPlayers && _winner == that.getWinner();
 	}
 	
 }

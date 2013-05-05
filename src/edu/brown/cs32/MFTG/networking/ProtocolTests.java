@@ -136,7 +136,7 @@ public class ProtocolTests {
 	@Test
 	public void testGameData() throws IOException{
 		ObjectMapper oMapper = new ObjectMapper();
-		GameData gd = new GameData(4);
+		GameData gd = new GameData(1,4);
 		
 		String gdJson = oMapper.writeValueAsString(gd);
 		GameData newGD = oMapper.readValue(gdJson, GameData.class);
@@ -164,8 +164,8 @@ public class ProtocolTests {
 		
 		playerWins.put(3, 4.);
 		playerWins.put(9, 12.);
-		List<Integer> winList = new ArrayList<>();
-		winList.add(3);
+		Map<Integer,Integer> winList = new HashMap<>();
+		winList.put(3,2);
 		
 		GameDataReport gdr = new GameDataReport(timeStamps, playerWins,winList, entireGameData, overallPropertyData,false);
 		

@@ -17,13 +17,13 @@ public class GameDataReport {
 	public final Map<String, List<PropertyDataReport>> _overallPlayerPropertyData; //the 
 	public final Map<String, PropertyDataReport> _overallPropertyData;
 	public final Map<Integer, Double> _playerWins;
-	public final List<Integer> _winList;
+	public final Map<Integer,Integer> _winList;
 	public final boolean _matchIsOver;
 	
 	@JsonCreator
 	public GameDataReport(@JsonProperty("timeStamps") List<TimeStampReport> timeStamps,
 						  @JsonProperty("playerWins") Map<Integer, Double> playerWins,
-						  @JsonProperty("winList") List<Integer> winList, 
+						  @JsonProperty("winList") Map<Integer,Integer> winList, 
 						  @JsonProperty("entireGameData") Map<String, List<PropertyDataReport>> entireGameData,
 						  @JsonProperty("overallPropertyData") Map<String, PropertyDataReport> overallPropertyData,
 						  @JsonProperty("matchIsOver") boolean matchIsOver){
@@ -48,7 +48,7 @@ public class GameDataReport {
 	}
 	
 	public GameDataAccumulator toGameDataAccumulator(){
-		GameDataAccumulator g = new GameDataAccumulator(_timeStamps.get(0).wealthData.size(),_playerWins.size()); //the number of players
+		GameDataAccumulator g = new GameDataAccumulator(_timeStamps.get(0).wealthData.size()/*,_playerWins.size()*/); //the number of players
 		List<TimeStampAccumulator> stamps = new ArrayList<>();
 		for(TimeStampReport t: _timeStamps){
 			stamps.add(t.toTimeStampAccumulator());

@@ -40,10 +40,12 @@ public class TimeStampAccumulator {
 	
 	public void averageWith(TimeStampAccumulator t){
 		if(_time != t._time){
-			System.out.println("TIMES DON'T MATCH");
+			System.err.println("Error : TimeStampAccumulator times do not match");
 		}
-		for(PlayerWealthDataAccumulator p : t._wealthData.values()){
-			_wealthData.get(p.ownerID).averageWith(p);
+		if(t._wealthData.size() == _wealthData.size()){
+			for(PlayerWealthDataAccumulator p : t._wealthData.values()){
+				_wealthData.get(p.ownerID).averageWith(p);
+			}
 		}
 	}
 	

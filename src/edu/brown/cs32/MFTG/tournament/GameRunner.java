@@ -3,6 +3,7 @@ package edu.brown.cs32.MFTG.tournament;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import edu.brown.cs32.MFTG.monopoly.Game;
+import edu.brown.cs32.MFTG.monopoly.GameData;
 
 /**
  * GameRunners are games that update the data in the Client
@@ -22,16 +23,14 @@ class GameRunner implements Runnable{
 	
 	@Override
 	public void run() {
-//		if(Math.random() > .5){
-//			try{
-				_game.run();
-				_client.addGameData(_game.getGameData());
-//			} catch (Exception e){
-//				_client.addGameData(null);
-//			}
-//		} else {
-//			_client.addGameData(null);
-//		}
+		try{
+			_game.run();
+			_client.addGameData(_game.getGameData());
+		} catch (Exception e){
+			GameData g = new GameData(_game.gameNum, BackendConstants.MAX_NUM_PLAYERS);
+			g.setWinner(-1); //tie
+			_client.addGameData(g);
+		}
 		synchronized(_client){
 			_numThreadsDone.incrementAndGet();
 			_client.notifyAll();

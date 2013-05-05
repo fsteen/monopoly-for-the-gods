@@ -293,14 +293,14 @@ public abstract class Client implements Runnable{
 		GameRunnerFactory gameRunnerFactory = new GameRunnerFactory(_numThreadsDone, this, BackendConstants.MAX_NUM_TURNS,
 				settings.freeParking,settings.doubleOnGo,settings.auctions,players.toArray(new Player[players.size()]));
 		
-		for(Long seed : seeds){
-			_pool.execute(gameRunnerFactory.build(seed)); //launch games
+		for(int i = 0; i < seeds.size(); i++){
+			_pool.execute(gameRunnerFactory.build(i,seeds.get(i)));
 		}
 		
 		synchronized (this){
 			while(_numThreadsDone.get() < seeds.size()){
 				try{
-					this.wait(); //wait for games to finish
+					this.wait();
 				} catch (InterruptedException e){}
 			}
 		}

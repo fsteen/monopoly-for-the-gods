@@ -10,12 +10,16 @@ from Chizu:
 
 from Frances:
 	-make sure menu shows up in end of game flow
+	-AI is getting stuck in get player method
 
 ===Chizu===
 - Decide whether or not to use pictures for buttons on the top
 - Add a button to turn on/off tooltips
 - Talk with Frances about using property ID's vs. using profiles to say "Player 1"
 - Work on repainting while playing the games?
+
+from Frances:
+	-enter listener for set heuristics button?
 
 Completed:
 	- implement the setWinnerData() method
@@ -27,17 +31,18 @@ Completed:
     
 
 ===Frances===
-- Figure out how to handle catching exceptions thrown in games
 - Figure out security issues ... it always says someone is cheating
+-fix exception that i just casued ...
 -Get rid of player with most $ method in GameDataAccumulator
-_out of memory error ... AHHH
+-out of memory error ... AHHH
 from Alex:
 	- make sure that games, sets, and matches are saved by adding them to the profile 
 	(addgame addset and addmatch methods in records)
-from Judah:
-	- only average the number of houses of games when we have a monopoly on the property.
 	
-
+Completed:
+-handle exceptions from Games
+- only average the number of houses of games when we have a monopoly on the property.
+-fix time owned
 
 ===Alex===
 - Make records persistent

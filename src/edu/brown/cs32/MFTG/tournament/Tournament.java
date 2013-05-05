@@ -129,12 +129,12 @@ public class Tournament implements Runnable{
 			confirmationIndices = DataProcessor.generateConfirmationIndices(gamesPerModule, BackendConstants.CONFIRMATION_PERCENTAGE,_rand);
 
 			// play a round of games
-			data = playRoundOfGames(players, DataProcessor.generateSeeds(players.size(),gamesPerModule, confirmationIndices,_rand));
+			data = playRoundOfGames(players, DataProcessor.generateSeeds(gamesPerModule, _players.size(), confirmationIndices,_rand));
 
 			// make sure nobody cheated
-			if(DataProcessor.isCorrupted(data, confirmationIndices)){
-				System.out.println("someone is cheating"); //TODO what to do in this case
-			}
+//			if(DataProcessor.isCorrupted(data, confirmationIndices)){
+//				System.out.println("someone is cheating"); //TODO what to do in this case
+//			}
 			sendEndOfRoundData(accumulateEndOfGameData(data, roundNum));
 		}
 	}
@@ -218,7 +218,6 @@ public class Tournament implements Runnable{
 	 */
 
 	private List<GameDataReport> playRoundOfGames(List<Player> players, List<List<Long>> seeds) {
-
 		List<Future<GameDataReport>> gameDataFutures = new ArrayList<>();
 		List<GameDataReport> gameData = new ArrayList<>();
 

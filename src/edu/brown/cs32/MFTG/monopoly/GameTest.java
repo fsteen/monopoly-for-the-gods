@@ -16,7 +16,7 @@ public class GameTest {
 		Player p0=new Player(0);
 		Player p1=new Player(1);
 		
-		Game g = new Game(13,1000, 500,false, false, p0,p1);
+		Game g = new Game(1,13,1000, 500,false, false, p0,p1);
 		g.run();
 		g.getGameData().printData();
 		
@@ -30,7 +30,7 @@ public class GameTest {
 		Player p2=new Player(2);
 		Player p3=new Player(3);
 		long rand = new Random().nextLong();
-		Game g1 = new Game(rand,1000, 500,true, true, p0,p1,p2,p3);
+		Game g1 = new Game(1,rand,1000, 500,true, true, p0,p1,p2,p3);
 		g1.run();
 		
 	}
@@ -46,7 +46,7 @@ public class GameTest {
 				Player p2=new Player(2);
 				Player p3=new Player(3);
 				long rand = new Random().nextLong();
-				Game g1 = new Game(rand,1000, 500,true, true, p0,p1,p2,p3);
+				Game g1 = new Game(1,rand,1000, 500,true, true, p0,p1,p2,p3);
 				g1.run();
 			}catch(Exception e) {
 				exc.add(e);
@@ -62,7 +62,7 @@ public class GameTest {
 	public void landongo_move_test() {
 		Player p0=new Player(0);
 		
-		Game g = new Game(13,1000, 500,true, false, p0);
+		Game g = new Game(1,13,1000, 500,true, false, p0);
 		g.setDice(new MockDice(0,false));
 		g.run();
 		assertTrue(g.getGameData().getWinner()==-1);
@@ -74,7 +74,7 @@ public class GameTest {
 	public void jail_test() {
 		Player p0=new Player(0);
 		
-		Game g = new Game(13,5, -1,false, false, p0);
+		Game g = new Game(1,13,5, -1,false, false, p0);
 		g.setDice(new MockDice(10,false));
 		g.run();
 		assertTrue(g.getOtherPlayers(g.getBanker()).get(0).getTurnsInJail()==2);	
@@ -85,7 +85,7 @@ public class GameTest {
 	public void freeparking_test() {
 		Player p0=new Player(0);
 		
-		Game g = new Game(13,2, 100,false, false, p0);
+		Game g = new Game(1,13,2, 100,false, false, p0);
 		g.setDice(new MockDice(10,false));
 		g.run();
 		assertTrue(g.getOtherPlayers(g.getBanker()).get(0).getCash()==1600);	
@@ -96,7 +96,7 @@ public class GameTest {
 	public void jailpay_test() {
 		Player p0=new Player(0);
 		
-		Game g = new Game(13,6, -1,false, false, p0);
+		Game g = new Game(1,13,6, -1,false, false, p0);
 		g.setDice(new MockDice(10,false));
 		g.run();
 		assertTrue(g.getOtherPlayers(g.getBanker()).get(0).getCash()==1450);	
@@ -113,9 +113,9 @@ public class GameTest {
 		Player p3=new Player(3);
 		long rand = new Random().nextLong();
 		System.out.println("SEED: "+rand);
-		Game g1 = new Game(rand,1000, 500,true, true, p0,p1,p2,p3);
+		Game g1 = new Game(1,rand,1000, 500,true, true, p0,p1,p2,p3);
 		g1.run();
-		Game g2 =  new Game(rand,1000, 500,true, true, p0,p1,p2,p3);
+		Game g2 =  new Game(1,rand,1000, 500,true, true, p0,p1,p2,p3);
 		g2.run();
 		assertEquals(g1.getGameData(),g2.getGameData());			
 	}

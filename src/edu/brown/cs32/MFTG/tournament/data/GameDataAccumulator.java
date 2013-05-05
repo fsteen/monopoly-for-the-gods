@@ -22,27 +22,27 @@ public class GameDataAccumulator {
 	public Map<String, Map<Integer,PropertyDataAccumulator>> playerEntireGameData;
 	private Map<String, Map<Integer,PropertyDataAccumulator>> playerCurrentMaxValues;
 	public Map<Integer, Double> _playerWins;
-	public List<Integer> _winList;
-	public final int _numPlayers;
+	public Map<Integer,Integer> _winList;
+//	public final int _numPlayers;
 	public boolean matchIsOver;
 
-	public GameDataAccumulator(int numTimeStamps, int numPlayers){
-		_playerWins = new HashMap<>();
+	public GameDataAccumulator(int numTimeStamps/*, int numPlayers*/){
 		entireGameData = new HashMap<>();
 		currentMaxValues = new HashMap<>();
 		playerEntireGameData = new HashMap<>();
 		playerCurrentMaxValues = new HashMap<>();
-		timeStamps = new ArrayList<>();
-		_winList = new ArrayList<>();
-		_numPlayers = numPlayers;
+		_winList = new HashMap<>();
+//		_numPlayers = numPlayers;
 		matchIsOver = false;
 
 		/* initialize timestamps */
+		timeStamps = new ArrayList<>();
 		for(int i = 0; i < numTimeStamps; i++){
 			timeStamps.add(new TimeStampAccumulator(i));
 		}
 		
-		/* initialize winners */
+		/* initialize player wins */
+		_playerWins = new HashMap<>();
 		for(int i = -1; i < BackendConstants.MAX_NUM_PLAYERS; i++){
 			_playerWins.put(i, 0.);
 		}
@@ -53,28 +53,35 @@ public class GameDataAccumulator {
 	 * @param g
 	 */
 	public void combineWith(GameDataAccumulator g){
-		if(g == null){
-			System.out.println("Cannot merge GameDataAcumulators with a null GameDataAccumulator.");
-		}
-		if(g.timeStamps.size() != timeStamps.size()){
-			System.out.println("Cannot merge GameDataAcumulators with different numbers of timestamps.");
-		}
-		
-		for(int i = 0; i < timeStamps.size(); i++){
-			timeStamps.get(i).averageWith(g.timeStamps.get(i));
-		}
-		for(PropertyDataAccumulator p : entireGameData.values()){
-			p.averageWith(g.entireGameData.get(p.propertyName));
-		}
-		for(Map<Integer,PropertyDataAccumulator> m : playerEntireGameData.values()){
-			for(PropertyDataAccumulator p : m.values()){
-				p.averageWith(g.playerEntireGameData.get(p.propertyName).get(p.ownerID));
+		if(g.timeStamps.size() == timeStamps.size()){
+			for(int i = 0; i < timeStamps.size(); i++){
+				timeStamps.get(i).averageWith(g.timeStamps.get(i));
 			}
 		}
-		for(Entry<Integer,Double> e : _playerWins.entrySet()){
-			e.setValue(e.getValue() + g._playerWins.get(e.getKey()));
+		
+		if(g.entireGameData.size() == entireGameData.size()){
+			for(PropertyDataAccumulator p : entireGameData.values()){
+				p.averageWith(g.entireGameData.get(p.propertyName));
+			}
 		}
-		this._winList.addAll(g._winList);
+		
+		if(g.playerEntireGameData.size() == playerEntireGameData.size()){
+			for(Map<Integer,PropertyDataAccumulator> m : playerEntireGameData.values()){
+				for(PropertyDataAccumulator p : m.values()){
+					p.averageWith(g.playerEntireGameData.get(p.propertyName).get(p.ownerID));
+				}
+			}
+		}
+		
+		if(g._playerWins.size() == _playerWins.size()){
+			for(Entry<Integer,Double> e : _playerWins.entrySet()){
+				e.setValue(e.getValue() + g._playerWins.get(e.getKey()));
+			}
+		}
+		
+		for(Entry<Integer,Integer> e : g._winList.entrySet()){
+			_winList.put(e.getKey(),e.getValue());
+		}		
 	}
 
 	/**
@@ -132,7 +139,7 @@ public class GameDataAccumulator {
 
 		if(playerProperties == null){
 			playerProperties = new HashMap<>();
-			for(int i = 0; i < _numPlayers; i++){
+			for(int i = 0; i < BackendConstants.MAX_NUM_PLAYERS; i++){ //TODO changed
 				playerData = new PropertyDataAccumulator(propertyName,i);
 				playerProperties.put(i, playerData);
 			}
@@ -154,7 +161,7 @@ public class GameDataAccumulator {
 		Map<Integer,PropertyDataAccumulator> playerProperties = playerCurrentMaxValues.get(propertyName);
 		if(playerProperties == null){
 			playerProperties = new HashMap<>();
-			for(int i = 0; i < _numPlayers; i++){
+			for(int i = 0; i < BackendConstants.MAX_NUM_PLAYERS; i++){ //TODO changed
 				temp = new PropertyDataAccumulator(propertyName,i);
 				playerProperties.put(i, temp);
 			}
@@ -191,13 +198,13 @@ public class GameDataAccumulator {
 	 * 
 	 * @param playerID
 	 */
-	public void addPlayerWin(int playerID){
+	public void addPlayerWin(int gameNum, int playerID){
 		Double wins = _playerWins.get(playerID);
 		if(wins == null){
 			wins = 0.;
 		}
 		_playerWins.put(playerID, ++wins);
-		_winList.add(playerID);
+		_winList.put(gameNum, playerID);
 
 	}
 	

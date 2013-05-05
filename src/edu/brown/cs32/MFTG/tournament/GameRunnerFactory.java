@@ -27,9 +27,9 @@ public class GameRunnerFactory {
 		_players = players;
 	}
 	
-	public GameRunner build(long seed){
+	public GameRunner build(int gameNum, long seed){
 		return new GameRunner(
-				new Game(seed,_maxNumTurns,_freeParking,_doubleOnGo,_auctions,_players),
+				new Game(gameNum,seed,_maxNumTurns,_freeParking,_doubleOnGo,_auctions,_players),
 				_numThreadsDone,
 				_module);
 		

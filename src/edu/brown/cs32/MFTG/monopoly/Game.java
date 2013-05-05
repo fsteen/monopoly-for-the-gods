@@ -25,6 +25,7 @@ public class Game implements Runnable{
 	private GameData _gameData;
 	private long _seed;
 	private GamePlayer _banker;
+	public final int gameNum;
 
 	/**
 	 * Constructs a new game
@@ -32,7 +33,8 @@ public class Game implements Runnable{
 	 * @param auctions
 	 * @param players
 	 */
-	public Game(long seed, int maxNumTurns, int freeParking,boolean doubleOnGo, boolean auctions, Player...players) {
+	public Game(int gameNum, long seed, int maxNumTurns, int freeParking,boolean doubleOnGo, boolean auctions, Player...players) {
+		this.gameNum = gameNum;
 		_maxNumTurns=maxNumTurns;
 		 Random rand= new Random(seed);
 		_players=new ArrayList<>(players.length);
@@ -67,7 +69,7 @@ public class Game implements Runnable{
 		_comChest=new CommunityChestDeck(rand);
 		_chance= new ChanceDeck(rand);
 
-		_gameData=new GameData(_players.size());
+		_gameData=new GameData(gameNum, _players.size());
 		sendGameData();
 
 
@@ -526,10 +528,4 @@ public class Game implements Runnable{
 		}
 		return num;
 	}
-	
-	//TODO added by Frances ... take out if you think it's bad, but I will need something like this for my code
-	public Game copy(){
-		return new Game(_seed, _maxNumTurns,_defaultFP,_doubleOnGo,_auctions,(Player[])_players.toArray());
-	}
-
 }
