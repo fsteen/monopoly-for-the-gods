@@ -51,6 +51,9 @@ from Judah:
 
 
 ===Alex===
+- Make records persistent
+- Figure out good timeout time
+- Remove a client when playing games times out
 - Properly implement timeouts server-side
 - Properly implement timeouts client-side
 - Make everything close properly upon shutdown
