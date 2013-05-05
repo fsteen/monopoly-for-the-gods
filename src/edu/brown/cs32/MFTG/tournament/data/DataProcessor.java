@@ -91,12 +91,6 @@ public class DataProcessor {
 				}
 			}
 		}
-		
-		if(corrupted){
-			for(GameDataReport d : data){
-				System.out.println(d._winList);
-			}
-		}
 		return corrupted;
 	}
 	
@@ -118,17 +112,17 @@ public class DataProcessor {
 			allSeedValues.add(new ArrayList<Long>());
 		}
 		
-		long constantSeed;
-		long changingSeed;
+		long seed;
 		boolean confirmationGame;
 		for(int game = 0; game < numGames; game++){
-			constantSeed = rand.nextLong();
+			seed = rand.nextLong();
 			confirmationGame = confirmationListIndex < confirmationListSize && game == confirmationIndices.get(confirmationListIndex);
 			for(int player = 0; player < numPlayers; player++){
-				changingSeed = rand.nextLong();
-				allSeedValues.get(player).add(confirmationGame ? constantSeed : changingSeed);
+				allSeedValues.get(player).add(confirmationGame ? seed : rand.nextLong());
 			}
-			confirmationListIndex++;
+			if(confirmationGame){
+				confirmationListIndex++;
+			}
 		}
 		return allSeedValues;
 	}

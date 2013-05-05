@@ -132,10 +132,10 @@ public class Tournament implements Runnable{
 			data = playRoundOfGames(players, DataProcessor.generateSeeds(gamesPerModule, _players.size(), confirmationIndices,_rand));
 
 			if(data.size() > 0){
-				// make sure nobody cheated
-	//			if(DataProcessor.isCorrupted(data, confirmationIndices)){
-	//				System.out.println("someone is cheating"); //TODO what to do in this case
-	//			}
+				//make sure nobody cheated
+				if(DataProcessor.isCorrupted(data, confirmationIndices)){
+					System.out.println("someone is cheating"); //TODO what to do in this case
+				}
 				sendEndOfRoundData(accumulateEndOfGameData(data, roundNum));
 			}
 		}
@@ -226,7 +226,6 @@ public class Tournament implements Runnable{
 		if (_clientHandlers.size() != seeds.size()){
 			// throw an error or something
 			System.out.println("seed size doesn't match num clients");
-			System.out.println("seeds size " + seeds.size() + " clients size " + _clientHandlers.size());
 		}
 
 		for (int i = 0; i < _clientHandlers.size(); i++){

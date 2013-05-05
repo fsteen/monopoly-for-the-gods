@@ -154,7 +154,6 @@ public class HumanClient extends Client{
 			_gui.getCurrentProfile().getRecord().addGame(gameData.getWinner() == _id, gameData.getData().size());
 		}
 		
-		
 		List<GameData> temp = new ArrayList<>();
 		temp.add(gameData);
 		GameDataAccumulator a = DataProcessor.aggregate(temp,BackendConstants.NUM_DATA_POINTS);

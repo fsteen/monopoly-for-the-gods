@@ -37,7 +37,6 @@ Completed:
     
 
 ===Frances===
-- Figure out security issues ... it always says someone is cheating
 -Get rid of player with most $ method in GameDataAccumulator
 -out of memory error ... AHHH
 from Alex:
@@ -53,6 +52,7 @@ from Judah:
 	- it seems you may not be saving records after the final set (though this may not be true), I added the saveProfiles() call (that writes to file) when the createEndGame() is called in monopolygui, this may not be appropriate, in which case fix where that's called, though it should be called at the end of a game (or even better at the end of a set)
 
 Completed:
+- Figure out security issues ... it always says someone is cheating
 -handle exceptions from Games
 -fix time owned
 
