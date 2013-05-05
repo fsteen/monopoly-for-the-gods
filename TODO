@@ -39,3 +39,4 @@ from Chizu:
 - Properly implement timeouts client-side
 - Make everything close properly upon shutdown
 - Make sure that errors are thrown and handled properly
+- Tell Judah about making the Balanced Player in the Tournament

@@ -140,6 +140,9 @@ public abstract class Client implements Runnable{
 		
 		} else if (method == Method.DISPLAYERROR){
 			respondToDisplayError(request);
+		
+		} else {
+			assert(false);
 		}
 	}
 

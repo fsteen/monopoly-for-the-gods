@@ -38,7 +38,7 @@ public class ClientHandler {
 	public ClientHandler(Socket client, int id, Settings settings) throws IOException{
 		_id = id;
 		_isFirstRound = true;
-		
+
 		_client = client;
 		_input = new BufferedReader(new InputStreamReader(_client.getInputStream()));
 		_output = new BufferedWriter(new OutputStreamWriter(_client.getOutputStream()));
@@ -47,7 +47,7 @@ public class ClientHandler {
 
 		_listOfPlayers = _oMapper.getTypeFactory().constructCollectionType(List.class, Player.class);
 	}
-	
+
 	/**
 	 * Writes a request to the output stream
 	 * @param request the request to write
@@ -59,7 +59,7 @@ public class ClientHandler {
 		_output.write("\n");
 		_output.flush();
 	}
-	
+
 	/**
 	 * Reads a response form the client
 	 * @return
@@ -74,55 +74,43 @@ public class ClientHandler {
 	/**
 	 * Gets the player associated with this object's client
 	 * @return the player returned by the client
-	 * @throws ClientCommunicationException 
 	 * @throws InvalidResponseException 
+	 * @throws IOException 
 	 */
-	public Player getPlayer() throws ClientCommunicationException, ClientLostException, InvalidResponseException{
-		String time = String.valueOf(_isFirstRound ? _settings.beginningTimeout : _settings.duringTimeout);
+	public Player getPlayer() throws InvalidResponseException, IOException{
+		int time = _isFirstRound ? _settings.beginningTimeout : _settings.duringTimeout;
 		_isFirstRound = false;
-		
-		ClientRequestContainer request = new ClientRequestContainer(Method.GETPLAYER, Arrays.asList(time));
+
+		ClientRequestContainer request = new ClientRequestContainer(Method.GETPLAYER, Arrays.asList(String.valueOf(time)));
 
 		// ask the client for gameData
-		try {
-			write(request);
-			
-			// read in the response
-			ClientRequestContainer response = readResponse();
-						
-			// check for bad responses
-			if (response._method != Method.SENDPLAYER){
-				throw new InvalidResponseException(Method.SENDPLAYER, response._method);
-			} else if (response._arguments == null || response._arguments.size() < 1){
-				throw new InvalidResponseException("Not enough arguments");
-			}
+		write(request);
 
-			// set the timeout and attempt to read the response from the client
-			try {
-//				_client.setSoTimeout((GET_PLAYER_TIME + 10) * 1000);
-				Player p = _oMapper.readValue(response._arguments.get(0), Player.class);
-//				_client.setSoTimeout(0);
-				return p;
-				
-			} catch (SocketTimeoutException | SocketException e){
-				throw new ClientLostException(_id);
-			}
+		// set the timeout and attempt to read the response from the client
+		_client.setSoTimeout((time + 10) * 1000);
+		ClientRequestContainer response = readResponse();
 
-		} catch (IOException e) {
-			throw new ClientCommunicationException(_id);
+		// check for bad responses
+		if (response._method != Method.SENDPLAYER){
+			throw new InvalidResponseException(Method.SENDPLAYER, response._method);
+		} else if (response._arguments == null || response._arguments.size() < 1){
+			throw new InvalidResponseException("Not enough arguments");
 		}
-		
+
+		Player p = _oMapper.readValue(response._arguments.get(0), Player.class);
+
+		return p;
 	}
-	
+
 	public List<GameData> readPlayGamesResponse() throws IOException {
 		List<GameData> toRet = new ArrayList<>();
-		
+
 		String line;
 		while(!(line = _input.readLine()).equals("DONE")){
 			GameData g = _oMapper.readValue(line, GameData.class);
 			toRet.add(g);
 		}
-		
+
 		return toRet;
 	}
 
@@ -144,13 +132,13 @@ public class ClientHandler {
 			ClientRequestContainer request = new ClientRequestContainer(Method.PLAYGAMES, arguments);
 			// request that the client play the games
 			write(request);
-			
+
 			ClientRequestContainer response = readResponse();
 
-//			List<GameData> gameData = readPlayGamesResponse();
-			
+			//			List<GameData> gameData = readPlayGamesResponse();
+
 			GameDataReport gameData= _oMapper.readValue(response._arguments.get(0), GameDataReport.class);
-			
+
 			return gameData;
 
 		} catch (IOException e){
@@ -172,10 +160,10 @@ public class ClientHandler {
 			throw new ClientCommunicationException(_id);
 		}
 	}
-	
+
 	public void sendErrorMessage(String errorMessage) {
 		ClientRequestContainer request = new ClientRequestContainer(Method.DISPLAYERROR, Arrays.asList(errorMessage));
-		
+
 		// request that the client display the error message
 		try {
 			write(request);
@@ -183,11 +171,11 @@ public class ClientHandler {
 			// do nothing -- you are already fucked
 		}
 	}
-	
+
 	public void sendID() throws ClientCommunicationException {
 		String stringID = String.valueOf(_id);
 		ClientRequestContainer request = new ClientRequestContainer(Method.SENDID, Arrays.asList(stringID));
-		
+
 		// request that the client display the error message
 		try {
 			write(request);
@@ -195,11 +183,11 @@ public class ClientHandler {
 			throw new ClientCommunicationException(_id);
 		}
 	}
-	
+
 	public Reader getInputReader(){
 		return _input;
 	}
-	
+
 	public Writer getOutputWriter(){
 		return _output;
 	}
