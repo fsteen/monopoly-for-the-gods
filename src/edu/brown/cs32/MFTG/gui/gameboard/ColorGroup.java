@@ -33,10 +33,10 @@ public class ColorGroup extends JPanel {
 	private Map<String, PropertyPanel> _myPropertyName = new HashMap<>();
 	private Map<String, PropertyPanel> _aggregatePropertyName = new HashMap<>();
 	private List<BufferedImage> _deeds = new ArrayList<>();
-	private List<PropertyPanel> _myProperties;
+	protected List<PropertyPanel> _myProperties;
 	private List<PropertyPanel> _aggregateProperties;
-	private ColorBlock _colorBlock;
-	private View _view = View.ME;
+	protected ColorBlock _colorBlock;
+	protected View _view = View.ME;
 	private Orientation _orientation;
 	private String _color;
 	private GridBagConstraints _c = new GridBagConstraints();
@@ -208,20 +208,24 @@ public class ColorGroup extends JPanel {
 		}
 	}
 	
+	public void nextView() {
+		if(_view == View.ME) {
+			_view = View.AGGREGATE;
+		}
+		else if(_view == View.AGGREGATE) {
+			_view = View.COLOR;
+		}
+		else if(_view == View.COLOR) {
+			_view = View.ME;
+		}
+	}
+	
 	private class ButtonMouseListener implements MouseListener {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			if(e.getButton() == MouseEvent.BUTTON1 && e.getClickCount()==2) {
-				if(_view == View.ME) {
-					_view = View.AGGREGATE;
-				}
-				else if(_view == View.AGGREGATE) {
-					_view = View.COLOR;
-				}
-				else if(_view == View.COLOR) {
-					_view = View.ME;
-				}
+				nextView();
 				update();
 			}
 			if(e.getButton() == MouseEvent.BUTTON3) {
