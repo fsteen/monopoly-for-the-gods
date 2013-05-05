@@ -133,7 +133,7 @@ public class ClientHandler {
 			// request that the client play the games
 			write(request);
 			
-			_client.setSoTimeout(_settings.getNumGames() * (int) (50./10000. * 1000.)); // 50 seconds per 10000 games
+//			_client.setSoTimeout(_settings.getNumGames() * (int) (50./10000. * 1000.)); // 50 seconds per 10000 games
 			ClientRequestContainer response = readResponse();
 			
 			if (response._method != Method.SENDGAMEDATA){

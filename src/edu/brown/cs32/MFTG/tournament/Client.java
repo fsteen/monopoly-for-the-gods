@@ -241,11 +241,9 @@ public abstract class Client implements Runnable{
 		Settings settings = _oMapper.readValue(arguments.get(2), Settings.class);
 		
 		GameDataReport gameData = playGames(players, seeds, settings);
-		
 		String gameDataJson = _oMapper.writeValueAsString(gameData);
 		
 		ClientRequestContainer response = new ClientRequestContainer(Method.SENDGAMEDATA, Arrays.asList(gameDataJson));
-		
 		write(response);
 	}
 	

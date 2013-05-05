@@ -114,7 +114,7 @@ public class Tournament implements Runnable{
 			System.out.println("you are fucked");
 			return;
 		}
-		int gamesPerModule = (int)Math.ceil(_settings.getNumGamesPerRound()/_numPlayers);
+		int gamesPerModule = (int)Math.ceil(((double)_settings.getNumGamesPerRound())/_numPlayers);
 
 		List<Player> players = null;
 		List<GameDataReport> data;
@@ -131,11 +131,13 @@ public class Tournament implements Runnable{
 			// play a round of games
 			data = playRoundOfGames(players, DataProcessor.generateSeeds(gamesPerModule, _players.size(), confirmationIndices,_rand));
 
-			// make sure nobody cheated
-//			if(DataProcessor.isCorrupted(data, confirmationIndices)){
-//				System.out.println("someone is cheating"); //TODO what to do in this case
-//			}
-			sendEndOfRoundData(accumulateEndOfGameData(data, roundNum));
+			if(data.size() > 0){
+				// make sure nobody cheated
+	//			if(DataProcessor.isCorrupted(data, confirmationIndices)){
+	//				System.out.println("someone is cheating"); //TODO what to do in this case
+	//			}
+				sendEndOfRoundData(accumulateEndOfGameData(data, roundNum));
+			}
 		}
 	}
 
@@ -244,6 +246,7 @@ public class Tournament implements Runnable{
 				e.printStackTrace();
 				numFails++;
 			} catch (ExecutionException e) {
+				e.printStackTrace();
 				if (e.getCause() instanceof SocketException){
 					// TODO remove client
 				} else {
