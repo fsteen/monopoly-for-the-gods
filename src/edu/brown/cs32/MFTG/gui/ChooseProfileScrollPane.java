@@ -49,4 +49,9 @@ public class ChooseProfileScrollPane extends ProfileScrollPane {
 		
 	}
 
+	@Override
+	public void processPress() {
+		//do nothing
+	}
+
 }

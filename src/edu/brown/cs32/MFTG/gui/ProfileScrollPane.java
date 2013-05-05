@@ -74,6 +74,11 @@ public abstract class ProfileScrollPane extends JScrollPane{
 	 */
 	public abstract void processClick();
 	
+	/**
+	 * proces press
+	 */
+	public abstract void processPress();
+	
 	/**********************Private inner classes*************************************/
 	public class ListListener implements ListSelectionListener{
 		public void valueChanged(ListSelectionEvent e) {
@@ -125,6 +130,7 @@ public abstract class ProfileScrollPane extends JScrollPane{
 			int index = _profileList.getSelectedIndex() + 1;
 			index = index >= _listModel.getSize() ? _listModel.getSize()-1 : index;
 			_profileList.setSelectedIndex(index);
+			processPress();
 		}
 	}
 
@@ -141,6 +147,7 @@ public abstract class ProfileScrollPane extends JScrollPane{
 			int index = _profileList.getSelectedIndex() - 1;
 			index = index >= 0 ? index : 0;
 			_profileList.setSelectedIndex(index);
+			processPress();
 		}
 	}	
 	

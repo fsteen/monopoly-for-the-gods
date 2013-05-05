@@ -42,7 +42,13 @@ public class MonopolyGui extends JFrame{
 		super("Monopoly for the GODS");
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		_musicOn=music;
-
+		
+		//this code is run at closing
+		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+			public void run() {
+				saveProfiles();
+			}
+		}, "Shutdown-thread"));
 
 		for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
 			if ("Nimbus".equals(info.getName())) {
@@ -276,7 +282,7 @@ public class MonopolyGui extends JFrame{
 		}
 		return null;
 	}
-	
+
 	public void createSettingsBoard(Profile profile) {
 		SettingsBoard board;
 		try {
@@ -287,7 +293,7 @@ public class MonopolyGui extends JFrame{
 			System.err.println("ERROR: "+e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * creates an end game screen
 	 * @param board
@@ -299,6 +305,7 @@ public class MonopolyGui extends JFrame{
 		end.setWinner(didWin, names);
 		_panels.put("end", end);
 		switchPanels("end");
+		saveProfiles();
 
 	}
 

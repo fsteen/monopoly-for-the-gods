@@ -20,6 +20,12 @@ from Frances:
 
 from Frances:
 	-enter listener for set heuristics button?
+	
+from Judah
+	-instead of displaying player numbers display profile names, as player numbers mean nothing to them
+	-weird bug where when I go on the aggressive player, the board view buttons on the board don't work, but those on the menu do
+	-move text field on railroads to not overlap the gray part at the beginning
+	-remove who's winning label at beginning, or display empty graph
 
 Completed:
 	- implement the setWinnerData() method
@@ -32,16 +38,22 @@ Completed:
 
 ===Frances===
 - Figure out security issues ... it always says someone is cheating
--fix exception that i just casued ...
 -Get rid of player with most $ method in GameDataAccumulator
 -out of memory error ... AHHH
 from Alex:
 	- make sure that games, sets, and matches are saved by adding them to the profile 
 	(addgame addset and addmatch methods in records)
-	
+
+
+from Judah:
+	- only average the number of houses of games when we have a monopoly on the property.
+	- make sure that game music turns on when game starts and game music turns off when game ends (just call playNextInGameSong() when game starts and playNextOutOfGameSong() when games ends on the monopolygui
+	- when you display players at end of game, you should print profile names as player numbers mean nothing to them
+	- make game exit cleanly when user clicks quit button in menu. just fill in the QuitListener in the InGameMenu class in the gameboard package
+	- it seems you may not be saving records after the final set (though this may not be true), I added the saveProfiles() call (that writes to file) when the createEndGame() is called in monopolygui, this may not be appropriate, in which case fix where that's called, though it should be called at the end of a game (or even better at the end of a set)
+
 Completed:
 -handle exceptions from Games
-- only average the number of houses of games when we have a monopoly on the property.
 -fix time owned
 
 ===Alex===
@@ -58,3 +70,8 @@ from Chizu:
 
 from Frances:
 	-fix client timeouts ... they do not work for small #s of games (like 5) so I turned them off
+
+from Judah
+	- right now when games end the port stays in use and cannot be reused, also game crashes if we try using a port in use, i've added an error message to the create game screen and join game screens that you should display if port or host is bad
+	- records also might not be saved to the right profile everytime, I played a game, got some records, and then when I relaunched they were displayed in different profiles, it was weird, 
+		I'm not sure exactly what the error is but do the following experiment: run a 2 player game on 2 new profiles for 5 sets, after the game is over go to the records page and note that it should be correct, next before closing the first 2 games, you can open up a third game and look at the records, this should be the same as the other two combined, but it's not.

@@ -44,6 +44,7 @@ public class EndGameMenu extends BoardMenu {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			_main.switchPanels("end");
+			
 		}
 			
 	}

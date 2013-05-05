@@ -2,7 +2,9 @@ package edu.brown.cs32.MFTG.gui;
 
 import java.awt.Color;
 import java.awt.Desktop;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -24,12 +26,14 @@ import javax.swing.event.MouseInputAdapter;
 
 
 
+
 public class JoinGamePanel extends JPanel{
 	private ImagePanel _createLite, _backLite, _backDark, _goLite, _goDark;
 	private BufferedImage _background;
 	private Point _createLoc, _whiteLoc, _backLoc, _goLoc;
 	private JoinBottomPanel _bottomPanel;
 	private MonopolyGui _main;
+	private JLabel _error;
 
 	private final int BUTTON_HEIGHT=Constants.FULL_PANEL_HEIGHT/8;
 	private final int BUTTON_WIDTH=2*Constants.FULL_PANEL_HEIGHT/3;
@@ -67,7 +71,14 @@ public class JoinGamePanel extends JPanel{
 			_goLite.setLocation(_goLoc);
 			_goDark.setLocation(_goLoc);
 			_goDark.setVisible(false);
-
+			
+			_error = new JLabel();
+			Dimension errorSize = new Dimension(this.getWidth()-_backLite.getWidth()*3, _backLite.getHeight());
+			_error.setSize(errorSize);
+			_error.setPreferredSize(errorSize);
+			_error.setLocation(Constants.BACK_X+_backLite.getWidth()+20, Constants.BACK_Y);
+			_error.setFont(new Font("errorFont",Font.ITALIC,30));
+			_error.setForeground(Color.RED);
 
 			addMouseListener(new MyMouseListener());
 
@@ -77,6 +88,7 @@ public class JoinGamePanel extends JPanel{
 			add(_goLite);
 			add(_goDark);
 			add(_bottomPanel);
+			add(_error);
 
 
 		} catch (IOException e) {
@@ -92,6 +104,14 @@ public class JoinGamePanel extends JPanel{
 		brush.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		brush.drawImage(_background, 0, 0, null);
 
+	}
+	
+	/**
+	 * sets error message, automatically adds "ERROR: " to the front
+	 * @param message
+	 */
+	public void setError(String message) {
+		_error.setText("ERROR: "+message);
 	}
 
 	private class MyMouseListener extends MouseInputAdapter{
@@ -113,7 +133,7 @@ public class JoinGamePanel extends JPanel{
 				_goDark.setVisible(true);
 				repaint();
 			}
-			if(e.getX()>240 &&e.getX()<440&&e.getY()>560 &&e.getY()<620) {
+			if(e.getX()>266 &&e.getX()<480&&e.getY()>600 &&e.getY()<666) {
 				String url = "https://itunes.apple.com/us/app/foodler/id615802139?mt=8"; // path to your new file
 
 				// open the default web browser for the HTML page
@@ -147,8 +167,6 @@ public class JoinGamePanel extends JPanel{
 					fixPanels();
 					_main.getClient().connect(_bottomPanel.getPort(), _bottomPanel.getHost());
 					_main.getClient().run();
-					//_main.createBoard(2);
-					//_main.switchPanels("board");
 				}
 				else {
 					fixPanels();

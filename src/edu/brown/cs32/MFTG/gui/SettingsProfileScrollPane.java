@@ -63,4 +63,9 @@ public class SettingsProfileScrollPane extends ProfileScrollPane {
 		
 	}
 
+	@Override
+	public void processPress() {
+		//do nothing
+	}
+
 }

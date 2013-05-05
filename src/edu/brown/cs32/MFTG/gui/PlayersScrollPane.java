@@ -59,4 +59,9 @@ public class PlayersScrollPane extends ProfileScrollPane {
 		
 	}
 
+	@Override
+	public void processPress() {
+		//do nothing
+	}
+
 }

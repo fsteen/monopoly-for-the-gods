@@ -63,9 +63,9 @@ public class EndGamePanel extends JPanel{
 			_backDark.setLocation(_backLoc);
 			_backDark.setVisible(false);
 			
-			_viewLite = new ImagePanel(Helper.resize(ImageIO.read(new File("images/ViewLite.png")), 130, 50));
-			_viewDark = new ImagePanel(Helper.resize(ImageIO.read(new File("images/ViewDark.png")), 130, 50));
-			_viewLoc= new Point(this.getWidth()-_backLite.getWidth()-50, this.getHeight()-_viewLite.getHeight()-_backDark.getHeight()-50);
+			_viewLite = new ImagePanel(Helper.resize(ImageIO.read(new File("images/ViewLite.png")), 110, 50));
+			_viewDark = new ImagePanel(Helper.resize(ImageIO.read(new File("images/ViewDark.png")), 110, 50));
+			_viewLoc= new Point(this.getWidth()-_backLite.getWidth()-40, this.getHeight()-_viewLite.getHeight()-_backDark.getHeight()-50);
 			_viewLite.setLocation(_viewLoc);
 			_viewDark.setLocation(_viewLoc);
 			_viewDark.setVisible(false);
@@ -103,6 +103,8 @@ public class EndGamePanel extends JPanel{
 			
 			add(_backLite);
 			add(_backDark);
+			add(_viewLite);
+			add(_viewDark);
 			add(_name1);
 			add(_name2);
 			add(_name3);
@@ -194,6 +196,8 @@ public class EndGamePanel extends JPanel{
 		private void fixPanels() {
 			_backDark.setVisible(false);
 			_backLite.setVisible(true);
+			_viewDark.setVisible(false);
+			_viewLite.setVisible(true);
 			repaint();
 		}
 		private boolean intersects(int xloc, int yloc, JPanel img, Point loc) {
