@@ -45,12 +45,12 @@ import edu.brown.cs32.MFTG.tournament.data.PropertyDataReport;
 
 public class Board extends JPanel {
 	
-	private Set<ColorGroup> _colorGroups = new HashSet<>();
-	private Set<Railroad> _railroads = new HashSet<>();
-	private Jail _jail;
+	protected Set<ColorGroup> _colorGroups = new HashSet<>();
+	protected Set<Railroad> _railroads = new HashSet<>();
+	protected Jail _jail;
 	private JMenuBar _menu;
-	private Center _center;
-	private int _id;
+	protected Center _center;
+	protected int _id;
 	private Player _player = null;
 	protected MonopolyGui _main;
 	protected Profile _profile;
@@ -482,6 +482,8 @@ public class Board extends JPanel {
 	
 	public void setWealthData(List<PlayerWealthDataReport> data) {
 		_center.setWealthData(data);
+		
+		
 		this.validate();
 		this.updateUI();
 		this.repaint();
@@ -507,106 +509,15 @@ public class Board extends JPanel {
 		_jail.setWaits(player.getJailWait(), player.getJailPoor(), player.getJailRich());
 	}
 	
-	/*public static void main (String[] args) {
-		JFrame frame = new JFrame();
-		frame.setPreferredSize(new Dimension(9*Constants.WIDTH + 2*Constants.HEIGHT, 9*Constants.WIDTH + 2*Constants.HEIGHT));
-		try {
-			JMenuBar menu = new JMenuBar();
-			Board board = new Board(1);
-			frame.add(board);
-			
-			List<PlayerWealthDataReport> wealthData = new ArrayList<>();
-			for(int i=0; i<100; i++) {
-				PlayerWealthDataReport d = new PlayerWealthDataReport(1, Math.random()*1000, Math.random()*250, 1);
-				wealthData.add(d);
-			}
-			
-			board.setWealthData(wealthData);
-			
-			frame.setJMenuBar(menu);
-			
-			Map<String, PropertyDataReport> data = new HashMap<>();
-			
-			int id = 0;
-			
-			for(ColorProperties color: ColorProperties.values()) {
-				PropertyDataReport d = new PropertyDataReport(color.getLowercaseName(), id, 
-						Math.random() * 5, Math.random() * 10000, 0, 1, .5,100);
-				data.put(color.getLowercaseName(), d);
-			}
-			
-			for(Utilities utilities: Utilities.values()) {
-				PropertyDataReport d = new PropertyDataReport(utilities.getLowercaseName(), id, 
-						Math.random() * 5, Math.random() * 10000, 0, 1,.5, 100);
-				data.put(utilities.getLowercaseName(), d);
-			}
-			
-			for(Railroads rr: Railroads.values()) {
-				PropertyDataReport d = new PropertyDataReport(rr.getLowercaseName(), id, 
-						Math.random() * 5, Math.random() * 10000, 0, 1,.5, 100);
-				data.put(rr.getLowercaseName(), d);
-			}
-			
-			board.setPropertyData(data);
-			
-			for(ColorProperties color: ColorProperties.values()) {
-				PropertyDataReport d = new PropertyDataReport(color.getLowercaseName(), id, 
-						Math.random() * 5, Math.random() * 10000, 0, 1,.5, 100);
-				data.put(color.getLowercaseName(), d);
-			}
-			
-			for(Utilities utilities: Utilities.values()) {
-				PropertyDataReport d = new PropertyDataReport(utilities.getLowercaseName(), id, 
-						Math.random() * 5, Math.random() * 10000, 0, 1, .5,100);
-				data.put(utilities.getLowercaseName(), d);
-			}
-			
-			for(Railroads rr: Railroads.values()) {
-				PropertyDataReport d = new PropertyDataReport(rr.getLowercaseName(), id, 
-						Math.random() * 5, Math.random() * 10000, 0, 1,.5, 100);
-				data.put(rr.getLowercaseName(), d);
-			}
-			
-			board.setPlayerSpecificPropertyData(data);
-			
-			
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		frame.pack();
-		frame.setVisible(true);
-	}*/
-
+	
 /* ----------------------------------------------------------------------------
  * ----------------------------- MENU LISTENERS -------------------------------
  * ----------------------------------------------------------------------------
  */
 	
-	private class MyPropertyListener implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-			for(ColorGroup c: _colorGroups) {
-				
-			}
-		}
-	}
-	
-	private class AggregatePropertyListener implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-			for(ColorGroup c: _colorGroups) {
-				
-			}
-		}
-	}
-	
-	private class ColorListener implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-			for(ColorGroup c: _colorGroups) {
-
-			}
-		}
-	}
 
 	public void setView(View view) {
+		_center.setView(view);
 		for(ColorGroup c: _colorGroups) {
 			c.setView(view);
 		}

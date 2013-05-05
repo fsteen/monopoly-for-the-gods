@@ -31,7 +31,7 @@ public class Railroad extends JPanel {
 	private HashMap<PropertyPanel, PropertyPanel> _other = new HashMap<>();
 	private Railroads _railroad;
 	private List<BufferedImage> _deeds = new ArrayList<>();
-	private View _view = View.ME;
+	protected View _view = View.ME;
 
 	public Railroad(Railroads railroad) throws IOException {//throws IOException {
 		super();
@@ -91,17 +91,22 @@ public class Railroad extends JPanel {
 		}
 		this.updateUI();
 	}
+	
+	public void nextView() {
+		if(_view == View.ME) {
+			_view = View.AGGREGATE;
+		}
+		else if(_view == View.AGGREGATE) {
+			_view = View.ME;
+		}
+		else _view = View.ME;
+	}
 
 	private class ButtonMouseListener implements MouseListener {
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			if(e.getButton() == MouseEvent.BUTTON1 && e.getClickCount()==2) {
-				if(_view == View.ME) {
-					_view = View.AGGREGATE;
-				}
-				else if(_view == View.AGGREGATE) {
-					_view = View.ME;
-				}
+				nextView();
 				update();
 			}
 			if(e.getButton() == MouseEvent.BUTTON3) {
@@ -149,8 +154,9 @@ public class Railroad extends JPanel {
 	public void setView(View view) {
 		if(view == View.ME || view == View.AGGREGATE) {
 			_view = view;
-			update();
 		}
+		else _view = View.ME;
+		update();
 	}
 
 	public void setPropertyValues(HashMap<String, Integer> propertyValues) {

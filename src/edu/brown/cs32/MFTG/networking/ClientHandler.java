@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -87,7 +88,7 @@ public class ClientHandler {
 		write(request);
 
 		// set the timeout and attempt to read the response from the client
-//		_client.setSoTimeout((time + 10) * 1000);
+		_client.setSoTimeout((time + 10) * 1000);
 		ClientRequestContainer response = readResponse();
 
 		// check for bad responses
@@ -119,11 +120,10 @@ public class ClientHandler {
 	 * @param players
 	 * @param numGames
 	 * @return the GameData collected from playing the round of games
-	 * @throws ClientLostException 
 	 * @throws InvalidResponseException 
+	 * @throws IOException 
 	 */
-	public GameDataReport playGames(List<Player> players, List<Long> seeds, Settings settings) throws ClientCommunicationException, ClientLostException, InvalidResponseException{
-		try {
+	public GameDataReport playGames(List<Player> players, List<Long> seeds, Settings settings) throws InvalidResponseException, IOException{
 			String playerList = _oMapper.writeValueAsString(players);
 			String seedList = _oMapper.writeValueAsString(seeds);
 			String settingsString = _oMapper.writeValueAsString(settings);
@@ -133,16 +133,18 @@ public class ClientHandler {
 			// request that the client play the games
 			write(request);
 			
+			_client.setSoTimeout(_settings.getNumGames() * (int) (50./10000. * 1000.)); // 50 seconds per 10000 games
 			ClientRequestContainer response = readResponse();
+			
+			if (response._method != Method.SENDGAMEDATA){
+				throw new InvalidResponseException(Method.SENDPLAYER, response._method);
+			} else if (response._arguments == null || response._arguments.size() < 1){
+				throw new InvalidResponseException("Not enough arguments");
+			}
 
 			GameDataReport gameData= _oMapper.readValue(response._arguments.get(0), GameDataReport.class);
 
 			return gameData;
-
-		} catch (IOException e){
-			e.printStackTrace();
-			throw new ClientCommunicationException(_id);
-		}
 	}
 
 	public void setGameData(GameDataReport combinedData) throws ClientCommunicationException {

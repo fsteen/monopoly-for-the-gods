@@ -133,7 +133,7 @@ public class ColorBlock extends JPanel {
 		_twoField.setHorizontalAlignment(JTextField.CENTER);
 
 		this.add(_twoField);
-
+		
 		_monopolyField = new JFormattedTextField(NumberFormat.getInstance());
 		_monopolyField.setValue(new Double(1));
 		_monopolyField.setFont(Constants.FONT);
@@ -145,7 +145,8 @@ public class ColorBlock extends JPanel {
 		_monopolyField.setOpaque(false);
 		_monopolyField.setHorizontalAlignment(JTextField.CENTER);
 
-		this.add(_monopolyField);
+		if(_colorInfo!=Colors.PURPLE && _colorInfo!=Colors.DARK_BLUE)
+			this.add(_monopolyField);
 
 		_noMonopolyField = new JFormattedTextField(NumberFormat.getInstance());
 		_noMonopolyField.setValue(new Double(1));
@@ -277,12 +278,14 @@ public class ColorBlock extends JPanel {
 		
 		if(_orientation == Orientation.UP || _orientation == Orientation.DOWN) {
 			g2.drawImage(_twoHousesPic, 20, 20, null);
-			g2.drawImage(_monopolyPic, 70, 20, null);
+			if(_colorInfo!=Colors.PURPLE && _colorInfo!=Colors.DARK_BLUE)
+				g2.drawImage(_monopolyPic, 70, 20, null);
 			g2.drawImage(_noMonopolyPic, 120, 20, null);
 		}
 		else {
 			g2.drawImage(_twoHousesPic, 20, 20, null);
-			g2.drawImage(_monopolyPic, 20, 70, null);
+			if(_colorInfo!=Colors.PURPLE && _colorInfo!=Colors.DARK_BLUE)
+				g2.drawImage(_monopolyPic, 20, 70, null);
 			g2.drawImage(_noMonopolyPic, 20, 120, null);
 		}
 		

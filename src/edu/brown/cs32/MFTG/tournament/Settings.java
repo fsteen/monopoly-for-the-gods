@@ -55,6 +55,15 @@ public class Settings {
 		return this.numRounds;
 	}
 	
+	/**
+	 * 
+	 * @return the number of games that will be played each round
+	 */
+	@JsonIgnore
+	public int getNumGames(){
+		return this.gamesPerRound * this.numRounds;
+	}
+	
 	@Override
 	public boolean equals(Object o){
 		if (o == null || !(o instanceof Settings))

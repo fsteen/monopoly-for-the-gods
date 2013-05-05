@@ -19,10 +19,10 @@ import edu.brown.cs32.MFTG.gui.gameboard.Board;
 public class ViewPanel extends JPanel{
 
 	private Board _board;
-	private JToggleButton _myProperty;
-	private JToggleButton _aggregateProperty;
-	private JToggleButton _colorGroup;
-	private JToggleButton _setHeuristics;
+	protected JToggleButton _myProperty;
+	protected JToggleButton _aggregateProperty;
+	protected JToggleButton _colorGroup;
+	protected JToggleButton _setHeuristics;
 	private Timer _timer;
 	private int _timeLeft;
 	private JLabel _timerLabel;
@@ -79,6 +79,10 @@ public class ViewPanel extends JPanel{
 		_timerLabel.setSize(100, 20);
 		_timerLabel.setLocation(0, Constants.WIDTH - _setHeuristics.getHeight()/2 + 50);
 		
+		addButtons();
+	}
+	
+	public void addButtons() {
 		this.add(_myProperty);
 		this.add(_aggregateProperty);
 		this.add(_colorGroup);
@@ -127,6 +131,16 @@ public class ViewPanel extends JPanel{
 			}
 		}
 		
+	}
+
+	public void setView(View view) {
+		if(view == View.ME) {
+			_myProperty.setSelected(true);
+		}
+		else if(view == View.AGGREGATE) {
+			_aggregateProperty.setSelected(true);
+		}
+		else _colorGroup.setSelected(true);
 	}
 
 

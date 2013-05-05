@@ -3,6 +3,7 @@ package edu.brown.cs32.MFTG.tournament;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -194,13 +195,13 @@ public class Tournament implements Runnable{
 				if (prevPlayers != null){
 					players.add(prevPlayers.get(i));
 					
-					sendErrorMessage("Unable to retrieve heuristic information from client " + i + 
+					sendErrorMessage("Unable to retrieve heuristic information from client " + _clientHandlers.get(i)._id + 
 							". Reusing old heuristics");
 
 				} else {
 					players.add(newBalancedPlayer(i));
 					
-					sendErrorMessage("Unable to retrieve heuristic information from client " + i + 
+					sendErrorMessage("Unable to retrieve heuristic information from client " + _clientHandlers.get(i)._id + 
 							". Using default balanced heuristics");
 				}
 				e.printStackTrace();
@@ -248,8 +249,11 @@ public class Tournament implements Runnable{
 				e.printStackTrace();
 				numFails++;
 			} catch (ExecutionException e) {
-				e.getStackTrace();
-				numFails++;
+				if (e.getCause() instanceof SocketException){
+					// TODO remove client
+				} else {
+					numFails++;
+				}
 			}
 		}
 

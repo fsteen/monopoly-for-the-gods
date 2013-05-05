@@ -6,6 +6,7 @@ import java.util.Map;
 import javax.swing.JPanel;
 
 import edu.brown.cs32.MFTG.gui.Constants;
+import edu.brown.cs32.MFTG.gui.Constants.View;
 import edu.brown.cs32.MFTG.gui.gameboard.Board;
 import edu.brown.cs32.MFTG.monopoly.Player;
 import edu.brown.cs32.MFTG.monopoly.Player.Aggression;
@@ -19,8 +20,8 @@ public class Center extends JPanel {
 	public ProfitGraph _profitGraph;
 	public SliderPanel _sliderPanel;
 	public ButtonPanel _buttonPanel;
-	public ViewPanel _viewPanel;
-	private Board _board;
+	protected ViewPanel _viewPanel;
+	protected Board _board;
 	private WinnerPanelVertical _winnerPanel;
 	
 	public Center(Board board, int id) {
@@ -40,7 +41,11 @@ public class Center extends JPanel {
 		_sliderPanel = new SliderPanel();
 		this.add(_sliderPanel);
 		
-		_viewPanel = new ViewPanel(board);
+		initializeViewPanel();
+	}
+	
+	public void initializeViewPanel() {
+		_viewPanel = new ViewPanel(_board);
 		this.add(_viewPanel);
 	}
 	
@@ -91,6 +96,10 @@ public class Center extends JPanel {
 
 	public void setWinnerData(Map<Integer, Double> data) {
 		_winnerPanel.update(data);
+	}
+
+	public void setView(View view) {
+		_viewPanel.setView(view);
 	}
 	
 
