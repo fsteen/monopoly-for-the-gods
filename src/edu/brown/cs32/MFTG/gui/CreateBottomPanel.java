@@ -3,16 +3,11 @@ package edu.brown.cs32.MFTG.gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
-import java.awt.Point;
 import java.awt.RenderingHints;
-import java.awt.TextField;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
@@ -22,7 +17,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import javax.imageio.ImageIO;
 import javax.swing.ButtonGroup;
@@ -37,19 +31,16 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import edu.brown.cs32.MFTG.monopoly.GamePlayer;
-import edu.brown.cs32.MFTG.monopoly.Player;
 import edu.brown.cs32.MFTG.tournament.Settings;
 import edu.brown.cs32.MFTG.tournament.Settings.WinningCondition;
 
+@SuppressWarnings("serial")
 public class CreateBottomPanel extends JPanel {
 	
 	private int DEFAULT_NUM_SETS=5;
 	private int DEFAULT_GAMES_PER_SET=1000;
-	private int DEFAULT_TIME_BEGIN=60;
-	private int DEFAULT_TIME_BETWEEN=60;
+	private int DEFAULT_TIME_BEGIN=5;
+	private int DEFAULT_TIME_BETWEEN=5;
 	private int DEFAULT_FREE_PARKING=-1;
 	private int DEFAULT_PORT=3232;
 		

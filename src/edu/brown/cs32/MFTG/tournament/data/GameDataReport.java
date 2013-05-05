@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class GameDataReport {
@@ -32,6 +33,18 @@ public class GameDataReport {
 		_overallPlayerPropertyData = entireGameData;
 		_overallPropertyData = overallPropertyData;
 		_matchIsOver = matchIsOver;
+	}
+	
+	@JsonIgnore
+	public int getPlayerWithMostWins(){
+		Pair<Integer,Double> winner = new Pair<>(-2,-2.);
+		for(Entry<Integer, Double> current : _playerWins.entrySet()){
+			if(current.getValue() > winner.getRight()){
+				winner.setLeft(current.getKey());
+				winner.setRight(current.getValue());
+			}
+		}
+		return winner.getLeft();
 	}
 	
 	public GameDataAccumulator toGameDataAccumulator(){
@@ -88,7 +101,7 @@ public class GameDataReport {
 				}
 			}
 		} else {
-			System.out.println("null");
+			b.append("null");
 		}
 		b.append("*****OVERALL PROPERTY DATA*****\n");
 		if(_overallPropertyData != null){

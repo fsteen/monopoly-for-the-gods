@@ -47,6 +47,7 @@ public abstract class Client implements Runnable{
 	protected final int DATA_PACKET_SIZE=500;
 	protected final int NUM_DATA_POINTS=100;	
 	protected final int MAX_NUM_TURNS=1000;
+	protected final int MAX_NUM_PLAYERS=4;
 	protected int _nextDisplaySize;
 	protected int _numGamesPlayed;
 	protected GameDataAccumulator _data;
@@ -140,6 +141,9 @@ public abstract class Client implements Runnable{
 		
 		} else if (method == Method.DISPLAYERROR){
 			respondToDisplayError(request);
+		
+		} else {
+			assert(false);
 		}
 	}
 
@@ -188,9 +192,7 @@ public abstract class Client implements Runnable{
 	}
 		
 	public void finishRespondToGetPlayer(){
-		System.out.println("finishing responding to get client");
 		Player p = finishGetPlayer();
-		System.out.println("player is : " + p);
 
 		String playerString;
 		
@@ -236,13 +238,13 @@ public abstract class Client implements Runnable{
 		} else if (arguments.size() < 3){
 			// you get the idea
 		}
-
+		
 		JavaType listOfPlayers = _oMapper.getTypeFactory().constructCollectionType(List.class, Player.class);
 		JavaType listOfSeeds = _oMapper.getTypeFactory().constructCollectionType(List.class, Long.class);
 		List<Player> players = _oMapper.readValue(arguments.get(0), listOfPlayers);
 		List<Long> seeds = _oMapper.readValue(arguments.get(1), listOfSeeds);
 		Settings settings = _oMapper.readValue(arguments.get(2), Settings.class);
-
+		
 		GameDataReport gameData = playGames(players, seeds, settings);
 		
 		String gameDataJson = _oMapper.writeValueAsString(gameData);
@@ -299,6 +301,7 @@ public abstract class Client implements Runnable{
 		for(Long seed : seeds){
 			_pool.execute(gameRunnerFactory.build(seed)); //launch games
 		}
+		
 		synchronized (this){
 			while(_numThreadsDone.get() < seeds.size()){
 				try{
@@ -306,6 +309,7 @@ public abstract class Client implements Runnable{
 				} catch (InterruptedException e){}
 			}
 		}
+		
 		return _data.toGameDataReport();
 	}
 

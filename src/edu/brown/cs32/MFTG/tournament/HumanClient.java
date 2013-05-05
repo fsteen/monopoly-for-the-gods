@@ -118,7 +118,14 @@ public class HumanClient extends Client{
 	 */
 	public void displayGameData(GameDataReport combinedData) {
 		//TODO differentiate between end of round and end of game data here
-		System.out.println("displaying end of round data");
+		int numPlayers = combinedData._timeStamps.get(0).wealthData.size();
+		if(combinedData._matchIsOver){
+			String[] names = new String[MAX_NUM_PLAYERS];
+			for(int i = 0; i < names.length; i++){
+				names[i] = i < numPlayers ? "Player " + i : "";
+			}
+			_gui.createEndGame(_gui.getBoard(), combinedData.getPlayerWithMostWins() == _id, names);
+		} 
 		displayDataToGui(combinedData);
 		_gui.getBoard().setWinnerData(combinedData._playerWins);
 	}
@@ -151,7 +158,6 @@ public class HumanClient extends Client{
 	}
 	
 	public void startGetPlayer(int time){
-		System.out.println(time);
 		_timer = new Timer(1000*(time+1), new GetPlayerActionListener(this));
 		_gui.getBoard().newRound(time);
 		_timer.setRepeats(false);
