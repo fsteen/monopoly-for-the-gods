@@ -43,11 +43,6 @@ public abstract class Client implements Runnable{
 	protected String _host;
 
 	/* Module variables */
-	protected final int NUM_THREADS=10;
-	protected final int DATA_PACKET_SIZE=1000;
-	protected final int NUM_DATA_POINTS=100;	
-	protected final int MAX_NUM_TURNS=1000;
-	protected final int MAX_NUM_PLAYERS=4;
 	protected int _nextDisplaySize;
 	protected int _numGamesPlayed;
 	protected GameDataAccumulator _data;
@@ -59,7 +54,7 @@ public abstract class Client implements Runnable{
 		_oMapper = new ObjectMapper();
 		_lastRequest = Method.DISPLAYGAMEDATA;
 
-		_pool = Executors.newFixedThreadPool(NUM_THREADS);
+		_pool = Executors.newFixedThreadPool(BackendConstants.NUM_THREADS);
 		_numThreadsDone = new AtomicInteger(0);
 	}
 	
@@ -292,10 +287,10 @@ public abstract class Client implements Runnable{
 	public GameDataReport playGames(List<Player> players, List<Long> seeds, Settings settings){
 		_numGamesPlayed = 0;
 		_data = null;
-		_nextDisplaySize = DATA_PACKET_SIZE;
+		_nextDisplaySize = BackendConstants.DATA_PACKET_SIZE;
 		_numThreadsDone.set(0);
 		
-		GameRunnerFactory gameRunnerFactory = new GameRunnerFactory(_numThreadsDone, this, MAX_NUM_TURNS,
+		GameRunnerFactory gameRunnerFactory = new GameRunnerFactory(_numThreadsDone, this, BackendConstants.MAX_NUM_TURNS,
 				settings.freeParking,settings.doubleOnGo,settings.auctions,players.toArray(new Player[players.size()]));
 		
 		for(Long seed : seeds){

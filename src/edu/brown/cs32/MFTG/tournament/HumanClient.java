@@ -129,7 +129,7 @@ public class HumanClient extends Client{
 	
 	private void finishMatch(GameDataReport combinedData){
 		int numPlayers = combinedData._timeStamps.get(0).wealthData.size();
-		String[] names = new String[MAX_NUM_PLAYERS];
+		String[] names = new String[BackendConstants.MAX_NUM_PLAYERS];
 		for(int i = 0; i < names.length; i++){
 			names[i] = i < numPlayers ? "Player " + i : "";
 		}
@@ -153,16 +153,16 @@ public class HumanClient extends Client{
 		List<GameData> temp = new ArrayList<>();
 		temp.add(gameData);
 		_gui.getCurrentProfile().getRecord().addGame(gameData.getWinner() == _id, gameData.getData().size()); //set record
-		GameDataAccumulator a = DataProcessor.aggregate(temp,NUM_DATA_POINTS);
+		GameDataAccumulator a = DataProcessor.aggregate(temp,BackendConstants.NUM_DATA_POINTS);
 		if(_data == null){
 			_data = a;
 		} else {
-			DataProcessor.combineAccumulators(_data, DataProcessor.aggregate(temp,NUM_DATA_POINTS));
+			DataProcessor.combineAccumulators(_data, DataProcessor.aggregate(temp,BackendConstants.NUM_DATA_POINTS));
 		}
 		_numGamesPlayed++;
 		if(_numGamesPlayed >= _nextDisplaySize){
 			displayDataToGui(_data.toGameDataReport());
-			_nextDisplaySize += DATA_PACKET_SIZE; //set next point at which to display
+			_nextDisplaySize += BackendConstants.DATA_PACKET_SIZE; //set next point at which to display
 		}
 	}
 	

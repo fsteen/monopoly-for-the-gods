@@ -88,11 +88,11 @@ public class AIClient extends Client{
 	public synchronized void addGameData(GameData gameData){
 		List<GameData> temp = new ArrayList<>();
 		temp.add(gameData);
-		GameDataAccumulator a = DataProcessor.aggregate(temp,NUM_DATA_POINTS);
+		GameDataAccumulator a = DataProcessor.aggregate(temp,BackendConstants.NUM_DATA_POINTS);
 		if(_data == null){
 			_data = a;
 		} else {
-			DataProcessor.combineAccumulators(_data, DataProcessor.aggregate(temp,NUM_DATA_POINTS));
+			DataProcessor.combineAccumulators(_data, DataProcessor.aggregate(temp,BackendConstants.NUM_DATA_POINTS));
 		}
 	}
 

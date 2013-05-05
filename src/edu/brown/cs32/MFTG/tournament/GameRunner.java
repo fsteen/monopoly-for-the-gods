@@ -12,24 +12,29 @@ import edu.brown.cs32.MFTG.monopoly.Game;
 class GameRunner implements Runnable{
 	private Game _game;
 	private AtomicInteger _numThreadsDone;
-	private Client _module;
+	private Client _client;
 	
-	public GameRunner(Game game, AtomicInteger numThreadsDone, Client module){
+	public GameRunner(Game game, AtomicInteger numThreadsDone, Client client){
 		_game = game;
 		_numThreadsDone = numThreadsDone;
-		_module = module;
+		_client = client;
 	}
 	
 	@Override
 	public void run() {
-			_game.run();
-			_module.addGameData(_game.getGameData());
-			
-			//TODO catch exception!!!!!!!!!!!!!
-				
-		synchronized(_module){
+//		if(Math.random() > .5){
+//			try{
+				_game.run();
+				_client.addGameData(_game.getGameData());
+//			} catch (Exception e){
+//				_client.addGameData(null);
+//			}
+//		} else {
+//			_client.addGameData(null);
+//		}
+		synchronized(_client){
 			_numThreadsDone.incrementAndGet();
-			_module.notifyAll();
+			_client.notifyAll();
 		}
 	}
 }

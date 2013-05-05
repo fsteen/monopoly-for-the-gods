@@ -31,19 +31,12 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 
+import edu.brown.cs32.MFTG.tournament.BackendConstants;
 import edu.brown.cs32.MFTG.tournament.Settings;
 import edu.brown.cs32.MFTG.tournament.Settings.WinningCondition;
 
 @SuppressWarnings("serial")
 public class CreateBottomPanel extends JPanel {
-	
-	private int DEFAULT_NUM_SETS=5;
-	private int DEFAULT_GAMES_PER_SET=1000;
-	private int DEFAULT_TIME_BEGIN=5;
-	private int DEFAULT_TIME_BETWEEN=5;
-	private int DEFAULT_FREE_PARKING=-1;
-	private int DEFAULT_PORT=3232;
-		
 	private BufferedImage _whiteBack;
 	private final int BOTTOM_HEIGHT=Constants.FULL_PANEL_HEIGHT*3/5;
 	private final int BOTTOM_WIDTH=Constants.FULL_WIDTH*15/16;
@@ -84,7 +77,7 @@ public class CreateBottomPanel extends JPanel {
 			_port.setDocument(new NumDocument(4));
 			_port.setSize(200,30);
 			_port.setFont(new Font("myFont",Font.PLAIN,40));
-			_port.setText(DEFAULT_PORT + "");
+			_port.setText(BackendConstants.DEFAULT_PORT + "");
 
 			_portLabel= new JLabel("Port: ");
 			_portLabel.setFont(new Font("portLabelFont",Font.PLAIN,40));
@@ -144,9 +137,9 @@ public class CreateBottomPanel extends JPanel {
 			_timeBetweenLabel.setLocation(0,42);
 			
 			_timeBegin.setDocument(new NumDocument(4));
-			_timeBegin.setText(DEFAULT_TIME_BEGIN + "");
+			_timeBegin.setText(BackendConstants.DEFAULT_TIME_BEGIN + "");
 			_timeBetween.setDocument(new NumDocument(4));
-			_timeBetween.setText(DEFAULT_TIME_BETWEEN + "");
+			_timeBetween.setText(BackendConstants.DEFAULT_TIME_BETWEEN + "");
 			
 			timePanel.add(_timeBeginLabel);
 			timePanel.add(_timeBegin);
@@ -163,9 +156,9 @@ public class CreateBottomPanel extends JPanel {
 			_numSets.setText("");
 			_numGames= new JTextField(4);
 			_numSets.setDocument(new NumDocument(3));
-			_numSets.setText(DEFAULT_NUM_SETS +"");
+			_numSets.setText(BackendConstants.DEFAULT_NUM_SETS +"");
 			_numGames.setDocument(new NumDocument(6));
-			_numGames.setText(DEFAULT_GAMES_PER_SET + "");
+			_numGames.setText(BackendConstants.DEFAULT_GAMES_PER_SET + "");
 			
 			Dimension numSize = new Dimension(70,30);
 			Dimension numLabelSize = new Dimension(200,15);
@@ -356,11 +349,11 @@ public class CreateBottomPanel extends JPanel {
 			winCond = WinningCondition.LAST_SET_WON;
 		}
 		
-		int beginningTimeout = _timeBegin.getText().equals("") ? DEFAULT_TIME_BEGIN : Integer.parseInt(_timeBegin.getText());
-		int betweenTimeout = _timeBetween.getText().equals("") ? DEFAULT_TIME_BETWEEN : Integer.parseInt(_timeBetween.getText());
-		int numSets = _numSets.getText().equals("") ? DEFAULT_NUM_SETS : Integer.parseInt(_numSets.getText());
-		int gamesPerRound = _numGames.getText().equals("") ? DEFAULT_GAMES_PER_SET : Integer.parseInt(_numGames.getText());
-		int freeParking = _freeParkingJackpot.getText().equals("") ? DEFAULT_FREE_PARKING : Integer.parseInt(_freeParkingJackpot.getText());
+		int beginningTimeout = _timeBegin.getText().equals("") ? BackendConstants.DEFAULT_TIME_BEGIN : Integer.parseInt(_timeBegin.getText());
+		int betweenTimeout = _timeBetween.getText().equals("") ? BackendConstants.DEFAULT_TIME_BETWEEN : Integer.parseInt(_timeBetween.getText());
+		int numSets = _numSets.getText().equals("") ? BackendConstants.DEFAULT_NUM_SETS : Integer.parseInt(_numSets.getText());
+		int gamesPerRound = _numGames.getText().equals("") ? BackendConstants.DEFAULT_GAMES_PER_SET : Integer.parseInt(_numGames.getText());
+		int freeParking = _freeParkingJackpot.getText().equals("") ? BackendConstants.DEFAULT_FREE_PARKING : Integer.parseInt(_freeParkingJackpot.getText());
 		boolean doubleOnGo = _doubleOnGo.isSelected();
 		boolean auctions = _auctions.isSelected();
 		
@@ -370,7 +363,7 @@ public class CreateBottomPanel extends JPanel {
 	}
 	
 	public int getPort(){
-		return _port.getText().equals("") ? DEFAULT_PORT : Integer.parseInt(_port.getText());
+		return _port.getText().equals("") ? BackendConstants.DEFAULT_PORT : Integer.parseInt(_port.getText());
 	}
 	
 	/**

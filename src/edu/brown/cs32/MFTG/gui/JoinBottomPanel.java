@@ -18,6 +18,8 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 
+import edu.brown.cs32.MFTG.tournament.BackendConstants;
+
 
 public class JoinBottomPanel extends JPanel {
 	private BufferedImage _whiteBack, _foodler;
@@ -25,8 +27,6 @@ public class JoinBottomPanel extends JPanel {
 	private final int BOTTOM_WIDTH=Constants.FULL_WIDTH*15/16;
 	private JTextField _port, _hostName;
 	private JLabel _portLabel, _hostLabel;
-	
-	private int DEFAULT_PORT=3232;
 	
 	public JoinBottomPanel() {
 		super();
@@ -47,14 +47,14 @@ public class JoinBottomPanel extends JPanel {
 			_port.setSize(portSize);
 			_port.setPreferredSize(portSize);
 			_port.setFont(new Font("portFont",Font.PLAIN,40));
-			_port.setText(DEFAULT_PORT + "");
+			_port.setText(BackendConstants.DEFAULT_PORT + "");
 			_hostName = new JTextField(4);
 			Dimension hostNameSize = new Dimension(200,40);
 			_hostName.setSize(hostNameSize);
 			_hostName.setPreferredSize(hostNameSize);
 			_hostName.setLocation(400,90);
 			_hostName.setFont(new Font("hostFont",Font.PLAIN,30));
-			_hostName.setText("localhost");
+			_hostName.setText(BackendConstants.DEFAULT_HOST);
 
 			_portLabel= new JLabel("Port: ");
 			_portLabel.setFont(new Font("portLabelFont",Font.PLAIN,40));
@@ -95,7 +95,7 @@ public class JoinBottomPanel extends JPanel {
 	 * @return hostname
 	 */
 	public String getHost() {
-		return _hostName.getText().equals("")? "localhost" : _hostName.getText();
+		return _hostName.getText().equals("")? BackendConstants.DEFAULT_HOST : _hostName.getText();
 	}
 	
 	/**
@@ -103,7 +103,7 @@ public class JoinBottomPanel extends JPanel {
 	 * @return port number
 	 */
 	public int getPort() {
-		return _port.getText().equals("") ? DEFAULT_PORT : Integer.parseInt(_port.getText());
+		return _port.getText().equals("") ? BackendConstants.DEFAULT_PORT : Integer.parseInt(_port.getText());
 	}
 	
 	/**

@@ -27,10 +27,10 @@ Completed:
     
 
 ===Frances===
-- Make sure that the "time owned" value is being calculated correctly
 - Figure out how to handle catching exceptions thrown in games
 - Figure out security issues ... it always says someone is cheating
 -Get rid of player with most $ method in GameDataAccumulator
+_out of memory error ... AHHH
 from Alex:
 	- make sure that games, sets, and matches are saved by adding them to the profile 
 	(addgame addset and addmatch methods in records)

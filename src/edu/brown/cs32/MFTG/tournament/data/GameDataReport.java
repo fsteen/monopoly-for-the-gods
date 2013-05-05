@@ -116,7 +116,7 @@ public class GameDataReport {
 		b.append("*********************\n\n\n\n");
 		
 		for(Entry<Integer, Double> e : _playerWins.entrySet()){
-			b.append(String.format("Player %d has %d wins\n",e.getKey(),e.getValue()));
+			b.append(String.format("Player %d has %f wins\n",e.getKey(),e.getValue()));
 		}
 		b.append("winList\n" + _winList + "\n");
 		b.append("matchIsOver " + _matchIsOver + "\n");

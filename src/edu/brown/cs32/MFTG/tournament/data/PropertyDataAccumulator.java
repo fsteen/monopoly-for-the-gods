@@ -30,10 +30,14 @@ public class PropertyDataAccumulator{
 		accNumHouses= accNumHouses/divideBy;
 		accTotalRevenueWithHouses = accTotalRevenueWithHouses/divideBy;
 		accTotalRevenueWithoutHouses = accTotalRevenueWithoutHouses/divideBy;
-		accMortgaged = accMortgaged/divideBy; 
+		accMortgaged = accMortgaged/divideBy;
 		accTimeOwned = accTimeOwned/divideBy;
 	}
 	
+	/**
+	 * Assumes everything is already averaged ... so we must unaverage first
+	 * @param p
+	 */
 	public void averageWith(PropertyDataAccumulator p){
 		if(p != null && numDataPoints != 0 && p.numDataPoints != 0){
 			int newNumDataPoints = p.numDataPoints + numDataPoints;

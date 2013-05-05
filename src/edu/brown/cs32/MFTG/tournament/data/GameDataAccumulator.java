@@ -11,6 +11,7 @@ import com.google.common.collect.ArrayListMultimap;
 import edu.brown.cs32.MFTG.monopoly.GameData;
 import edu.brown.cs32.MFTG.monopoly.PlayerWealthData;
 import edu.brown.cs32.MFTG.monopoly.PropertyData;
+import edu.brown.cs32.MFTG.tournament.BackendConstants;
 
 public class GameDataAccumulator {
 
@@ -23,7 +24,6 @@ public class GameDataAccumulator {
 	public Map<Integer, Double> _playerWins;
 	public List<Integer> _winList;
 	public final int _numPlayers;
-	public final int MAX_NUM_PLAYERS=4;
 	public boolean matchIsOver;
 
 	public GameDataAccumulator(int numTimeStamps, int numPlayers){
@@ -43,7 +43,7 @@ public class GameDataAccumulator {
 		}
 		
 		/* initialize winners */
-		for(int i = -1; i < MAX_NUM_PLAYERS; i++){
+		for(int i = -1; i < BackendConstants.MAX_NUM_PLAYERS; i++){
 			_playerWins.put(i, 0.);
 		}
 	}
@@ -83,6 +83,7 @@ public class GameDataAccumulator {
 	public void gameFinished(){
 		PropertyDataAccumulator temp;
 		Map<Integer,PropertyDataAccumulator> playerEntireGameTemp;
+		int totalNumDataPoints = 0;
 		/* initialize everything */
 		for(String s : currentMaxValues.keySet()){
 			initializeEntireGameData(s);
@@ -95,8 +96,10 @@ public class GameDataAccumulator {
 			temp.accTotalRevenueWithHouses += p.accTotalRevenueWithHouses;
 			temp.accTotalRevenueWithoutHouses += p.accTotalRevenueWithoutHouses;
 			temp.numDataPoints += 1;
+			totalNumDataPoints = p.numDataPoints;
 			p.reset(); //reset the currentMaxes
 		}
+		totalNumDataPoints = totalNumDataPoints == 0 ? 1 : totalNumDataPoints;
 		
 		/* Add the player specific property information */
 		for(Entry<String,Map<Integer,PropertyDataAccumulator>> e : playerCurrentMaxValues.entrySet()){
@@ -106,9 +109,7 @@ public class GameDataAccumulator {
 				temp.accNumHouses += p.accNumHouses;
 				temp.accTotalRevenueWithHouses += p.accTotalRevenueWithHouses;
 				temp.accTotalRevenueWithoutHouses += p.accTotalRevenueWithoutHouses;
-				int divideBy = currentMaxValues.get(temp.propertyName).numDataPoints;
-				divideBy = divideBy == 0 ? 1 : divideBy;
-//				temp.accTimeOwned += p.numDataPoints;
+				temp.accTimeOwned += ((double)p.numDataPoints)/totalNumDataPoints;
 				temp.numDataPoints += 1;
 				p.reset();
 			}
@@ -235,6 +236,9 @@ public class GameDataAccumulator {
 		return wealthMap;
 	}
 
+	/**
+	 * 
+	 */
 	public void average(){
 		for(TimeStampAccumulator t : timeStamps){
 			t.average();

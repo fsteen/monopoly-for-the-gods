@@ -30,10 +30,6 @@ import edu.brown.cs32.MFTG.tournament.data.GameDataReport;
 public class Tournament implements Runnable{
 	private final List<Integer> _players;
 	private final int _numPlayers;
-
-	public final double CONFIRMATION_PERCENTAGE = 0.1; //confirm 10% of games
-	public final int NUM_DATA_POINTS = 10;
-	public final int MAX_NUM_PLAYERS = 4;
 	private List<ClientHandler> _clientHandlers;
 	private ServerSocket _socket;
 	private Settings _settings;
@@ -105,7 +101,7 @@ public class Tournament implements Runnable{
 	}
 
 	private void resetRoundWinners(){
-		for(int i = -1; i < MAX_NUM_PLAYERS; i++){ //-1 is a tie
+		for(int i = -1; i < BackendConstants.MAX_NUM_PLAYERS; i++){ //-1 is a tie
 			_roundWinners.put(i, 0.);
 		}
 	}
@@ -130,7 +126,7 @@ public class Tournament implements Runnable{
 			players = getNewPlayers(players);
 
 			// generate which seeds will be used for integrity validation
-			confirmationIndices = DataProcessor.generateConfirmationIndices(gamesPerModule, CONFIRMATION_PERCENTAGE,_rand);
+			confirmationIndices = DataProcessor.generateConfirmationIndices(gamesPerModule, BackendConstants.CONFIRMATION_PERCENTAGE,_rand);
 
 			// play a round of games
 			data = playRoundOfGames(players, DataProcessor.generateSeeds(players.size(),gamesPerModule, confirmationIndices,_rand));
