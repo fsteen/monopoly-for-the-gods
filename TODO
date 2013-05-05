@@ -22,10 +22,10 @@ from Frances:
 	-enter listener for set heuristics button?
 	
 from Judah
-	-instead of displaying player numbers display profile names, as player numbers mean nothing to them
+	-instead of displaying player numbers display profile names, as player numbers mean nothing to them: i need this information from francis
 	-weird bug where when I go on the aggressive player, the board view buttons on the board don't work, but those on the menu do
 	-move text field on railroads to not overlap the gray part at the beginning
-	-remove who's winning label at beginning, or display empty graph
+	-remove who's winning label at beginning, or display empty graph (it is displaying an empty graph but i'll play around with it)
 
 Completed:
 	- implement the setWinnerData() method
@@ -50,6 +50,9 @@ from Judah:
 	- when you display players at end of game, you should print profile names as player numbers mean nothing to them
 	- make game exit cleanly when user clicks quit button in menu. just fill in the QuitListener in the InGameMenu class in the gameboard package
 	- it seems you may not be saving records after the final set (though this may not be true), I added the saveProfiles() call (that writes to file) when the createEndGame() is called in monopolygui, this may not be appropriate, in which case fix where that's called, though it should be called at the end of a game (or even better at the end of a set)
+
+from Chizu:
+	- give player names as well as numbers
 
 Completed:
 - Figure out security issues ... it always says someone is cheating
