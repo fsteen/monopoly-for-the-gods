@@ -48,6 +48,7 @@ public class Board extends JPanel {
 	private Set<ColorGroup> _colorGroups = new HashSet<>();
 	private Set<Railroad> _railroads = new HashSet<>();
 	private Jail _jail;
+	private JMenuBar _menu;
 	private Center _center;
 	private int _id;
 	private Player _player = null;
@@ -470,8 +471,8 @@ public class Board extends JPanel {
 		}
 	}
 	
-	public void setWinnerData(Map<Integer,Double> data){
-		//TODO Chizu can you implement this?
+	public void setWinnerData(Map<Integer, Double> data){
+		_center.setWinnerData(data);
 	}
 
 	
