@@ -1,15 +1,20 @@
 package edu.brown.cs32.MFTG.gui.gameboard;
 
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JSeparator;
+import javax.swing.SwingConstants;
 
 import edu.brown.cs32.MFTG.gui.Constants.View;
 import edu.brown.cs32.MFTG.gui.MonopolyGui;
@@ -24,28 +29,33 @@ public class BoardMenu extends JMenuBar {
 	protected List<JMenuItem> _playerItems;
 	protected String _currentPlayer;
 	protected Profile _profile;
+	private JMenuItem _aggregateProperty;
+	private JMenu _boardView;
 	public BoardMenu(Board board, MonopolyGui main, Profile profile) {
 		super();
 		_board=board;
 		_main=main;
 		_profile=profile;
 
-		JMenu boardView = new JMenu("Board View");
-
+		JLabel profileLabel = new JLabel(profile._name);
+		
+		_boardView = new JMenu("Board View");
+		
 		JMenuItem myProperty = new JMenuItem("My Properties");
 		myProperty.addActionListener(new ViewListener(View.ME,_board));
-		boardView.add(myProperty);
+		_boardView.add(myProperty);
 
-		JMenuItem aggregateProperty = new JMenuItem("Aggregate Properties");
-		aggregateProperty.addActionListener(new ViewListener(View.AGGREGATE,_board));
-		boardView.add(aggregateProperty);
+		_aggregateProperty = new JMenuItem("Aggregate Properties");
+		_aggregateProperty.addActionListener(new ViewListener(View.AGGREGATE,_board));
+		_boardView.add(_aggregateProperty);
 
 		JMenuItem colorGroup = new JMenuItem("Color Groups");
 		colorGroup.addActionListener(new ViewListener(View.COLOR,_board));
-		boardView.add(colorGroup);
+		_boardView.add(colorGroup);
 
 
 		_players = new JMenu("Players");
+		_players.setFont(new Font("playerFont", Font.BOLD, 14));
 
 		_playerItems = new ArrayList<>();
 		if(_profile!=null) {
@@ -57,8 +67,10 @@ public class BoardMenu extends JMenuBar {
 			}
 		}
 		JMenuItem newplayer = new JMenuItem("Create New Player");
+		newplayer.setFont(new Font("newplayerFont", Font.ITALIC, 12));
 		_playerItems.add(newplayer);
 		newplayer.addActionListener(new NewPlayerListener());
+		_players.addSeparator();
 		_players.add(newplayer);
 		
 		_currentPlayer=_playerItems.get(0).getText();
@@ -68,10 +80,21 @@ public class BoardMenu extends JMenuBar {
 		JButton save = new JButton("Save");
 		save.addActionListener(new SaveListener());
 
-		add(boardView);
+		add(profileLabel);
+		
+		JSeparator separator = new JSeparator(JSeparator.VERTICAL);
+		Dimension size = new Dimension(separator.getPreferredSize().width+3,separator.getMaximumSize().height);
+		separator.setMaximumSize(size);
+		
+		add(separator);
+		add(_boardView);
 		add(_players);
 		add(save);
 
+	}
+	
+	protected void removeAggregateButton() {
+		_boardView.remove(_aggregateProperty);
 	}
 	
 	public void resetPlayerMenu() {
@@ -89,6 +112,7 @@ public class BoardMenu extends JMenuBar {
 		JMenuItem newplayer = new JMenuItem("Create New Player");
 		_playerItems.add(newplayer);
 		newplayer.addActionListener(new NewPlayerListener());
+		_players.addSeparator();
 		_players.add(newplayer);
 		
 		_currentPlayer=_playerItems.get(0).getText();

@@ -23,15 +23,16 @@ public class SettingsMenu extends BoardMenu {
 		_main=main;
 		_board=board;
 		
-		JButton delete = new JButton("Delete Player");
+		JButton delete = new JButton("Delete");
 		delete.addActionListener(new DeleteListener());
+		add(delete);
 		
 		add(Box.createHorizontalGlue());
 		
 		JButton back = new JButton("Back");
 		back.addActionListener(new BackListener());
-		back.setHorizontalAlignment(SwingConstants.RIGHT);
 		add(back);
+		removeAggregateButton();
 	}
 	
 	protected class BackListener implements ActionListener{
@@ -63,11 +64,13 @@ public class SettingsMenu extends BoardMenu {
 				for(int i = 0; i<_playerItems.size(); i++) {
 					JMenuItem item = _playerItems.get(i);
 					if(item.getText().equals(_currentPlayer)) {
-						_players.remove(i);
+						_players.remove(item);
+						_playerItems.remove(item);
 						break;
 					}
 				}
 				_players.setText(_playerItems.get(0).getText());
+				_board.setHeuristics(_profile.getPlayer(_players.getText()));
 			}
 			_main.saveProfiles();
 		}		

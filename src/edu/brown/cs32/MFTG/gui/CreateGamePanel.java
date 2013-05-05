@@ -1,7 +1,9 @@
 package edu.brown.cs32.MFTG.gui;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -30,6 +32,7 @@ public class CreateGamePanel extends JPanel{
 	private Point _createLoc, _whiteLoc, _backLoc, _goLoc;
 	private CreateBottomPanel _bottomPanel;
 	private MonopolyGui _main;
+	private JLabel _error;
 	
 	private final int BUTTON_HEIGHT=Constants.FULL_PANEL_HEIGHT/8;
 	private final int BUTTON_WIDTH=2*Constants.FULL_PANEL_HEIGHT/3;
@@ -63,11 +66,18 @@ public class CreateGamePanel extends JPanel{
 			
 			_goLite = new ImagePanel(Helper.resize(ImageIO.read(new File("images/GoLite.png")), 100, 50));
 			_goDark = new ImagePanel(Helper.resize(ImageIO.read(new File("images/GoDark.png")), 100, 50));
-			//_goLoc= new Point(_whiteLoc.getLocation().x+_bottomPanel.getWidth()-_goLite.getWidth()-30, _whiteLoc.getLocation().y+_goDark.getHeight()-20);
 			_goLoc = new Point(this.getWidth()-_goLite.getWidth()-30, this.getHeight()-_goLite.getHeight()-40);
 			_goLite.setLocation(_goLoc);
 			_goDark.setLocation(_goLoc);
 			_goDark.setVisible(false);
+			
+			_error = new JLabel();
+			Dimension errorSize = new Dimension(this.getWidth()-_backLite.getWidth()*3, _backLite.getHeight());
+			_error.setSize(errorSize);
+			_error.setPreferredSize(errorSize);
+			_error.setLocation(Constants.BACK_X+_backLite.getWidth()+20, Constants.BACK_Y);
+			_error.setFont(new Font("errorFont",Font.ITALIC,30));
+			_error.setForeground(Color.RED);
 			
 			addMouseListener(new MyMouseListener());
 			
@@ -77,6 +87,7 @@ public class CreateGamePanel extends JPanel{
 			add(_goLite);
 			add(_goDark);
 			add(_bottomPanel);
+			add(_error);
 
 			
 		} catch (IOException e) {
@@ -93,6 +104,14 @@ public class CreateGamePanel extends JPanel{
 		brush.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		brush.drawImage(_background, 0, 0, null);
 
+	}
+	
+	/**
+	 * sets error message, automatically adds "ERROR: " to the front
+	 * @param message
+	 */
+	public void setError(String message) {
+		_error.setText("ERROR: "+message);
 	}
 
 	private class MyMouseListener extends MouseInputAdapter{

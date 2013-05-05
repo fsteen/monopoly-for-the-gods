@@ -41,7 +41,13 @@ public class RecordsProfileScrollPane extends ProfileScrollPane {
 
 	private class myMouseAdapter extends MouseAdapter {
 		public void mousePressed(MouseEvent e) {
-			 _side.setRecords(_main.getRecord(_profileList.getSelectedValue()));
+			 processPress();
 		}
+	}
+
+	@Override
+	public void processPress() {
+		_side.setRecords(_main.getRecord(_profileList.getSelectedValue()));
+		
 	}
 }
