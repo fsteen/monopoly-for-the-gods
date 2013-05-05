@@ -139,6 +139,7 @@ public class Tournament implements Runnable{
 				System.out.println("someone is cheating"); //TODO what to do in this case
 			}
 			sendEndOfRoundData(accumulateEndOfGameData(data, roundNum));
+			System.out.println("checkpoint 4, round " + roundNum);
 		}
 	}
 
@@ -182,6 +183,7 @@ public class Tournament implements Runnable{
 		List<Player> players = new ArrayList<>();
 
 		for(ClientHandler c : _clientHandlers){
+			System.out.println("checkpoint 5 client " + c._id);
 			Callable<Player> worker = new getPlayerCallable(c);
 			Future<Player> future = _executor.submit(worker);
 			playerFutures.add(future);
@@ -235,11 +237,13 @@ public class Tournament implements Runnable{
 			Callable<GameDataReport> worker = new PlayGamesCallable(_clientHandlers.get(i), players, seeds.get(i), _settings);
 			Future<GameDataReport> future = _executor.submit(worker);
 			gameDataFutures.add(future);
+			System.out.println("got future for client " + _clientHandlers.get(i)._id);
 		}
 
 		int numFails = 0;
 
 		for (int i = 0; i < gameDataFutures.size(); i++){
+			System.out.println("for loop " + i);
 			try {
 				Future<GameDataReport> future = gameDataFutures.get(i);
 				future.get();

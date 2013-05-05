@@ -160,8 +160,6 @@ public class ProfitGraph extends JPanel {
 		
 		NumberAxis rangeAxis = (NumberAxis) _plot.getRangeAxis();
 		rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
-		rangeAxis.setAutoRangeMinimumSize(3000);
-		rangeAxis.setLowerBound(0);
 		
 		NumberAxis domainAxis = (NumberAxis) _plot.getDomainAxis();
 		domainAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());

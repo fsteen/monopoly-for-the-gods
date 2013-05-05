@@ -1,6 +1,7 @@
 package edu.brown.cs32.MFTG.gui.center;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.JPanel;
 
@@ -86,6 +87,10 @@ public class Center extends JPanel {
 			Balance buildingEvenness, Aggression buildAggression,
 			Expense sellingChoice, Amount houseSelling, Expense mortgageChoice) {
 		_buttonPanel.setValues(buildingChoice, buildingEvenness, buildAggression, sellingChoice, houseSelling, mortgageChoice);
+	}
+
+	public void setWinnerData(Map<Integer, Double> data) {
+		_winnerPanel.update(data);
 	}
 	
 

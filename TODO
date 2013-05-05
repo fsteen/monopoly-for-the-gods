@@ -1,37 +1,53 @@
+==GENERAL QUESTIONS==
+- what do we want to do about players being able to see the board before evyerone has joined?
+
 ===JUDAH===
 - make sure that nothing falls through the cracks
 
+from Chizu:
+	- Verify that game results make sense
+	- make passive and aggressive players have different property valuations
+	- change the passive/ aggressive players? i though you said you were going to do this
+	- why is the switch board menu in the board not the gui? to my knowledge the
+	  board will not know when the game is finally over but the client will switch
+
+from Frances:
+	- debug the AI player (gets stuck in getPlayer())
 
 ===Chizu===
-- Format the winner graph
 - Decide whether or not to use pictures for buttons on the top
-- Integrate winner data with Frances
-- Ensure that timing is working correctly
 - Add a button to turn on/off tooltips
-- Make a board without aggregate property data for the settings page
 - Talk with Frances about using property ID's vs. using profiles to say "Player 1"
+- Work on repainting while playing the games
+- Get the graph to change size properly
 
 from Judah:
-	- add the removeAggregateButton() method
+	- subclass the color group/ railroad panels for the settings board
 	- fix up the connection between the menubar and "those buttons"
-	
-from Frances:
+
+Completed:
 	- implement the setWinnerData() method
+	- Format the winner graph
+    
 
 ===Frances===
-- Set up the end of game flow
-	- call setWinner() in the monopolyGui
+- Set up the end of game flow --- DONE
 - Figure out how to handle catching exceptions thrown in games
+- Make sure that the "time owned" value is being calculated correctly
+- Figure out how to handle catching exceptions thrown in games
+- Figure out security issues ... it always says someone is cheating
+
+from Chizu:
+	-time owned is not updating correctly
 
 from Alex:
 	- make sure that games, sets, and matches are saved by adding them to the profile
 
+======
 from Judah:
 	- only average the number of houses of games when we have a monopoly on the property.
 	- when AI player is playing, only 1 set is every played
 	
-from Chizu:
-	-time owned is not updating correctly
 
 
 ===Alex===
@@ -40,3 +56,6 @@ from Chizu:
 - Make everything close properly upon shutdown
 - Make sure that errors are thrown and handled properly
 - Tell Judah about making the Balanced Player in the Tournament
+
+from Chizu:
+	- Ensure that timing is working correctly

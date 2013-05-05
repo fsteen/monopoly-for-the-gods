@@ -25,6 +25,7 @@ public class InGameMenu extends BoardMenu {
 		
 		JCheckBox music = new JCheckBox("Music: ", true);
 		music.setHorizontalTextPosition(SwingConstants.LEADING);
+
 		music.addItemListener(new MusicListener());
 		
 		JButton quit = new JButton("Quit Game");
@@ -48,6 +49,7 @@ public class InGameMenu extends BoardMenu {
 			
 	}
 	
+
 	private class MusicListener implements ItemListener{
 
 		@Override
