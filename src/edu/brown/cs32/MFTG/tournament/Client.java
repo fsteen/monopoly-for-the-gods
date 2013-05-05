@@ -137,7 +137,7 @@ public abstract class Client implements Runnable{
 			} else {
 				throw new InvalidRequestException();
 			}
-
+		
 		} else if (method == Method.DISPLAYERROR){
 			respondToDisplayError(request);
 		}

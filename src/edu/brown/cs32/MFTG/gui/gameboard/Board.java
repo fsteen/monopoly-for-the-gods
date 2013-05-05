@@ -94,6 +94,11 @@ public class Board extends JPanel {
 		_center.removeSetHeuristicsButton();
 	}
 	
+	public void switchToEndGameMenu() {
+		JMenuBar menu = new EndGameMenu(this,_main, _profile);
+		_main.setJMenuBar(menu);
+	}
+	
 	public void enableToolTips(boolean enabled) {
 		ToolTipManager.sharedInstance().setEnabled(enabled);
 	}
@@ -466,7 +471,7 @@ public class Board extends JPanel {
 		}
 	}
 	
-	public void setWinnerData(Map<Integer,Integer> data){
+	public void setWinnerData(Map<Integer, Double> data){
 		_center.setWinnerData(data);
 	}
 

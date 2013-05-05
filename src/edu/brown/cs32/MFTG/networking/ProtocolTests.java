@@ -79,7 +79,6 @@ public class ProtocolTests {
 		
 		// make sure that all necessary getters and setters exist
 		HashMap<String, Integer> propertyValues = p.getPropertyValues();
-		propertyValues.put(null, 76);
 		p2.setPropertyValues(propertyValues);
 		
 		HashMap<String, Double[]> colorValues = p.getColorValues();
@@ -150,7 +149,7 @@ public class ProtocolTests {
 		List<TimeStampReport> timeStamps = new ArrayList<>();
 		Map<String, List<PropertyDataReport>> entireGameData = new HashMap<>();
 		Map<String, PropertyDataReport> overallPropertyData = new HashMap<>();
-		Map<Integer,Integer> playerWins = new HashMap<>();
+		Map<Integer,Double> playerWins = new HashMap<>();
 		
 		Map<Integer, PlayerWealthDataReport> wealthData = new HashMap<>();
 		wealthData.put(1, new PlayerWealthDataReport(1, 2, 3, 4));
@@ -163,12 +162,12 @@ public class ProtocolTests {
 		
 		overallPropertyData.put("test", p);
 		
-		playerWins.put(3, 4);
-		playerWins.put(9, 12);
+		playerWins.put(3, 4.);
+		playerWins.put(9, 12.);
 		List<Integer> winList = new ArrayList<>();
 		winList.add(3);
 		
-		GameDataReport gdr = new GameDataReport(timeStamps, playerWins,winList, entireGameData, overallPropertyData);
+		GameDataReport gdr = new GameDataReport(timeStamps, playerWins,winList, entireGameData, overallPropertyData,false);
 		
 		ObjectMapper oMapper = new ObjectMapper();
 		

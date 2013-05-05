@@ -26,7 +26,6 @@ import edu.brown.cs32.MFTG.tournament.Record;
 public class MonopolyGui extends JFrame{
 	private JPanel _currentPanel;
 	private HashMap<String, JPanel> _panels;
-	private EndGamePanel _end;
 	private ChooseProfilePanel _choose;
 	private Profile _currentProfile;
 	private ProfileManager _profileManager;
@@ -82,8 +81,6 @@ public class MonopolyGui extends JFrame{
 		_panels.put("create", create);
 		JoinGamePanel join = new JoinGamePanel(this);
 		_panels.put("join", join);
-		_end = new EndGamePanel(this);
-		_panels.put("end", _end);
 
 		_empty = new EmptyMenuBar();
 
@@ -91,7 +88,6 @@ public class MonopolyGui extends JFrame{
 		this.add(_currentPanel);
 
 		this.setJMenuBar(_empty);
-
 
 		this.switchPanels("greet");
 
@@ -149,14 +145,6 @@ public class MonopolyGui extends JFrame{
 	}
 
 	/**
-	 * sets winner of game
-	 * @param didWin
-	 * @param names
-	 */
-	public void setWinner(boolean didWin, String...names) {
-		_end.setWinner(didWin, names);
-	}
-	/**
 	 * This method switches between panels
 	 * @param panel
 	 */
@@ -201,6 +189,14 @@ public class MonopolyGui extends JFrame{
 	}
 
 	/**
+	 * Saves the current profiles to disk
+	 * @return true if it was possible to save the profiles, and false otherwise
+	 */
+	public boolean saveProfiles(){
+		return _profileManager.saveProfiles();
+	}
+
+	/**
 	 * 
 	 * @param profileName
 	 * @return record for profile
@@ -223,14 +219,6 @@ public class MonopolyGui extends JFrame{
 	 */
 	public Set<String> getPlayerNames(String profile) {
 		return _profileManager.getProfile(profile).getPlayerNames();
-	}
-
-	/**
-	 * 
-	 * @return set of settings names
-	 */
-	public Set<String> getSettingsNames(String profile) {
-		return _profileManager.getProfile(profile).getSettingsNames();
 	}
 
 	/**
@@ -276,16 +264,17 @@ public class MonopolyGui extends JFrame{
 		return (Board) _panels.get("board"); //TODO get rid of casting
 	}
 
-	public void createBoard(int id, Profile profile, Client client) {
+	public Board createBoard(int id, Profile profile, Client client) {
 		Board board;
 		try {
 			board = new Board(id, this, profile, client);
 			_panels.put("board", board);
 			switchPanels("board");
+			return board;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.err.println("ERROR: "+e.getMessage());
 		}
+		return null;
 	}
 
 	public void createSettingsBoard(Profile profile) {
@@ -295,10 +284,24 @@ public class MonopolyGui extends JFrame{
 			_panels.put("settingsboard", board);
 			switchPanels("settingsboard");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.err.println("ERROR: "+e.getMessage());
 		}
 	}
+	
+	/**
+	 * creates an end game screen
+	 * @param board
+	 * @param didWin
+	 * @param names
+	 */
+	public void createEndGame(Board board, boolean didWin, String...names) {
+		EndGamePanel end = new EndGamePanel(this, board);
+		end.setWinner(didWin, names);
+		_panels.put("end", end);
+		switchPanels("end");
+
+	}
+
 
 	public Client getClient(){
 		return _client;

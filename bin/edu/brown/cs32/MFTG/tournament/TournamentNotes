@@ -35,6 +35,10 @@ fix time owned
 send end of game data to GUI (winners)
 add records information
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 6f5acb59632dca799be9e36d7577adea3f8f402c
 -------------
 Thoughts : we need a count of who the winner is
 		   we to be able to send end of game data

@@ -113,15 +113,14 @@ public class HumanClient extends Client{
 	/*******************************************************/
 
 	/**
-	 * Set and display the combined GameData
+	 * Set and display the combined GameData at the end of a set
 	 * @param combinedData
 	 */
 	public void displayGameData(GameDataReport combinedData) {
+		//TODO differentiate between end of round and end of game data here
 		System.out.println("displaying end of round data");
 		displayDataToGui(combinedData);
 		_gui.getBoard().setWinnerData(combinedData._playerWins);
-		//_gui.getBoard().newRound();
-		
 	}
 	
 	private void displayDataToGui(GameDataReport combinedData){

@@ -8,6 +8,8 @@ from Chizu:
 	- Verify that game results make sense
 	- make passive and aggressive players have different property valuations
 	- change the passive/ aggressive players? i though you said you were going to do this
+	- why is the switch board menu in the board not the gui? to my knowledge the
+	  board will not know when the game is finally over but the client will switch
 
 from Frances:
 	- debug the AI player (gets stuck in getPlayer())
@@ -31,9 +33,14 @@ Completed:
 ===Frances===
 - Set up the end of game flow
 	- call setWinner() in the monopolyGui
+
 - Figure out how to create AI players
 - Figure out how to handle catching exceptions thrown in games
 - Make sure that the "time owned" value is being calculated correctly
+- Figure out how to handle catching exceptions thrown in games
+
+from Chizu:
+	-time owned is not updating correctly
 
 from Alex:
 	- make sure that games, sets, and matches are saved by adding them to the profile
@@ -41,6 +48,14 @@ from Alex:
 ===Alex===
 - Profile persistence
 - Make sure that verification data is being sent back to the server
+=======
+from Judah:
+	- only average the number of houses of games when we have a monopoly on the property.
+	- when AI player is playing, only 1 set is every played
+	
+
+
+===Alex===
 - Properly implement timeouts server-side
 - Properly implement timeouts client-side
 - Make everything close properly upon shutdown
@@ -48,5 +63,3 @@ from Alex:
 
 from Chizu:
 	- Ensure that timing is working correctly
-
-

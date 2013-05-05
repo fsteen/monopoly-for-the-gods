@@ -6,41 +6,35 @@ import java.util.Objects;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import edu.brown.cs32.MFTG.monopoly.Player;
-import edu.brown.cs32.MFTG.tournament.Settings.WinningCondition;
+import edu.brown.cs32.MFTG.monopoly.Player.Aggression;
+import edu.brown.cs32.MFTG.monopoly.Player.Amount;
+import edu.brown.cs32.MFTG.monopoly.Player.Balance;
 
 public class Profile {
 	public final String _name;
 	Map<String, Player> _players;
-	Map<String, Settings> _settings;
 	private Record _record;
 
 	@JsonCreator
 	public Profile(@JsonProperty("name") String name){
 		_name = name;
 		buildPlayersMap();
-		buildSettingsMap();
 		_record = new Record();
 	}
-	
+
 	/**
 	 * 
 	 * @return palyer names
 	 */
+	@JsonIgnore
 	public Set<String> getPlayerNames(){
 		return _players.keySet();
 	}
-	
-	/**
-	 * 
-	 * @return get settings names
-	 */
-	public Set<String> getSettingsNames(){
-		return _settings.keySet();
-	}
-	
+
 	/**
 	 * Builds the Players that are included in every profile 
 	 */
@@ -48,49 +42,40 @@ public class Profile {
 		Player timid = new Player(1);
 		Player balanced = new Player(2);
 		Player aggressive = new Player(3);
-		
+		setTimidValues(timid);
+		setBalancedValues(balanced);
+		setAggressiveValues(aggressive);
+
 		Map<String, Player> players = new HashMap<>();
-		
+
 		players.put("timid", timid);
 		players.put("balanced", balanced);
 		players.put("aggressive", aggressive);
-		
+
 		_players = players;
-	}
-	
-	/**
-	 * Builds the settings that are included in every profile
-	 */
-	private void buildSettingsMap(){
-		Map<String, Settings> settings = new HashMap<>();
-		
-		Settings defaultSettings = new Settings(10000, 10, false, -1, false, WinningCondition.MOST_SETS_WON, 300, 180);
-		
-		settings.put("default", defaultSettings);
-		
-		_settings = settings;
 	}
 	
 	@Override
 	public boolean equals(Object o){
 		if (o == null || !(o instanceof Profile))
 			return false;
-		
+
 		Profile that = (Profile) o;
-		
+
 		return Objects.equals(_name, that._name) && Objects.equals(_players, that._players) 
-			&& Objects.equals(_settings, that._settings);
+			&& Objects.equals(_record, that.getRecord()); 
 	}
 
 	/**
 	 * 
 	 * @return player
 	 */
+	@JsonIgnore
 	public Player getPlayer(String s) {
 		return _players.get(s);
-		
+
 	}
-	
+
 	/**
 	 * 
 	 * @param p
@@ -104,7 +89,7 @@ public class Profile {
 		_players.put(name,p);
 		return true;
 	}
-	
+
 	/**
 	 * remove a player
 	 * @param name
@@ -117,7 +102,7 @@ public class Profile {
 		_players.remove(name);
 		return true;
 	}
-	
+
 	/**
 	 * adds a player or replaces previous if it exists
 	 * @param p
@@ -140,22 +125,6 @@ public class Profile {
 	}
 
 	/**
-	 * 
-	 * @return _settings;
-	 */
-	public Map<String, Settings> getSettings() {
-		return _settings;
-	}
-
-	/**
-	 * Setter for the settings attribute
-	 * @param _settings
-	 */
-	public void setSettings(Map<String, Settings> settings) {
-		_settings = settings;
-	}
-
-	/**
 	 * @return the _record
 	 */
 	public Record getRecord() {
@@ -168,10 +137,78 @@ public class Profile {
 	public void setRecord(Record record) {
 		_record = record;
 	}
-	
+
+	private void setTimidValues(Player p) {
+		p.setColorValue("purple", 1.2, 1.1, 1.1, 1.05);
+		p.setColorValue("light blue", 1.2, 1.1, 1.1, 1.05);
+		p.setColorValue("pink", 1.2, 1.1, 1.1, 1.05);
+		p.setColorValue("orange", 1.2, 1.1, 1.1, 1.05);
+		p.setColorValue("red", 1.2, 1.1, 1.1, 1.05);
+		p.setColorValue("yellow", 1.2, 1.1, 1.1, 1.05);
+		p.setColorValue("green", 1.2, 1.1, 1.1, 1.05);
+		p.setColorValue("dark blue", 1.2, 1.1, 1.1, 1.05);
+
+		p.setJailWait(3);
+		p.setJailRich(3);
+		p.setJailPoor(3);
+		p.setMinBuildCash(400);
+		p.setMinBuyCash(300);
+		p.setMinUnmortgageCash(600);
+		p.setTradingFear(1.5);
+		p.setLiquidity(3);
+		p.setBuildAggression(Aggression.PASSIVE);
+		p.setBuildingEvenness(Balance.UNEVEN);
+		p.setHouseSelling(Amount.MORE);
+		
+	}
+
+	private void setAggressiveValues(Player p) {
+		p.setColorValue("purple", 2.5, 1.5, 2.25, 2);
+		p.setColorValue("light blue", 2.5, 1.5, 2.25, 2);
+		p.setColorValue("pink", 2.5, 1.5, 2.25, 2);
+		p.setColorValue("orange", 2.5, 1.5,2.25, 2);
+		p.setColorValue("red", 2.5, 1.5, 2.25, 2);
+		p.setColorValue("yellow", 2.5, 1.5, 2.25, 2);
+		p.setColorValue("green", 2.5, 1.5, 2.25, 2);
+		p.setColorValue("dark blue", 2.5, 1.5, 2.25, 2);
+
+		p.setJailWait(1);
+		p.setJailRich(1);
+		p.setJailPoor(1);
+		p.setMinBuildCash(0);
+		p.setMinBuyCash(0);
+		p.setMinUnmortgageCash(0);
+		p.setTradingFear(1.1);
+		p.setLiquidity(10);
+		p.setBuildAggression(Aggression.AGGRESSIVE);
+		p.setBuildingEvenness(Balance.EVEN);
+		p.setHouseSelling(Amount.FEWER);
+	}
+
+	private void setBalancedValues(Player p) {
+		p.setColorValue("purple", 1.7, 1.2, 1.5, 1.3);
+		p.setColorValue("light blue", 1.2, 1.2, 1.5, 1.3);
+		p.setColorValue("pink", 1.7, 1.2, 1.5, 1.3);
+		p.setColorValue("orange", 1.7, 1.2, 1.5, 1.3);
+		p.setColorValue("red", 1.7, 1.2, 1.5, 1.3);
+		p.setColorValue("yellow", 1.7, 1.2, 1.5, 1.3);
+		p.setColorValue("green", 1.7, 1.2, 1.5, 1.3);
+		p.setColorValue("dark blue", 1.7, 1.2, 1.5, 1.3);
+
+		p.setJailWait(2);
+		p.setJailRich(2);
+		p.setJailPoor(2);
+		p.setMinBuildCash(200);
+		p.setMinBuyCash(150);
+		p.setMinUnmortgageCash(300);
+		p.setTradingFear(1.3);
+		p.setLiquidity(6);
+
+	}
+
 	@Override
 	public String toString() {
 		return _name;
 	}
-	
+
 }

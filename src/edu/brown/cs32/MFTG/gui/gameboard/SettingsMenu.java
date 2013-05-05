@@ -69,10 +69,7 @@ public class SettingsMenu extends BoardMenu {
 				}
 				_players.setText(_playerItems.get(0).getText());
 			}
-
-		}
-			
+			_main.saveProfiles();
+		}		
 	}
-
-
 }

@@ -318,6 +318,6 @@ public class DataProcessorTests {
 			tStamps.add(new TimeStampReport(time, wAtT));
 		}
 		
-		return new GameDataReport(tStamps, null,null, null, null);		
+		return new GameDataReport(tStamps, null,null, null, null,false);		
 	}
 }

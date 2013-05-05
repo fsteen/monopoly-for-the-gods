@@ -51,18 +51,9 @@ public class WinnerPanelVertical extends JPanel {
 		panel.setBackground(Constants.BACKGROUND_COLOR);
 		panel.setPreferredSize(dimension);
 		add(panel);
-		
-		/*HashMap<Integer, Integer> values = new HashMap<>();
-		values.put(new Integer(-1), new Integer(0));
-		values.put(new Integer(0), new Integer(123));
-		values.put(new Integer(1), new Integer(200));
-		values.put(new Integer(3), new Integer(124));
-		values.put(new Integer(2), new Integer(134));
-		
-		update(values);*/
 	}
 	
-	public void update (Map<Integer, Integer> data) {
+	public void update (Map<Integer, Double> data) {
 		Integer negativeOne = new Integer(-1);
 		for(Integer i: data.keySet()) {
 			if(i.equals(negativeOne)) {
@@ -80,11 +71,13 @@ public class WinnerPanelVertical extends JPanel {
 	
 	public void createChart() {
 		_chart = ChartFactory.createStackedBarChart("Who's Winning?", "", "", _dataset, PlotOrientation.VERTICAL, false, false, false);
+
 		_chart.setBackgroundPaint(Constants.BACKGROUND_COLOR);
 		
 		CategoryPlot categoryPlot = (CategoryPlot) _chart.getPlot();
 		categoryPlot.setBackgroundPaint(Constants.BACKGROUND_COLOR);
 		categoryPlot.setRangeGridlinePaint(Color.LIGHT_GRAY);
+
 		categoryPlot.setOutlinePaint(null);
 		categoryPlot.setRangeGridlinesVisible(false);
 		
@@ -121,13 +114,12 @@ public class WinnerPanelVertical extends JPanel {
 		frame.setVisible(true);
 		frame.pack();
 		
-		HashMap<Integer, Integer> values = new HashMap<>();
+		/*HashMap<Integer, Integer> values = new HashMap<>();
 		values.put(new Integer(-1), new Integer(0));
 		values.put(new Integer(0), new Integer(123));
 		values.put(new Integer(1), new Integer(200));
 		values.put(new Integer(3), new Integer(124));
 		values.put(new Integer(2), new Integer(134));
-		
-		panel.update(values);
+		panel.update(values);*/
 	}
 }

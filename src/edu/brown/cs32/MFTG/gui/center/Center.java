@@ -89,7 +89,7 @@ public class Center extends JPanel {
 		_buttonPanel.setValues(buildingChoice, buildingEvenness, buildAggression, sellingChoice, houseSelling, mortgageChoice);
 	}
 
-	public void setWinnerData(Map<Integer, Integer> data) {
+	public void setWinnerData(Map<Integer, Double> data) {
 		_winnerPanel.update(data);
 	}
 	

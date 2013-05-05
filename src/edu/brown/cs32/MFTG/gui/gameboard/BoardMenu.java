@@ -147,9 +147,7 @@ public class BoardMenu extends JMenuBar {
 			}
 			else {
 				_profile.replacePlayer(newPlayer, _currentPlayer);
-				
 			}
-
 		}
 
 	}

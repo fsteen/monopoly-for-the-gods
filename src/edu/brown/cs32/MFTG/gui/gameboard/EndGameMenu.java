@@ -16,40 +16,38 @@ import edu.brown.cs32.MFTG.gui.Constants;
 import edu.brown.cs32.MFTG.gui.MonopolyGui;
 import edu.brown.cs32.MFTG.tournament.Profile;
 
-public class InGameMenu extends BoardMenu {
+public class EndGameMenu extends BoardMenu {
 	private MonopolyGui _main;
-	public InGameMenu(Board board, MonopolyGui main, Profile profile) {
+	public EndGameMenu(Board board, MonopolyGui main, Profile profile) {
 		super(board, main, profile);
 		_main=main;
 		add(Box.createHorizontalGlue());
 		
 		JCheckBox music = new JCheckBox("Music: ", true);
 		music.setHorizontalTextPosition(SwingConstants.LEADING);
-
 		music.addItemListener(new MusicListener());
 		
-		JButton quit = new JButton("Quit Game");
-		quit.addActionListener(new QuitListener());
-		quit.setHorizontalAlignment(SwingConstants.RIGHT);
+		JButton back = new JButton("Back");
+		back.addActionListener(new BackListener());
+		back.setHorizontalAlignment(SwingConstants.RIGHT);
 		
 		Dimension dimension = new Dimension(Constants.FULL_WIDTH, Constants.MENU_HEIGHT);
 		setSize(dimension);
 		setPreferredSize(dimension);
 		
 		add(music);
-		add(quit);
+		add(back);
 	}
 	
-	protected class QuitListener implements ActionListener{
+	protected class BackListener implements ActionListener{
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-				//TODO
+			_main.switchPanels("end");
 		}
 			
 	}
 	
-
 	private class MusicListener implements ItemListener{
 
 		@Override
