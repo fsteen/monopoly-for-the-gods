@@ -309,8 +309,6 @@ public class MonopolyGui extends JFrame{
 		end.setWinner(didWin, names);
 		_panels.put("end", end);
 		switchPanels("end");
-		saveProfiles();
-
 	}
 
 

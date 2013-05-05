@@ -40,26 +40,28 @@ Completed:
 
 ===Frances===
 -Get rid of player with most $ method in GameDataAccumulator
--out of memory error ... AHHH
 from Alex:
-	- make sure that games, sets, and matches are saved by adding them to the profile 
-	(addgame addset and addmatch methods in records)
-
 
 from Judah:
 	- only average the number of houses of games when we have a monopoly on the property.
 	- make sure that game music turns on when game starts and game music turns off when game ends (just call playNextInGameSong() when game starts and playNextOutOfGameSong() when games ends on the monopolygui
 	- when you display players at end of game, you should print profile names as player numbers mean nothing to them
-	- it seems you may not be saving records after the final set (though this may not be true), I added the saveProfiles() call (that writes to file) when the createEndGame() is called in monopolygui, this may not be appropriate, in which case fix where that's called, though it should be called at the end of a game (or even better at the end of a set)
 
 from Chizu:
 	- give player names as well as numbers
 
 Completed:
+- make sure that games, sets, and matches are saved by adding them to the profile 
+(addgame addset and addmatch methods in records)
+-out of memory error ... AHHH 
 - Figure out security issues ... it always says someone is cheating
 -handle exceptions from Games
 -fix time owned
 -DONE but check once Alex gets ports working: make game exit cleanly when user clicks quit button in menu. just fill in the QuitListener in the InGameMenu class in the gameboard package
+- it seems you may not be saving records after the final set (though this may not be true),
+		I added the saveProfiles() call (that writes to file) when the createEndGame() is called in monopolygui,
+		this may not be appropriate, in which case fix where that's called, though it should be called at the end of a game
+		(or even better at the end of a set)
 
 ===Alex===
 - Make records persistent

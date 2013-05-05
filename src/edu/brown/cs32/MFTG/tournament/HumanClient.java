@@ -141,6 +141,7 @@ public class HumanClient extends Client{
 		
 		/* update records */
 		_gui.getCurrentProfile().getRecord().addMatch(combinedData.getPlayerWithMostWins() == _id, 3232);
+		_gui.saveProfiles();
 	}
 	
 	private void displayDataToGui(GameDataReport combinedData){
