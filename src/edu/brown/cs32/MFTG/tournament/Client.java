@@ -192,9 +192,7 @@ public abstract class Client implements Runnable{
 	}
 		
 	public void finishRespondToGetPlayer(){
-		System.out.println("finishing responding to get client");
 		Player p = finishGetPlayer();
-		System.out.println("player is : " + p);
 
 		String playerString;
 		
@@ -240,13 +238,13 @@ public abstract class Client implements Runnable{
 		} else if (arguments.size() < 3){
 			// you get the idea
 		}
-
+		
 		JavaType listOfPlayers = _oMapper.getTypeFactory().constructCollectionType(List.class, Player.class);
 		JavaType listOfSeeds = _oMapper.getTypeFactory().constructCollectionType(List.class, Long.class);
 		List<Player> players = _oMapper.readValue(arguments.get(0), listOfPlayers);
 		List<Long> seeds = _oMapper.readValue(arguments.get(1), listOfSeeds);
 		Settings settings = _oMapper.readValue(arguments.get(2), Settings.class);
-
+		
 		GameDataReport gameData = playGames(players, seeds, settings);
 		
 		String gameDataJson = _oMapper.writeValueAsString(gameData);
@@ -297,13 +295,13 @@ public abstract class Client implements Runnable{
 		_nextDisplaySize = DATA_PACKET_SIZE;
 		_numThreadsDone.set(0);
 		
-		System.out.println("Client checkpoint 1 " + this.getClass().toString());
 		GameRunnerFactory gameRunnerFactory = new GameRunnerFactory(_numThreadsDone, this, MAX_NUM_TURNS,
 				settings.freeParking,settings.doubleOnGo,settings.auctions,players.toArray(new Player[players.size()]));
 		
 		for(Long seed : seeds){
 			_pool.execute(gameRunnerFactory.build(seed)); //launch games
 		}
+		
 		synchronized (this){
 			while(_numThreadsDone.get() < seeds.size()){
 				try{
@@ -311,8 +309,7 @@ public abstract class Client implements Runnable{
 				} catch (InterruptedException e){}
 			}
 		}
-		System.out.println("Client checkpoint 2 " + this.getClass().toString());
-
+		
 		return _data.toGameDataReport();
 	}
 

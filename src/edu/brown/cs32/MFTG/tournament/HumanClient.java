@@ -158,7 +158,6 @@ public class HumanClient extends Client{
 	}
 	
 	public void startGetPlayer(int time){
-		System.out.println(time);
 		_timer = new Timer(1000*(time+1), new GetPlayerActionListener(this));
 		_gui.getBoard().newRound(time);
 		_timer.setRepeats(false);

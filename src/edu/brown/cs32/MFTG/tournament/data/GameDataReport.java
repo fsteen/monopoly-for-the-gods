@@ -101,7 +101,7 @@ public class GameDataReport {
 				}
 			}
 		} else {
-			System.out.println("null");
+			b.append("null");
 		}
 		b.append("*****OVERALL PROPERTY DATA*****\n");
 		if(_overallPropertyData != null){

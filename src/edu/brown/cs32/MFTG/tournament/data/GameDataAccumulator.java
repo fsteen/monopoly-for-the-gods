@@ -256,7 +256,6 @@ public class GameDataAccumulator {
 	 * @return
 	 */
 	public GameDataReport toGameDataReport(){
-		System.out.println("here");
 		List<TimeStampReport> times = new ArrayList<>();
 
 		for(TimeStampAccumulator t : timeStamps){
@@ -269,6 +268,8 @@ public class GameDataAccumulator {
 		for(PropertyDataAccumulator p : entireGameData.values()){
 			overallPropertyData.put(p.propertyName, p.toPropertyDataReport());
 		}
+		
+		
 		for(Map<Integer,PropertyDataAccumulator> m : playerEntireGameData.values()){
 			tempList = new ArrayList<>();			
 			for(PropertyDataAccumulator p : m.values()){
@@ -276,7 +277,6 @@ public class GameDataAccumulator {
 			}
 			overallPlayerPropertyData.put(tempList.get(0).propertyName, tempList);
 		}
-
 		return new GameDataReport(times, _playerWins,_winList, overallPlayerPropertyData, overallPropertyData,matchIsOver);		
 	}
 }

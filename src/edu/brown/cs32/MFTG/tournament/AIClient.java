@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -16,6 +17,8 @@ import edu.brown.cs32.MFTG.monopoly.GameData;
 import edu.brown.cs32.MFTG.monopoly.Player;
 import edu.brown.cs32.MFTG.networking.ClientRequestContainer;
 import edu.brown.cs32.MFTG.networking.InvalidRequestException;
+import edu.brown.cs32.MFTG.tournament.data.DataProcessor;
+import edu.brown.cs32.MFTG.tournament.data.GameDataAccumulator;
 import edu.brown.cs32.MFTG.tournament.data.GameDataReport;
 import edu.brown.cs32.MFTG.tournament.data.PlayerWealthDataReport;
 import edu.brown.cs32.MFTG.tournament.data.PropertyDataReport;
@@ -83,7 +86,14 @@ public class AIClient extends Client{
 	}
 
 	public synchronized void addGameData(GameData gameData){
-		// do nothing -- there is no gui
+		List<GameData> temp = new ArrayList<>();
+		temp.add(gameData);
+		GameDataAccumulator a = DataProcessor.aggregate(temp,NUM_DATA_POINTS);
+		if(_data == null){
+			_data = a;
+		} else {
+			DataProcessor.combineAccumulators(_data, DataProcessor.aggregate(temp,NUM_DATA_POINTS));
+		}
 	}
 
 	public void startGetPlayer(int time){
@@ -91,7 +101,6 @@ public class AIClient extends Client{
 	}
 
 	public Player finishGetPlayer(){
-		System.out.println("START GETTING AI PLAYER");
 		Player temp = new Player(_player);
 		if(_currentGameData==null) {
 			_player.setColorValue("purple", 2, 1.25, 1.75, 1.5);
@@ -318,7 +327,6 @@ public class AIClient extends Client{
 				_player.setTradingFear(Math.min(Math.max(1,_previousPlayer.getTradingFear()-.9*(_previousPlayer.getTradingFear()-_player.getTradingFear())),10));
 			}
 		}
-		System.out.println("FINISH GETTING AI PLAYER");
 		_previousPlayer=temp;
 		return _player;
 	}

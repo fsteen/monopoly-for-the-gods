@@ -87,7 +87,7 @@ public class ClientHandler {
 		write(request);
 
 		// set the timeout and attempt to read the response from the client
-		_client.setSoTimeout((time + 10) * 1000);
+//		_client.setSoTimeout((time + 10) * 1000);
 		ClientRequestContainer response = readResponse();
 
 		// check for bad responses
@@ -132,10 +132,8 @@ public class ClientHandler {
 			ClientRequestContainer request = new ClientRequestContainer(Method.PLAYGAMES, arguments);
 			// request that the client play the games
 			write(request);
-
+			
 			ClientRequestContainer response = readResponse();
-
-			//			List<GameData> gameData = readPlayGamesResponse();
 
 			GameDataReport gameData= _oMapper.readValue(response._arguments.get(0), GameDataReport.class);
 
