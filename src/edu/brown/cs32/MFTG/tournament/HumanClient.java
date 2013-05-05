@@ -123,7 +123,12 @@ public class HumanClient extends Client{
 		}
 		displayDataToGui(combinedData);
 		_gui.getBoard().setWinnerData(combinedData._playerWins);
-		_gui.getCurrentProfile().getRecord().addSet(combinedData.getPlayerWithMostWins() == _id); //update records
+		
+		/* update records */
+		_gui.getCurrentProfile().getRecord().addSet(combinedData.getPlayerWithMostWins() == _id);
+		for(Integer i : combinedData._winList.values()){
+			_gui.getCurrentProfile().getRecord().addGame(i == _id, 0);
+		}
 	}
 	
 	private void finishMatch(GameDataReport combinedData){
@@ -133,6 +138,8 @@ public class HumanClient extends Client{
 			names[i] = i < numPlayers ? "Player " + i : "";
 		}
 		_gui.createEndGame(_gui.getBoard(), combinedData.getPlayerWithMostWins() == _id, names);
+		
+		/* update records */
 		_gui.getCurrentProfile().getRecord().addMatch(combinedData.getPlayerWithMostWins() == _id, 3232);
 	}
 	
@@ -140,7 +147,6 @@ public class HumanClient extends Client{
 		_gui.getBoard().setPlayerSpecificPropertyData(getPlayerPropertyData(combinedData._overallPlayerPropertyData));
 		_gui.getBoard().setPropertyData(combinedData._overallPropertyData);
 		_gui.getBoard().setWealthData(getPlayerWealthData(combinedData._timeStamps));
-
 	}
 	
 	/**
@@ -148,12 +154,7 @@ public class HumanClient extends Client{
 	 * when they finish playing
 	 * @param gameData
 	 */
-	public synchronized void addGameData(GameData gameData){
-		/* update records */
-		if(gameData != null){
-			_gui.getCurrentProfile().getRecord().addGame(gameData.getWinner() == _id, gameData.getData().size());
-		}
-		
+	public synchronized void addGameData(GameData gameData){		
 		List<GameData> temp = new ArrayList<>();
 		temp.add(gameData);
 		GameDataAccumulator a = DataProcessor.aggregate(temp,BackendConstants.NUM_DATA_POINTS);

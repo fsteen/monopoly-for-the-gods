@@ -32,8 +32,7 @@ public class Record {
 	public void addGame(boolean isWin, int numTurnsTaken) {
 		_numGames++;
 		if(isWin)_numGamesWon++;
-		_gameWinningPercentage=_numGamesWon/_numGames;	
-		
+		_gameWinningPercentage=((double)_numGamesWon)/_numGames;	
 		_numTurnsTaken+=numTurnsTaken;
 	}
 	
@@ -44,8 +43,7 @@ public class Record {
 	public void addSet(boolean isWin) {
 		_numSets++;
 		if(isWin)_numSetsWon++;
-		_setWinningPercentage=_numSetsWon/_numSets;	
-
+		_setWinningPercentage=((double)_numSetsWon)/_numSets;	
 	}
 	
 	/**
@@ -55,10 +53,8 @@ public class Record {
 	public void addMatch(boolean isWin, int lengthOfGameInSeconds) {
 		_numMatches++;
 		if(isWin)_numMatchesWon++;
-		_matchWinningPercentage=_numMatchesWon/_numMatches;	
-		
+		_matchWinningPercentage=((double)_numMatchesWon)/_numMatches;	
 		_secondsPlayed+=lengthOfGameInSeconds;
-
 	}
 
 	/**

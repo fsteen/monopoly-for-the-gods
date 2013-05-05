@@ -282,6 +282,10 @@ public class MonopolyGui extends JFrame{
 		}
 		return null;
 	}
+	
+	public void destroyBoard(){
+		_panels.remove("board");
+	}
 
 	public void createSettingsBoard(Profile profile) {
 		SettingsBoard board;

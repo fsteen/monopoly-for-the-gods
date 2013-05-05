@@ -44,7 +44,8 @@ public class InGameMenu extends BoardMenu {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-				//TODO
+				_main.switchPanels("greet");
+				
 		}
 			
 	}
