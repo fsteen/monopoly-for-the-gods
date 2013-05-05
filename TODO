@@ -5,11 +5,8 @@
 - make sure that nothing falls through the cracks
 
 from Chizu:
-	- Verify that game results make sense
 	- make passive and aggressive players have different property valuations
-	- change the passive/ aggressive players? i though you said you were going to do this
-	- why is the switch board menu in the board not the gui? to my knowledge the
-	  board will not know when the game is finally over but the client will switch
+	- can you remove the aggregate property button from the menu for the settings page
 
 from Frances:
 	- debug the AI player (gets stuck in getPlayer())
@@ -18,16 +15,15 @@ from Frances:
 - Decide whether or not to use pictures for buttons on the top
 - Add a button to turn on/off tooltips
 - Talk with Frances about using property ID's vs. using profiles to say "Player 1"
-- Work on repainting while playing the games
-- Get the graph to change size properly
-
-from Judah:
-	- subclass the color group/ railroad panels for the settings board
-	- fix up the connection between the menubar and "those buttons"
+- Work on repainting while playing the games?
 
 Completed:
 	- implement the setWinnerData() method
+	- fix up the connection between the menubar and "those buttons"
 	- Format the winner graph
+	- subclass the color group/ railroad panels for the settings board
+	- Get the graph to change size properly
+	- remove the three properties for purple and dark blue
     
 
 ===Frances===
