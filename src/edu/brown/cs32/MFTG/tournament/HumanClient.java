@@ -118,22 +118,30 @@ public class HumanClient extends Client{
 	 */
 	public void displayGameData(GameDataReport combinedData) {
 		//TODO differentiate between end of round and end of game data here
-		int numPlayers = combinedData._timeStamps.get(0).wealthData.size();
 		if(combinedData._matchIsOver){
-			String[] names = new String[MAX_NUM_PLAYERS];
-			for(int i = 0; i < names.length; i++){
-				names[i] = i < numPlayers ? "Player " + i : "";
-			}
-			_gui.createEndGame(_gui.getBoard(), combinedData.getPlayerWithMostWins() == _id, names);
-		} 
+			finishMatch(combinedData);
+		}
 		displayDataToGui(combinedData);
 		_gui.getBoard().setWinnerData(combinedData._playerWins);
+		System.out.println(_id + " " + combinedData.getPlayerWithMostWins());
+		_gui.getCurrentProfile().getRecord().addSet(combinedData.getPlayerWithMostWins() == _id); //update records
+	}
+	
+	private void finishMatch(GameDataReport combinedData){
+		int numPlayers = combinedData._timeStamps.get(0).wealthData.size();
+		String[] names = new String[MAX_NUM_PLAYERS];
+		for(int i = 0; i < names.length; i++){
+			names[i] = i < numPlayers ? "Player " + i : "";
+		}
+		_gui.createEndGame(_gui.getBoard(), combinedData.getPlayerWithMostWins() == _id, names);
+		_gui.getCurrentProfile().getRecord().addMatch(combinedData.getPlayerWithMostWins() == _id, 3232);
 	}
 	
 	private void displayDataToGui(GameDataReport combinedData){
 		_gui.getBoard().setPlayerSpecificPropertyData(getPlayerPropertyData(combinedData._overallPlayerPropertyData));
 		_gui.getBoard().setPropertyData(combinedData._overallPropertyData);
 		_gui.getBoard().setWealthData(getPlayerWealthData(combinedData._timeStamps));
+
 	}
 	
 	/**
@@ -144,6 +152,7 @@ public class HumanClient extends Client{
 	public synchronized void addGameData(GameData gameData){
 		List<GameData> temp = new ArrayList<>();
 		temp.add(gameData);
+		_gui.getCurrentProfile().getRecord().addGame(gameData.getWinner() == _id, gameData.getData().size()); //set record
 		GameDataAccumulator a = DataProcessor.aggregate(temp,NUM_DATA_POINTS);
 		if(_data == null){
 			_data = a;
