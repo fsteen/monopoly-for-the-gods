@@ -127,7 +127,7 @@ public class HumanClient extends Client{
 		/* update records */
 		_gui.getCurrentProfile().getRecord().addSet(combinedData.getPlayerWithMostWins() == _id);
 		for(Integer i : combinedData._winList.values()){
-			_gui.getCurrentProfile().getRecord().addGame(i == _id, 0);
+			_gui.getCurrentProfile().getRecord().addGame(i == _id);
 		}
 	}
 	
@@ -140,7 +140,7 @@ public class HumanClient extends Client{
 		_gui.createEndGame(_gui.getBoard(), combinedData.getPlayerWithMostWins() == _id, names);
 		
 		/* update records */
-		_gui.getCurrentProfile().getRecord().addMatch(combinedData.getPlayerWithMostWins() == _id, 3232);
+		_gui.getCurrentProfile().getRecord().addMatch(combinedData.getPlayerWithMostWins() == _id);
 	}
 	
 	private void displayDataToGui(GameDataReport combinedData){

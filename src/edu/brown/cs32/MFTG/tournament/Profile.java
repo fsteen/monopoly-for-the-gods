@@ -160,6 +160,34 @@ public class Profile {
 		p.setBuildingEvenness(Balance.UNEVEN);
 		p.setHouseSelling(Amount.MORE);
 		
+		p.setPropertyValue("mediterranean avenue", 50);
+		p.setPropertyValue("baltic avenue", 50);
+		p.setPropertyValue("reading railroad", 190);
+		p.setPropertyValue("oriental avenue", 90);
+		p.setPropertyValue("vermont avenue", 90);
+		p.setPropertyValue("connecticut avenue", 110);
+		p.setPropertyValue("st. charles place", 130);
+		p.setPropertyValue("electric company", 140);
+		p.setPropertyValue("states avenue", 150);
+		p.setPropertyValue("virginia avenue", 150);
+		p.setPropertyValue("pennsylvania railroad", 190);
+		p.setPropertyValue("st. james place", 170);
+		p.setPropertyValue("tennessee avenue", 170);	
+		p.setPropertyValue("new york avenue", 190);	
+		p.setPropertyValue("kentucky avenue", 210);	
+		p.setPropertyValue("indiana avenue", 210);	
+		p.setPropertyValue("illinois avenue", 230);		
+		p.setPropertyValue("b and o railroad",190);		
+		p.setPropertyValue("atlantic avenue", 250);		
+		p.setPropertyValue("ventnor avenue", 250);		
+		p.setPropertyValue("water works",140);		
+		p.setPropertyValue("marvin gardens", 270);	
+		p.setPropertyValue("pacific avenue", 290);
+		p.setPropertyValue("north carolina avenue", 290);
+		p.setPropertyValue("pennsylvania avenue", 310);
+		p.setPropertyValue("short line", 190);
+		p.setPropertyValue("park place", 340);
+		p.setPropertyValue("boardwalk", 390);
 	}
 
 	private void setAggressiveValues(Player p) {
@@ -183,6 +211,35 @@ public class Profile {
 		p.setBuildAggression(Aggression.AGGRESSIVE);
 		p.setBuildingEvenness(Balance.EVEN);
 		p.setHouseSelling(Amount.FEWER);
+		
+		p.setPropertyValue("mediterranean avenue", 70);
+		p.setPropertyValue("baltic avenue", 70);
+		p.setPropertyValue("reading railroad", 210);
+		p.setPropertyValue("oriental avenue", 110);
+		p.setPropertyValue("vermont avenue", 110);
+		p.setPropertyValue("connecticut avenue", 130);
+		p.setPropertyValue("st. charles place", 150);
+		p.setPropertyValue("electric company", 160);
+		p.setPropertyValue("states avenue", 150);
+		p.setPropertyValue("virginia avenue", 170);
+		p.setPropertyValue("pennsylvania railroad", 210);
+		p.setPropertyValue("st. james place", 190);
+		p.setPropertyValue("tennessee avenue", 190);	
+		p.setPropertyValue("new york avenue", 210);	
+		p.setPropertyValue("kentucky avenue", 230);	
+		p.setPropertyValue("indiana avenue", 230);	
+		p.setPropertyValue("illinois avenue", 250);		
+		p.setPropertyValue("b and o railroad",210);		
+		p.setPropertyValue("atlantic avenue", 270);		
+		p.setPropertyValue("ventnor avenue", 270);		
+		p.setPropertyValue("water works",160);		
+		p.setPropertyValue("marvin gardens", 290);	
+		p.setPropertyValue("pacific avenue", 310);
+		p.setPropertyValue("north carolina avenue", 310);
+		p.setPropertyValue("pennsylvania avenue", 330);
+		p.setPropertyValue("short line", 210);
+		p.setPropertyValue("park place", 360);
+		p.setPropertyValue("boardwalk", 410);
 	}
 
 	private void setBalancedValues(Player p) {

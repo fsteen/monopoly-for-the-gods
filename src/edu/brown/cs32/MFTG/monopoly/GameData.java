@@ -97,8 +97,8 @@ public class GameData {
 	 * @param revenue
 	 * @param mortgaged
 	 */
-	void setPropertyAtTime(String propertyName, int ownerID, double numHouses,  double personalRevenueWithHouses, double personalRevenueWithoutHouses,double totalRevenueWithHouses,double totalRevenueWithoutHouses, boolean mortgaged){
-		_data.get(_time).addPropertyData(propertyName,ownerID,numHouses,personalRevenueWithHouses, personalRevenueWithoutHouses, totalRevenueWithHouses, totalRevenueWithoutHouses,mortgaged);
+	void setPropertyAtTime(String propertyName, int ownerID, double numHouses,  double personalRevenueWithHouses, double personalRevenueWithoutHouses,double totalRevenueWithHouses,double totalRevenueWithoutHouses, boolean mortgaged, boolean monopolized){
+		_data.get(_time).addPropertyData(propertyName,ownerID,numHouses,personalRevenueWithHouses, personalRevenueWithoutHouses, totalRevenueWithHouses, totalRevenueWithoutHouses,mortgaged, monopolized);
 	}
 	
 	/**

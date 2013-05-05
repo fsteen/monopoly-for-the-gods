@@ -193,7 +193,7 @@ public class ProtocolTests {
 	public void testTimeStamp() throws IOException {
 		ObjectMapper oMapper = new ObjectMapper();
 		
-		PropertyData p = new PropertyData("test", 0, 0, 0, 0, 0, 0, false);
+		PropertyData p = new PropertyData("test", 0, 0, 0, 0, 0, 0, false, false);
 		PlayerWealthData pwd = new PlayerWealthData(0, 0, 0);
 		
 		TimeStamp t = new TimeStamp(5);

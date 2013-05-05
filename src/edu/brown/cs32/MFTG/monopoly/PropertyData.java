@@ -19,6 +19,7 @@ public class PropertyData{
 	public final double totalRevenueWithHouses;
 	public final double totalRevenueWithoutHouses;
 	public final boolean mortgaged;
+	public final boolean monopolized;
 	
 	@JsonCreator
 	public PropertyData(@JsonProperty("propertyName") String propertyName, 
@@ -28,7 +29,7 @@ public class PropertyData{
 						@JsonProperty("personalRevenueWIthoutHouses") double personalRevenueWithoutHouses,
 						@JsonProperty("totalRevenueWithHouses") double totalRevenueWithHouses,
 						@JsonProperty("totalRevenueWithoutHouses") double totalRevenueWithoutHouses,
-						@JsonProperty("mortgaged") boolean mortgaged){
+						@JsonProperty("mortgaged") boolean mortgaged, @JsonProperty("monopolized") boolean monopolized){
 		
 		this.propertyName=propertyName;
 		this.ownerID=ownerID;
@@ -38,6 +39,7 @@ public class PropertyData{
 		this.totalRevenueWithHouses=totalRevenueWithHouses;
 		this.totalRevenueWithoutHouses=totalRevenueWithoutHouses;
 		this.mortgaged=mortgaged;
+		this.monopolized=monopolized;
 	}
 	
 	@Override
@@ -54,6 +56,7 @@ public class PropertyData{
 			&& (this.personalRevenueWithoutHouses == that.personalRevenueWithoutHouses)
 			&& (this.totalRevenueWithHouses == that.totalRevenueWithHouses)
 			&& (this.totalRevenueWithoutHouses == that.totalRevenueWithoutHouses)
-			&& (this.mortgaged == that.mortgaged);
+			&& (this.mortgaged == that.mortgaged)
+			&& (this.monopolized == that.monopolized);
 	}
 }
