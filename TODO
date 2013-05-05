@@ -19,9 +19,9 @@ from Frances:
 	- implement the setWinnerData() method
 
 ===Frances===
-- Set up the end of game flow
-	- call setWinner() in the monopolyGui
+- Set up the end of game flow --- DONE
 - Figure out how to handle catching exceptions thrown in games
+- Figure out security issues ... it always says someone is cheating
 
 from Alex:
 	- make sure that games, sets, and matches are saved by adding them to the profile

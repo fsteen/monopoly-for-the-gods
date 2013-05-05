@@ -47,6 +47,7 @@ public abstract class Client implements Runnable{
 	protected final int DATA_PACKET_SIZE=500;
 	protected final int NUM_DATA_POINTS=100;	
 	protected final int MAX_NUM_TURNS=1000;
+	protected final int MAX_NUM_PLAYERS=4;
 	protected int _nextDisplaySize;
 	protected int _numGamesPlayed;
 	protected GameDataAccumulator _data;
@@ -293,6 +294,7 @@ public abstract class Client implements Runnable{
 		_nextDisplaySize = DATA_PACKET_SIZE;
 		_numThreadsDone.set(0);
 		
+		System.out.println("Client checkpoint 1 " + this.getClass().toString());
 		GameRunnerFactory gameRunnerFactory = new GameRunnerFactory(_numThreadsDone, this, MAX_NUM_TURNS,
 				settings.freeParking,settings.doubleOnGo,settings.auctions,players.toArray(new Player[players.size()]));
 		
@@ -306,6 +308,8 @@ public abstract class Client implements Runnable{
 				} catch (InterruptedException e){}
 			}
 		}
+		System.out.println("Client checkpoint 2 " + this.getClass().toString());
+
 		return _data.toGameDataReport();
 	}
 

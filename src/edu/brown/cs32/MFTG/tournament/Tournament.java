@@ -94,6 +94,7 @@ public class Tournament implements Runnable{
 		
 		for(int roundNum = 0; roundNum < _settings.getNumRounds(); roundNum++){
 			// request a Player from each client
+			System.out.println("checkpoint 1, round " + roundNum);
 			List<Player> newPlayers = getNewPlayers();
 			
 			if (newPlayers != null)
@@ -104,14 +105,16 @@ public class Tournament implements Runnable{
 			// generate which seeds will be used for integrity validation
 			confirmationIndices = DataProcessor.generateConfirmationIndices(gamesPerModule, CONFIRMATION_PERCENTAGE,_rand);
 			
+			System.out.println("checkpoint 2, round " + roundNum);
 			// play a round of games
 			data = playRoundOfGames(players, DataProcessor.generateSeeds(players.size(),gamesPerModule, confirmationIndices,_rand));
-			
+			System.out.println("checkpoint 3, round " + roundNum);
 			// make sure nobody cheated
 			if(DataProcessor.isCorrupted(data, confirmationIndices)){
 				System.out.println("someone is cheating"); //TODO what to do in this case
 			}
 			sendEndOfRoundData(accumulateEndOfGameData(data, roundNum));
+			System.out.println("checkpoint 4, round " + roundNum);
 		}
 	}
 	
@@ -175,6 +178,7 @@ public class Tournament implements Runnable{
 		List<Player> players = new ArrayList<>();
 		
 		for(ClientHandler c : _clientHandlers){
+			System.out.println("checkpoint 5 client " + c._id);
 			Callable<Player> worker = new getPlayerCallable(c);
 			Future<Player> future = _executor.submit(worker);
 			playerFutures.add(future);
@@ -227,15 +231,18 @@ public class Tournament implements Runnable{
 			System.out.println("seeds size " + seeds.size() + " clients size " + _clientHandlers.size());
 		}
 		
+		System.out.println("client handlers size " + _clientHandlers.size());
 		for (int i = 0; i < _clientHandlers.size(); i++){
 			Callable<GameDataReport> worker = new PlayGamesCallable(_clientHandlers.get(i), players, seeds.get(i), _settings);
 			Future<GameDataReport> future = _executor.submit(worker);
 			gameDataFutures.add(future);
+			System.out.println("got future for client " + _clientHandlers.get(i)._id);
 		}
 
 		int numFails = 0;
 		
 		for (int i = 0; i < gameDataFutures.size(); i++){
+			System.out.println("for loop " + i);
 			try {
 				Future<GameDataReport> future = gameDataFutures.get(i);
 				future.get();
@@ -251,7 +258,7 @@ public class Tournament implements Runnable{
 				
 		if (numFails > 0)
 			sendErrorMessage("Unable to use game data from " + numFails + " of the " + _clientHandlers.size() + " clients");
-		
+		System.out.println("returning futures");
 		return gameData;
 	}
 
