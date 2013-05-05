@@ -35,15 +35,6 @@ public class ButtonPanel extends JPanel {
 		setup();
 	}
 	
-	/*public void setup() {
-		JButton _buildingChoice = new JButton("", Price.CHEAP.getIcon(), false);
-		_buildingChoice.setSelectedIcon(Price.EXPENSIVE.getIcon());
-		_buildingChoice.setRolloverSelectedIcon(Price.EXPENSIVE.getIcon());
-		_buildingChoice.setRolloverIcon(Price.CHEAP.getIcon());
-		_buildingChoice.setText("hello");
-		this.add(_buildingChoice);
-	}*/
-	
 	public void setup() {
 		Dimension dim = new Dimension(Constants.BUTTON_DIMENSION, Constants.BUTTON_DIMENSION);
 		_buildingExpense.setSize(dim);

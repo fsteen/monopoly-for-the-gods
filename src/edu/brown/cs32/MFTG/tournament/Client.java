@@ -44,7 +44,7 @@ public abstract class Client implements Runnable{
 
 	/* Module variables */
 	protected final int NUM_THREADS=10;
-	protected final int DATA_PACKET_SIZE=500;
+	protected final int DATA_PACKET_SIZE=1000;
 	protected final int NUM_DATA_POINTS=100;	
 	protected final int MAX_NUM_TURNS=1000;
 	protected final int MAX_NUM_PLAYERS=4;

@@ -424,9 +424,7 @@ public class Board extends JPanel {
 		player.setJailPoor(waits.get(1));
 		player.setJailRich(waits.get(2));
 		
-		this.setHeuristics(player);
-		System.out.println("resetting my heuristics");
-		_center.setButtonChoices(player);		
+		_center.setButtonChoices(player);
 		return player;
 	}
 	

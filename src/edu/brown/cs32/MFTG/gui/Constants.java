@@ -259,17 +259,17 @@ public class Constants {
 	}
 	
 	public enum StaticProperties implements Properties {
-		COMMUNITY_CHEST_DOWN(Orientation.DOWN, "Deed_Cards/community_chest.jpg"),
+		COMMUNITY_CHEST_DOWN(Orientation.UP, "Deed_Cards/community_chest_down.jpg"),
 		INCOME_TAX(Orientation.DOWN, "Deed_Cards/income_tax.jpg"),
 		PINK_CHANCE(Orientation.DOWN, "Deed_Cards/pink_chance.jpg"),
-		COMMUNITY_CHEST_LEFT(Orientation.LEFT, "Deed_Cards/community_chest.jpg"),
+		COMMUNITY_CHEST_LEFT(Orientation.LEFT, "Deed_Cards/community_chest_left.jpg"),
 		BLUE_CHANCE(Orientation.UP, "Deed_Cards/blue_chance.jpg"),
-		COMMUNITY_CHEST_RIGHT(Orientation.RIGHT, "Deed_Cards/community_chest.jpg"),
+		COMMUNITY_CHEST_RIGHT(Orientation.RIGHT, "Deed_Cards/community_chest_right.jpg"),
 		RED_CHANCE(Orientation.RIGHT, "Deed_Cards/red_chance.jpg"),
 		LUXURY_TAX(Orientation.RIGHT, "Deed_Cards/ring.jpg"), 
-		GO_TO_JAIL (Orientation.RIGHT, "Deed_Cards/go_to_jail.jpg"),
+		GO_TO_JAIL (Orientation.UP, "Deed_Cards/go_to_jail.jpg"),
 		FREE_PARKING (Orientation.UP, "Deed_Cards/free_parking.jpg"),
-		GO (Orientation.DOWN, "Deed_Cards/go.jpg"),
+		GO (Orientation.UP, "Deed_Cards/go.jpg"),
 		JAIL (Orientation.LEFT, "Deed_Cards/jail.jpg");
 		
 		private Orientation orientation;

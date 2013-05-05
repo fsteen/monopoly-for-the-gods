@@ -84,8 +84,6 @@ public class ColorBlock extends JPanel {
 		initializeInputFields();
 		initializeHouse();
 		initializeBackground();
-		
-		repaint();
 	}
 	
 	public String getName() {

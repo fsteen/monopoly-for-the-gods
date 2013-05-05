@@ -43,7 +43,7 @@ public class ProfitGraph extends JPanel {
 		update();
 		this.setLayout(null);
 		
-		_chartPanel = new DynamicChartPanel(_chart, _renderer);
+		_chartPanel = new DynamicChartPanel(_chart, _renderer, this);
 		
 		Dimension dim = new Dimension(6*Constants.WIDTH, 5*Constants.WIDTH);
 		this.setMaximumSize(dim);
@@ -58,6 +58,21 @@ public class ProfitGraph extends JPanel {
 		this.add(_chartPanel);
 	}
 
+	public void setMinCash(int index, double value) {
+		if(index==0){
+			System.out.println("buy");
+			_minBuyCash = (int) value;
+		}
+		else if (index ==1) {
+			System.out.println("build");
+			_minBuildCash = (int) value;
+		}
+		else if(index == 2) {
+			System.out.println("Mortgage");
+			_minMortgageCash = (int) value;
+		}
+	}
+	
 /*	
 	public void createDataset() {
 		XYSeries netWorth = new XYSeries("Net Worth");
@@ -94,17 +109,17 @@ public class ProfitGraph extends JPanel {
 	
 	public void update() {
 		_dataset.removeAllSeries();
-		XYSeries minBuild = new XYSeries("Minimum Build Cash");
 		XYSeries minBuy = new XYSeries("Minimum Buy Cash");
+		XYSeries minBuild = new XYSeries("Minimum Build Cash");
 		XYSeries minMortgage = new XYSeries("Minimum Mortgage Cash");
 		
 		for(double x=0; x<100; x+=.1) {
-			minBuild.add(x, _minBuildCash);
 			minBuy.add(x, _minBuyCash);
+			minBuild.add(x, _minBuildCash);
 			minMortgage.add(x, _minMortgageCash);
 		}
-		_dataset.addSeries(minBuild);
 		_dataset.addSeries(minBuy);
+		_dataset.addSeries(minBuild);
 		_dataset.addSeries(minMortgage);
 		
 		if (_currData != null) {
@@ -166,27 +181,6 @@ public class ProfitGraph extends JPanel {
 		domainAxis.setAutoRange(false);
 		domainAxis.setRange(0, 100);
 	}
-	
-	public static void main (String [] args) {
-		JFrame frame = new JFrame("Testing");
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		ProfitGraph graph = new ProfitGraph();
-		frame.add(graph);
-		frame.pack();
-		frame.setVisible(true);
-		
-		//while (true) {
-			try {
-				Thread.sleep(3000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		
-			graph.update();
-		//}
-		
-	}
 
 	public List<Integer> getMinCash() {
 		List<Integer> minCash = new ArrayList<>();
@@ -201,6 +195,7 @@ public class ProfitGraph extends JPanel {
 		_minBuyCash = minBuyCash;
 		_minBuildCash = minBuildCash;
 		_minMortgageCash = minUnmortgageCash;
+		
 		update();
 	}
 

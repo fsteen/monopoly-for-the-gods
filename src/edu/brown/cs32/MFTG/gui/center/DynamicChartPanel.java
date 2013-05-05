@@ -37,9 +37,11 @@ public class DynamicChartPanel extends ChartPanel {
 	private JToggleButton _buyCash;
 	private JToggleButton _buildCash;
 	private JToggleButton _unmortgageCash;
+	private ProfitGraph _graph;
 	
-	public DynamicChartPanel(JFreeChart chart, XYLineAndShapeRenderer renderer) {
+	public DynamicChartPanel(JFreeChart chart, XYLineAndShapeRenderer renderer, ProfitGraph graph) {
 		super(chart);
+		_graph = graph;
 		_renderer = renderer;
 		//this.setMouseWheelEnabled(true);
 		_chart = chart;
@@ -116,6 +118,8 @@ public class DynamicChartPanel extends ChartPanel {
 		for(double x=0; x<100; x+=.1) {
 			series.update(x, currValue);
 		}
+		
+		_graph.setMinCash(_moving, currValue);
 		
 		_chart.fireChartChanged();
 	}

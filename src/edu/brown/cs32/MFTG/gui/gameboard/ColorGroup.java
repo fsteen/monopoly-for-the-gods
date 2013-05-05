@@ -147,8 +147,6 @@ public class ColorGroup extends JPanel {
 		_c.gridx = 0;
 		_c.gridy = 0;
 		this.add(_colorBlock, _c);
-		this.updateUI();
-		this.repaint();
 	}
 	
 	public void putObjects (List<PropertyPanel> panel) {
@@ -177,8 +175,8 @@ public class ColorGroup extends JPanel {
 			_c.gridy = 3;
 			this.add(panel.get(3), _c);
 		}
-		this.updateUI();
-		this.repaint();
+		//this.updateUI();
+		//this.repaint();
 	}
 	
 	public Set<String> getNames() {

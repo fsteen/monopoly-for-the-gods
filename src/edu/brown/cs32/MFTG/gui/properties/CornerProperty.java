@@ -15,7 +15,7 @@ public class CornerProperty extends StaticProperty{
 		this.setMaximumSize(new Dimension(Constants.ACTUAL_HEIGHT, Constants.ACTUAL_HEIGHT));
 		this.setMinimumSize(new Dimension(Constants.ACTUAL_HEIGHT, Constants.ACTUAL_HEIGHT));
 		
-		resizePicture(Constants.ACTUAL_HEIGHT, Constants.ACTUAL_HEIGHT);
+		_spaceOutline.setSize(Constants.HEIGHT, Constants.HEIGHT);
 	}
 
 }

@@ -11,6 +11,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import edu.brown.cs32.MFTG.gui.Constants;
+import edu.brown.cs32.MFTG.gui.Constants.Orientation;
 import edu.brown.cs32.MFTG.gui.Constants.StaticProperties;
 import edu.brown.cs32.MFTG.gui.Helper;
 import edu.brown.cs32.MFTG.tournament.data.PropertyDataReport;
@@ -24,12 +25,16 @@ public class StaticProperty extends PropertyPanel {
 		super(property);
 		_property = property;
 		_picture = ImageIO.read(new File(property.getFile()));
-		_picture = Helper.resize(_picture, Constants.WIDTH, Constants.HEIGHT);
-		_picture = Helper.rotate(_picture, property.getOrientation());
+		fixSpaceOutline();
 	}
 	
-	protected void resizePicture(int width, int height) {
-		_picture = Helper.resize(_picture, width, height);
+	public void fixSpaceOutline() {
+		if(_orientation == Orientation.LEFT || _orientation == Orientation.RIGHT) {
+			_spaceOutline.setSize(Constants.HEIGHT, Constants.WIDTH);
+			//if(_orientation == Orientation.RIGHT) {
+				_spaceOutline.setLocation(0, 0);
+			//}
+		}
 	}
 	
 	@Override
@@ -38,8 +43,9 @@ public class StaticProperty extends PropertyPanel {
 		
 		g2.drawImage(_picture, 0, 0, null);
 		
-		//g2.rotate(_property.getOrientation().getRotation(), (int) (Constants.HEIGHT/2.), (int) (Constants.WIDTH/2.));
-		//g2.draw(_spaceOutline);
+		g2.setColor(Color.BLACK);
+		g2.setStroke(new BasicStroke(Constants.BORDER));
+		g2.draw(_spaceOutline);
 	}
 
 	@Override
