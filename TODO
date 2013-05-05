@@ -9,7 +9,7 @@ from Chizu:
 	- can you remove the aggregate property button from the menu for the settings page
 
 from Frances:
-	- debug the AI player (gets stuck in getPlayer())
+	-make sure menu shows up in end of game flow
 
 ===Chizu===
 - Decide whether or not to use pictures for buttons on the top
@@ -27,31 +27,22 @@ Completed:
     
 
 ===Frances===
-- Set up the end of game flow
-	- call setWinner() in the monopolyGui
-
-- Figure out how to create AI players
-- Figure out how to handle catching exceptions thrown in games
 - Make sure that the "time owned" value is being calculated correctly
 - Figure out how to handle catching exceptions thrown in games
-
-from Chizu:
-	-time owned is not updating correctly
-
+- Figure out security issues ... it always says someone is cheating
+-Get rid of player with most $ method in GameDataAccumulator
 from Alex:
-	- make sure that games, sets, and matches are saved by adding them to the profile
-
-===Alex===
-- Profile persistence
-- Make sure that verification data is being sent back to the server
-=======
+	- make sure that games, sets, and matches are saved by adding them to the profile 
+	(addgame addset and addmatch methods in records)
 from Judah:
 	- only average the number of houses of games when we have a monopoly on the property.
-	- when AI player is playing, only 1 set is every played
 	
 
 
 ===Alex===
+- Make records persistent
+- Figure out good timeout time
+- Remove a client when playing games times out
 - Properly implement timeouts server-side
 - Properly implement timeouts client-side
 - Make everything close properly upon shutdown

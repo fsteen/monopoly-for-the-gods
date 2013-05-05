@@ -108,7 +108,7 @@ public class GameDataAccumulator {
 				temp.accTotalRevenueWithoutHouses += p.accTotalRevenueWithoutHouses;
 				int divideBy = currentMaxValues.get(temp.propertyName).numDataPoints;
 				divideBy = divideBy == 0 ? 1 : divideBy;
-				temp.accTimeOwned += p.numDataPoints/divideBy;
+//				temp.accTimeOwned += p.numDataPoints;
 				temp.numDataPoints += 1;
 				p.reset();
 			}
