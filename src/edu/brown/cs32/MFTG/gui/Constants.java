@@ -44,7 +44,7 @@ public class Constants {
 	public static int BUTTON_DIMENSION = (int) (1.2*Constants.WIDTH);
 	
 	public interface Toggle {
-		//public ImageIcon getIcon();
+		public Image getIcon();
 		public Toggle next();
 		public String getText();
 	}
@@ -52,20 +52,19 @@ public class Constants {
 	public enum Price implements Toggle {
 		CHEAP("Deed_Cards/cheap.jpg", "CHEAP"), EXPENSIVE("Deed_Cards/expensive.jpg", "EXPENSIVE");
 		
-		private ImageIcon icon;
+		private Image icon;
 		private String text;
 		private Price (String path, String text) {
 			try {
 				BufferedImage i = ImageIO.read(new File(path));
-				i = Helper.resize(i, BUTTON_DIMENSION, BUTTON_DIMENSION);
-				icon = new ImageIcon(i);
+				icon = Helper.transparent(i);
 				this.text = text;
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-		public ImageIcon getIcon() { return icon; }
+		public Image getIcon() { return icon; }
 		public String getText() { return text; }
 		public Toggle next() {
 			if(this == CHEAP) return EXPENSIVE;
@@ -76,13 +75,12 @@ public class Constants {
 	public enum Quantity implements Toggle {
 		FEWER("Deed_Cards/fewer.jpg", "FEWER"), MORE("Deed_Cards/more.jpg", "MORE");
 		
-		private ImageIcon icon;
+		private Image icon;
 		private String text;
 		private Quantity (String path, String text) {
 			try {
 				BufferedImage i = ImageIO.read(new File(path));
-				i = Helper.resize(i, BUTTON_DIMENSION, BUTTON_DIMENSION);
-				icon = new ImageIcon(i);
+				icon = Helper.transparent(i);
 				this.text = text;
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -90,7 +88,7 @@ public class Constants {
 			}
 		}
 		public String getText() { return text; }
-		public ImageIcon getIcon() { return icon; }
+		public Image getIcon() { return icon; }
 		public Toggle next() {
 			if(this == FEWER) return MORE;
 			return FEWER;
@@ -100,13 +98,12 @@ public class Constants {
 	public enum Aggression implements Toggle {
 		PASSIVE("Deed_Cards/passive.jpg", "PASSIVE"), AGGRESSIVE("Deed_Cards/aggressive.jpg", "AGGRESSIVE");
 		
-		private ImageIcon icon;
+		private Image icon;
 		private String text;
 		private Aggression (String path, String text) {
 			try {
 				BufferedImage i = ImageIO.read(new File(path));
-				i = Helper.resize(i, BUTTON_DIMENSION, BUTTON_DIMENSION);
-				icon = new ImageIcon(i);
+				icon = Helper.transparent(i);
 				this.text = text;
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -114,7 +111,7 @@ public class Constants {
 			}
 		}
 		public String getText() { return text; }
-		public ImageIcon getIcon() { return icon; }
+		public Image getIcon() { return icon; }
 		public Toggle next() {
 			if(this == PASSIVE) return AGGRESSIVE;
 			return PASSIVE;
@@ -124,14 +121,12 @@ public class Constants {
 	public enum Balance implements Toggle {
 		EVEN("Deed_Cards/balanced.jpg", "EVEN"), UNEVEN("Deed_Cards/uneven.jpg", "UNEVEN");
 		
-		private ImageIcon icon;
+		private Image icon;
 		private String text;
 		private Balance (String path, String text) {
 			try {
 				BufferedImage i = ImageIO.read(new File(path));
-				i = Helper.resize(i, BUTTON_DIMENSION, BUTTON_DIMENSION);
-				Image im = Helper.transparent(ImageIO.read(new File("Deed_Cards/railroad.jpg")));
-				icon = new ImageIcon(im);
+				icon = Helper.transparent(i);
 				this.text = text;
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -139,7 +134,7 @@ public class Constants {
 			}
 		}
 		public String getText() { return text; }
-		public ImageIcon getIcon() { return icon; }
+		public Image getIcon() { return icon; }
 		public Toggle next() {
 			if(this == EVEN) return UNEVEN;
 			return EVEN;
