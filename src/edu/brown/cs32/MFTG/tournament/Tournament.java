@@ -38,27 +38,31 @@ public class Tournament implements Runnable{
 	private Random _rand;
 
 	/**
-	 * Creates a tournament for the specified number of players and games
-	 * @param numPlayers
-	 * @param numGames
-	 * @throws IOException 
+	 * Creates a tournament with the specified number of players, port and settings
+	 * @param players the heuristics for each player
+	 * @param settings the game settings
+	 * @param port the server port for the tournament
+	 * @throws IOException
 	 */
 	public Tournament(List<Integer> players, Settings settings, int port) throws IOException{
 		if (port <= 1024){
 			throw new IllegalArgumentException("Ports under 1024 are reserved!");
 		}
-		_players = players;
-		_numPlayers = _players.size();
-		_roundWinners = new HashMap<>();
-		resetRoundWinners();
-		_rand = new Random();
+		
+		/* initialize everything */
 		_socket = new ServerSocket(port);
 		_clientHandlers = new ArrayList<>();
+		_players = players;
+		_numPlayers = _players.size();
 		_settings = settings;
+		_rand = new Random();
+		_roundWinners = new HashMap<>();
+		resetRoundWinners();
 
+		/* figure out how many AI clients there are and connect them */
 		int numAIPlayers = 0;
 		for(Integer i : players){
-			if(i == 1){ //AIClient
+			if(i == 1){ //AIClient id
 				numAIPlayers++;
 			}
 		}
@@ -99,13 +103,10 @@ public class Tournament implements Runnable{
 		
 		return p;
 	}
-
-	private void resetRoundWinners(){
-		for(int i = -1; i < BackendConstants.MAX_NUM_PLAYERS; i++){ //-1 is a tie
-			_roundWinners.put(i, 0.);
-		}
-	}
-
+	
+	/**
+	 * The main loop, goes through the steps of the game sending instructions to the clients
+	 */
 	public void run() {
 
 		try {
@@ -114,56 +115,53 @@ public class Tournament implements Runnable{
 			System.out.println("you are fucked");
 			return;
 		}
-		int gamesPerModule = (int)Math.ceil(((double)_settings.getNumGamesPerRound())/_numPlayers);
-
+		
+		/* initialze variables */
+		int gamesPerModule = (int)Math.ceil(((double)_settings.gamesPerRound)/_numPlayers);
 		List<Player> players = null;
 		List<GameDataReport> data;
 		List<Integer> confirmationIndices;
 
-		for(int roundNum = 0; roundNum < _settings.getNumRounds(); roundNum++){
+		/* play numRounds sets of games */
+		for(int roundNum = 0; roundNum < _settings.numRounds; roundNum++){
 
-			// request a Player from each client
+			/* request a Player from each client */
 			players = getNewPlayers(players);
 
-			// generate which seeds will be used for integrity validation
+			/* generate which seeds will be used for integrity validation */
 			confirmationIndices = DataProcessor.generateConfirmationIndices(gamesPerModule, BackendConstants.CONFIRMATION_PERCENTAGE,_rand);
 
-			// play a round of games
+			/* play a round of games */
 			data = playRoundOfGames(players, DataProcessor.generateSeeds(gamesPerModule, _players.size(), confirmationIndices,_rand));
 
+			/* check for cheating */
 			if(data.size() > 0){
-				//make sure nobody cheated
 				if(DataProcessor.isCorrupted(data, confirmationIndices)){
 					System.out.println("someone is cheating");
 				}
-				sendEndOfRoundData(accumulateEndOfGameData(data, roundNum));
+				sendEndOfRoundData(accumulateEndOfRoundData(data, roundNum));
 			}
 		}
 	}
 
-	private GameDataReport accumulateEndOfGameData(List<GameDataReport> data, int roundNum){
-		GameDataAccumulator[] accumulators = new GameDataAccumulator[data.size()];
-		for(int j = 0; j < data.size(); j++){
-			accumulators[j] = data.get(j).toGameDataAccumulator();
-		}
-		GameDataAccumulator combined = DataProcessor.combineAccumulators(accumulators);
-		int winnerID;
+	/**
+	 * Waits for _players.size() connections from the clients.
+	 * @throws IOException
+	 */
+	public void getPlayerConnections() throws IOException{
+		int connectionsMade = 0;
 
-		winnerID = combined.getPlayerWithMostGamesWon(_settings.winType).getLeft();
-		_roundWinners.put(winnerID, _roundWinners.get(winnerID) + 1);
-		
-		if(_settings.winType == WinningCondition.LAST_SET_WON && roundNum == _settings.getNumRounds()-1){
-			resetRoundWinners();
-			winnerID = combined.getPlayerWithMostGamesWon(_settings.winType).getLeft();
-			_roundWinners.put(winnerID, _roundWinners.get(winnerID) + 1);
+		while(connectionsMade < _players.size()){
+			Socket clientConnection = _socket.accept();
+			ClientHandler cHandler = new ClientHandler(clientConnection, connectionsMade,_settings);
+			connectionsMade++;
+			_clientHandlers.add(cHandler);
+			try {
+				cHandler.sendID();
+			} catch (ClientCommunicationException e) {
+				e.printStackTrace();
+			}
 		}
-		
-		combined._playerWins = _roundWinners;
-
-		if(roundNum == _settings.getNumRounds()-1){
-			combined.matchIsOver = true;
-		}
-		return combined.toGameDataReport();
 	}
 
 	/**
@@ -205,33 +203,29 @@ public class Tournament implements Runnable{
 	}
 
 	/**
-	 * Splits the games between each of the clients and has them play
-	 * rounds to next lowest multiple of # of clients
-	 * @param players the players who will be playing the game
-	 * @param seeds the seeds which will be used to play the games
-	 * @return the GameData from the games played
-	 * @throws ClientCommunicationException 
-	 * @throws InvalidResponseException 
-	 * @throws ClientLostException 
+	 * Tells the client handlers to send the instruction to play games to the clients
+	 * then waits for the clients to finish and hand back data
+	 * @param players the player heuristics
+	 * @param seeds the seed values for all of the games
+	 * @return the data recieved from the clients
 	 */
-
 	private List<GameDataReport> playRoundOfGames(List<Player> players, List<List<Long>> seeds) {
 		List<Future<GameDataReport>> gameDataFutures = new ArrayList<>();
 		List<GameDataReport> gameData = new ArrayList<>();
 
 		if (_clientHandlers.size() != seeds.size()){
-			// throw an error or something
 			System.out.println("seed size doesn't match num clients");
 		}
 
+		/* tell the clients to play games */
 		for (int i = 0; i < _clientHandlers.size(); i++){
 			Callable<GameDataReport> worker = new PlayGamesCallable(_clientHandlers.get(i), players, seeds.get(i), _settings);
 			Future<GameDataReport> future = _executor.submit(worker);
 			gameDataFutures.add(future);
 		}
 
+		/* wait for the clients to finish playing games */
 		int numFails = 0;
-
 		for (int i = 0; i < gameDataFutures.size(); i++){
 			try {
 				Future<GameDataReport> future = gameDataFutures.get(i);
@@ -255,7 +249,54 @@ public class Tournament implements Runnable{
 
 		return gameData;
 	}
+	
+	/**
+	 * Combine all of the data after a set of games is completed
+	 * @param data the data to combine
+	 * @param roundNum the current set number
+	 * @return
+	 */
+	private GameDataReport accumulateEndOfRoundData(List<GameDataReport> data, int roundNum){
+		/* combine all of the data */
+		GameDataAccumulator[] accumulators = new GameDataAccumulator[data.size()];
+		for(int j = 0; j < data.size(); j++){
+			accumulators[j] = data.get(j).toGameDataAccumulator();
+		}
+		GameDataAccumulator combined = DataProcessor.combineAccumulators(accumulators);
+		
+		/* figure out and set the round winner */
+		int winnerID = combined.getPlayerWithMostGamesWon(_settings.winType).getLeft();
+		_roundWinners.put(winnerID, _roundWinners.get(winnerID) + 1);
+		
+		if(_settings.winType == WinningCondition.LAST_SET_WON && roundNum == _settings.numRounds-1){
+			resetRoundWinners();
+			winnerID = combined.getPlayerWithMostGamesWon(_settings.winType).getLeft();
+			_roundWinners.put(winnerID, _roundWinners.get(winnerID) + 1);
+		}
+		
+		combined.playerWins = _roundWinners;
 
+		/* determine whether match is over */
+		if(roundNum == _settings.numRounds-1){
+			combined.matchIsOver = true;
+		}
+		
+		return combined.toGameDataReport();
+	}
+
+	/**
+	 * Sets all the player win values to 0
+	 */
+	private void resetRoundWinners(){
+		for(int i = -1; i < BackendConstants.MAX_NUM_PLAYERS; i++){ //-1 is a tie
+			_roundWinners.put(i, 0.);
+		}
+	}
+	
+	/**
+	 * Tell the client handlers to send the end of round data back to the clients
+	 * @param aggregatedData the data to send
+	 */
 	private void sendEndOfRoundData(GameDataReport aggregatedData) {
 		for(ClientHandler c : _clientHandlers){
 			try {
@@ -265,32 +306,14 @@ public class Tournament implements Runnable{
 			}
 		}
 	}
-
+	
+	/**
+	 * Send an error message to the clients
+	 * @param errorMessage
+	 */
 	private void sendErrorMessage(String errorMessage){
 		for (ClientHandler c : _clientHandlers){
 			c.sendErrorMessage(errorMessage);
-		}
-	}
-
-	/**
-	 * Adds _numPlayers connections to the client handler list. This method does not return
-	 * until after numPlayers connections are made over the socket
-	 * @param numPlayers
-	 * @throws IOException
-	 */
-	public void getPlayerConnections() throws IOException{
-		int connectionsMade = 0;
-
-		while(connectionsMade < _players.size()){
-			Socket clientConnection = _socket.accept();
-			ClientHandler cHandler = new ClientHandler(clientConnection, connectionsMade,_settings);
-			connectionsMade++;
-			_clientHandlers.add(cHandler);
-			try {
-				cHandler.sendID();
-			} catch (ClientCommunicationException e) {
-				e.printStackTrace();
-			}
 		}
 	}
 }

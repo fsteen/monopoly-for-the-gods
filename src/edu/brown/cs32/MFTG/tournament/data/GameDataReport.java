@@ -47,6 +47,10 @@ public class GameDataReport {
 		return winner.getLeft();
 	}
 	
+	/**
+	 * Converts the report to an accumulator
+	 * @return
+	 */
 	public GameDataAccumulator toGameDataAccumulator(){
 		GameDataAccumulator g = new GameDataAccumulator(_timeStamps.get(0).wealthData.size()/*,_playerWins.size()*/); //the number of players
 		List<TimeStampAccumulator> stamps = new ArrayList<>();
@@ -68,11 +72,11 @@ public class GameDataReport {
 			}
 			tempOverallPlayerData.put(l.get(0).propertyName, tempPlayerData);
 		}
-		g._playerWins = _playerWins;
-		g._winList = _winList;
+		g.playerWins = _playerWins;
+		g.winList = _winList;
 		g.timeStamps = stamps;
-		g.entireGameData = tempOverallData;
-		g.playerEntireGameData = tempOverallPlayerData;
+		g.setPropertyData = tempOverallData;
+		g.setPlayerPropertyData = tempOverallPlayerData;
 		
 		return g;
 	}
@@ -89,7 +93,6 @@ public class GameDataReport {
 		b.append("************************\n");
 		b.append("************************\n");
 		b.append("*****OVERALL PLAYER PROPERTY DATA*****\n");
-//		b.append(_overallPlayerPropertyData.entrySet().size() == 0);
 		if(_overallPlayerPropertyData != null){
 			for(Entry<String,List<PropertyDataReport>> e : _overallPlayerPropertyData.entrySet()){
 				for(PropertyDataReport p : e.getValue()){
@@ -123,7 +126,6 @@ public class GameDataReport {
 		return b.toString();
 	}
 	
-	//TODO change to match Map<String,List<PropertyDataReport>>
 	@Override
 	public boolean equals(Object o){
 		if (o == null || !(o instanceof GameDataReport))
