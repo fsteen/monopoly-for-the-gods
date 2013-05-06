@@ -87,7 +87,7 @@ public class Player {
 		ID=copyPlayer.ID;
 		_propertyValues=new HashMap<>();
 		_colorValues = new HashMap<>();
-		for(String s:copyPlayer.getColorValues().keySet()) {
+		for(String s:copyPlayer.getPropertyValues().keySet()) {
 			Integer val =copyPlayer.getPropertyValue(s);
 			_propertyValues.put(s, val);
 		}

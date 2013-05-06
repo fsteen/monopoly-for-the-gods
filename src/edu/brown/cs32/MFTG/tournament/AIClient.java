@@ -8,11 +8,14 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
+import edu.brown.cs32.MFTG.monopoly.Board;
+import edu.brown.cs32.MFTG.monopoly.Game;
 import edu.brown.cs32.MFTG.monopoly.GameData;
 import edu.brown.cs32.MFTG.monopoly.Player;
 import edu.brown.cs32.MFTG.networking.ClientRequestContainer;
@@ -26,17 +29,60 @@ import edu.brown.cs32.MFTG.tournament.data.TimeStampReport;
 
 public class AIClient extends Client{
 	// data from previous set
-	GameDataReport _currentGameData;
-	GameDataReport _previousGameData;
+	private GameDataReport _currentGameData;
+	private GameDataReport _previousGameData;
+	private HashMap<String,String> _colorKeys;
 
 	// player from previous set
-	Player _player;
-	Player _previousPlayer;
+	private Player _player;
+	private Player _previousPlayer;
 
 	public AIClient() {
 		super();
 		_player = new Player(_id);
 		_previousPlayer=null;
+		_colorKeys = new HashMap<>(30);
+		initializeColorKeys();
+	}
+	
+	private void initializeColorKeys() {
+		_colorKeys.put("mediterranean avenue", "purple");
+		_colorKeys.put("baltic avenue", "purple");
+		
+		_colorKeys.put("oriental avenue", "light blue");
+		_colorKeys.put("vermont avenue", "light blue");
+		_colorKeys.put("connecticut avenue", "light blue");
+		
+		_colorKeys.put("st. charles place", "pink");
+		_colorKeys.put("states avenue", "pink");
+		_colorKeys.put("virginia avenue", "pink");
+		
+		_colorKeys.put("st. james place", "orange");
+		_colorKeys.put("tennessee avenue", "orange");
+		_colorKeys.put("new york avenue", "orange");
+		
+		_colorKeys.put("kentucky avenue", "red");
+		_colorKeys.put("indiana avenue", "red");
+		_colorKeys.put("illinois avenue", "red");
+		
+		_colorKeys.put("atlantic avenue", "yellow");
+		_colorKeys.put("ventnor avenue", "yellow");
+		_colorKeys.put("marvin gardens", "yellow");
+		
+		_colorKeys.put("pacific avenue", "green");
+		_colorKeys.put("north carolina avenue", "green");
+		_colorKeys.put("pennsylvania avenue", "green");
+		
+		_colorKeys.put("park place", "dark blue");
+		_colorKeys.put("boardwalk", "dark blue");
+		
+		_colorKeys.put("reading railroad", "black");
+		_colorKeys.put("pennsylvania railroad", "black");
+		_colorKeys.put("b and o railroad", "black");
+		_colorKeys.put("short line", "black");
+		_colorKeys.put("electric company", "black");
+		_colorKeys.put("water works", "black");
+		
 	}
 
 	public void run() {
@@ -103,14 +149,14 @@ public class AIClient extends Client{
 	public Player finishGetPlayer(){
 		Player temp = new Player(_player);
 		if(_currentGameData==null) {
-			_player.setColorValue("purple", 2, 1.25, 1.75, 1.5);
-			_player.setColorValue("light blue", 2, 1.25, 1.75, 1.5);
-			_player.setColorValue("pink", 2, 1.25, 1.75, 1.5);
-			_player.setColorValue("orange", 2, 1.25, 1.75, 1.5);
-			_player.setColorValue("red", 2, 1.25, 1.75, 1.5);
-			_player.setColorValue("yellow", 2, 1.25, 1.75, 1.5);
-			_player.setColorValue("green", 2, 1.25, 1.75, 1.5);
-			_player.setColorValue("dark blue", 2, 1.25, 1.75, 1.5);
+			_player.setColorValue("purple", 2, 65, 1.75, 1.5);
+			_player.setColorValue("light blue", 2, 65, 1.75, 1.5);
+			_player.setColorValue("pink", 2, 125, 1.75, 1.5);
+			_player.setColorValue("orange", 2, 125, 1.75, 1.5);
+			_player.setColorValue("red", 2, 200, 1.75, 1.5);
+			_player.setColorValue("yellow", 2, 200, 1.75, 1.5);
+			_player.setColorValue("green", 2, 250, 1.75, 1.5);
+			_player.setColorValue("dark blue", 2, 250, 1.75, 1.5);
 
 			_player.setPropertyValue("oriental avenue", 150);
 			_player.setPropertyValue("vermont place", 140);
@@ -129,10 +175,10 @@ public class AIClient extends Client{
 
 		}
 		else if(_previousGameData==null) {
-			_player.setColorValue("light blue", 2.2, 1.25, 1.9, 1.7);
-			_player.setColorValue("orange", 2.2, 1.25, 1.9, 1.7);
-			_player.setColorValue("green", 1.9, 1.25, 1.6, 1.3);
-			_player.setColorValue("dark blue", 1.9, 1.25, 1.6, 1.3);
+			_player.setColorValue("light blue", 2.2, 70, 1.9, 1.7);
+			_player.setColorValue("orange", 2.2, 140, 1.9, 1.7);
+			_player.setColorValue("green", 1.9, 140, 1.6, 1.3);
+			_player.setColorValue("dark blue", 1.9, 225, 1.6, 1.3);
 
 			_player.setJailWait(2);
 			_player.setMinBuildCash(200);
@@ -147,6 +193,9 @@ public class AIClient extends Client{
 				PropertyDataReport others =  _currentGameData._overallPropertyData.get(key);
 				PropertyDataReport mine =   findMyReport(_currentGameData._overallPlayerPropertyData.get(key));
 				PropertyDataReport minePrev =   findMyReport(_previousGameData._overallPlayerPropertyData.get(key));
+				String color = _colorKeys.get(key);
+				System.out.println(color);
+				System.out.println(key);
 				if(mine==null&&minePrev!=null) {
 					if(others.accTotalRevenueWithoutHouses+others.accTotalRevenueWithHouses>minePrev.accTotalRevenueWithHouses+minePrev.accTotalRevenueWithoutHouses) {
 						int valDif = _player.getPropertyValue(key)-_previousPlayer.getPropertyValue(key);
@@ -174,7 +223,6 @@ public class AIClient extends Client{
 				else if(mine==null&&minePrev==null) {
 					continue;
 				}
-
 				//If i'm doing better than previously, then I can value it more or less according to what i've previously done
 				if(mine.accTotalRevenueWithoutHouses+mine.accTotalRevenueWithHouses>minePrev.accTotalRevenueWithHouses+minePrev.accTotalRevenueWithoutHouses) {
 					int valDif = _player.getPropertyValue(key)-_previousPlayer.getPropertyValue(key);
@@ -195,67 +243,68 @@ public class AIClient extends Client{
 						_player.setPropertyValue(key, (int) (_player.getPropertyValue(key)+valDif*.9));
 					}
 				}
-
+				if(color.equals("black")) {
+					continue;
+				}
 				if(mine.accTotalRevenueWithHouses>minePrev.accTotalRevenueWithHouses) {
-					double monopolyDif = _player.getMonopolyValue(key)-_previousPlayer.getMonopolyValue(key);
+					double monopolyDif = _player.getMonopolyValue(color)-_previousPlayer.getMonopolyValue(color);
 					if(monopolyDif>0) {
-						_player.setMonopolyValue(key, _player.getMonopolyValue(key)+monopolyDif*.9);
+						_player.setMonopolyValue(color, _player.getMonopolyValue(color)+monopolyDif*.9);
 					}
 					else if(monopolyDif<0){
-						_player.setMonopolyValue(key, _player.getMonopolyValue(key)-monopolyDif*.9);
+						_player.setMonopolyValue(color, _player.getMonopolyValue(color)-monopolyDif*.9);
 					}
 
-					double houseDif = _player.getHouseValueOfColor(key)-_previousPlayer.getHouseValueOfColor(key);
+					double houseDif = _player.getHouseValueOfColor(color)-_previousPlayer.getHouseValueOfColor(color);
 					if(houseDif>0) {
-						_player.setHouseValueOfColor(key, _player.getHouseValueOfColor(key)+houseDif*.9);
+						_player.setHouseValueOfColor(color, _player.getHouseValueOfColor(color)+houseDif*.9);
 					}
 					else if(houseDif<0){
-						_player.setHouseValueOfColor(key, _player.getHouseValueOfColor(key)-houseDif*.9);
+						_player.setHouseValueOfColor(color, _player.getHouseValueOfColor(color)-houseDif*.9);
 					}
 
-					double sameDif = _player.getSameColorEffect(key)-_previousPlayer.getSameColorEffect(key);
+					double sameDif = _player.getSameColorEffect(color)-_previousPlayer.getSameColorEffect(color);
 					if(sameDif>0) {
-						_player.setSameColorEffect(key, _player.getSameColorEffect(key)+sameDif*.9);
+						_player.setSameColorEffect(color, _player.getSameColorEffect(color)+sameDif*.9);
 					}
 					else if(sameDif<0){
-						_player.setSameColorEffect(key, _player.getSameColorEffect(key)-sameDif*.9);
+						_player.setSameColorEffect(color, _player.getSameColorEffect(color)-sameDif*.9);
 					}
 
 
 				}
 				else {
-					double monopolyDif = _player.getMonopolyValue(key)-_previousPlayer.getMonopolyValue(key);
+					double monopolyDif = _player.getMonopolyValue(color)-_previousPlayer.getMonopolyValue(color);
 					if(monopolyDif>0) {
-						_player.setMonopolyValue(key, _player.getMonopolyValue(key)-monopolyDif*.9);
+						_player.setMonopolyValue(color, _player.getMonopolyValue(color)-monopolyDif*.9);
 					}
 					else if(monopolyDif<0){
-						_player.setMonopolyValue(key, _player.getMonopolyValue(key)+monopolyDif*.9);
+						_player.setMonopolyValue(color, _player.getMonopolyValue(color)+monopolyDif*.9);
 					}
-
-					double houseDif = _player.getHouseValueOfColor(key)-_previousPlayer.getHouseValueOfColor(key);
+					System.out.println("5b1");
+					double houseDif = _player.getHouseValueOfColor(color)-_previousPlayer.getHouseValueOfColor(color);
 					if(houseDif>0) {
-						_player.setHouseValueOfColor(key, _player.getHouseValueOfColor(key)-houseDif*.9);
+						_player.setHouseValueOfColor(color, _player.getHouseValueOfColor(color)-houseDif*.9);
 					}
 					else if(houseDif<0){
-						_player.setHouseValueOfColor(key, _player.getHouseValueOfColor(key)+houseDif*.9);
+						_player.setHouseValueOfColor(color, _player.getHouseValueOfColor(color)+houseDif*.9);
 					}
-
-					double sameDif = _player.getSameColorEffect(key)-_previousPlayer.getSameColorEffect(key);
+					System.out.println("5b2");
+					double sameDif = _player.getSameColorEffect(color)-_previousPlayer.getSameColorEffect(color);
 					if(sameDif>0) {
-						_player.setSameColorEffect(key, _player.getSameColorEffect(key)-sameDif*.9);
+						_player.setSameColorEffect(color, _player.getSameColorEffect(color)-sameDif*.9);
 					}
 					else if(sameDif<0){
-						_player.setSameColorEffect(key, _player.getSameColorEffect(key)+sameDif*.9);
+						_player.setSameColorEffect(color, _player.getSameColorEffect(color)+sameDif*.9);
 					}
 				}
-
 				if(others.accTotalRevenueWithHouses>mine.accTotalRevenueWithHouses) {
-					double monopolyDif = _player.getBreakingOpponentMonopolyValue(key)-_previousPlayer.getBreakingOpponentMonopolyValue(key);
+					double monopolyDif = _player.getBreakingOpponentMonopolyValue(color)-_previousPlayer.getBreakingOpponentMonopolyValue(color);
 					if(monopolyDif>0) {
-						_player.setBreakingOpponentMonopolyValue(key, _player.getBreakingOpponentMonopolyValue(key)+monopolyDif*.9);
+						_player.setBreakingOpponentMonopolyValue(color, _player.getBreakingOpponentMonopolyValue(color)+monopolyDif*.9);
 					}
 					else if(monopolyDif<0){
-						_player.setBreakingOpponentMonopolyValue(key, _player.getBreakingOpponentMonopolyValue(key)-monopolyDif*.9);
+						_player.setBreakingOpponentMonopolyValue(color, _player.getBreakingOpponentMonopolyValue(color)-monopolyDif*.9);
 					}	
 				}
 
