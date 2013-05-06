@@ -429,8 +429,11 @@ public class Board extends JPanel {
 	}
 	
 	public Player getPlayer () {
-		if(_player != null) return _player;
-		return getHeuristics();
+		if(_player != null) {
+			return _player;
+		}
+		Player player =  getHeuristics();
+		return player;
 	}
 	
 	public void setPlayerSpecificPropertyData(Map<String, PropertyDataReport> data) {
@@ -444,7 +447,7 @@ public class Board extends JPanel {
 		}
 		
 		for(Railroad railroad: _railroads) {
-			String name = railroad.getName();
+			String name = railroad.getLowercaseName();
 			if(data.containsKey(name)) {
 				railroad.setMyData(data.get(name));
 			}
@@ -462,7 +465,7 @@ public class Board extends JPanel {
 		}
 		
 		for(Railroad railroad: _railroads) {
-			String name = railroad.getName();
+			String name = railroad.getLowercaseName();
 			if(data.containsKey(name)) {
 				railroad.setAggregateData(data.get(name));
 			}

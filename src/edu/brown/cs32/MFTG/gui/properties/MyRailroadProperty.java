@@ -22,8 +22,8 @@ public class MyRailroadProperty extends MyPropertyPanel {
 		
 		/* Move the label */
 		if(_orientation == Orientation.UP){
-			moveProfitField(0, _orientation.getHeight()/2);
-			moveValueField(0, _orientation.getHeight()/2 +10);
+			moveProfitField(0, _orientation.getHeight()/2 - 15);
+			moveValueField(0, _orientation.getHeight()/2 + 15);
 		}
 		else if ( _orientation == Orientation.DOWN) {
 			moveProfitField(0, _orientation.getHeight()/2 - 40);
@@ -46,7 +46,9 @@ public class MyRailroadProperty extends MyPropertyPanel {
 
 	@Override
 	public void setData(PropertyDataReport data) {
+		System.out.println("updateing my railroad");
 		updateProfit(data.accTotalRevenueWithoutHouses);
+		updateTimeOwned(data.timeOwned);
 	}
 
 }
