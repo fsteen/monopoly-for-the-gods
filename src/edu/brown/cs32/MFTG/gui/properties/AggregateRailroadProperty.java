@@ -43,6 +43,7 @@ public class AggregateRailroadProperty extends NonstaticProperty {
 
 	@Override
 	public void setData(PropertyDataReport data) {
+		System.out.println("aggregate railroad property data");
 		updateProfit(data.accTotalRevenueWithoutHouses);
 	}
 	
