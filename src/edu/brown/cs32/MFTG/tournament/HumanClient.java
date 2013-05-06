@@ -131,7 +131,7 @@ public class HumanClient extends Client{
 		
 		/* update the board */
 		sendDataToGui(combinedData);
-		_gui.getBoard().setWinnerData(combinedData._playerWins);
+		_gui.getBoard().setWinnerData(combinedData._playerWins, _playerNames);
 	}
 	
 	/**
