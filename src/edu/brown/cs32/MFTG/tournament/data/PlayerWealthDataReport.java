@@ -20,6 +20,10 @@ public class PlayerWealthDataReport {
 		this.numDataPoints = numDataPoints;
 	}
 	
+	/**
+	 * Converts the report to an accumulator
+	 * @return
+	 */
 	public PlayerWealthDataAccumulator toPlayerWealthDataAccumulator(){
 		PlayerWealthDataAccumulator p = new PlayerWealthDataAccumulator(ownerID);
 		p.accCash = accCash;

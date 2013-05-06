@@ -21,23 +21,38 @@ public class TimeStampAccumulator {
 		_wealthData = wealthData;
 	}
 
+	public List<PlayerWealthDataAccumulator> getAllPlayerWealthData(){
+		return new ArrayList<PlayerWealthDataAccumulator>(_wealthData.values());
+	}
+	
+	/**
+	 * Adds the values in data to the values in this
+	 * @param data
+	 */
 	public void putWealthData(PlayerWealthData data){
-		//add everything together so that in the end you can average it
 		PlayerWealthDataAccumulator accData = _wealthData.get(data.ownerID);
 		if(accData == null){
 			accData = new PlayerWealthDataAccumulator(data.ownerID);
 			_wealthData.put(data.ownerID, accData);
 		}
-		
 		accData.accCash += data.cash;
 		accData.accTotalWealth += data.totalWealth;
 		accData.numDataPoints += 1;
 	}
-	
-	public List<PlayerWealthDataAccumulator> getAllPlayerWealthData(){
-		return new ArrayList<PlayerWealthDataAccumulator>(_wealthData.values());
+
+	/**
+	 * Divides all of the data in this by the number of data points
+	 */
+	public void average(){
+		for(PlayerWealthDataAccumulator w : _wealthData.values()){
+			w.average();
+		}
 	}
 	
+	/**
+	 * Combines this and t, averaging mainly
+	 * @param t the time stamp whose information is transfered over to this one's
+	 */
 	public void averageWith(TimeStampAccumulator t){
 		if(_time != t._time){
 			System.err.println("Error : TimeStampAccumulator times do not match");
@@ -49,14 +64,8 @@ public class TimeStampAccumulator {
 		}
 	}
 	
-	public void average(){
-		for(PlayerWealthDataAccumulator w : _wealthData.values()){
-			w.average();
-		}
-	}
-	
 	/**
-	 * Converts a TimeStampAccumulator to a TimeStamp
+	 * Converts a TimeStampAccumulator to a TimeStampReport
 	 * @return
 	 */
 	public TimeStampReport toTimeStampReport(){		

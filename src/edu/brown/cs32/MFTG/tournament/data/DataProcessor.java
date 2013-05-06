@@ -40,8 +40,7 @@ public class DataProcessor {
 		int numDataPoints = overall.timeStamps.size();
 		int stepSize;
 		
-		//we go backwards so that we ensure that we always get the last time stamp
-		//we don't care so much about getting the first stamp		
+		/* traverse backwards to ensure you get last time stamp */
 		TimeStampAccumulator overallTimeStamp;
 		for(int i = numDataPoints - 1; i >= 0; i--){	
 			overallTimeStamp = overall.timeStamps.get(i);
@@ -51,7 +50,8 @@ public class DataProcessor {
 			stepSize = (int)Math.round(((double)specificIndex)/i);
 			specificIndex -= stepSize;
 		}
-		//overall game data
+		
+		/* non time-specific game data */
 		for(TimeStamp t : specific.getData()){
 			for(PropertyData p : t.getPropertyData()){
 				overall.putPropertyData(p);

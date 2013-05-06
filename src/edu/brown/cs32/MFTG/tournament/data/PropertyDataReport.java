@@ -36,6 +36,10 @@ public class PropertyDataReport {
 		this.numDataPoints = numDataPoints;
 	}
 	
+	/**
+	 * Converts the report to an accumulator
+	 * @return
+	 */
 	public PropertyDataAccumulator toPropertyDataAccumulator(){
 		PropertyDataAccumulator p = new PropertyDataAccumulator(propertyName, ownerID);
 		p.accNumHouses = accNumHouses;
