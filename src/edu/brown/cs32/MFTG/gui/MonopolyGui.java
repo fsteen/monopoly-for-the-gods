@@ -113,8 +113,6 @@ public class MonopolyGui extends JFrame{
 			_currentSong=new Music(_outSongNames.get(_currentOutSongNumber), this, false);
 			_currentSong.play();
 		}
-
-
 	}
 
 	/**
@@ -125,7 +123,6 @@ public class MonopolyGui extends JFrame{
 	}
 
 	/**
-	 * plays the next song out of game
 	 */
 	public void playNextOutOfGameSong(){
 		if(_musicOn){
@@ -141,6 +138,7 @@ public class MonopolyGui extends JFrame{
 	 * play song in game
 	 */
 	public void playNextInGameSong(){
+		System.out.println(_musicOn);
 		if(_musicOn){
 			_currentSong.close();
 			_currentInSongNumber = (_currentInSongNumber+1)%_inSongNames.size();

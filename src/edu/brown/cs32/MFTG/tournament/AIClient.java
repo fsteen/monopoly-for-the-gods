@@ -148,7 +148,6 @@ public class AIClient extends Client{
 	}
 
 	public Player finishGetPlayer(){
-		System.out.println("starting to get player");
 		Player temp = new Player(_player);
 		if(_currentGameData==null) {
 			_player.setColorValue("purple", 2, 65, 1.75, 1.5);
@@ -379,7 +378,6 @@ public class AIClient extends Client{
 			}
 		}
 		_previousPlayer=temp;
-		System.out.println("finished getting player");
 		return _player;
 	}
 

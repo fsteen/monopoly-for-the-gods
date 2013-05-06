@@ -49,7 +49,7 @@ public class HumanClient extends Client{
 	 * Connects the Client to a socket
 	 * @throws IOException
 	 */
-	public void run(){		
+	public void run(){
 		try {
 			_server = new Socket(_host, _port);
 			_input = new BufferedReader(new InputStreamReader(_server.getInputStream()));
@@ -64,6 +64,7 @@ public class HumanClient extends Client{
 		try {
 			_id = respondToSendID();
 			_gui.createBoard(_id, _gui.getCurrentProfile(), this);
+			_gui.playNextInGameSong();
 		} catch (IOException | InvalidRequestException e1) {
 			displayMessage("Unable to retrieve a unique ID from the server :(");
 			return;
@@ -188,6 +189,7 @@ public class HumanClient extends Client{
 		}
 		
 		/* displays the end game screen */
+		_gui.playNextOutOfGameSong();
 		_gui.createEndGame(_gui.getBoard(), combinedData.getPlayerWithMostWins() == _id, names);
 		
 		/* update records */
