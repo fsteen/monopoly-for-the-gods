@@ -250,24 +250,6 @@ public abstract class Client implements Runnable{
 	}
 	
 	/**
-	 * Writes a list of of gameData to the server
-	 * @param gameData
-	 * @throws IOException
-	 */
-//	private void sendGameResponse(List<GameData> gameData) throws IOException{
-//		for (GameData g : gameData){
-//			System.out.println("writing g as a string");
-//			String gameDataString = _oMapper.writeValueAsString(g);
-//			System.out.println("written");
-//			_output.write(gameDataString);
-//			_output.write("\n");
-//		}
-//		_output.write("DONE\n");
-//		_output.flush();
-//		System.out.println("entire response written");
-//	}
-	
-	/**
 	 * Creates a new tournament and runs it in a new thread
 	 * @param players the player heuristics from all of the clients
 	 * @param settings the game settings

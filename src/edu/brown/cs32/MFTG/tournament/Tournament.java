@@ -158,7 +158,7 @@ public class Tournament implements Runnable{
 			connectionsMade++;
 			_clientHandlers.add(cHandler);
 			try {
-				cHandler.sendID();
+				cHandler.sendIDAndTimeouts();
 			} catch (ClientCommunicationException e) {
 				e.printStackTrace();
 			}

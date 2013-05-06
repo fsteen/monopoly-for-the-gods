@@ -184,7 +184,7 @@ public class ClientHandler {
 		}
 	}
 
-	public void sendID() throws ClientCommunicationException {
+	public void sendIDAndTimeouts() throws ClientCommunicationException {
 		String stringID = String.valueOf(_id);
 		ClientRequestContainer request = new ClientRequestContainer(Method.SENDID, Arrays.asList(stringID));
 
