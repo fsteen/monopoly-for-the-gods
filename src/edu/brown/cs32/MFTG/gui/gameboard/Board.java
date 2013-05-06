@@ -473,7 +473,7 @@ public class Board extends JPanel {
 	}
 	
 	public void setWinnerData(Map<Integer, Double> data, Map<Integer, String> names){
-		_center.setWinnerData(data);
+		_center.setWinnerData(data, names);
 	}
 
 	
