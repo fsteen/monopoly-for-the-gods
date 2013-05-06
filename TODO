@@ -2,17 +2,9 @@
 - what do we want to do about players being able to see the board before evyerone has joined?
 
 ===JUDAH===
-- make sure that nothing falls through the cracks
-
-from Chizu:
-	- make passive and aggressive players have different property valuations
-	- can you remove the aggregate property button from the menu for the settings page
 
 from Frances:
-	-make sure menu shows up in end of game flow
 	-AI is getting stuck in get player method
-	-records don't seem to be displaying properly (if this is a bug on my end, let me know, but i don't think it is)
-	-get rid of # seconds played and # turns taken in records ... these, esp the first, are too hard to keep track of
 
 ===Chizu===
 - Decide whether or not to use pictures for buttons on the top
@@ -28,7 +20,6 @@ from Judah
 	-weird bug where when I go on the aggressive player, the board view buttons on the board don't work, but those on the menu do
 	-move text field on railroads to not overlap the gray part at the beginning
 	-remove who's winning label at beginning, or display empty graph (it is displaying an empty graph but i'll play around with it)
-
 Completed:
 	- implement the setWinnerData() method
 	- fix up the connection between the menubar and "those buttons"
@@ -43,14 +34,14 @@ Completed:
 from Alex:
 
 from Judah:
-	- only average the number of houses of games when we have a monopoly on the property.
 	- make sure that game music turns on when game starts and game music turns off when game ends (just call playNextInGameSong() when game starts and playNextOutOfGameSong() when games ends on the monopolygui
-	- when you display players at end of game, you should print profile names as player numbers mean nothing to them
 
 from Chizu:
-	- give player names as well as numbers
 
 Completed:
+- give player names as well as numbers
+- when you display players at end of game, you should print profile names as player numbers mean nothing to them
+- only average the number of houses of games when we have a monopoly on the property.
 - make sure that games, sets, and matches are saved by adding them to the profile 
 (addgame addset and addmatch methods in records)
 -out of memory error ... AHHH 
@@ -77,6 +68,8 @@ from Chizu:
 
 from Frances:
 	-fix client timeouts ... they do not work for small #s of games (like 5) so I turned them off
+	-i can create two games (by clicking create game in two gui's) and it will work, except for a port assignment error ...
+		this doesn't seem like good behavior
 
 from Judah
 	- right now when games end the port stays in use and cannot be reused, also game crashes if we try using a port in use, i've added an error message to the create game screen and join game screens that you should display if port or host is bad

@@ -73,6 +73,8 @@ public abstract class Client implements Runnable{
 	
 	public abstract Player finishGetPlayer();
 	
+	public abstract void setPlayerNames(List<Player> players);
+	
 	public abstract void addGameData(GameData gameData);
 
 	/**
@@ -283,6 +285,8 @@ public abstract class Client implements Runnable{
 	 * @return the data collected from the games
 	 */
 	public GameDataReport playGames(List<Player> players, List<Long> seeds, Settings settings){
+		setPlayerNames(players);
+		
 		_numGamesPlayed = 0;
 		_data = null;
 		_nextDisplaySize = BackendConstants.DATA_PACKET_SIZE;

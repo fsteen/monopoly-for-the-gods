@@ -6,9 +6,8 @@ package edu.brown.cs32.MFTG.tournament;
  *
  */
 public class Record {
-	private int _numMatches, _numMatchesWon,  _numSets, _numSetsWon,  _numGames, _numGamesWon, _numTurnsTaken;
+	private int _numMatches, _numMatchesWon,  _numSets, _numSetsWon,  _numGames, _numGamesWon;
 	private double _matchWinningPercentage, _setWinningPercentage, _gameWinningPercentage;
-	private int _secondsPlayed;
 	public Record() {
 		_numMatches=0;
 		_numMatchesWon=0;
@@ -20,8 +19,6 @@ public class Record {
 		_numGamesWon=0;
 		_gameWinningPercentage=0;
 		
-		_numTurnsTaken=0;
-		_secondsPlayed=0;
 	}
 	
 	/**
@@ -29,11 +26,10 @@ public class Record {
 	 * @param isWin
 	 * @param numTurnsTaken
 	 */
-	public void addGame(boolean isWin, int numTurnsTaken) {
+	public void addGame(boolean isWin) {
 		_numGames++;
 		if(isWin)_numGamesWon++;
 		_gameWinningPercentage=((double)_numGamesWon)/_numGames;	
-		_numTurnsTaken+=numTurnsTaken;
 	}
 	
 	/**
@@ -50,11 +46,10 @@ public class Record {
 	 * set
 	 * @param isWin
 	 */
-	public void addMatch(boolean isWin, int lengthOfGameInSeconds) {
+	public void addMatch(boolean isWin) {
 		_numMatches++;
 		if(isWin)_numMatchesWon++;
 		_matchWinningPercentage=((double)_numMatchesWon)/_numMatches;	
-		_secondsPlayed+=lengthOfGameInSeconds;
 	}
 
 	/**
@@ -142,20 +137,6 @@ public class Record {
 	}
 
 	/**
-	 * @return the _numTurnsTaken
-	 */
-	public int getNumTurnsTaken() {
-		return _numTurnsTaken;
-	}
-
-	/**
-	 * @param _numTurnsTaken the _numTurnsTaken to set
-	 */
-	public void setNumTurnsTaken(int _numTurnsTaken) {
-		this._numTurnsTaken = _numTurnsTaken;
-	}
-
-	/**
 	 * @return the _matchWinningPercentage
 	 */
 	public double getMatchWinningPercentage() {
@@ -197,20 +178,7 @@ public class Record {
 		this._gameWinningPercentage = _gameWinningPercentage;
 	}
 
-	/**
-	 * @return the _secondsPlayed
-	 */
-	public int getSecondsPlayed() {
-		return _secondsPlayed;
-	}
 
-	/**
-	 * @param _secondsPlayed the _secondsPlayed to set
-	 */
-	public void setSecondsPlayed(int _secondsPlayed) {
-		this._secondsPlayed = _secondsPlayed;
-	}
-	
 	@Override
 	public boolean equals(Object o){
 		if (o == null || !(o instanceof Record))
@@ -224,11 +192,9 @@ public class Record {
 			   && _numSetsWon == that.getNumSetsWon()
 			   && _numGames == that.getNumGames()
 			   && _numGamesWon == that.getNumGamesWon()
-			   && _numTurnsTaken == that.getNumTurnsTaken()
 			   && _matchWinningPercentage == that.getMatchWinningPercentage()
 			   && _setWinningPercentage == that.getSetWinningPercentage()
-			   && _gameWinningPercentage == that.getGameWinningPercentage()
-			   && _secondsPlayed == that.getSecondsPlayed();
+			   && _gameWinningPercentage == that.getGameWinningPercentage();
 			
 	}
 }

@@ -390,7 +390,7 @@ public class Board extends JPanel {
 	}
 	
 	public Player getHeuristics () {
-		Player player = new Player(_id);
+		Player player = new Player(_id,_profile._name);
 		
 		HashMap<String, Integer> propertyValues = new HashMap<>();
 		HashMap<String, Double[]> colorValues = new HashMap<>();

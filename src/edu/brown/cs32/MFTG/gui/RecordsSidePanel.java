@@ -13,10 +13,8 @@ import edu.brown.cs32.MFTG.tournament.Record;
 public class RecordsSidePanel extends JPanel{
 	private JLabel _numMatches, _numMatchesWon,  _numSets, _numSetsWon,  _numGames, _numGamesWon, _numTurnsTaken;
 	private JLabel _matchWinningPercentage, _setWinningPercentage, _gameWinningPercentage;
-	private JLabel _secondsPlayed;
 	private JLabel _numMatchesRecord, _numMatchesWonRecord,  _numSetsRecord, _numSetsWonRecord,  _numGamesRecord, _numGamesWonRecord, _numTurnsTakenRecord;
 	private JLabel _matchWinningPercentageRecord, _setWinningPercentageRecord, _gameWinningPercentageRecord;
-	private JLabel _secondsPlayedRecord;
 	public RecordsSidePanel() {
 		this.setLayout(new BorderLayout());
 		this.setBackground(Color.WHITE);
@@ -49,10 +47,6 @@ public class RecordsSidePanel extends JPanel{
 		_numGamesWonRecord = new JLabel("");
 		_gameWinningPercentage = new JLabel("Percentage of Gamets Won: ");
 		_gameWinningPercentageRecord = new JLabel("");
-		JLabel break5 = new JLabel("");
-		JLabel break6 = new JLabel("");
-		_secondsPlayed = new JLabel("Seconds Played: ");
-		_secondsPlayedRecord = new JLabel("");
 		
 		JPanel leftPanel = new JPanel();
 		leftPanel.setLayout(new GridLayout(0,1));
@@ -83,10 +77,6 @@ public class RecordsSidePanel extends JPanel{
 		rightPanel.add(_numGamesWonRecord);
 		leftPanel.add(_gameWinningPercentage);
 		rightPanel.add(_gameWinningPercentageRecord);
-		leftPanel.add(break5);
-		rightPanel.add(break6);
-		leftPanel.add(_secondsPlayed);
-		rightPanel.add(_secondsPlayedRecord);
 
 		this.add(topPanel, BorderLayout.NORTH);
 		this.add(leftPanel,BorderLayout.WEST);
@@ -113,8 +103,6 @@ public class RecordsSidePanel extends JPanel{
 		_numGamesRecord.setText(String.valueOf(r.getNumGames()));
 		_numGamesWonRecord.setText(String.valueOf(r.getNumGamesWon()));
 		_gameWinningPercentageRecord.setText(String.valueOf(r.getGameWinningPercentage()));
-
-		_secondsPlayedRecord.setText(String.valueOf(r.getSecondsPlayed()));
 	}
 
 }

@@ -139,7 +139,7 @@ public class BoardMenu extends JMenuBar {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			_board.setHeuristics(new Player(-1));
+			_board.setHeuristics(new Player(-1,""));
 			_players.setText("Create New Player");
 			_currentPlayer=null;
 		}

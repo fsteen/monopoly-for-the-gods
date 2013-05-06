@@ -23,16 +23,14 @@ public class GameDataAccumulator {
 	private Map<String, Map<Integer,PropertyDataAccumulator>> playerCurrentMaxValues;
 	public Map<Integer, Double> _playerWins;
 	public Map<Integer,Integer> _winList;
-//	public final int _numPlayers;
 	public boolean matchIsOver;
 
-	public GameDataAccumulator(int numTimeStamps/*, int numPlayers*/){
+	public GameDataAccumulator(int numTimeStamps){
 		entireGameData = new HashMap<>();
 		currentMaxValues = new HashMap<>();
 		playerEntireGameData = new HashMap<>();
 		playerCurrentMaxValues = new HashMap<>();
 		_winList = new HashMap<>();
-//		_numPlayers = numPlayers;
 		matchIsOver = false;
 
 		/* initialize timestamps */
@@ -88,23 +86,23 @@ public class GameDataAccumulator {
 	 * puts all the current max values into the entireGameData and playerEntireGameData
 	 */
 	public void gameFinished(){
+		/* initialize everything */
 		PropertyDataAccumulator temp;
 		Map<Integer,PropertyDataAccumulator> playerEntireGameTemp;
 		int totalNumDataPoints = 0;
-		/* initialize everything */
 		for(String s : currentMaxValues.keySet()){
 			initializeEntireGameData(s);
 		}
 		
 		/* Add the overall property information */
-		for(PropertyDataAccumulator p : currentMaxValues.values()){ //for all of the current maxes
-			temp = entireGameData.get(p.propertyName); //add to the overall property data
+		for(PropertyDataAccumulator p : currentMaxValues.values()){
+			temp = entireGameData.get(p.propertyName);
 			temp.accNumHouses += p.accNumHouses;
 			temp.accTotalRevenueWithHouses += p.accTotalRevenueWithHouses;
 			temp.accTotalRevenueWithoutHouses += p.accTotalRevenueWithoutHouses;
 			temp.numDataPoints += 1;
 			totalNumDataPoints = p.numDataPoints;
-			p.reset(); //reset the currentMaxes
+			p.reset();
 		}
 		totalNumDataPoints = totalNumDataPoints == 0 ? 1 : totalNumDataPoints;
 		
@@ -139,11 +137,11 @@ public class GameDataAccumulator {
 
 		if(playerProperties == null){
 			playerProperties = new HashMap<>();
-			for(int i = 0; i < BackendConstants.MAX_NUM_PLAYERS; i++){ //TODO changed
+			for(int i = 0; i < BackendConstants.MAX_NUM_PLAYERS; i++){
 				playerData = new PropertyDataAccumulator(propertyName,i);
 				playerProperties.put(i, playerData);
 			}
-			playerEntireGameData.put(propertyName,playerProperties); //add the hashmap if it doesn't yet exist
+			playerEntireGameData.put(propertyName,playerProperties);
 		}
 	}
 	
@@ -161,26 +159,28 @@ public class GameDataAccumulator {
 		Map<Integer,PropertyDataAccumulator> playerProperties = playerCurrentMaxValues.get(propertyName);
 		if(playerProperties == null){
 			playerProperties = new HashMap<>();
-			for(int i = 0; i < BackendConstants.MAX_NUM_PLAYERS; i++){ //TODO changed
+			for(int i = 0; i < BackendConstants.MAX_NUM_PLAYERS; i++){
 				temp = new PropertyDataAccumulator(propertyName,i);
 				playerProperties.put(i, temp);
 			}
-			playerCurrentMaxValues.put(propertyName,playerProperties); //add the hashmap if it doesn't yet exist
+			playerCurrentMaxValues.put(propertyName,playerProperties);
 		}
 	}
 
 	/**
-	 * 
+	 * Goes through all time stamps in a game
 	 * @param data
 	 */
-	public void putPropertyData(PropertyData data){ //this goes through all time stamps in a game		
+	public void putPropertyData(PropertyData data){		
 		initializeCurrentMaxValues(data.propertyName);
+		
 		/* Add the overall property information */
 		PropertyDataAccumulator accData = currentMaxValues.get(data.propertyName);
 		accData.accNumHouses = Math.max(accData.accNumHouses, data.numHouses);
 		accData.accTotalRevenueWithHouses = Math.max(accData.accTotalRevenueWithHouses, data.totalRevenueWithHouses);
 		accData.accTotalRevenueWithoutHouses = Math.max(accData.accTotalRevenueWithoutHouses, data.totalRevenueWithoutHouses);
 		accData.numDataPoints += 1;
+		
 		/* Add the player specific property information */
 		if(data.ownerID == -1){ //the property is not owned
 			return;
@@ -191,7 +191,7 @@ public class GameDataAccumulator {
 		playerData.accNumHouses = Math.max(playerData.accNumHouses, data.numHouses);
 		playerData.accTotalRevenueWithHouses = Math.max(playerData.accTotalRevenueWithHouses, data.personalRevenueWithHouses);
 		playerData.accTotalRevenueWithoutHouses = Math.max(playerData.accTotalRevenueWithoutHouses, data.personalRevenueWithoutHouses);
-		playerData.numDataPoints += 1;
+		playerData.numDataPoints += data.monopolized ? 1 : 0;
 	}
 
 	/**

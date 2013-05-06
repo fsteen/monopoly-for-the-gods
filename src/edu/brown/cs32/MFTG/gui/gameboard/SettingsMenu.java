@@ -53,7 +53,7 @@ public class SettingsMenu extends BoardMenu {
 				if(remove!=0) {
 					return;
 				}
-				_board.setHeuristics(new Player(-1));		
+				_board.setHeuristics(new Player(-1,""));		
 			}
 			else {
 				int remove=JOptionPane.showConfirmDialog(_main, "Are you sure you want to remove the player \""+_currentPlayer+"\"?\nThis action cannot be reversed.");

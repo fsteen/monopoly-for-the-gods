@@ -46,7 +46,7 @@ public class Game implements Runnable{
 		Collections.shuffle(_players, rand);
 		_currentPlayer = _players.get(0);
 		
-		_banker = new GamePlayer(this, new Player(-1));
+		_banker = new GamePlayer(this, new Player(-1,"banker"));
 		
 		_seed=seed;
 		_currentTurn=0;
@@ -167,8 +167,8 @@ public class Game implements Runnable{
 	private void sendGameData() {
 		_gameData.addNewTime();
 		for(Property prop:_board.getAllProperties()){
-			if(prop.getOwner()!=null)_gameData.setPropertyAtTime(prop.Name, prop.getOwner().getPlayer().ID, prop.getNumHouses(), prop.getPersonalRevenueWith(),prop.getPersonalRevenueWithout(),prop.getTotalRevenueWithHouses(),prop.getTotalRevenueWithoutHouses(), prop.getMortgagedState());
-			else _gameData.setPropertyAtTime(prop.Name, -1, prop.getNumHouses(), prop.getPersonalRevenueWith(),prop.getPersonalRevenueWithout(),prop.getTotalRevenueWithHouses(),prop.getTotalRevenueWithoutHouses(), prop.getMortgagedState());
+			if(prop.getOwner()!=null)_gameData.setPropertyAtTime(prop.Name, prop.getOwner().getPlayer().ID, prop.getNumHouses(), prop.getPersonalRevenueWith(),prop.getPersonalRevenueWithout(),prop.getTotalRevenueWithHouses(),prop.getTotalRevenueWithoutHouses(), prop.getMortgagedState(), prop.getMonopolyState());
+			else _gameData.setPropertyAtTime(prop.Name, -1, prop.getNumHouses(), prop.getPersonalRevenueWith(),prop.getPersonalRevenueWithout(),prop.getTotalRevenueWithHouses(),prop.getTotalRevenueWithoutHouses(), prop.getMortgagedState(), prop.getMonopolyState());
 		}
 		for(GamePlayer player: _players){
 			_gameData.setWealthAtTime(player.getPlayer().ID, player.getCash(), player.getTotalWealth());

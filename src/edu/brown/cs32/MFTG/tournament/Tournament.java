@@ -77,7 +77,7 @@ public class Tournament implements Runnable{
 	 * @param id the id to assign to the new player
 	 */
 	private Player newBalancedPlayer(int id){
-		Player p = new Player(id);
+		Player p = new Player(id,"balanced");
 		
 		p.setColorValue("purple", 1.7, 1.2, 1.5, 1.3);
 		p.setColorValue("light blue", 1.2, 1.2, 1.5, 1.3);

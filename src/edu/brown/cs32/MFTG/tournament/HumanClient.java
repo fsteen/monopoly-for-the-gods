@@ -10,7 +10,9 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -38,10 +40,12 @@ public class HumanClient extends Client{
 	private MonopolyGui _gui;
 	private ExecutorService _executor = Executors.newCachedThreadPool();
 	private Timer _timer;
+	private Map<Integer,String> _playerNames;
 
 	public HumanClient(boolean music){
 		super();
 		_gui = new MonopolyGui(this, music);
+		_playerNames = new HashMap<>();
 	}
 	
 	/**
@@ -127,7 +131,7 @@ public class HumanClient extends Client{
 		/* update records */
 		_gui.getCurrentProfile().getRecord().addSet(combinedData.getPlayerWithMostWins() == _id);
 		for(Integer i : combinedData._winList.values()){
-			_gui.getCurrentProfile().getRecord().addGame(i == _id, 0);
+			_gui.getCurrentProfile().getRecord().addGame(i == _id);
 		}
 	}
 	
@@ -135,12 +139,12 @@ public class HumanClient extends Client{
 		int numPlayers = combinedData._timeStamps.get(0).wealthData.size();
 		String[] names = new String[BackendConstants.MAX_NUM_PLAYERS];
 		for(int i = 0; i < names.length; i++){
-			names[i] = i < numPlayers ? "Player " + i : "";
+			names[i] = i < numPlayers ? _playerNames.get(i) : "";
 		}
 		_gui.createEndGame(_gui.getBoard(), combinedData.getPlayerWithMostWins() == _id, names);
 		
 		/* update records */
-		_gui.getCurrentProfile().getRecord().addMatch(combinedData.getPlayerWithMostWins() == _id, 3232);
+		_gui.getCurrentProfile().getRecord().addMatch(combinedData.getPlayerWithMostWins() == _id);
 		_gui.saveProfiles();
 	}
 	
@@ -169,6 +173,13 @@ public class HumanClient extends Client{
 			displayDataToGui(_data.toGameDataReport());
 			_nextDisplaySize += BackendConstants.DATA_PACKET_SIZE; //set next point at which to display
 		}
+	}
+	
+	public void setPlayerNames(List<Player> players){
+		for(Player p : players){
+			_playerNames.put(p.ID, p.Name);
+		}
+		_playerNames.put(-1, "banker");
 	}
 	
 	public void startGetPlayer(int time){

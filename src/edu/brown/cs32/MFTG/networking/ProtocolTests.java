@@ -74,8 +74,8 @@ public class ProtocolTests {
 //	    oMapper.setSerializationInclusion(Include.NON_NULL);
 //	    oMapper.getSerializerProvider().setNullKeySerializer(new MyNullKeySerializer());
 		
-		Player p = new Player(1);
-		Player p2 = new Player(1);
+		Player p = new Player(1,"");
+		Player p2 = new Player(1,"");
 		
 		// make sure that all necessary getters and setters exist
 		HashMap<String, Integer> propertyValues = p.getPropertyValues();
@@ -193,7 +193,7 @@ public class ProtocolTests {
 	public void testTimeStamp() throws IOException {
 		ObjectMapper oMapper = new ObjectMapper();
 		
-		PropertyData p = new PropertyData("test", 0, 0, 0, 0, 0, 0, false);
+		PropertyData p = new PropertyData("test", 0, 0, 0, 0, 0, 0, false, false);
 		PlayerWealthData pwd = new PlayerWealthData(0, 0, 0);
 		
 		TimeStamp t = new TimeStamp(5);

@@ -72,8 +72,8 @@ public class TimeStamp{
 	 * @param revenue
 	 * @param mortgaged
 	 */
-	void addPropertyData(String propertyName, int ownerID, double numHouses, double personalRevenueWithHouses, double personalRevenueWithoutHouses,double totalRevenueWithHouses,double totalRevenueWithoutHouses, boolean mortgaged){
-		_propertyData.add(new PropertyData(propertyName,ownerID,numHouses, personalRevenueWithHouses, personalRevenueWithoutHouses, totalRevenueWithHouses, totalRevenueWithoutHouses,mortgaged));
+	void addPropertyData(String propertyName, int ownerID, double numHouses, double personalRevenueWithHouses, double personalRevenueWithoutHouses,double totalRevenueWithHouses,double totalRevenueWithoutHouses, boolean mortgaged, boolean monopolized){
+		_propertyData.add(new PropertyData(propertyName,ownerID,numHouses, personalRevenueWithHouses, personalRevenueWithoutHouses, totalRevenueWithHouses, totalRevenueWithoutHouses,mortgaged, monopolized));
 	}
 	
 	/**

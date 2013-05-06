@@ -25,6 +25,7 @@ public class Player {
 	}
 	
 	public final int ID;
+	public final String Name;
 	private HashMap<String, Integer> _propertyValues;
 	private HashMap<String, Double[]> _colorValues;
 	private double _liquidity, _timeChange, _tradingFear;
@@ -39,8 +40,9 @@ public class Player {
 	private int _jailPoor, _jailRich;
 	
 	@JsonCreator
-	public Player(@JsonProperty("id") int id){
+	public Player(@JsonProperty("id") int id, @JsonProperty("name") String name){
 		ID=id;
+		Name = name;
 		_propertyValues= new HashMap<>();
 		initializePropertyValues();
 		
@@ -85,6 +87,7 @@ public class Player {
 	
 	public Player(Player copyPlayer) {
 		ID=copyPlayer.ID;
+		Name=copyPlayer.Name;
 		_propertyValues=new HashMap<>();
 		_colorValues = new HashMap<>();
 		for(String s:copyPlayer.getColorValues().keySet()) {
@@ -109,7 +112,6 @@ public class Player {
 		_minBuildCash = copyPlayer.getMinBuildCash();
 		_buildAggression=copyPlayer.getBuildAggression();
 		_tradingFear=copyPlayer.getTradingFear();
-		
 	}
 	
 	/**

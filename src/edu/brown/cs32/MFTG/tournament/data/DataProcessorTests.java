@@ -78,8 +78,8 @@ public class DataProcessorTests {
 	
 //	@Test
 	public void generateGameDataReportSingleGame(){
-		Player p0=new Player(0);
-		Player p1=new Player(1);
+		Player p0=new Player(0,"");
+		Player p1=new Player(1,"");
 		
 		Game g = new Game(1,13,1000,500, false, false, p0, p1);
 		g.run();
@@ -93,10 +93,10 @@ public class DataProcessorTests {
 //	@Test
 	public void combineAccumulatorsTest(){
 		Random rand = new Random();
-		Player p0=new Player(0);
-		Player p1=new Player(1);
-		Player p2=new Player(2);
-		Player p3=new Player(3);
+		Player p0=new Player(0,"");
+		Player p1=new Player(1,"");
+		Player p2=new Player(2,"");
+		Player p3=new Player(3,"");
 
 		List<GameData> data = new ArrayList<>();
 		List<GameData> data2 = new ArrayList<>();
@@ -130,8 +130,8 @@ public class DataProcessorTests {
 //	@Test
 	public void generateGameDataReportMany(){
 		Random rand = new Random();
-		Player p0=new Player(0);
-		Player p1=new Player(1);
+		Player p0=new Player(0,"");
+		Player p1=new Player(1,"");
 		
 		List<GameData> data = new ArrayList<>();
 		Game g;
@@ -147,10 +147,10 @@ public class DataProcessorTests {
 //	@Test
 	public void generateGameDataReportMany4Player(){
 		Random rand = new Random();
-		Player p0=new Player(0);
-		Player p1=new Player(1);
-		Player p2=new Player(2);
-		Player p3=new Player(3);
+		Player p0=new Player(0,"");
+		Player p1=new Player(1,"");
+		Player p2=new Player(2,"");
+		Player p3=new Player(3,"");
 
 		List<GameData> data = new ArrayList<>();
 		Game g;
@@ -190,10 +190,10 @@ public class DataProcessorTests {
 	public void gameDataConversionTests(){
 		
 		Random rand = new Random();
-		Player p0=new Player(0);
-		Player p1=new Player(1);
-		Player p2=new Player(2);
-		Player p3=new Player(3);
+		Player p0=new Player(0,"");
+		Player p1=new Player(1,"");
+		Player p2=new Player(2,"");
+		Player p3=new Player(3,"");
 
 		List<GameData> data = new ArrayList<>();
 		Game g;
@@ -212,10 +212,10 @@ public class DataProcessorTests {
 		
 		int size = 500;
 		Random rand = new Random();
-		Player p0=new Player(0);
-		Player p1=new Player(1);
-		Player p2=new Player(2);
-		Player p3=new Player(3);
+		Player p0=new Player(0,"");
+		Player p1=new Player(1,"");
+		Player p2=new Player(2,"");
+		Player p3=new Player(3,"");
 
 		List<GameData> data = new ArrayList<>();
 		GameDataAccumulator[] reports = new GameDataAccumulator[size];
