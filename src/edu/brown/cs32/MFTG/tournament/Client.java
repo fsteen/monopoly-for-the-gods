@@ -73,7 +73,7 @@ public abstract class Client implements Runnable{
 	
 	public abstract Player finishGetPlayer();
 	
-	public abstract void setPlayerNames(List<Player> players);
+	protected abstract void setPlayerNames(List<Player> players);
 	
 	public abstract void addGameData(GameData gameData);
 
@@ -267,6 +267,12 @@ public abstract class Client implements Runnable{
 //		System.out.println("entire response written");
 //	}
 	
+	/**
+	 * Creates a new tournament and runs it in a new thread
+	 * @param players the player heuristics from all of the clients
+	 * @param settings the game settings
+	 * @param port the server port
+	 */
 	public void launchTournament(List<Integer> players, Settings settings, int port){
 		try {
 			_pool.execute((new Tournament(players, settings, port)));
@@ -276,8 +282,6 @@ public abstract class Client implements Runnable{
 		}
 	}
 	
-	/***************Module Methods *************************/
-
 	/**
 	 * Play seeds.size games in separate threads
 	 * @param players the player heuristics
@@ -286,7 +290,7 @@ public abstract class Client implements Runnable{
 	 * @return the data collected from the games
 	 */
 	public GameDataReport playGames(List<Player> players, List<Long> seeds, Settings settings){
-		/* reset stuff */
+		/* reset variables */
 		_numGamesPlayed = 0;
 		_data = null;
 		_nextDisplaySize = BackendConstants.DATA_PACKET_SIZE;

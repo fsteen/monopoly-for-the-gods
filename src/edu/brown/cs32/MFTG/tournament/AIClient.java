@@ -85,7 +85,6 @@ public class AIClient extends Client{
 		
 	}
 
-	public void setPlayerNames(List<Player> players){} //do nothing
 	
 	public void run() {
 		try {
@@ -396,8 +395,9 @@ public class AIClient extends Client{
 		return null;
 	}
 
-	protected void respondToDisplayError(ClientRequestContainer request) {
-		// do nothing -- there is no error to display
-	}
+	protected void respondToDisplayError(ClientRequestContainer request) {} /* do nothing, there is no error to display */
+
+	protected void setPlayerNames(List<Player> players){} /* do nothing */
+
 
 }

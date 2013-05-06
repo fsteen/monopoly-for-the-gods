@@ -16,21 +16,18 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.google.common.collect.Lists;
 
 import edu.brown.cs32.MFTG.gui.MonopolyGui;
 import edu.brown.cs32.MFTG.monopoly.GameData;
 import edu.brown.cs32.MFTG.monopoly.Player;
 import edu.brown.cs32.MFTG.networking.ClientRequestContainer;
 import edu.brown.cs32.MFTG.networking.InvalidRequestException;
-import edu.brown.cs32.MFTG.networking.getPlayerCallable;
 import edu.brown.cs32.MFTG.tournament.data.DataProcessor;
 import edu.brown.cs32.MFTG.tournament.data.GameDataAccumulator;
 import edu.brown.cs32.MFTG.tournament.data.GameDataReport;
@@ -121,37 +118,20 @@ public class HumanClient extends Client{
 	 * @param combinedData
 	 */
 	public void displayGameData(GameDataReport combinedData) {
-		//TODO differentiate between end of round and end of game data here
-		if(combinedData._matchIsOver){
-			finishMatch(combinedData);
-		}
-		displayDataToGui(combinedData);
-		_gui.getBoard().setWinnerData(combinedData._playerWins);
-		
 		/* update records */
 		_gui.getCurrentProfile().getRecord().addSet(combinedData.getPlayerWithMostWins() == _id);
 		for(Integer i : combinedData._winList.values()){
 			_gui.getCurrentProfile().getRecord().addGame(i == _id);
 		}
-	}
-	
-	private void finishMatch(GameDataReport combinedData){
-		int numPlayers = combinedData._timeStamps.get(0).wealthData.size();
-		String[] names = new String[BackendConstants.MAX_NUM_PLAYERS];
-		for(int i = 0; i < names.length; i++){
-			names[i] = i < numPlayers ? _playerNames.get(i) : "";
-		}
-		_gui.createEndGame(_gui.getBoard(), combinedData.getPlayerWithMostWins() == _id, names);
 		
-		/* update records */
-		_gui.getCurrentProfile().getRecord().addMatch(combinedData.getPlayerWithMostWins() == _id);
-		_gui.saveProfiles();
-	}
-	
-	private void displayDataToGui(GameDataReport combinedData){
-		_gui.getBoard().setPlayerSpecificPropertyData(getPlayerPropertyData(combinedData._overallPlayerPropertyData));
-		_gui.getBoard().setPropertyData(combinedData._overallPropertyData);
-		_gui.getBoard().setWealthData(getPlayerWealthData(combinedData._timeStamps));
+		/* take care of end of game business */
+		if(combinedData._matchIsOver){
+			finishMatch(combinedData);
+		}
+		
+		/* update the board */
+		sendDataToGui(combinedData);
+		_gui.getBoard().setWinnerData(combinedData._playerWins);
 	}
 	
 	/**
@@ -160,28 +140,25 @@ public class HumanClient extends Client{
 	 * @param gameData
 	 */
 	public synchronized void addGameData(GameData gameData){		
-		List<GameData> temp = new ArrayList<>();
-		temp.add(gameData);
-		GameDataAccumulator a = DataProcessor.aggregate(temp,BackendConstants.NUM_DATA_POINTS);
-		if(_data == null){
-			_data = a;
-		} else {
-			DataProcessor.combineAccumulators(_data, DataProcessor.aggregate(temp,BackendConstants.NUM_DATA_POINTS));
-		}
+		List<GameData> dataList = new ArrayList<>();
+		dataList.add(gameData);
+		GameDataAccumulator newData = DataProcessor.aggregate(dataList,BackendConstants.NUM_DATA_POINTS);
+		
+		_data = _data == null ? newData :
+			DataProcessor.combineAccumulators(_data, DataProcessor.aggregate(dataList,BackendConstants.NUM_DATA_POINTS));
+		
+		/* display data and determine the next display point */
 		_numGamesPlayed++;
 		if(_numGamesPlayed >= _nextDisplaySize){
-			displayDataToGui(_data.toGameDataReport());
-			_nextDisplaySize += BackendConstants.DATA_PACKET_SIZE; //set next point at which to display
+			sendDataToGui(_data.toGameDataReport());
+			_nextDisplaySize += BackendConstants.DATA_PACKET_SIZE;
 		}
 	}
 	
-	public void setPlayerNames(List<Player> players){
-		for(Player p : players){
-			_playerNames.put(p.ID, p.Name);
-		}
-		_playerNames.put(-1, "banker");
-	}
-	
+	/**
+	 * Starts the timer for choosing heuristics, after which the player will be retrieved
+	 * @param the time, in seconds, to wait before requesting the player
+	 */
 	public void startGetPlayer(int time){
 		_timer = new Timer(1000*(time+1), new GetPlayerActionListener(this));
 		_gui.getBoard().newRound(time);
@@ -190,15 +167,52 @@ public class HumanClient extends Client{
 	}
 	
 	/**
-	 * Gets the player associated with this object	private void sendEndOfGameData(){
-		//TODO implement
-	}
-	 * @param the time, in seconds, to wait before requesting the player
-	 * @return
+	 * Gets the player associated with this object
+	 * @return the player
 	 */
 	public Player finishGetPlayer(){
 		if(_timer!= null) _timer.stop();
 		return _gui.getBoard().getPlayer();
+	}
+	
+	/**
+	 * Updates records, data and displays finishing screen for the end of the game
+	 * @param combinedData
+	 */
+	private void finishMatch(GameDataReport combinedData){
+		int numPlayers = combinedData._timeStamps.get(0).wealthData.size();
+		String[] names = new String[BackendConstants.MAX_NUM_PLAYERS];
+		
+		for(int i = 0; i < names.length; i++){
+			names[i] = i < numPlayers ? _playerNames.get(i) : "";
+		}
+		
+		/* displays the end game screen */
+		_gui.createEndGame(_gui.getBoard(), combinedData.getPlayerWithMostWins() == _id, names);
+		
+		/* update records */
+		_gui.getCurrentProfile().getRecord().addMatch(combinedData.getPlayerWithMostWins() == _id);
+		_gui.saveProfiles();
+	}
+	
+	/**
+	 * Updates data in the gui
+	 * @param data 
+	 */
+	private void sendDataToGui(GameDataReport data){
+		_gui.getBoard().setPlayerSpecificPropertyData(getPlayerPropertyData(data._overallPlayerPropertyData));
+		_gui.getBoard().setPropertyData(data._overallPropertyData);
+		_gui.getBoard().setWealthData(getPlayerWealthData(data._timeStamps));
+	}
+	
+	/**
+	 * Populates the map of player ids to names
+	 */
+	protected void setPlayerNames(List<Player> players){
+		for(Player p : players){
+			_playerNames.put(p.ID, p.Name);
+		}
+		_playerNames.put(-1, "banker");
 	}
 
 	/**
@@ -207,10 +221,7 @@ public class HumanClient extends Client{
 	 */
 	private void displayMessage(String message){
 		JOptionPane.showMessageDialog(_gui, message);
-	}
-
-	/*******************************************************/
-	
+	}	
 	
 	private class GetPlayerActionListener implements ActionListener{
 		HumanClient _client;
