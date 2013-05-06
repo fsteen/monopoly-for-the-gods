@@ -18,6 +18,9 @@ import edu.brown.cs32.MFTG.monopoly.Board;
 import edu.brown.cs32.MFTG.monopoly.Game;
 import edu.brown.cs32.MFTG.monopoly.GameData;
 import edu.brown.cs32.MFTG.monopoly.Player;
+import edu.brown.cs32.MFTG.monopoly.Player.Aggression;
+import edu.brown.cs32.MFTG.monopoly.Player.Amount;
+import edu.brown.cs32.MFTG.monopoly.Player.Balance;
 import edu.brown.cs32.MFTG.networking.ClientRequestContainer;
 import edu.brown.cs32.MFTG.networking.InvalidRequestException;
 import edu.brown.cs32.MFTG.tournament.data.DataProcessor;
@@ -150,43 +153,104 @@ public class AIClient extends Client{
 	public Player finishGetPlayer(){
 		Player temp = new Player(_player);
 		if(_currentGameData==null) {
-			_player.setColorValue("purple", 2, 65, 1.75, 1.5);
-			_player.setColorValue("light blue", 2, 65, 1.75, 1.5);
-			_player.setColorValue("pink", 2, 125, 1.75, 1.5);
-			_player.setColorValue("orange", 2, 125, 1.75, 1.5);
-			_player.setColorValue("red", 2, 200, 1.75, 1.5);
-			_player.setColorValue("yellow", 2, 200, 1.75, 1.5);
-			_player.setColorValue("green", 2, 250, 1.75, 1.5);
-			_player.setColorValue("dark blue", 2, 250, 1.75, 1.5);
-
-			_player.setPropertyValue("oriental avenue", 150);
-			_player.setPropertyValue("vermont place", 140);
-			_player.setPropertyValue("connecticut avenue", 170);
-
-			_player.setPropertyValue("tennessee avenue", 220);
-			_player.setPropertyValue("st. james place", 220);
-			_player.setPropertyValue("new york avenue", 240);
+			_player.setColorValue("purple", 2.5, 75, 2.25, 2);
+			_player.setColorValue("light blue", 2.5, 75, 2.25, 2);
+			_player.setColorValue("pink", 2.5, 150, 2.25, 2);
+			_player.setColorValue("orange", 2.5, 150,2.25, 2);
+			_player.setColorValue("red", 2.5, 225, 2.25, 2);
+			_player.setColorValue("yellow", 2.5, 225, 2.25, 2);
+			_player.setColorValue("green", 2.5, 300, 2.25, 2);
+			_player.setColorValue("dark blue", 2.5, 300, 2.25, 2);
 
 			_player.setJailWait(1);
-			_player.setMinBuildCash(200);
-			_player.setMinBuyCash(150);
-			_player.setMinUnmortgageCash(300);
-			_player.setTradingFear(1.3);
-			_player.setLiquidity(7);
+			_player.setJailRich(1);
+			_player.setJailPoor(1);
+			_player.setMinBuildCash(0);
+			_player.setMinBuyCash(0);
+			_player.setMinUnmortgageCash(0);
+			_player.setTradingFear(1.1);
+			_player.setLiquidity(10);
+			_player.setBuildAggression(Aggression.AGGRESSIVE);
+			_player.setBuildingEvenness(Balance.UNEVEN);
+			_player.setHouseSelling(Amount.FEWER);
+			
+			_player.setPropertyValue("mediterranean avenue", 70);
+			_player.setPropertyValue("baltic avenue", 70);
+			_player.setPropertyValue("reading railroad", 210);
+			_player.setPropertyValue("oriental avenue", 110);
+			_player.setPropertyValue("vermont avenue", 110);
+			_player.setPropertyValue("connecticut avenue", 130);
+			_player.setPropertyValue("st. charles place", 150);
+			_player.setPropertyValue("electric company", 160);
+			_player.setPropertyValue("states avenue", 150);
+			_player.setPropertyValue("virginia avenue", 170);
+			_player.setPropertyValue("pennsylvania railroad", 210);
+			_player.setPropertyValue("st. james place", 190);
+			_player.setPropertyValue("tennessee avenue", 190);	
+			_player.setPropertyValue("new york avenue", 210);	
+			_player.setPropertyValue("kentucky avenue", 230);	
+			_player.setPropertyValue("indiana avenue", 230);	
+			_player.setPropertyValue("illinois avenue", 250);		
+			_player.setPropertyValue("b and o railroad",210);		
+			_player.setPropertyValue("atlantic avenue", 270);		
+			_player.setPropertyValue("ventnor avenue", 270);		
+			_player.setPropertyValue("water works",160);		
+			_player.setPropertyValue("marvin gardens", 290);	
+			_player.setPropertyValue("pacific avenue", 310);
+			_player.setPropertyValue("north carolina avenue", 310);
+			_player.setPropertyValue("pennsylvania avenue", 330);
+			_player.setPropertyValue("short line", 210);
+			_player.setPropertyValue("park place", 360);
+			_player.setPropertyValue("boardwalk", 410);
 
 		}
 		else if(_previousGameData==null) {
-			_player.setColorValue("light blue", 2.2, 70, 1.9, 1.7);
-			_player.setColorValue("orange", 2.2, 140, 1.9, 1.7);
-			_player.setColorValue("green", 1.9, 140, 1.6, 1.3);
-			_player.setColorValue("dark blue", 1.9, 225, 1.6, 1.3);
+			_player.setColorValue("purple", 2, 55, 1.9, 1.8);
+			_player.setColorValue("light blue", 2.7, 100, 2.5, 2.25);
+			_player.setColorValue("pink", 2.5, 150, 2.25, 2);
+			_player.setColorValue("orange", 2.6, 150,2.35, 2.1);
+			_player.setColorValue("red", 2.5, 225, 2.25, 2);
+			_player.setColorValue("yellow", 2.5, 225, 2.25, 2);
+			_player.setColorValue("green", 2, 250, 1.9, 1.8);
+			_player.setColorValue("dark blue", 2, 250, 1.9, 1.8);
 
-			_player.setJailWait(2);
+			_player.setJailRich(3);
+			_player.setJailPoor(3);
 			_player.setMinBuildCash(200);
 			_player.setMinBuyCash(150);
 			_player.setMinUnmortgageCash(300);
 			_player.setTradingFear(1.2);
-			_player.setLiquidity(9);
+			_player.setLiquidity(8);
+			
+			_player.setPropertyValue("mediterranean avenue", 60);
+			_player.setPropertyValue("baltic avenue", 60);
+			_player.setPropertyValue("reading railroad", 220);
+			_player.setPropertyValue("oriental avenue", 130);
+			_player.setPropertyValue("vermont avenue", 130);
+			_player.setPropertyValue("connecticut avenue", 150);
+			_player.setPropertyValue("st. charles place", 140);
+			_player.setPropertyValue("electric company", 160);
+			_player.setPropertyValue("states avenue", 140);
+			_player.setPropertyValue("virginia avenue", 160);
+			_player.setPropertyValue("pennsylvania railroad", 220);
+			_player.setPropertyValue("st. james place", 200);
+			_player.setPropertyValue("tennessee avenue", 200);	
+			_player.setPropertyValue("new york avenue", 220);	
+			_player.setPropertyValue("kentucky avenue", 230);	
+			_player.setPropertyValue("indiana avenue", 230);	
+			_player.setPropertyValue("illinois avenue", 250);		
+			_player.setPropertyValue("b and o railroad",220);		
+			_player.setPropertyValue("atlantic avenue", 270);		
+			_player.setPropertyValue("ventnor avenue", 270);		
+			_player.setPropertyValue("water works",160);		
+			_player.setPropertyValue("marvin gardens", 290);	
+			_player.setPropertyValue("pacific avenue", 300);
+			_player.setPropertyValue("north carolina avenue", 300);
+			_player.setPropertyValue("pennsylvania avenue", 320);
+			_player.setPropertyValue("short line", 220);
+			_player.setPropertyValue("park place", 350);
+			_player.setPropertyValue("boardwalk", 400);
+
 
 		}
 		else {
@@ -195,8 +259,6 @@ public class AIClient extends Client{
 				PropertyDataReport mine =   findMyReport(_currentGameData._overallPlayerPropertyData.get(key));
 				PropertyDataReport minePrev =   findMyReport(_previousGameData._overallPlayerPropertyData.get(key));
 				String color = _colorKeys.get(key);
-				System.out.println(color);
-				System.out.println(key);
 				if(mine==null&&minePrev!=null) {
 					if(others.accTotalRevenueWithoutHouses+others.accTotalRevenueWithHouses>minePrev.accTotalRevenueWithHouses+minePrev.accTotalRevenueWithoutHouses) {
 						int valDif = _player.getPropertyValue(key)-_previousPlayer.getPropertyValue(key);

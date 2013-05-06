@@ -157,7 +157,7 @@ public class Profile {
 		p.setTradingFear(1.5);
 		p.setLiquidity(3);
 		p.setBuildAggression(Aggression.PASSIVE);
-		p.setBuildingEvenness(Balance.UNEVEN);
+		p.setBuildingEvenness(Balance.EVEN);
 		p.setHouseSelling(Amount.MORE);
 		
 		p.setPropertyValue("mediterranean avenue", 50);
@@ -209,7 +209,7 @@ public class Profile {
 		p.setTradingFear(1.1);
 		p.setLiquidity(10);
 		p.setBuildAggression(Aggression.AGGRESSIVE);
-		p.setBuildingEvenness(Balance.EVEN);
+		p.setBuildingEvenness(Balance.UNEVEN);
 		p.setHouseSelling(Amount.FEWER);
 		
 		p.setPropertyValue("mediterranean avenue", 70);

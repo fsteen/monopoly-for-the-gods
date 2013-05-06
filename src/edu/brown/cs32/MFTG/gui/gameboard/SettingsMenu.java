@@ -23,12 +23,7 @@ public class SettingsMenu extends BoardMenu {
 		_main=main;
 		_board=board;
 		
-		JButton delete = new JButton("Delete");
-		delete.addActionListener(new DeleteListener());
-		add(delete);
-		
-		add(Box.createHorizontalGlue());
-		
+				
 		JButton back = new JButton("Back");
 		back.addActionListener(new BackListener());
 		add(back);
@@ -44,35 +39,4 @@ public class SettingsMenu extends BoardMenu {
 			
 	}
 	
-	protected class DeleteListener implements ActionListener{
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			if(_currentPlayer ==null) {
-				int remove=JOptionPane.showConfirmDialog(_main, "Are you sure you want to delete this new player and start over?");
-				if(remove!=0) {
-					return;
-				}
-				_board.setHeuristics(new Player(-1,""));		
-			}
-			else {
-				int remove=JOptionPane.showConfirmDialog(_main, "Are you sure you want to remove the player \""+_currentPlayer+"\"?\nThis action cannot be reversed.");
-				if(remove!=0) {
-					return;
-				}
-				_profile.removePlayer(_currentPlayer);
-				for(int i = 0; i<_playerItems.size(); i++) {
-					JMenuItem item = _playerItems.get(i);
-					if(item.getText().equals(_currentPlayer)) {
-						_players.remove(item);
-						_playerItems.remove(item);
-						break;
-					}
-				}
-				_players.setText(_playerItems.get(0).getText());
-				_board.setHeuristics(_profile.getPlayer(_players.getText()));
-			}
-			_main.saveProfiles();
-		}		
-	}
 }
