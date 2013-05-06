@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -184,6 +185,11 @@ public class Tournament implements Runnable{
 			try {
 				players.add(playerFutures.get(i).get());
 			} catch (InterruptedException | ExecutionException e) {
+				
+				if (e.getCause() instanceof SocketTimeoutException){
+					System.out.println("caught timeout stuff");
+				}
+				
 				if (prevPlayers != null){
 					players.add(prevPlayers.get(i));
 					
@@ -196,7 +202,6 @@ public class Tournament implements Runnable{
 					sendErrorMessage("Unable to retrieve heuristic information from client " + _clientHandlers.get(i)._id + 
 							". Using default balanced heuristics");
 				}
-				e.printStackTrace();
 			}
 		}
 		return players;
@@ -235,9 +240,16 @@ public class Tournament implements Runnable{
 				e.printStackTrace();
 				numFails++;
 			} catch (ExecutionException e) {
-				e.printStackTrace();
-				if (e.getCause() instanceof SocketException){
-					// TODO remove client
+				if (e.getCause() instanceof SocketTimeoutException){
+					sendErrorMessage("Connection with client " + _clientHandlers.get(i)._id + " timed out. " +
+							"Removing this client from the game");
+					_clientHandlers.remove(i);
+					players.remove(i);
+					
+					if (_clientHandlers.size() < 2){
+						sendErrorMessage("Not enough clients remaining to play a game. The game lobby will not close.");
+						shutDown();
+					}
 				} else {
 					numFails++;
 				}
@@ -248,6 +260,38 @@ public class Tournament implements Runnable{
 			sendErrorMessage("Unable to use game data from " + numFails + " of the " + _clientHandlers.size() + " clients");
 
 		return gameData;
+	}
+	
+	
+	/**
+	 * Tell the client handlers to send the end of round data back to the clients
+	 * @param aggregatedData the data to send
+	 */
+	private void sendEndOfRoundData(GameDataReport aggregatedData) {
+		for(ClientHandler c : _clientHandlers){
+			try {
+				c.setGameData(aggregatedData);
+			} catch (IOException e) {
+				c.sendErrorMessage("Unable to display game data");
+			}
+		}
+	}
+	
+	/**
+	 * Send an error message to the clients
+	 * @param errorMessage
+	 */
+	private void sendErrorMessage(String errorMessage){
+		for (ClientHandler c : _clientHandlers){
+			c.sendErrorMessage(errorMessage);
+		}
+	}
+	
+	/**
+	 * To be called immediately before the program shuts down
+	 */
+	private void shutDown(){
+		// TODO implement
 	}
 	
 	/**
@@ -290,30 +334,6 @@ public class Tournament implements Runnable{
 	private void resetRoundWinners(){
 		for(int i = -1; i < BackendConstants.MAX_NUM_PLAYERS; i++){ //-1 is a tie
 			_roundWinners.put(i, 0.);
-		}
-	}
-	
-	/**
-	 * Tell the client handlers to send the end of round data back to the clients
-	 * @param aggregatedData the data to send
-	 */
-	private void sendEndOfRoundData(GameDataReport aggregatedData) {
-		for(ClientHandler c : _clientHandlers){
-			try {
-				c.setGameData(aggregatedData);
-			} catch (ClientCommunicationException e) {
-				c.sendErrorMessage("Unable to display game data");
-			}
-		}
-	}
-	
-	/**
-	 * Send an error message to the clients
-	 * @param errorMessage
-	 */
-	private void sendErrorMessage(String errorMessage){
-		for (ClientHandler c : _clientHandlers){
-			c.sendErrorMessage(errorMessage);
 		}
 	}
 }

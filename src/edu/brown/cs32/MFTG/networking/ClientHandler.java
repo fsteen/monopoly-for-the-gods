@@ -78,7 +78,7 @@ public class ClientHandler {
 	 * @throws InvalidResponseException 
 	 * @throws IOException 
 	 */
-	public Player getPlayer() throws InvalidResponseException, IOException{
+	public Player getPlayer() throws InvalidResponseException, IOException, SocketTimeoutException{
 		int time = _isFirstRound ? _settings.beginningTimeout : _settings.duringTimeout;
 		_isFirstRound = false;
 
@@ -124,41 +124,36 @@ public class ClientHandler {
 	 * @throws IOException 
 	 */
 	public GameDataReport playGames(List<Player> players, List<Long> seeds, Settings settings) throws InvalidResponseException, IOException{
-			String playerList = _oMapper.writeValueAsString(players);
-			String seedList = _oMapper.writeValueAsString(seeds);
-			String settingsString = _oMapper.writeValueAsString(settings);
-			List<String> arguments = Arrays.asList(playerList, seedList, settingsString);
+		String playerList = _oMapper.writeValueAsString(players);
+		String seedList = _oMapper.writeValueAsString(seeds);
+		String settingsString = _oMapper.writeValueAsString(settings);
+		List<String> arguments = Arrays.asList(playerList, seedList, settingsString);
 
-			ClientRequestContainer request = new ClientRequestContainer(Method.PLAYGAMES, arguments);
-			// request that the client play the games
-			write(request);
-			
-//			_client.setSoTimeout(_settings.getNumGames() * (int) (50./10000. * 1000.)); // 50 seconds per 10000 games
-			ClientRequestContainer response = readResponse();
-			
-			if (response._method != Method.SENDGAMEDATA){
-				throw new InvalidResponseException(Method.SENDPLAYER, response._method);
-			} else if (response._arguments == null || response._arguments.size() < 1){
-				throw new InvalidResponseException("Not enough arguments");
-			}
+		ClientRequestContainer request = new ClientRequestContainer(Method.PLAYGAMES, arguments);
+		// request that the client play the games
+		write(request);
 
-			GameDataReport gameData= _oMapper.readValue(response._arguments.get(0), GameDataReport.class);
+//		_client.setSoTimeout(5000 _settings.getNumGames() * (int) (50./10000. * 1000.) + 2000); // 50 seconds per 10000 games
+		ClientRequestContainer response = readResponse();
 
-			return gameData;
+		if (response._method != Method.SENDGAMEDATA){
+			throw new InvalidResponseException(Method.SENDPLAYER, response._method);
+		} else if (response._arguments == null || response._arguments.size() < 1){
+			throw new InvalidResponseException("Not enough arguments");
+		}
+
+		GameDataReport gameData= _oMapper.readValue(response._arguments.get(0), GameDataReport.class);
+
+		return gameData;
 	}
 
-	public void setGameData(GameDataReport combinedData) throws ClientCommunicationException {
-		try {
-			String data = _oMapper.writeValueAsString(combinedData);
+	public void setGameData(GameDataReport combinedData) throws IOException {
+		String data = _oMapper.writeValueAsString(combinedData);
 
-			ClientRequestContainer request = new ClientRequestContainer(Method.DISPLAYGAMEDATA, Arrays.asList(data));
+		ClientRequestContainer request = new ClientRequestContainer(Method.DISPLAYGAMEDATA, Arrays.asList(data));
 
-			// request that the client display the data
-			write(request);
-
-		} catch (IOException e){
-			throw new ClientCommunicationException(_id);
-		}
+		// request that the client display the data
+		write(request);
 	}
 
 	public void sendErrorMessage(String errorMessage) {
