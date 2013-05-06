@@ -1,9 +1,9 @@
 package edu.brown.cs32.MFTG.gui.center;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.text.NumberFormat;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.JFrame;
@@ -53,19 +53,24 @@ public class WinnerPanelVertical extends JPanel {
 		add(panel);
 	}
 	
-	public void update (Map<Integer, Double> data) {
+	public void update (Map<Integer, Double> data, Map<Integer, String> names) {
 		_chart.setTitle("Who's Winning?");
 		Integer negativeOne = new Integer(-1);
+		int series = -1;
 		for(Integer i: data.keySet()) {
 			if(i.equals(negativeOne)) {
 				_dataset.addValue(data.get(i), "Tie", "Player");
 			}
 			else if (i.equals(_id)) {
-				_dataset.addValue(data.get(i), "ME", "Player");
+				series = _dataset.getRowCount();
+				_dataset.addValue(data.get(i), names.get(i) + " (ME!)", "Player");
 				_dataset.getColumnCount();
 			}
 			else {
-				_dataset.addValue(data.get(i), "Player " + Integer.toString(i), "Player");
+				if(names.containsKey(i))
+					_dataset.addValue(data.get(i), names.get(i), "Player");
+				else 
+					_dataset.addValue(data.get(i), "Player " + i, "Player");
 			}
 		}
 	}
@@ -101,26 +106,8 @@ public class WinnerPanelVertical extends JPanel {
 		renderer.setSeriesPaint(3, Colors.ORANGE.getColor());
 		renderer.setSeriesPaint(4, Colors.PURPLE.getColor());
 		renderer.setSeriesPaint(0, Colors.YELLOW.getColor());
-		
-		_chart.getCategoryPlot().setRenderer(renderer);
-		
 		renderer.setRenderAsPercentages(true);
-		
-	}
-	
-	public static void main (String[] args) {
-		JFrame frame = new JFrame();
-		WinnerPanelVertical panel = new WinnerPanelVertical(1);
-		frame.add(panel);
-		frame.setVisible(true);
-		frame.pack();
-		
-		/*HashMap<Integer, Integer> values = new HashMap<>();
-		values.put(new Integer(-1), new Integer(0));
-		values.put(new Integer(0), new Integer(123));
-		values.put(new Integer(1), new Integer(200));
-		values.put(new Integer(3), new Integer(124));
-		values.put(new Integer(2), new Integer(134));
-		panel.update(values);*/
+
+		_chart.getCategoryPlot().setRenderer(renderer);
 	}
 }

@@ -8,8 +8,6 @@
 - Decide whether or not to use pictures for buttons on the top
 - Add a button to turn on/off tooltips
 	
-from Judah
-	-instead of displaying player numbers display profile names, as player numbers mean nothing to them: i need this information from frances
 Completed:
 	- implement the setWinnerData() method
 	- fix up the connection between the menubar and "those buttons"
@@ -22,6 +20,7 @@ Completed:
 	-move text field on railroads to not overlap the gray part at the beginning
 	-enter listener for set heuristics button?
 	-remove who's winning label at beginning, or display empty graph (it is displaying an empty graph but i'll play around with it)
+	-instead of displaying player numbers display profile names, as player numbers mean nothing to them: i need this information from frances
 
 
     
@@ -39,6 +38,7 @@ from Judah:
 	- winner screen does not show ai players
 
 from Chizu:
+	- try calculating time owned based on whether you owned it in a game not the percentage of time in a game that you owned it
 
 Completed:
 -Get rid of player with most $ method in GameDataAccumulator

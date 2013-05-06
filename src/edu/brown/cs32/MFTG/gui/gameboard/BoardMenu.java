@@ -4,10 +4,13 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -15,6 +18,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
+import javax.swing.ToolTipManager;
 
 import edu.brown.cs32.MFTG.gui.Constants.View;
 import edu.brown.cs32.MFTG.gui.MonopolyGui;
@@ -81,15 +85,23 @@ public class BoardMenu extends JMenuBar {
 		save.addActionListener(new SaveListener());
 
 		add(profileLabel);
+
+		JCheckBox toolTips = new JCheckBox("Tool Tips On: ", true);
+		toolTips.setHorizontalTextPosition(SwingConstants.LEADING);
+		toolTips.addItemListener(new ToolTipListener());
+
 		
 		JSeparator separator = new JSeparator(JSeparator.VERTICAL);
 		Dimension size = new Dimension(separator.getPreferredSize().width+3,separator.getMaximumSize().height);
 		separator.setMaximumSize(size);
 		
+
+		
 		add(separator);
 		add(_boardView);
 		add(_players);
 		add(save);
+		add(toolTips);
 
 	}
 	
@@ -120,7 +132,20 @@ public class BoardMenu extends JMenuBar {
 		_board.setHeuristics(_profile.getPlayer(_currentPlayer));
 		
 	}
+	
+	private class ToolTipListener implements ItemListener{
 
+		@Override
+		public void itemStateChanged(ItemEvent e) {
+			if(e.getStateChange()==ItemEvent.SELECTED){
+				ToolTipManager.sharedInstance().setEnabled(true);
+			}
+			else{
+				ToolTipManager.sharedInstance().setEnabled(false);
+			}
+		}
+		
+	}
 	protected class PlayerListener implements ActionListener{
 		private String _player;
 		public PlayerListener(String player) {
