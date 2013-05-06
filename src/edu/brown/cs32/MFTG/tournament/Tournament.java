@@ -77,7 +77,7 @@ public class Tournament implements Runnable{
 	 * @param id the id to assign to the new player
 	 */
 	private Player newBalancedPlayer(int id){
-		Player p = new Player(id);
+		Player p = new Player(id,"balanced");
 		
 		p.setColorValue("purple", 1.7, 1.2, 1.5, 1.3);
 		p.setColorValue("light blue", 1.2, 1.2, 1.5, 1.3);
@@ -134,7 +134,7 @@ public class Tournament implements Runnable{
 			if(data.size() > 0){
 				//make sure nobody cheated
 				if(DataProcessor.isCorrupted(data, confirmationIndices)){
-					System.out.println("someone is cheating"); //TODO what to do in this case
+					System.out.println("someone is cheating");
 				}
 				sendEndOfRoundData(accumulateEndOfGameData(data, roundNum));
 			}
@@ -149,19 +149,15 @@ public class Tournament implements Runnable{
 		GameDataAccumulator combined = DataProcessor.combineAccumulators(accumulators);
 		int winnerID;
 
-		if(_settings.winType == WinningCondition.MOST_MONEY){
-			winnerID = combined.getGreatestAverageWealthPlayer().getLeft();
-			_roundWinners.put(winnerID, _roundWinners.get(winnerID) + 1);
-		} else {
-			winnerID = combined.getMostGamesWonPlayer().getLeft();
-			_roundWinners.put(winnerID, _roundWinners.get(winnerID) + 1);
-		}
-
+		winnerID = combined.getPlayerWithMostGamesWon(_settings.winType).getLeft();
+		_roundWinners.put(winnerID, _roundWinners.get(winnerID) + 1);
+		
 		if(_settings.winType == WinningCondition.LAST_SET_WON && roundNum == _settings.getNumRounds()-1){
 			resetRoundWinners();
-			winnerID = combined.getMostGamesWonPlayer().getLeft();
+			winnerID = combined.getPlayerWithMostGamesWon(_settings.winType).getLeft();
 			_roundWinners.put(winnerID, _roundWinners.get(winnerID) + 1);
 		}
+		
 		combined._playerWins = _roundWinners;
 
 		if(roundNum == _settings.getNumRounds()-1){

@@ -30,10 +30,10 @@ public class ClientTests {
 //	@Test
 	public void playGamesTest(){
 		List<Player> players = new ArrayList<>();
-		players.add(new Player(0));
-		players.add(new Player(1));
-		players.add(new Player(2));
-		players.add(new Player(3));
+		players.add(new Player(0,""));
+		players.add(new Player(1,""));
+		players.add(new Player(2,""));
+		players.add(new Player(3,""));
 		
 		List<Long> seeds = new ArrayList<>();
 		seeds.add((long) 12345);
@@ -61,10 +61,10 @@ public class ClientTests {
 		
 		List<Player> players = new ArrayList<>();
 
-		players.add(new Player(0));
-		players.add(new Player(1));
-		players.add(new Player(2));
-		players.add(new Player(3));
+		players.add(new Player(0,""));
+		players.add(new Player(1,""));
+		players.add(new Player(2,""));
+		players.add(new Player(3,""));
 		
 		Client p = new HumanClient(false);
 		p.playGames(players, seeds, new Settings(0, 0, false, -1, false, null, -1, -1));
@@ -86,10 +86,10 @@ public class ClientTests {
 		
 		List<Player> players = new ArrayList<>();
 
-		players.add(new Player(0));
-		players.add(new Player(1));
-		players.add(new Player(2));
-		players.add(new Player(3));
+		players.add(new Player(0,""));
+		players.add(new Player(1,""));
+		players.add(new Player(2,""));
+		players.add(new Player(3,""));
 		
 		Client p = new HumanClient(false);
 
@@ -114,10 +114,10 @@ public class ClientTests {
 		Player player = p.finishGetPlayer();
 		
 		List<Player> players = new ArrayList<>();
-		players.add(new Player(0));
+		players.add(new Player(0,""));
 		players.add(player);
-		players.add(new Player(2));
-		players.add(new Player(3));
+		players.add(new Player(2,""));
+		players.add(new Player(3,""));
 		
 		Random rand = new Random();
 		List<Long> seeds = new ArrayList<>();

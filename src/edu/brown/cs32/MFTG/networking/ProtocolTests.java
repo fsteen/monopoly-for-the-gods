@@ -74,8 +74,8 @@ public class ProtocolTests {
 //	    oMapper.setSerializationInclusion(Include.NON_NULL);
 //	    oMapper.getSerializerProvider().setNullKeySerializer(new MyNullKeySerializer());
 		
-		Player p = new Player(1);
-		Player p2 = new Player(1);
+		Player p = new Player(1,"");
+		Player p2 = new Player(1,"");
 		
 		// make sure that all necessary getters and setters exist
 		HashMap<String, Integer> propertyValues = p.getPropertyValues();

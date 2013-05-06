@@ -39,7 +39,7 @@ public class AIClient extends Client{
 
 	public AIClient() {
 		super();
-		_player = new Player(_id);
+		_player = new Player(_id,"Computer");
 		_previousPlayer=null;
 		_colorKeys = new HashMap<>(30);
 		initializeColorKeys();
@@ -85,6 +85,8 @@ public class AIClient extends Client{
 		
 	}
 
+	public void setPlayerNames(List<Player> players){} //do nothing
+	
 	public void run() {
 		try {
 			_server = new Socket(_host,_port);
@@ -147,6 +149,7 @@ public class AIClient extends Client{
 	}
 
 	public Player finishGetPlayer(){
+		System.out.println("starting to get player");
 		Player temp = new Player(_player);
 		if(_currentGameData==null) {
 			_player.setColorValue("purple", 2, 65, 1.75, 1.5);
@@ -377,6 +380,7 @@ public class AIClient extends Client{
 			}
 		}
 		_previousPlayer=temp;
+		System.out.println("finished getting player");
 		return _player;
 	}
 

@@ -46,7 +46,7 @@ public class Game implements Runnable{
 		Collections.shuffle(_players, rand);
 		_currentPlayer = _players.get(0);
 		
-		_banker = new GamePlayer(this, new Player(-1));
+		_banker = new GamePlayer(this, new Player(-1,"banker"));
 		
 		_seed=seed;
 		_currentTurn=0;

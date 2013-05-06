@@ -37,25 +37,6 @@ public class Settings {
 	}
 	
 	/**
-	 * Returns the number of games to be played per round
-	 * (players choose new heuristics every round)
-	 * @return
-	 */
-	@JsonIgnore
-	public int getNumGamesPerRound(){
-		return this.gamesPerRound;
-	}
-	
-	/**
-	 * Stores the number of rounds to be played
-	 * @return
-	 */
-	@JsonIgnore
-	public int getNumRounds(){
-		return this.numRounds;
-	}
-	
-	/**
 	 * 
 	 * @return the number of games that will be played each round
 	 */

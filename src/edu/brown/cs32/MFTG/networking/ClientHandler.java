@@ -88,7 +88,7 @@ public class ClientHandler {
 		write(request);
 
 		// set the timeout and attempt to read the response from the client
-		_client.setSoTimeout((time + 10) * 1000);
+//		_client.setSoTimeout((time + 10) * 1000);
 		ClientRequestContainer response = readResponse();
 
 		// check for bad responses

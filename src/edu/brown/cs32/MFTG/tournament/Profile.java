@@ -39,9 +39,9 @@ public class Profile {
 	 * Builds the Players that are included in every profile 
 	 */
 	private void buildPlayersMap(){
-		Player timid = new Player(1);
-		Player balanced = new Player(2);
-		Player aggressive = new Player(3);
+		Player timid = new Player(1,"timid");
+		Player balanced = new Player(2,"balanced");
+		Player aggressive = new Player(3,"aggressive");
 		setTimidValues(timid);
 		setBalancedValues(balanced);
 		setAggressiveValues(aggressive);
