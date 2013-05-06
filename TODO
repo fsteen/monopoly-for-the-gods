@@ -2,9 +2,7 @@
 - what do we want to do about players being able to see the board before evyerone has joined?
 
 ===JUDAH===
-
-from Frances:
-	-AI is getting stuck in get player method
+	-fix record precision
 
 ===Chizu===
 - Decide whether or not to use pictures for buttons on the top
@@ -18,6 +16,7 @@ from Frances:
 from Judah
 	-instead of displaying player numbers display profile names, as player numbers mean nothing to them: i need this information from frances
 	-weird bug where when I go on the aggressive player, the board view buttons on the board don't work, but those on the menu do
+		-this actually happens somewhat more generally, i'm not sure the circumstances, but sometimes it gets into modes where only railroads switch
 	-move text field on railroads to not overlap the gray part at the beginning
 	-remove who's winning label at beginning, or display empty graph (it is displaying an empty graph but i'll play around with it)
 Completed:
@@ -37,6 +36,9 @@ from Alex:
 
 from Judah:
 	- make sure that game music turns on when game starts and game music turns off when game ends (just call playNextInGameSong() when game starts and playNextOutOfGameSong() when games ends on the monopolygui
+	- when you display players at end of game, you should print profile names as player numbers mean nothing to them
+	- it seems you may not be saving records after the final set (though this may not be true), I added the saveProfiles() call (that writes to file) when the createEndGame() is called in monopolygui, this may not be appropriate, in which case fix where that's called, though it should be called at the end of a game (or even better at the end of a set)
+	- winner screen does not show ai players
 
 from Chizu:
 

@@ -139,14 +139,14 @@ public class Profile {
 	}
 
 	private void setTimidValues(Player p) {
-		p.setColorValue("purple", 1.2, 1.1, 1.1, 1.05);
-		p.setColorValue("light blue", 1.2, 1.1, 1.1, 1.05);
-		p.setColorValue("pink", 1.2, 1.1, 1.1, 1.05);
-		p.setColorValue("orange", 1.2, 1.1, 1.1, 1.05);
-		p.setColorValue("red", 1.2, 1.1, 1.1, 1.05);
-		p.setColorValue("yellow", 1.2, 1.1, 1.1, 1.05);
-		p.setColorValue("green", 1.2, 1.1, 1.1, 1.05);
-		p.setColorValue("dark blue", 1.2, 1.1, 1.1, 1.05);
+		p.setColorValue("purple", 1.2, 55, 1.1, 1.05);
+		p.setColorValue("light blue", 1.2, 55, 1.1, 1.05);
+		p.setColorValue("pink", 1.2, 110, 1.1, 1.05);
+		p.setColorValue("orange", 1.2, 110, 1.1, 1.05);
+		p.setColorValue("red", 1.2, 165, 1.1, 1.05);
+		p.setColorValue("yellow", 1.2, 165, 1.1, 1.05);
+		p.setColorValue("green", 1.2, 220, 1.1, 1.05);
+		p.setColorValue("dark blue", 1.2, 220, 1.1, 1.05);
 
 		p.setJailWait(3);
 		p.setJailRich(3);
@@ -191,14 +191,14 @@ public class Profile {
 	}
 
 	private void setAggressiveValues(Player p) {
-		p.setColorValue("purple", 2.5, 1.5, 2.25, 2);
-		p.setColorValue("light blue", 2.5, 1.5, 2.25, 2);
-		p.setColorValue("pink", 2.5, 1.5, 2.25, 2);
-		p.setColorValue("orange", 2.5, 1.5,2.25, 2);
-		p.setColorValue("red", 2.5, 1.5, 2.25, 2);
-		p.setColorValue("yellow", 2.5, 1.5, 2.25, 2);
-		p.setColorValue("green", 2.5, 1.5, 2.25, 2);
-		p.setColorValue("dark blue", 2.5, 1.5, 2.25, 2);
+		p.setColorValue("purple", 2.5, 75, 2.25, 2);
+		p.setColorValue("light blue", 2.5, 75, 2.25, 2);
+		p.setColorValue("pink", 2.5, 150, 2.25, 2);
+		p.setColorValue("orange", 2.5, 150,2.25, 2);
+		p.setColorValue("red", 2.5, 225, 2.25, 2);
+		p.setColorValue("yellow", 2.5, 225, 2.25, 2);
+		p.setColorValue("green", 2.5, 300, 2.25, 2);
+		p.setColorValue("dark blue", 2.5, 300, 2.25, 2);
 
 		p.setJailWait(1);
 		p.setJailRich(1);
@@ -243,14 +243,14 @@ public class Profile {
 	}
 
 	private void setBalancedValues(Player p) {
-		p.setColorValue("purple", 1.7, 1.2, 1.5, 1.3);
-		p.setColorValue("light blue", 1.2, 1.2, 1.5, 1.3);
-		p.setColorValue("pink", 1.7, 1.2, 1.5, 1.3);
-		p.setColorValue("orange", 1.7, 1.2, 1.5, 1.3);
-		p.setColorValue("red", 1.7, 1.2, 1.5, 1.3);
-		p.setColorValue("yellow", 1.7, 1.2, 1.5, 1.3);
-		p.setColorValue("green", 1.7, 1.2, 1.5, 1.3);
-		p.setColorValue("dark blue", 1.7, 1.2, 1.5, 1.3);
+		p.setColorValue("purple", 1.7, 60, 1.5, 1.3);
+		p.setColorValue("light blue", 60, 1.2, 1.5, 1.3);
+		p.setColorValue("pink", 1.7, 120, 1.5, 1.3);
+		p.setColorValue("orange", 1.7, 120, 1.5, 1.3);
+		p.setColorValue("red", 1.7, 180, 1.5, 1.3);
+		p.setColorValue("yellow", 1.7, 180, 1.5, 1.3);
+		p.setColorValue("green", 1.7, 240, 1.5, 1.3);
+		p.setColorValue("dark blue", 1.7, 240, 1.5, 1.3);
 
 		p.setJailWait(2);
 		p.setJailRich(2);
