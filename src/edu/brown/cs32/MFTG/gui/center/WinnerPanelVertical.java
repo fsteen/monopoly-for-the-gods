@@ -54,6 +54,7 @@ public class WinnerPanelVertical extends JPanel {
 	}
 	
 	public void update (Map<Integer, Double> data) {
+		_chart.setTitle("Who's Winning?");
 		Integer negativeOne = new Integer(-1);
 		for(Integer i: data.keySet()) {
 			if(i.equals(negativeOne)) {
@@ -70,7 +71,7 @@ public class WinnerPanelVertical extends JPanel {
 	}
 	
 	public void createChart() {
-		_chart = ChartFactory.createStackedBarChart("Who's Winning?", "", "", _dataset, PlotOrientation.VERTICAL, false, false, false);
+		_chart = ChartFactory.createStackedBarChart("", "", "", _dataset, PlotOrientation.VERTICAL, false, false, false);
 
 		_chart.setBackgroundPaint(Constants.BACKGROUND_COLOR);
 		

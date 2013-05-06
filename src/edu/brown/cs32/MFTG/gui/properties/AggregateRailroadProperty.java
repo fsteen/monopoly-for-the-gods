@@ -23,16 +23,16 @@ public class AggregateRailroadProperty extends NonstaticProperty {
 		
 		/* Move the label */
 		if(_orientation == Orientation.UP){
-			moveProfitField(0, _orientation.getHeight()/2 -10);
+			moveProfitField(0, _orientation.getHeight()/2);
 		}
 		else if ( _orientation == Orientation.DOWN) {
-			moveProfitField(0, _orientation.getHeight()/2 - 50);
+			moveProfitField(0, _orientation.getHeight()/2 - 40);
 		}
 		else if (_orientation == Orientation.RIGHT) {
-			moveProfitField(_orientation.getWidth()/16, _orientation.getHeight()/2 - 30);
+			moveProfitField(_orientation.getWidth()/16 + 10, _orientation.getHeight()/2 - 30);
 		}
 		else {
-			moveProfitField(_orientation.getWidth()/2 - _orientation.getWidth()/16, _orientation.getHeight()/2 - 30);
+			moveProfitField(_orientation.getWidth()/2 - _orientation.getWidth()/16 - 10, _orientation.getHeight()/2 - 30);
 		}
 	}
 

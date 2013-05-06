@@ -7,18 +7,9 @@
 ===Chizu===
 - Decide whether or not to use pictures for buttons on the top
 - Add a button to turn on/off tooltips
-- Talk with Frances about using property ID's vs. using profiles to say "Player 1"
-- Work on repainting while playing the games?
-
-from Frances:
-	-enter listener for set heuristics button?
 	
 from Judah
 	-instead of displaying player numbers display profile names, as player numbers mean nothing to them: i need this information from frances
-	-weird bug where when I go on the aggressive player, the board view buttons on the board don't work, but those on the menu do
-		-this actually happens somewhat more generally, i'm not sure the circumstances, but sometimes it gets into modes where only railroads switch
-	-move text field on railroads to not overlap the gray part at the beginning
-	-remove who's winning label at beginning, or display empty graph (it is displaying an empty graph but i'll play around with it)
 Completed:
 	- implement the setWinnerData() method
 	- fix up the connection between the menubar and "those buttons"
@@ -26,6 +17,13 @@ Completed:
 	- subclass the color group/ railroad panels for the settings board
 	- Get the graph to change size properly
 	- remove the three properties for purple and dark blue
+	-weird bug where when I go on the aggressive player, the board view buttons on the board don't work, but those on the menu do
+		-this actually happens somewhat more generally, i'm not sure the circumstances, but sometimes it gets into modes where only railroads switch
+	-move text field on railroads to not overlap the gray part at the beginning
+	-enter listener for set heuristics button?
+	-remove who's winning label at beginning, or display empty graph (it is displaying an empty graph but i'll play around with it)
+
+
     
 
 ===Frances===
@@ -69,7 +67,7 @@ Completed:
 - Make sure that errors are thrown and handled properly
 
 from Chizu:
-	- Ensure that timing is working correctly
+	- Ensure that timing is working correctly - I think we figured out why this wasn't working and we shouldn't worry about it
 
 from Frances:
 	-fix client timeouts ... they do not work for small #s of games (like 5) so I turned them off

@@ -522,6 +522,7 @@ public class Board extends JPanel {
 		for(Railroad r: _railroads) {
 			r.setView(view);
 		}
+		this.repaint();
 	}
 
 }
