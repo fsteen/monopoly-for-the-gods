@@ -6,19 +6,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.google.common.collect.ArrayListMultimap;
-
-import edu.brown.cs32.MFTG.monopoly.GameData;
-import edu.brown.cs32.MFTG.monopoly.PlayerWealthData;
 import edu.brown.cs32.MFTG.monopoly.PropertyData;
 import edu.brown.cs32.MFTG.tournament.BackendConstants;
+import edu.brown.cs32.MFTG.tournament.Settings.WinningCondition;
+
 
 public class GameDataAccumulator {
-
 	public List<TimeStampAccumulator> timeStamps;
 	public Map<String, PropertyDataAccumulator> entireGameData;
 	private Map<String, PropertyDataAccumulator> currentMaxValues;
-
 	public Map<String, Map<Integer,PropertyDataAccumulator>> playerEntireGameData;
 	private Map<String, Map<Integer,PropertyDataAccumulator>> playerCurrentMaxValues;
 	public Map<Integer, Double> _playerWins;
@@ -47,8 +43,8 @@ public class GameDataAccumulator {
 	}
 
 	/**
-	 * Averages this and g, appending g's winList to this's
-	 * @param g
+	 * Combines this and g, averaging mainly, but appending g's winList to this's
+	 * @param g the accumulator whose information is transfered over to this one's
 	 */
 	public void combineWith(GameDataAccumulator g){
 		if(g.timeStamps.size() == timeStamps.size()){
@@ -212,28 +208,30 @@ public class GameDataAccumulator {
 	 * 
 	 * @return a pair of the winner id and the number of wins
 	 */
-	public Pair<Integer,Double> getMostGamesWonPlayer(){
+	public Pair<Integer,Double> getPlayerWithMostGamesWon(WinningCondition winType){
 		Pair<Integer,Double> winner = new Pair<>(-2,-2.);
-		for(Entry<Integer, Double> current : _playerWins.entrySet()){
-			if(current.getValue() > winner.getRight()){
-				winner.setLeft(current.getKey());
-				winner.setRight(current.getValue());
+		if(winType == WinningCondition.MOST_MONEY){
+			for(PlayerWealthDataAccumulator p : timeStamps.get(timeStamps.size()-1).getAllPlayerWealthData()){
+				if(p.accTotalWealth > winner.getRight()){
+					winner.setLeft(p.ownerID);
+					winner.setRight(p.accTotalWealth);
+				}
+			}
+		} else {
+			for(Entry<Integer, Double> current : _playerWins.entrySet()){
+				if(current.getValue() > winner.getRight()){
+					winner.setLeft(current.getKey());
+					winner.setRight(current.getValue());
+				}
 			}
 		}
 		return winner;
 	}
 	
-	public Pair<Integer,Double> getGreatestAverageWealthPlayer(){
-		Pair<Integer,Double> winner = new Pair<>(-2,-2.);
-		for(PlayerWealthDataAccumulator p : timeStamps.get(timeStamps.size()-1).getAllPlayerWealthData()){
-			if(p.accTotalWealth > winner.getRight()){
-				winner.setLeft(p.ownerID);
-				winner.setRight(p.accTotalWealth);
-			}
-		}
-		return winner;
-	}
-	
+	/**
+	 * 
+	 * @return
+	 */
 	public Map<Integer,Double> getEndOfGameWealth(){
 		List<PlayerWealthDataAccumulator> wealth = timeStamps.get(timeStamps.size()-1).getAllPlayerWealthData();
 		Map<Integer,Double> wealthMap = new HashMap<>();

@@ -204,7 +204,7 @@ public abstract class Client implements Runnable{
 			//	System.out.println(d);
 			}
 			
-			playerString = _oMapper.writeValueAsString(p);  //TODO: the problem is this line
+			playerString = _oMapper.writeValueAsString(p);
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 			assert(false);
@@ -282,16 +282,18 @@ public abstract class Client implements Runnable{
 	 * Play seeds.size games in separate threads
 	 * @param players the player heuristics
 	 * @param seeds the game seeds
+	 * @param settings the game settings
 	 * @return the data collected from the games
 	 */
 	public GameDataReport playGames(List<Player> players, List<Long> seeds, Settings settings){
-		setPlayerNames(players);
-		
+		/* reset stuff */
 		_numGamesPlayed = 0;
 		_data = null;
 		_nextDisplaySize = BackendConstants.DATA_PACKET_SIZE;
 		_numThreadsDone.set(0);
+		setPlayerNames(players);
 		
+		/* launch the games in separate threads */
 		GameRunnerFactory gameRunnerFactory = new GameRunnerFactory(_numThreadsDone, this, BackendConstants.MAX_NUM_TURNS,
 				settings.freeParking,settings.doubleOnGo,settings.auctions,players.toArray(new Player[players.size()]));
 		
@@ -299,6 +301,7 @@ public abstract class Client implements Runnable{
 			_pool.execute(gameRunnerFactory.build(i,seeds.get(i)));
 		}
 		
+		/* wait for the games to finish */
 		synchronized (this){
 			while(_numThreadsDone.get() < seeds.size()){
 				try{
@@ -312,8 +315,8 @@ public abstract class Client implements Runnable{
 
 	/**
 	 * Find the player property data specific to this player
-	 * @param allPlayerPropertyData
-	 * @return
+	 * @param allPlayerPropertyData the data for all of the players
+	 * @return the data specific to this player
 	 */
 	protected Map<String, PropertyDataReport> getPlayerPropertyData(Map<String,List<PropertyDataReport>> allPlayerPropertyData){
 		Map<String, PropertyDataReport> playerPropertyData = new HashMap<>();
@@ -330,8 +333,8 @@ public abstract class Client implements Runnable{
 
 	/**
 	 * Find the player wealth data specific to this player
-	 * @param timeStamps
-	 * @return
+	 * @param timeStamps the wealth data over the game for all of the players
+	 * @return the data specific to this player
 	 */
 	protected List<PlayerWealthDataReport> getPlayerWealthData(List<TimeStampReport> timeStamps){
 		List<PlayerWealthDataReport> playerWealthData = new ArrayList<>();

@@ -16,7 +16,7 @@ from Frances:
 	-enter listener for set heuristics button?
 	
 from Judah
-	-instead of displaying player numbers display profile names, as player numbers mean nothing to them: i need this information from francis
+	-instead of displaying player numbers display profile names, as player numbers mean nothing to them: i need this information from frances
 	-weird bug where when I go on the aggressive player, the board view buttons on the board don't work, but those on the menu do
 	-move text field on railroads to not overlap the gray part at the beginning
 	-remove who's winning label at beginning, or display empty graph (it is displaying an empty graph but i'll play around with it)
@@ -30,7 +30,9 @@ Completed:
     
 
 ===Frances===
--Get rid of player with most $ method in GameDataAccumulator
+-double check that things handle cleanly when a game throws an exception
+-comment and make things look nice
+-fix test cases
 from Alex:
 
 from Judah:
@@ -39,6 +41,7 @@ from Judah:
 from Chizu:
 
 Completed:
+-Get rid of player with most $ method in GameDataAccumulator
 - give player names as well as numbers
 - when you display players at end of game, you should print profile names as player numbers mean nothing to them
 - only average the number of houses of games when we have a monopoly on the property.
