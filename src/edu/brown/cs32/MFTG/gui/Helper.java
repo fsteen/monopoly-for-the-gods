@@ -70,5 +70,24 @@ public class Helper {
 		ImageProducer ip = new FilteredImageSource(image.getSource(), filter);
 		return Toolkit.getDefaultToolkit().createImage(ip);
 	}
+	
+	public static Image transparentRed (BufferedImage image) {
+		ImageFilter filter = new RGBImageFilter() {
+			
+			public final int filterRGB(int x, int y, int rgb) {
+				Color color = new Color(rgb);
+				if(color.getBlue() > 200 && color.getGreen() > 200 && color.getBlue() > 200) {
+					//System.out.println(rgb);
+					return 0x00FFFFFF & rgb;
+				}
+				
+				//System.out.println("black: " + rgb);
+				return rgb;
+			}
+		};
+		ImageProducer ip = new FilteredImageSource(image.getSource(), filter);
+		return Toolkit.getDefaultToolkit().createImage(ip);
+	}
+
 
 }
