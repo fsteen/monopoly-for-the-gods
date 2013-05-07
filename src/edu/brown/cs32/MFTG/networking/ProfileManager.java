@@ -68,7 +68,7 @@ public class ProfileManager {
 		System.out.println("getting called");
 		ObjectMapper oMapper = new ObjectMapper();
 		
-		System.out.println(_profiles.get("Test 1").getPlayer("balanced").getPropertyValue("kentucky avenue"));
+		//System.out.println(_profiles.get("Test 1").getPlayer("balanced").getPropertyValue("kentucky avenue"));
 
 		try (RandomAccessFile raf = new RandomAccessFile(_filePath, "rw")){
 			try (FileLock fLock = raf.getChannel().lock()){
@@ -81,7 +81,7 @@ public class ProfileManager {
 				
 				_profiles = profiles;
 				
-				System.out.println(_profiles.get("Test 1").getPlayer("balanced").getPropertyValue("kentucky avenue"));
+				//System.out.println(_profiles.get("Test 1").getPlayer("balanced").getPropertyValue("kentucky avenue"));
 				
 				String toWrite = oMapper.writeValueAsString(_profiles);
 				raf.seek(0);
