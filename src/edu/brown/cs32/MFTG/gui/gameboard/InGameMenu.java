@@ -44,7 +44,7 @@ public class InGameMenu extends BoardMenu {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			_main.getClient().sayGoodbye();
+			_main.getClient().sayGoodbye(true);
 			_main.switchPanels("greet");
 				
 		}

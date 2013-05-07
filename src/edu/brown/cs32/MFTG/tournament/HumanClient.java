@@ -56,11 +56,11 @@ public class HumanClient extends Client{
 			_output = new BufferedWriter(new OutputStreamWriter(_server.getOutputStream()));
 		} catch (UnknownHostException e) {
 			displayMessage("Unknown host. Unable to connect to server :( WHAT THE FUCK, MAN!!!");
-			sayGoodbye();
+			sayGoodbye(false);
 			return;
 		} catch (IOException e) {
 			displayMessage("Unable to connect to server :(");
-			sayGoodbye();
+			sayGoodbye(false);
 			return;
 		}
 		try {
@@ -69,7 +69,7 @@ public class HumanClient extends Client{
 			if(_gui.getUserMusic())_gui.playNextInGameSong();
 		} catch (IOException | InvalidRequestException e1) {
 			displayMessage("Unable to retrieve a unique ID from the server :(");
-			sayGoodbye();
+			sayGoodbye(false);
 			return;
 		}
 		Callable<Void> worker = new RequestCallable(this);
@@ -124,7 +124,7 @@ public class HumanClient extends Client{
 	 * Returns the user to the welcome screen  
 	 */
 	synchronized void returnToWelcomeScreen(){
-		sayGoodbye();
+		sayGoodbye(true);
 		_gui.switchPanels("greet");
 	}
 	

@@ -77,9 +77,9 @@ public class ClientHandler {
 	 * @return the player returned by the client
 	 * @throws InvalidResponseException 
 	 * @throws IOException 
-	 * @throws ClientSideException 
+	 * @throws ClientExitException 
 	 */
-	public Player getPlayer() throws InvalidResponseException, IOException, SocketTimeoutException, ClientSideException{
+	public Player getPlayer() throws InvalidResponseException, IOException, SocketTimeoutException, ClientExitException{
 		int time = _isFirstRound ? _settings.beginningTimeout : _settings.duringTimeout;
 		_isFirstRound = false;
 
@@ -94,7 +94,10 @@ public class ClientHandler {
 
 		//check for fatal client errors
 		if (response._method == Method.GOODBYE){
-			throw new ClientSideException();
+			if (response._arguments == null || response._arguments.size() < 1)
+				throw new InvalidResponseException("Not enough arguments");
+			
+			throw new ClientExitException(response._arguments.get(0));
 		}
 		
 		// check for bad responses 
@@ -143,9 +146,9 @@ public class ClientHandler {
 	 * @return the GameData collected from playing the round of games
 	 * @throws InvalidResponseException 
 	 * @throws IOException 
-	 * @throws ClientSideException 
+	 * @throws ClientExitException 
 	 */
-	public GameDataReport playGames(List<Player> players, List<Long> seeds, Settings settings) throws InvalidResponseException, IOException, ClientSideException{
+	public GameDataReport playGames(List<Player> players, List<Long> seeds, Settings settings) throws InvalidResponseException, IOException, ClientExitException{
 		String playerList = _oMapper.writeValueAsString(players);
 		String seedList = _oMapper.writeValueAsString(seeds);
 		String settingsString = _oMapper.writeValueAsString(settings);
@@ -166,7 +169,10 @@ public class ClientHandler {
 
 		//check for fatal client errors
 		if (response._method == Method.GOODBYE){
-			throw new ClientSideException();
+			if (response._arguments == null || response._arguments.size() < 1)
+				throw new InvalidResponseException("Not enough arguments");
+			
+			throw new ClientExitException(response._arguments.get(0));
 		}
 		
 		if (response._method != Method.SENDGAMEDATA){

@@ -101,7 +101,7 @@ public class AIClient extends Client{
 			respondToSendConstants();
 		} catch (IOException | InvalidRequestException e1) {
 			System.err.println("An error has occured. AI will now exit");
-			sayGoodbye();
+			sayGoodbye(true);
 			return;
 		}
 
@@ -110,12 +110,12 @@ public class AIClient extends Client{
 				handleRequest();
 			} catch (IOException | InvalidRequestException e){
 				System.err.println("An error has occured. AI will now exit");
-				sayGoodbye();
+				sayGoodbye(false);
 				return;
 			} catch (Exception e){
 				e.printStackTrace();
 				System.err.println("An error has occured. AI will now exit");
-				sayGoodbye();
+				sayGoodbye(false);
 				return;
 			}
 		}
