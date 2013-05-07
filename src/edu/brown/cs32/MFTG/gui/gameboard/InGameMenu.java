@@ -21,7 +21,7 @@ public class InGameMenu extends BoardMenu {
 	public InGameMenu(Board board, MonopolyGui main, Profile profile) {
 		super(board, main, profile);
 		_main=main;
-		add(Box.createHorizontalGlue());
+		removeDeleteButton();
 		
 		JCheckBox music = new JCheckBox("Music: ", true);
 		music.setHorizontalTextPosition(SwingConstants.LEADING);

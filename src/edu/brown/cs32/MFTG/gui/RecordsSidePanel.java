@@ -45,7 +45,7 @@ public class RecordsSidePanel extends JPanel{
 		_numGamesRecord = new JLabel("");
 		_numGamesWon = new JLabel("Number of Games Won: ");
 		_numGamesWonRecord = new JLabel("");
-		_gameWinningPercentage = new JLabel("Percentage of Gamets Won: ");
+		_gameWinningPercentage = new JLabel("Percentage of Games Won: ");
 		_gameWinningPercentageRecord = new JLabel("");
 		
 		JPanel leftPanel = new JPanel();
@@ -94,15 +94,15 @@ public class RecordsSidePanel extends JPanel{
 		}
 		_numMatchesRecord.setText(String.valueOf(r.getNumMatches()));
 		_numMatchesWonRecord.setText(String.valueOf(r.getNumMatchesWon()));
-		_matchWinningPercentageRecord.setText(String.valueOf(r.getMatchWinningPercentage()));
+		_matchWinningPercentageRecord.setText(String.format("%.3f", r.getMatchWinningPercentage()));
 
 		_numSetsRecord.setText(String.valueOf(r.getNumSets()));
 		_numSetsWonRecord.setText(String.valueOf(r.getNumSets()));
-		_setWinningPercentageRecord.setText(String.valueOf(r.getSetWinningPercentage()));
+		_setWinningPercentageRecord.setText(String.format("%.3f", r.getSetWinningPercentage()));
 
 		_numGamesRecord.setText(String.valueOf(r.getNumGames()));
 		_numGamesWonRecord.setText(String.valueOf(r.getNumGamesWon()));
-		_gameWinningPercentageRecord.setText(String.valueOf(r.getGameWinningPercentage()));
+		_gameWinningPercentageRecord.setText(String.format("%.3f", r.getGameWinningPercentage()));
 	}
 
 }

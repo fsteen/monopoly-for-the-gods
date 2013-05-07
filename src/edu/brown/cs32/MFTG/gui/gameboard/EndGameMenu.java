@@ -21,7 +21,7 @@ public class EndGameMenu extends BoardMenu {
 	public EndGameMenu(Board board, MonopolyGui main, Profile profile) {
 		super(board, main, profile);
 		_main=main;
-		add(Box.createHorizontalGlue());
+		removeDeleteButton();
 		
 		JCheckBox music = new JCheckBox("Music: ", true);
 		music.setHorizontalTextPosition(SwingConstants.LEADING);
@@ -29,11 +29,11 @@ public class EndGameMenu extends BoardMenu {
 		
 		JButton back = new JButton("Back");
 		back.addActionListener(new BackListener());
-		back.setHorizontalAlignment(SwingConstants.RIGHT);
 		
 		Dimension dimension = new Dimension(Constants.FULL_WIDTH, Constants.MENU_HEIGHT);
 		setSize(dimension);
 		setPreferredSize(dimension);
+		
 		
 		add(music);
 		add(back);

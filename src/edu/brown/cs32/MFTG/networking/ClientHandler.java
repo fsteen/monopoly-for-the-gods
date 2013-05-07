@@ -33,12 +33,14 @@ public class ClientHandler {
 	private ObjectMapper _oMapper;
 	private Settings _settings;
 	private boolean _isFirstRound;
+	private boolean _doubleRead;
 
 	JavaType _listOfPlayers;
 
 	public ClientHandler(Socket client, int id, Settings settings) throws IOException{
 		_id = id;
 		_isFirstRound = true;
+		_doubleRead = false;
 
 		_client = client;
 		_input = new BufferedReader(new InputStreamReader(_client.getInputStream()));
@@ -88,7 +90,7 @@ public class ClientHandler {
 		write(request);
 
 		// set the timeout and attempt to read the response from the client
-//		_client.setSoTimeout((time + 10) * 1000);
+		_client.setSoTimeout(5000 /*(time + 10) * 1000*/);
 		ClientRequestContainer response = readResponse();
 
 		// check for bad responses
@@ -114,6 +116,13 @@ public class ClientHandler {
 
 		return toRet;
 	}
+	
+	/**
+	 * Sets the doubleRead boolean to true
+	 */
+	public void setDoubleRead(){
+		_doubleRead = true;
+	}
 
 	/**
 	 * Sends an encoding of the players to the client and a request to play numGame games
@@ -133,11 +142,19 @@ public class ClientHandler {
 		// request that the client play the games
 		write(request);
 
-//		_client.setSoTimeout(5000 _settings.getNumGames() * (int) (50./10000. * 1000.) + 2000); // 50 seconds per 10000 games
+		_client.setSoTimeout(50000000 /*_settings.getNumGames() * (int) (50./10000. * 1000.) + 2000*/); // 50 seconds per 10000 games
+		
+		if (_doubleRead){
+			System.out.println("It's working! It's working!!!");
+			readResponse();
+			_doubleRead = false;
+		}
+		
 		ClientRequestContainer response = readResponse();
 
 		if (response._method != Method.SENDGAMEDATA){
-			throw new InvalidResponseException(Method.SENDPLAYER, response._method);
+			System.out.println("wrong response! Got " + response._method);
+			throw new InvalidResponseException(Method.SENDGAMEDATA, response._method);
 		} else if (response._arguments == null || response._arguments.size() < 1){
 			throw new InvalidResponseException("Not enough arguments");
 		}
@@ -167,7 +184,7 @@ public class ClientHandler {
 		}
 	}
 
-	public void sendID() throws ClientCommunicationException {
+	public void sendIDAndTimeouts() throws ClientCommunicationException {
 		String stringID = String.valueOf(_id);
 		ClientRequestContainer request = new ClientRequestContainer(Method.SENDID, Arrays.asList(stringID));
 

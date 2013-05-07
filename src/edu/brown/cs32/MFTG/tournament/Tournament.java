@@ -158,7 +158,7 @@ public class Tournament implements Runnable{
 			connectionsMade++;
 			_clientHandlers.add(cHandler);
 			try {
-				cHandler.sendID();
+				cHandler.sendIDAndTimeouts();
 			} catch (ClientCommunicationException e) {
 				e.printStackTrace();
 			}
@@ -186,8 +186,11 @@ public class Tournament implements Runnable{
 				players.add(playerFutures.get(i).get());
 			} catch (InterruptedException | ExecutionException e) {
 				
-				if (e.getCause() instanceof SocketTimeoutException){
+				if (e.getCause() instanceof SocketTimeoutException || e.getCause() instanceof SocketException){
 					System.out.println("caught timeout stuff");
+					_clientHandlers.get(i).setDoubleRead();
+				} else {
+					e.getCause().printStackTrace(); // will be removed, just for debugging
 				}
 				
 				if (prevPlayers != null){
@@ -240,17 +243,24 @@ public class Tournament implements Runnable{
 				e.printStackTrace();
 				numFails++;
 			} catch (ExecutionException e) {
-				if (e.getCause() instanceof SocketTimeoutException){
+				
+				if (e.getCause() instanceof SocketTimeoutException || e.getCause() instanceof SocketException){
+					
+					System.out.println("removing player from the game");
+					
 					sendErrorMessage("Connection with client " + _clientHandlers.get(i)._id + " timed out. " +
 							"Removing this client from the game");
 					_clientHandlers.remove(i);
 					players.remove(i);
+					gameDataFutures.remove(i);
+					i--;
 					
 					if (_clientHandlers.size() < 2){
-						sendErrorMessage("Not enough clients remaining to play a game. The game lobby will not close.");
+						sendErrorMessage("Not enough clients remaining to play a game. The game lobby will now close.");
 						shutDown();
 					}
 				} else {
+					e.getCause().printStackTrace(); // will be removed in final version
 					numFails++;
 				}
 			}

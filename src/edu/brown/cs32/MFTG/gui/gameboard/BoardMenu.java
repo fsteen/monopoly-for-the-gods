@@ -1,5 +1,6 @@
 package edu.brown.cs32.MFTG.gui.gameboard;
 
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -9,8 +10,10 @@ import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -35,6 +38,7 @@ public class BoardMenu extends JMenuBar {
 	protected Profile _profile;
 	private JMenuItem _aggregateProperty;
 	private JMenu _boardView;
+	private JButton _delete;
 	public BoardMenu(Board board, MonopolyGui main, Profile profile) {
 		super();
 		_board=board;
@@ -83,6 +87,9 @@ public class BoardMenu extends JMenuBar {
 
 		JButton save = new JButton("Save");
 		save.addActionListener(new SaveListener());
+		
+		_delete = new JButton("Delete");
+		_delete.addActionListener(new DeleteListener());
 
 		add(profileLabel);
 
@@ -95,14 +102,19 @@ public class BoardMenu extends JMenuBar {
 		Dimension size = new Dimension(separator.getPreferredSize().width+3,separator.getMaximumSize().height);
 		separator.setMaximumSize(size);
 		
-
-		
 		add(separator);
 		add(_boardView);
 		add(_players);
 		add(save);
+		add(_delete);
+		add(Box.createHorizontalGlue());
 		add(toolTips);
 
+
+	}
+	
+	protected void removeDeleteButton() {
+		remove(_delete);
 	}
 	
 	protected void removeAggregateButton() {
@@ -199,6 +211,38 @@ public class BoardMenu extends JMenuBar {
 			}
 		}
 
+	}
+	
+	protected class DeleteListener implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if(_currentPlayer ==null) {
+				int remove=JOptionPane.showConfirmDialog(_main, "Are you sure you want to delete this new player and start over?");
+				if(remove!=0) {
+					return;
+				}
+				_board.setHeuristics(new Player(-1,""));		
+			}
+			else {
+				int remove=JOptionPane.showConfirmDialog(_main, "Are you sure you want to remove the player \""+_currentPlayer+"\"?\nThis action cannot be reversed.");
+				if(remove!=0) {
+					return;
+				}
+				_profile.removePlayer(_currentPlayer);
+				for(int i = 0; i<_playerItems.size(); i++) {
+					JMenuItem item = _playerItems.get(i);
+					if(item.getText().equals(_currentPlayer)) {
+						_players.remove(item);
+						_playerItems.remove(item);
+						break;
+					}
+				}
+				_players.setText(_playerItems.get(0).getText());
+				_board.setHeuristics(_profile.getPlayer(_players.getText()));
+			}
+			_main.saveProfiles();
+		}		
 	}
 
 }
