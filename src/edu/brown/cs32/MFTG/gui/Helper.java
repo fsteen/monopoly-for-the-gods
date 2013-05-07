@@ -59,11 +59,8 @@ public class Helper {
 			public final int filterRGB(int x, int y, int rgb) {
 				Color color = new Color(rgb);
 				if(color.getGreen() > 100) {
-					//System.out.println(rgb);
 					return 0x00FFFFFF & rgb;
 				}
-				
-				//System.out.println("black: " + rgb);
 				return rgb;
 			}
 		};
@@ -71,17 +68,14 @@ public class Helper {
 		return Toolkit.getDefaultToolkit().createImage(ip);
 	}
 	
-	public static Image transparentRed (BufferedImage image) {
+	public static Image transparentWhite (BufferedImage image) {
 		ImageFilter filter = new RGBImageFilter() {
 			
 			public final int filterRGB(int x, int y, int rgb) {
 				Color color = new Color(rgb);
 				if(color.getBlue() > 200 && color.getGreen() > 200 && color.getBlue() > 200) {
-					//System.out.println(rgb);
 					return 0x00FFFFFF & rgb;
 				}
-				
-				//System.out.println("black: " + rgb);
 				return rgb;
 			}
 		};

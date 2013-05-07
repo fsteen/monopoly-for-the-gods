@@ -91,7 +91,7 @@ public class CreateGamePanel extends JPanel{
 
 			
 		} catch (IOException e) {
-			System.out.println("ERROR: "+e.getMessage());
+			System.err.println("ERROR: "+e.getMessage());
 			System.exit(1);
 		}
 
@@ -156,8 +156,6 @@ public class CreateGamePanel extends JPanel{
 					fixPanels();					
 					Settings settings = _bottomPanel.getSettings();
 					List<Integer> players = _bottomPanel.getPlayers();
-					System.out.println("num players " + players.size());
-//					int numPlayers = 2; //TODO change later
 					int port = _bottomPanel.getPort();
 					
 					_main.getClient().launchTournament(players, settings,port);

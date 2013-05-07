@@ -46,8 +46,8 @@ public class MyRailroadProperty extends MyPropertyPanel {
 
 	@Override
 	public void setData(PropertyDataReport data) {
-		System.out.println("updateing my railroad");
 		updateProfit(data.accTotalRevenueWithoutHouses);
+		System.out.println("railroad time owned: " + data.timeOwned);
 		updateTimeOwned(data.timeOwned);
 	}
 
