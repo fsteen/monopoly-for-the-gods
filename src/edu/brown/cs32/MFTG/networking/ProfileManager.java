@@ -50,8 +50,50 @@ public class ProfileManager {
 		}
 	}
 	
+	/**
+	 * Writes the current map of profiles to disk
+	 * @throws IOException
+	 */
+	private void writeProfiles() throws IOException{
+		String toWrite = (new ObjectMapper()).writeValueAsString(_profiles);
+
+		try (BufferedWriter bWriter = new BufferedWriter(new FileWriter(_filePath))){
+			bWriter.write(toWrite);
+			bWriter.write("\n");
+			bWriter.flush();
+		}
+	}
+	
 	public boolean saveProfiles(){
-		return false;
+		System.out.println("getting called");
+		ObjectMapper oMapper = new ObjectMapper();
+		
+		System.out.println(_profiles.get("Test 1").getPlayer("balanced").getPropertyValue("kentucky avenue"));
+
+		try (RandomAccessFile raf = new RandomAccessFile(_filePath, "rw")){
+			try (FileLock fLock = raf.getChannel().lock()){
+				String json = raf.readLine();
+
+				Map<String, Profile> profiles = oMapper.readValue(json, new TypeReference<Map<String, Profile>>() {});
+
+				for (String key : _profiles.keySet())
+					profiles.put(key, _profiles.get(key));
+				
+				_profiles = profiles;
+				
+				System.out.println(_profiles.get("Test 1").getPlayer("balanced").getPropertyValue("kentucky avenue"));
+				
+				String toWrite = oMapper.writeValueAsString(_profiles);
+				raf.seek(0);
+				raf.writeBytes(toWrite);
+				raf.writeByte('\n');
+			}
+
+		} catch (IOException e) {
+			assert(false);
+			return false;
+		}
+		return true;
 	}
 
 	/**
@@ -78,13 +120,7 @@ public class ProfileManager {
 				profiles.put(profileName, p);
 				_profiles = profiles;
 
-				String toWrite = oMapper.writeValueAsString(_profiles);
-
-				try (BufferedWriter bWriter = new BufferedWriter(new FileWriter(_filePath))){
-					bWriter.write(toWrite);
-					bWriter.write("\n");
-					bWriter.flush();
-				}
+				writeProfiles();
 			}
 
 		} catch (IOException e) {
@@ -115,13 +151,7 @@ public class ProfileManager {
 				profiles.remove(profileName);
 				_profiles = profiles;
 
-				String toWrite = oMapper.writeValueAsString(_profiles);
-
-				try (BufferedWriter bWriter = new BufferedWriter(new FileWriter(_filePath))){
-					bWriter.write(toWrite);
-					bWriter.write("\n");
-					bWriter.flush();
-				}
+				writeProfiles();
 			}
 
 		} catch (IOException e) {
