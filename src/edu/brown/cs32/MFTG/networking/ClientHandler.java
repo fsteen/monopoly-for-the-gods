@@ -89,7 +89,7 @@ public class ClientHandler {
 		write(request);
 
 		// set the timeout and attempt to read the response from the client
-		_client.setSoTimeout(0 /*(time + 10) * 1000*/);
+		_client.setSoTimeout((time + 10) * 1000);
 		ClientRequestContainer response = readResponse();
 
 		//check for fatal client errors
@@ -206,7 +206,7 @@ public class ClientHandler {
 	 */
 	public void sendIDAndTimeouts() throws IOException {
 		String stringID = String.valueOf(_id);
-		String duringTimeout = String.valueOf(_settings.duringTimeout * 1000);
+		String duringTimeout = String.valueOf((_settings.duringTimeout + 10) * 1000);
 		String gt = String.valueOf(gameTimeout());
 		
 		List<String> args = Arrays.asList(stringID, duringTimeout, gt);
