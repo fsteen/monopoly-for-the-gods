@@ -1,0 +1,5 @@
+Testing communication errors server-side
+	- I closed clients so that the server would never recieve a response and made sure that everything still worked
+
+Test timeout errors client-side
+	- I used assert(false) statements to make the server never send a response to the client, and made sure that the client did what it was supposed to when stuff timed out

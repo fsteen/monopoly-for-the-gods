@@ -14,8 +14,6 @@ import java.util.List;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
-import edu.brown.cs32.MFTG.monopoly.Board;
-import edu.brown.cs32.MFTG.monopoly.Game;
 import edu.brown.cs32.MFTG.monopoly.GameData;
 import edu.brown.cs32.MFTG.monopoly.Player;
 import edu.brown.cs32.MFTG.monopoly.Player.Aggression;
@@ -100,7 +98,7 @@ public class AIClient extends Client{
 			return;
 		}
 		try {
-			_id = respondToSendID();
+			respondToSendConstants();
 		} catch (IOException | InvalidRequestException e1) {
 			return;
 		}
@@ -108,8 +106,15 @@ public class AIClient extends Client{
 		while(true){
 			try {
 				handleRequest();
+			} catch (IOException | InvalidRequestException e){
+				System.err.println("An error has occured. AI will now exit");
+				sayGoodbye();
+				return;
 			} catch (Exception e){
-				// TODO handle this
+				e.printStackTrace();
+				System.err.println("An error has occured. AI will now exit");
+				sayGoodbye();
+				return;
 			}
 		}
 	}
