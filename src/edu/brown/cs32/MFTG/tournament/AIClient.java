@@ -100,6 +100,8 @@ public class AIClient extends Client{
 		try {
 			respondToSendConstants();
 		} catch (IOException | InvalidRequestException e1) {
+			System.err.println("An error has occured. AI will now exit");
+			sayGoodbye();
 			return;
 		}
 
@@ -122,17 +124,18 @@ public class AIClient extends Client{
 	/**
 	 * Responds to a request sent over the server to display game data by displaying the data received
 	 * @param the request which is being responded to
-	 * @throws JsonParseException
-	 * @throws JsonMappingException
 	 * @throws IOException
+	 * @throws InvalidRequestException 
 	 */
-	protected void respondToDisplayData(ClientRequestContainer request) throws JsonParseException, JsonMappingException, IOException{
+	protected void respondToDisplayData(ClientRequestContainer request) throws IOException, InvalidRequestException{
+		if (request == null){
+			throw new InvalidRequestException("Null request");
+		}
+		
 		List<String> arguments = request._arguments;
 
-		if (arguments == null){
-			// error
-		} else if (arguments.size() < 1){
-			// error
+		if (arguments == null || arguments.size() < 1){
+			throw new InvalidRequestException("Wrong number of arguments");
 		}
 
 		GameDataReport gameDataReport = _oMapper.readValue(arguments.get(0), GameDataReport.class);
