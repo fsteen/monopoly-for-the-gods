@@ -352,7 +352,6 @@ public class AIClient extends Client{
 					else if(monopolyDif<0){
 						_player.setMonopolyValue(color, _player.getMonopolyValue(color)+monopolyDif*.9);
 					}
-					System.out.println("5b1");
 					double houseDif = _player.getHouseValueOfColor(color)-_previousPlayer.getHouseValueOfColor(color);
 					if(houseDif>0) {
 						_player.setHouseValueOfColor(color, _player.getHouseValueOfColor(color)-houseDif*.9);
@@ -360,7 +359,6 @@ public class AIClient extends Client{
 					else if(houseDif<0){
 						_player.setHouseValueOfColor(color, _player.getHouseValueOfColor(color)+houseDif*.9);
 					}
-					System.out.println("5b2");
 					double sameDif = _player.getSameColorEffect(color)-_previousPlayer.getSameColorEffect(color);
 					if(sameDif>0) {
 						_player.setSameColorEffect(color, _player.getSameColorEffect(color)-sameDif*.9);

@@ -23,7 +23,7 @@ public class InGameMenu extends BoardMenu {
 		_main=main;
 		removeDeleteButton();
 		
-		JCheckBox music = new JCheckBox("Music: ", true);
+		JCheckBox music = new JCheckBox("Music: ", _main.getUserMusic());
 		music.setHorizontalTextPosition(SwingConstants.LEADING);
 
 		music.addItemListener(new MusicListener());
