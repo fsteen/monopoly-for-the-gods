@@ -158,14 +158,14 @@ public class AIClient extends Client{
 	public Player finishGetPlayer(){
 		Player temp = new Player(_player);
 		if(_currentGameData==null) {
-			_player.setColorValue("purple", 2.5, 75, 2.25, 2);
-			_player.setColorValue("light blue", 2.5, 75, 2.25, 2);
+			_player.setColorValue("purple", 2.5, 75, 3, 3);
+			_player.setColorValue("light blue", 2.5, 150, 4, 4);
 			_player.setColorValue("pink", 2.5, 150, 2.25, 2);
 			_player.setColorValue("orange", 2.5, 150,2.25, 2);
 			_player.setColorValue("red", 2.5, 225, 2.25, 2);
 			_player.setColorValue("yellow", 2.5, 225, 2.25, 2);
 			_player.setColorValue("green", 2.5, 300, 2.25, 2);
-			_player.setColorValue("dark blue", 2.5, 300, 2.25, 2);
+			_player.setColorValue("dark blue", 2.5, 400, 4, 4);
 
 			_player.setJailWait(1);
 			_player.setJailRich(1);
@@ -179,7 +179,7 @@ public class AIClient extends Client{
 			_player.setBuildingEvenness(Balance.UNEVEN);
 			_player.setHouseSelling(Amount.FEWER);
 			
-			_player.setPropertyValue("mediterranean avenue", 70);
+			_player.setPropertyValue("mediterranean avenue", 50);
 			_player.setPropertyValue("baltic avenue", 70);
 			_player.setPropertyValue("reading railroad", 210);
 			_player.setPropertyValue("oriental avenue", 110);
@@ -206,18 +206,18 @@ public class AIClient extends Client{
 			_player.setPropertyValue("pennsylvania avenue", 330);
 			_player.setPropertyValue("short line", 210);
 			_player.setPropertyValue("park place", 360);
-			_player.setPropertyValue("boardwalk", 410);
+			_player.setPropertyValue("boardwalk", 500);
 
 		}
 		else if(_previousGameData==null) {
-			_player.setColorValue("purple", 2, 55, 1.9, 1.8);
-			_player.setColorValue("light blue", 2.7, 100, 2.5, 2.25);
+			_player.setColorValue("purple", 2, 85, 3.1, 3.1);
+			_player.setColorValue("light blue", 2.7, 160, 4.1, 4.1);
 			_player.setColorValue("pink", 2.5, 150, 2.25, 2);
 			_player.setColorValue("orange", 2.6, 150,2.35, 2.1);
 			_player.setColorValue("red", 2.5, 225, 2.25, 2);
 			_player.setColorValue("yellow", 2.5, 225, 2.25, 2);
 			_player.setColorValue("green", 2, 250, 1.9, 1.8);
-			_player.setColorValue("dark blue", 2, 250, 1.9, 1.8);
+			_player.setColorValue("dark blue", 2, 410, 4.1, 4.1);
 
 			_player.setJailRich(3);
 			_player.setJailPoor(3);
@@ -227,8 +227,8 @@ public class AIClient extends Client{
 			_player.setTradingFear(1.2);
 			_player.setLiquidity(8);
 			
-			_player.setPropertyValue("mediterranean avenue", 60);
-			_player.setPropertyValue("baltic avenue", 60);
+			_player.setPropertyValue("mediterranean avenue", 50);
+			_player.setPropertyValue("baltic avenue", 80);
 			_player.setPropertyValue("reading railroad", 220);
 			_player.setPropertyValue("oriental avenue", 130);
 			_player.setPropertyValue("vermont avenue", 130);
@@ -249,12 +249,12 @@ public class AIClient extends Client{
 			_player.setPropertyValue("ventnor avenue", 270);		
 			_player.setPropertyValue("water works",160);		
 			_player.setPropertyValue("marvin gardens", 290);	
-			_player.setPropertyValue("pacific avenue", 300);
-			_player.setPropertyValue("north carolina avenue", 300);
-			_player.setPropertyValue("pennsylvania avenue", 320);
+			_player.setPropertyValue("pacific avenue", 290);
+			_player.setPropertyValue("north carolina avenue", 290);
+			_player.setPropertyValue("pennsylvania avenue", 310);
 			_player.setPropertyValue("short line", 220);
 			_player.setPropertyValue("park place", 350);
-			_player.setPropertyValue("boardwalk", 400);
+			_player.setPropertyValue("boardwalk", 500);
 
 
 		}
