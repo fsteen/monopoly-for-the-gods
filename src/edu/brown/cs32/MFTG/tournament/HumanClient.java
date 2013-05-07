@@ -62,7 +62,7 @@ public class HumanClient extends Client{
 			return;
 		}
 		try {
-			_id = respondToSendID();
+			respondToSendConstants();
 			_gui.createBoard(_id, _gui.getCurrentProfile(), this);
 			_gui.playNextInGameSong();
 		} catch (IOException | InvalidRequestException e1) {
@@ -114,6 +114,14 @@ public class HumanClient extends Client{
 
 	/*******************************************************/
 
+	/**
+	 * Returns the user to the welcome screen  
+	 */
+	synchronized void returnToWelcomeScreen(){
+		sayGoodbye();
+		_gui.switchPanels("greet");
+	}
+	
 	/**
 	 * Set and display the combined GameData at the end of a set
 	 * @param combinedData
@@ -221,7 +229,7 @@ public class HumanClient extends Client{
 	 * Displays an error message in the gui
 	 * @param errorMessage the error message to be displayed
 	 */
-	private void displayMessage(String message){
+	synchronized void displayMessage(String message){
 		JOptionPane.showMessageDialog(_gui, message);
 	}	
 	

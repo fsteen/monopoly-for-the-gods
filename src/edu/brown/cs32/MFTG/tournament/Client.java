@@ -41,6 +41,9 @@ public abstract class Client implements Runnable{
 	protected Method _lastRequest;
 	protected int _port;
 	protected String _host;
+	
+	protected int _playGamesTO;
+	protected int _displayDataTO;
 
 	/* Module variables */
 	protected int _nextDisplaySize;
@@ -78,6 +81,20 @@ public abstract class Client implements Runnable{
 	public abstract void addGameData(GameData gameData);
 
 	/**
+	 * Sends a goodbye message to the server
+	 * @throws IOException 
+	 */
+	protected void sayGoodbye() {
+		ClientRequestContainer r = new ClientRequestContainer(Method.GOODBYE, new ArrayList<String>());
+		try {
+			write(r);
+		} catch (IOException e) {
+			// Do nothing -- if you can't write this message, just give up
+			e.printStackTrace();
+		}
+	}
+	
+	/**
 	 * Writes a request to the output stream
 	 * @param request the request to write
 	 * @throws IOException
@@ -96,7 +113,13 @@ public abstract class Client implements Runnable{
 	 */
 	protected ClientRequestContainer readRequest() throws IOException{
 		String json = _input.readLine();
-		return _oMapper.readValue(json, ClientRequestContainer.class);
+		try {
+			return _oMapper.readValue(json, ClientRequestContainer.class);
+		} catch (Exception e){
+			System.out.println("json: " + json);
+			assert(false);
+			return null;
+		}
 	}
 
 	/**
@@ -113,10 +136,11 @@ public abstract class Client implements Runnable{
 			throw new InvalidRequestException();
 
 		if (method == Method.GETPLAYER){
-			if (_lastRequest == Method.DISPLAYGAMEDATA){ 
+			if (_lastRequest == Method.DISPLAYGAMEDATA || _lastRequest == Method.SENDCONSTANTS){ 
 				respondToGetPlayer(request);
 				_lastRequest = Method.GETPLAYER;
-			} else {
+				_server.setSoTimeout(_playGamesTO); // we have to wait for everyone else to choose their profiles
+			} else {								// before we can play the games
 				throw new InvalidRequestException();
 			}
 
@@ -124,7 +148,8 @@ public abstract class Client implements Runnable{
 			if (_lastRequest == Method.GETPLAYER){
 				respondToPlayGames(request);
 				_lastRequest = Method.PLAYGAMES;
-			} else {
+				_server.setSoTimeout(_displayDataTO); // we may have to wait a while for the other clients to finish playing
+			} else {								 // before we get data
 				throw new InvalidRequestException();
 			}
 
@@ -132,6 +157,7 @@ public abstract class Client implements Runnable{
 			if (_lastRequest == Method.PLAYGAMES){
 				respondToDisplayData(request);
 				_lastRequest = Method.DISPLAYGAMEDATA;
+				_server.setSoTimeout(0); // they could wait a while after the end of the round, so no timeout
 			} else {
 				throw new InvalidRequestException();
 			}
@@ -145,24 +171,29 @@ public abstract class Client implements Runnable{
 	}
 
 
-	protected int respondToSendID() throws IOException, InvalidRequestException{
-
+	protected void respondToSendConstants() throws IOException, InvalidRequestException{
+		
+		_server.setSoTimeout(10000); // this should happen immediately
 		ClientRequestContainer request = readRequest();
 
-		if (request == null || request._method != Method.SENDID)
+		if (request == null || request._method != Method.SENDCONSTANTS){
 			throw new InvalidRequestException();
+		}
 
-
+		_lastRequest = Method.SENDCONSTANTS;
+		
 		List<String> arguments = request._arguments;
 
 		if (arguments == null){
 			// throw an error
-		} else if (arguments.size() < 1){
+		} else if (arguments.size() < 3){
 			// throw a different error
 		}
-
 		try {
-			return Integer.parseInt(arguments.get(0));
+			_id = Integer.parseInt(arguments.get(0));
+			_playGamesTO = Integer.parseInt(arguments.get(1));
+			_displayDataTO = Integer.parseInt(arguments.get(2));
+			_server.setSoTimeout(0); // turn the timeout off, since we may need to wait for others to connect
 		} catch (NumberFormatException e){
 			throw new InvalidRequestException();
 		}

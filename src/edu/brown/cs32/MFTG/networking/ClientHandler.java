@@ -8,13 +8,11 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.net.Socket;
-import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -79,8 +77,9 @@ public class ClientHandler {
 	 * @return the player returned by the client
 	 * @throws InvalidResponseException 
 	 * @throws IOException 
+	 * @throws ClientSideException 
 	 */
-	public Player getPlayer() throws InvalidResponseException, IOException, SocketTimeoutException{
+	public Player getPlayer() throws InvalidResponseException, IOException, SocketTimeoutException, ClientSideException{
 		int time = _isFirstRound ? _settings.beginningTimeout : _settings.duringTimeout;
 		_isFirstRound = false;
 
@@ -90,10 +89,15 @@ public class ClientHandler {
 		write(request);
 
 		// set the timeout and attempt to read the response from the client
-		_client.setSoTimeout(5000 /*(time + 10) * 1000*/);
+		_client.setSoTimeout(0 /*(time + 10) * 1000*/);
 		ClientRequestContainer response = readResponse();
 
-		// check for bad responses
+		//check for fatal client errors
+		if (response._method == Method.GOODBYE){
+			throw new ClientSideException();
+		}
+		
+		// check for bad responses 
 		if (response._method != Method.SENDPLAYER){
 			throw new InvalidResponseException(Method.SENDPLAYER, response._method);
 		} else if (response._arguments == null || response._arguments.size() < 1){
@@ -123,6 +127,14 @@ public class ClientHandler {
 	public void setDoubleRead(){
 		_doubleRead = true;
 	}
+	
+	/**
+	 * 
+	 * @return the timeout, in milliseconds, for requests to play games
+	 */
+	private int gameTimeout(){
+		return _settings.getNumGames() * (int) (50./10000. * 1000.) + 2000;
+	}
 
 	/**
 	 * Sends an encoding of the players to the client and a request to play numGame games
@@ -131,8 +143,9 @@ public class ClientHandler {
 	 * @return the GameData collected from playing the round of games
 	 * @throws InvalidResponseException 
 	 * @throws IOException 
+	 * @throws ClientSideException 
 	 */
-	public GameDataReport playGames(List<Player> players, List<Long> seeds, Settings settings) throws InvalidResponseException, IOException{
+	public GameDataReport playGames(List<Player> players, List<Long> seeds, Settings settings) throws InvalidResponseException, IOException, ClientSideException{
 		String playerList = _oMapper.writeValueAsString(players);
 		String seedList = _oMapper.writeValueAsString(seeds);
 		String settingsString = _oMapper.writeValueAsString(settings);
@@ -142,18 +155,21 @@ public class ClientHandler {
 		// request that the client play the games
 		write(request);
 
-		_client.setSoTimeout(50000000 /*_settings.getNumGames() * (int) (50./10000. * 1000.) + 2000*/); // 50 seconds per 10000 games
+		_client.setSoTimeout(gameTimeout()); // 50 seconds per 10000 games
 		
 		if (_doubleRead){
-			System.out.println("It's working! It's working!!!");
 			readResponse();
 			_doubleRead = false;
 		}
 		
 		ClientRequestContainer response = readResponse();
 
+		//check for fatal client errors
+		if (response._method == Method.GOODBYE){
+			throw new ClientSideException();
+		}
+		
 		if (response._method != Method.SENDGAMEDATA){
-			System.out.println("wrong response! Got " + response._method);
 			throw new InvalidResponseException(Method.SENDGAMEDATA, response._method);
 		} else if (response._arguments == null || response._arguments.size() < 1){
 			throw new InvalidResponseException("Not enough arguments");
@@ -184,16 +200,20 @@ public class ClientHandler {
 		}
 	}
 
-	public void sendIDAndTimeouts() throws ClientCommunicationException {
+	/**
+	 * Sends the client it's id and the timeouts that it will need
+	 * @throws IOException
+	 */
+	public void sendIDAndTimeouts() throws IOException {
 		String stringID = String.valueOf(_id);
-		ClientRequestContainer request = new ClientRequestContainer(Method.SENDID, Arrays.asList(stringID));
+		String duringTimeout = String.valueOf(_settings.duringTimeout * 1000);
+		String gt = String.valueOf(gameTimeout());
+		
+		List<String> args = Arrays.asList(stringID, duringTimeout, gt);
+		ClientRequestContainer request = new ClientRequestContainer(Method.SENDCONSTANTS, args);
 
 		// request that the client display the error message
-		try {
-			write(request);
-		} catch (IOException e) {
-			throw new ClientCommunicationException(_id);
-		}
+		write(request);
 	}
 
 	public Reader getInputReader(){
@@ -202,5 +222,16 @@ public class ClientHandler {
 
 	public Writer getOutputWriter(){
 		return _output;
+	}
+	
+	/**
+	 * Performs all necessary cleanup
+	 */
+	public void shutDown(){
+		try {
+			_client.close();
+		} catch (IOException e) {
+			// shrug and say, "fuck it"
+		}
 	}
 }
