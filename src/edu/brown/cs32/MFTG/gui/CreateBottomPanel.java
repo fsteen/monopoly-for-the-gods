@@ -334,7 +334,7 @@ public class CreateBottomPanel extends JPanel {
 
 
 		} catch (IOException e) {
-			System.out.println("ERROR: "+e.getMessage());
+			System.err.println("ERROR: "+e.getMessage());
 			System.exit(1);
 		}
 	}
@@ -378,7 +378,6 @@ public class CreateBottomPanel extends JPanel {
 				players.add(i);
 			}
 		}
-		System.out.println(players);
 		return players;
 	}
 	
