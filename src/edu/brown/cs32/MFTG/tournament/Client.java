@@ -293,14 +293,10 @@ public abstract class Client implements Runnable{
 	 * @param players the player heuristics from all of the clients
 	 * @param settings the game settings
 	 * @param port the server port
+	 * @throws IOException 
 	 */
-	public void launchTournament(List<Integer> players, Settings settings, int port){
-		try {
-			_pool.execute((new Tournament(players, settings, port)));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public void launchTournament(List<Integer> players, Settings settings, int port) throws IOException{
+		_pool.execute((new Tournament(players, settings, port)));
 	}
 	
 	/**

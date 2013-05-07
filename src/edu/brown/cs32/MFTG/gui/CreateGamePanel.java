@@ -158,7 +158,12 @@ public class CreateGamePanel extends JPanel{
 					List<Integer> players = _bottomPanel.getPlayers();
 					int port = _bottomPanel.getPort();
 					
-					_main.getClient().launchTournament(players, settings,port);
+					try {
+						_main.getClient().launchTournament(players, settings,port);
+					} catch (IOException e1) {
+						_error.setText("Error: Port already in use.");
+						return;
+					}
 					_main.getClient().connect(_bottomPanel.getPort(), "localhost");
 					_main.getClient().run();
 				}
