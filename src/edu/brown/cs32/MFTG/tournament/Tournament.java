@@ -116,6 +116,7 @@ public class Tournament implements Runnable{
 			Thread.sleep(3000);
 		} catch (IOException e) {
 			System.out.println("you are fucked");
+			shutDown();
 			return;
 		} catch (InterruptedException e) {} //swallow
 		
@@ -136,6 +137,11 @@ public class Tournament implements Runnable{
 
 			/* play a round of games */
 			data = playRoundOfGames(players, DataProcessor.generateSeeds(gamesPerModule, _players.size(), confirmationIndices,_rand));
+			
+			if (data == null){
+				shutDown();
+				return;
+			}
 
 			/* check for cheating */
 			if(data.size() > 0){
@@ -145,6 +151,7 @@ public class Tournament implements Runnable{
 				sendEndOfRoundData(accumulateEndOfRoundData(data, roundNum));
 			}
 		}
+		shutDown();
 	}
 
 	/**
@@ -278,7 +285,7 @@ public class Tournament implements Runnable{
 					
 					if (_clientHandlers.size() < 2){
 						sendErrorMessage("Not enough clients remaining to play a game. The game lobby will now close.");
-						shutDown();
+						return null;
 					}
 				} else {
 					e.getCause().printStackTrace(); // will be removed in final version
@@ -322,7 +329,11 @@ public class Tournament implements Runnable{
 	 * To be called immediately before the program shuts down
 	 */
 	private void shutDown(){
-		// TODO implement
+		try {
+			_socket.close();
+		} catch (IOException e) {
+			// Just walk away quietly
+		}
 	}
 	
 	/**

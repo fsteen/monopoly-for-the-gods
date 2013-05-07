@@ -7,7 +7,7 @@ public class BackendConstants {
 	public static final int DATA_PACKET_SIZE=1000; //when the client is running games, update GUI after this many games
 	public static final int NUM_DATA_POINTS=100; //combine game data into this many time stamps
 	public static final int MAX_NUM_TURNS=1000; //cut off a game after this many turns
-	public static int DEFAULT_NUM_SETS=5; //the GUI starts out showing this many sets
+	public static int DEFAULT_NUM_SETS=60; //the GUI starts out showing this many sets
 	public static int DEFAULT_GAMES_PER_SET=1000; //the GUI starts out showing this many games
 	public static int DEFAULT_TIME_BEGIN=5; //the GUI starts out showing this much time to choose heuristics the first time
 	public static int DEFAULT_TIME_BETWEEN=5; //the GUI starts out showing this much time to choose heuristics subsequent times

@@ -113,13 +113,13 @@ public abstract class Client implements Runnable{
 	 */
 	protected ClientRequestContainer readRequest() throws IOException{
 		String json = _input.readLine();
-		try {
-			return _oMapper.readValue(json, ClientRequestContainer.class);
-		} catch (Exception e){
-			System.out.println("json: " + json);
+		
+		if (json == null){
 			assert(false);
 			return null;
 		}
+		
+		return _oMapper.readValue(json, ClientRequestContainer.class);
 	}
 
 	/**
