@@ -51,25 +51,12 @@ public class ProfileManager {
 	}
 	
 	/**
-	 * Writes the current map of profiles to disk
-	 * @throws IOException
+	 * Saves the current profiles to disk
+	 * @return true if the profiles were successfully written to disk, and false otherwise
 	 */
-	private void writeProfiles() throws IOException{
-		String toWrite = (new ObjectMapper()).writeValueAsString(_profiles);
-
-		try (BufferedWriter bWriter = new BufferedWriter(new FileWriter(_filePath))){
-			bWriter.write(toWrite);
-			bWriter.write("\n");
-			bWriter.flush();
-		}
-	}
-	
 	public boolean saveProfiles(){
-		System.out.println("getting called");
 		ObjectMapper oMapper = new ObjectMapper();
 		
-		System.out.println(_profiles.get("Test 1").getPlayer("balanced").getPropertyValue("kentucky avenue"));
-
 		try (RandomAccessFile raf = new RandomAccessFile(_filePath, "rw")){
 			try (FileLock fLock = raf.getChannel().lock()){
 				String json = raf.readLine();
@@ -81,8 +68,6 @@ public class ProfileManager {
 				
 				_profiles = profiles;
 				
-				System.out.println(_profiles.get("Test 1").getPlayer("balanced").getPropertyValue("kentucky avenue"));
-				
 				String toWrite = oMapper.writeValueAsString(_profiles);
 				raf.seek(0);
 				raf.writeBytes(toWrite);
@@ -90,7 +75,7 @@ public class ProfileManager {
 			}
 
 		} catch (IOException e) {
-			assert(false);
+			e.printStackTrace();
 			return false;
 		}
 		return true;
@@ -120,10 +105,14 @@ public class ProfileManager {
 				profiles.put(profileName, p);
 				_profiles = profiles;
 
-				writeProfiles();
+				String toWrite = oMapper.writeValueAsString(_profiles);
+				raf.seek(0);
+				raf.writeBytes(toWrite);
+				raf.writeByte('\n');
 			}
 
 		} catch (IOException e) {
+			e.printStackTrace();
 			return false;
 		}
 		return true;
@@ -151,10 +140,14 @@ public class ProfileManager {
 				profiles.remove(profileName);
 				_profiles = profiles;
 
-				writeProfiles();
+				String toWrite = oMapper.writeValueAsString(_profiles);
+				raf.seek(0);
+				raf.writeBytes(toWrite);
+				raf.writeByte('\n');
 			}
 
 		} catch (IOException e) {
+			e.printStackTrace();
 			return false;
 		}
 		return true;
