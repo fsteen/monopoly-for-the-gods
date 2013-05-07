@@ -18,15 +18,16 @@ import edu.brown.cs32.MFTG.tournament.Profile;
 
 public class InGameMenu extends BoardMenu {
 	private MonopolyGui _main;
+	private JCheckBox _music;
 	public InGameMenu(Board board, MonopolyGui main, Profile profile) {
 		super(board, main, profile);
 		_main=main;
 		removeDeleteButton();
 		
-		JCheckBox music = new JCheckBox("Music: ", _main.getUserMusic());
-		music.setHorizontalTextPosition(SwingConstants.LEADING);
+		_music = new JCheckBox("Music: ", _main.getUserMusic());
+		_music.setHorizontalTextPosition(SwingConstants.LEADING);
 
-		music.addItemListener(new MusicListener());
+		_music.addItemListener(new MusicListener());
 		
 		JButton quit = new JButton("Quit Game");
 		quit.addActionListener(new QuitListener());
@@ -36,7 +37,7 @@ public class InGameMenu extends BoardMenu {
 		setSize(dimension);
 		setPreferredSize(dimension);
 		
-		add(music);
+		add(_music);
 		add(quit);
 	}
 	
@@ -56,6 +57,10 @@ public class InGameMenu extends BoardMenu {
 		@Override
 		public void itemStateChanged(ItemEvent e) {
 			if(e.getStateChange()==ItemEvent.SELECTED){
+				if(_main.getMusicOn()==false) {
+					_music.setSelected(false);
+					return;
+				}
 				_main.playNextInGameSong();
 			}
 			else{

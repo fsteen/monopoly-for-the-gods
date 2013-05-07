@@ -99,7 +99,7 @@ public class MonopolyGui extends JFrame{
 
 		this.pack();
 		this.setVisible(true);
-		_userMusic=true;
+		_userMusic=_musicOn;
 
 		if(_musicOn){
 			_outSongNames = new ArrayList<>(2);
@@ -144,7 +144,6 @@ public class MonopolyGui extends JFrame{
 	 * play song in game
 	 */
 	public void playNextInGameSong(){
-		System.out.println(_musicOn);
 		if(_musicOn){
 			_userMusic=true;
 			_currentSong.close();
@@ -159,15 +158,27 @@ public class MonopolyGui extends JFrame{
 	 * 
 	 * @return user music
 	 */
+	public boolean getMusicOn() {
+		return _musicOn;
+	}
+	
+	/**
+	 * 
+	 * @return user music
+	 */
 	public boolean getUserMusic() {
 		return _userMusic;
 	}
+
 
 	/**
 	 * 
 	 * @param userMusic
 	 */
 	public void setUserMusic(boolean userMusic) {
+		if(_musicOn==false) {
+			return;
+		}
 		_userMusic=userMusic;
 	}
 
