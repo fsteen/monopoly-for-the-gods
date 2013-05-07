@@ -208,6 +208,7 @@ public class BoardMenu extends JMenuBar {
 			}
 			else {
 				_profile.replacePlayer(newPlayer, _currentPlayer);
+				_main.saveProfiles();
 			}
 		}
 
@@ -240,6 +241,11 @@ public class BoardMenu extends JMenuBar {
 				}
 				_players.setText(_playerItems.get(0).getText());
 				_board.setHeuristics(_profile.getPlayer(_players.getText()));
+				
+				if (_playerItems.size() > 1)
+					_currentPlayer = _playerItems.get(0).getText();
+				else
+					_currentPlayer = null;
 			}
 			_main.saveProfiles();
 		}		

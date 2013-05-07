@@ -46,7 +46,7 @@ public class MonopolyGui extends JFrame{
 		//this code is run at closing
 		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
 			public void run() {
-				saveProfiles();
+		//		saveProfiles();
 			}
 		}, "Shutdown-thread"));
 

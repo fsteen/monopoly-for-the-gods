@@ -1,7 +1,6 @@
 package edu.brown.cs32.MFTG.networking;
 
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -18,19 +17,16 @@ import edu.brown.cs32.MFTG.tournament.Profile;
 public class ProfileManager {
 	private final String DEFAULT_PATH = ".profiles.mf";
 	private String _filePath;
-	private final ObjectMapper _oMapper;
 
 	Map<String, Profile> _profiles;
 
 	public ProfileManager(){
 		_filePath = DEFAULT_PATH;
-		_oMapper = new ObjectMapper();
 		buildProfileMap();
 	}
 
 	public ProfileManager(String filePath){
 		_filePath = filePath;
-		_oMapper = new ObjectMapper();
 		buildProfileMap();
 	}
 
@@ -53,32 +49,51 @@ public class ProfileManager {
 			_profiles = new HashMap<>();
 		}
 	}
-
-
+	
 	/**
-	 * Saves the current profile information to disk
-	 * @return true if the profile could be saved, and false otherwise
+	 * Writes the current map of profiles to disk
+	 * @throws IOException
 	 */
-	public boolean saveProfiles(){
-		File f = new File(_filePath);
+	private void writeProfiles() throws IOException{
+		String toWrite = (new ObjectMapper()).writeValueAsString(_profiles);
 
-		// make sure that the file is either writable or nonexistent
-		if (f.isFile() && !f.canWrite())
-			return false;
-
-		// if f exists, make sure that it's a file
-		if (f.exists() && !f.isFile())
-			return false;
-
-		// attempt to write the profiles to file
-		try (BufferedWriter bWriter = new BufferedWriter(new FileWriter(f))){
-			String json = _oMapper.writeValueAsString(_profiles);
-			bWriter.write(json);
+		try (BufferedWriter bWriter = new BufferedWriter(new FileWriter(_filePath))){
+			bWriter.write(toWrite);
+			bWriter.write("\n");
 			bWriter.flush();
-			return true;
+		}
+	}
+	
+	public boolean saveProfiles(){
+		System.out.println("getting called");
+		ObjectMapper oMapper = new ObjectMapper();
+		
+		System.out.println(_profiles.get("Test 1").getPlayer("balanced").getPropertyValue("kentucky avenue"));
+
+		try (RandomAccessFile raf = new RandomAccessFile(_filePath, "rw")){
+			try (FileLock fLock = raf.getChannel().lock()){
+				String json = raf.readLine();
+
+				Map<String, Profile> profiles = oMapper.readValue(json, new TypeReference<Map<String, Profile>>() {});
+
+				for (String key : _profiles.keySet())
+					profiles.put(key, _profiles.get(key));
+				
+				_profiles = profiles;
+				
+				System.out.println(_profiles.get("Test 1").getPlayer("balanced").getPropertyValue("kentucky avenue"));
+				
+				String toWrite = oMapper.writeValueAsString(_profiles);
+				raf.seek(0);
+				raf.writeBytes(toWrite);
+				raf.writeByte('\n');
+			}
+
 		} catch (IOException e) {
+			assert(false);
 			return false;
 		}
+		return true;
 	}
 
 	/**
@@ -91,8 +106,27 @@ public class ProfileManager {
 		if (_profiles.containsKey(profileName))
 			return false;
 
-		_profiles.put(profileName, p);
-		return saveProfiles();
+		try (RandomAccessFile raf = new RandomAccessFile(_filePath, "rw")){
+			ObjectMapper oMapper = new ObjectMapper();
+
+			try (FileLock fLock = raf.getChannel().lock()){
+				String json = raf.readLine();
+
+				Map<String, Profile> profiles = oMapper.readValue(json, new TypeReference<Map<String, Profile>>() {});
+
+				if (profiles.containsKey(profileName))
+					return false;
+
+				profiles.put(profileName, p);
+				_profiles = profiles;
+
+				writeProfiles();
+			}
+
+		} catch (IOException e) {
+			return false;
+		}
+		return true;
 	}
 
 	/**
@@ -101,8 +135,29 @@ public class ProfileManager {
 	 * @return true if it was possible to write the deletion to disk, and false otherwise
 	 */
 	public boolean deleteProfile(String profileName){
-		_profiles.remove(profileName);
-		return saveProfiles();
+		
+		// make sure they can't delete stuff added recently by other players
+		if (!_profiles.containsKey(profileName))
+			return true;
+		
+		try (RandomAccessFile raf = new RandomAccessFile(_filePath, "rw")){
+			ObjectMapper oMapper = new ObjectMapper();
+
+			try (FileLock fLock = raf.getChannel().lock()){
+				String json = raf.readLine();
+
+				Map<String, Profile> profiles = oMapper.readValue(json, new TypeReference<Map<String, Profile>>() {});
+
+				profiles.remove(profileName);
+				_profiles = profiles;
+
+				writeProfiles();
+			}
+
+		} catch (IOException e) {
+			return false;
+		}
+		return true;
 	}
 
 	/**
