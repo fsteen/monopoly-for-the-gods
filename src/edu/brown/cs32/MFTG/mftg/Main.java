@@ -10,7 +10,7 @@ public class Main {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		boolean music=true;
+		boolean music=false;
 		if(args.length>0&&args[0].equals("-music")){
 			music=true;
 		}

@@ -113,10 +113,11 @@ public class Tournament implements Runnable{
 
 		try {
 			getPlayerConnections();
+			Thread.sleep(3000);
 		} catch (IOException e) {
 			System.out.println("you are fucked");
 			return;
-		}
+		} catch (InterruptedException e) {} //swallow
 		
 		/* initialze variables */
 		int gamesPerModule = (int)Math.ceil(((double)_settings.gamesPerRound)/_numPlayers);

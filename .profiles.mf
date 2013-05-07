@@ -1,5 +1,1 @@
-<<<<<<< HEAD
-{"asdsdsda":{"_name":"asdsdsda","record":{"numMatches":0,"numMatchesWon":0,"numSets":0,"numSetsWon":0,"numGames":0,"numGamesWon":0,"matchWinningPercentage":0.0,"setWinningPercentage":0.0,"gameWinningPercentage":0.0}}}
-=======
-{"dsfds":{"_name":"dsfds","record":{"numMatches":1,"numMatchesWon":0,"numSets":9,"numSetsWon":0,"numGames":4500,"numGamesWon":1983,"matchWinningPercentage":0.0,"setWinningPercentage":0.0,"gameWinningPercentage":0.44066666666666665}},"Chizu":{"_name":"Chizu","record":{"numMatches":4,"numMatchesWon":4,"numSets":24,"numSetsWon":22,"numGames":12000,"numGamesWon":9799,"matchWinningPercentage":1.0,"setWinningPercentage":0.9166666666666666,"gameWinningPercentage":0.8165833333333333}}}
->>>>>>> branch 'master' of https://github.com/fsteen/monopoly-for-the-gods.git
+{"dsfsdfd":{"_name":"dsfsdfd","record":{"numMatches":0,"numMatchesWon":0,"numSets":0,"numSetsWon":0,"numGames":0,"numGamesWon":0,"matchWinningPercentage":0.0,"setWinningPercentage":0.0,"gameWinningPercentage":0.0}}}

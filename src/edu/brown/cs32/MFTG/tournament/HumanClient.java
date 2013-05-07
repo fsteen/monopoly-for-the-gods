@@ -199,6 +199,7 @@ public class HumanClient extends Client{
 		/* displays the end game screen */
 		_gui.playNextOutOfGameSong();
 		_gui.createEndGame(_gui.getBoard(), combinedData.getPlayerWithMostWins() == _id, names);
+		_gui.playNextOutOfGameSong();
 		
 		/* update records */
 		_gui.getCurrentProfile().getRecord().addMatch(combinedData.getPlayerWithMostWins() == _id);

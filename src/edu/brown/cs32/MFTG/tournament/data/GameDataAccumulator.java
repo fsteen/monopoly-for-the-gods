@@ -108,8 +108,9 @@ public class GameDataAccumulator {
 				temp.accNumHouses += p.accNumHouses;
 				temp.accTotalRevenueWithHouses += p.accTotalRevenueWithHouses;
 				temp.accTotalRevenueWithoutHouses += p.accTotalRevenueWithoutHouses;
-				temp.accTimeOwned += ((double)p.numDataPoints)/totalNumDataPoints;
-				temp.numDataPoints += 1;
+				//temp.accTimeOwned += ((double)p.numDataPoints)/totalNumDataPoints; //average % time owned during game
+				temp.accTimeOwned += 1; //for now, we store the total # data points here
+				temp.numDataPoints += p.numDataPoints > 0 ? 1 : 0; //increment data points if it was owned in a given game
 				p.reset();
 			}
 		}
@@ -186,7 +187,8 @@ public class GameDataAccumulator {
 		playerData.accNumHouses = Math.max(playerData.accNumHouses, data.numHouses);
 		playerData.accTotalRevenueWithHouses = Math.max(playerData.accTotalRevenueWithHouses, data.personalRevenueWithHouses);
 		playerData.accTotalRevenueWithoutHouses = Math.max(playerData.accTotalRevenueWithoutHouses, data.personalRevenueWithoutHouses);
-		playerData.numDataPoints += data.monopolized ? 1 : 0;
+		playerData.numDataPoints += 1;
+		//playerData.numDataPoints += data.monopolized ? 1 : 0; //for numHouses, we want average num houses when monopolized
 	}
 
 	/**
@@ -276,3 +278,17 @@ public class GameDataAccumulator {
 				overallPropertyData,matchIsOver);		
 	}
 }
+
+
+/*
+What is being calculated:
+
+
+
+
+
+
+
+
+
+*/

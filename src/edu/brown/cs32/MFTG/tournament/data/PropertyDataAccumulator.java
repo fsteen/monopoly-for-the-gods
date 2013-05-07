@@ -31,7 +31,7 @@ public class PropertyDataAccumulator{
 		accTotalRevenueWithHouses = accTotalRevenueWithHouses/divideBy;
 		accTotalRevenueWithoutHouses = accTotalRevenueWithoutHouses/divideBy;
 		accMortgaged = accMortgaged/divideBy;
-		accTimeOwned = accTimeOwned/divideBy;
+		accTimeOwned = divideBy/(accTimeOwned == 0 ? 1 : accTimeOwned); //we were storing total # data points in accTimeOwned
 	}
 	
 	/**
