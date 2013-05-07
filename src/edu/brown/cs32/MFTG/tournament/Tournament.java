@@ -131,6 +131,11 @@ public class Tournament implements Runnable{
 
 			/* request a Player from each client */
 			players = getNewPlayers(players);
+			
+			if (players == null){
+				shutDown();
+				return;
+			}
 
 			/* generate which seeds will be used for integrity validation */
 			confirmationIndices = DataProcessor.generateConfirmationIndices(gamesPerModule, BackendConstants.CONFIRMATION_PERCENTAGE,_rand);
@@ -216,6 +221,12 @@ public class Tournament implements Runnable{
 
 				if (e.getCause() instanceof ClientExitException){
 					shutDownClient(i, (ClientExitException) e.getCause());
+					
+					if (_clientHandlers.size() < 2){
+						sendErrorMessage("Not enough clients remaining to play a game. The game lobby will now close.");
+						return null;
+					}
+					
 					continue;
 				}
 
@@ -278,6 +289,12 @@ public class Tournament implements Runnable{
 
 				if (e.getCause() instanceof ClientExitException){
 					shutDownClient(i, (ClientExitException) e.getCause());
+					System.out.println("here");
+					if (_clientHandlers.size() < 2){
+						sendErrorMessage("Not enough clients remaining to play a game. The game lobby will now close.");
+						return null;
+					}
+					
 					continue;
 				}
 
@@ -294,6 +311,7 @@ public class Tournament implements Runnable{
 						sendErrorMessage("Not enough clients remaining to play a game. The game lobby will now close.");
 						return null;
 					}
+					
 				} else {
 					e.getCause().printStackTrace(); // will be removed in final version
 					numFails++;
