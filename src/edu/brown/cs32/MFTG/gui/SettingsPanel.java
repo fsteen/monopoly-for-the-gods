@@ -73,7 +73,7 @@ public class SettingsPanel extends JPanel{
 			topPanel.setPreferredSize(topSize);
 			topPanel.setLocation(Constants.FULL_WIDTH/32+3, START_HEIGHT+BUTTON_HEIGHT*6/5);
 
-			_music = new JCheckBox("Music: ", true);
+			_music = new JCheckBox("Music: ", _main.getMusicOn());
 			_music.setFont(new Font("musicFont",Font.PLAIN, 30));
 			_music.setHorizontalTextPosition(SwingConstants.LEADING);
 			_music.addItemListener(new MusicListener());
@@ -263,6 +263,10 @@ public class SettingsPanel extends JPanel{
 		@Override
 		public void itemStateChanged(ItemEvent e) {
 			if(e.getStateChange()==ItemEvent.SELECTED){
+				if(_main.getMusicOn()==false) {
+					_music.setSelected(false);
+					return;
+				}
 				_main.playNextOutOfGameSong();
 
 			}
