@@ -9,6 +9,7 @@ public class PropertyDataAccumulator{
 	public double accMortgaged;
 	public double accTimeOwned;
 	public int numDataPoints;
+	public int numDataPointsMonopolized;
 
 	public PropertyDataAccumulator(String propertyName, int ownerID) {
 		this.propertyName = propertyName;
@@ -23,11 +24,13 @@ public class PropertyDataAccumulator{
 		accMortgaged = 0.0;
 		accTimeOwned = 0.0;
 		numDataPoints = 0;
+		numDataPointsMonopolized = 0;
 	}
 
 	public void average(){
 		int divideBy = numDataPoints == 0 ? 1 : numDataPoints;
-		accNumHouses= accNumHouses/divideBy;
+		/* the average number of houses for the games in which it was monopolized */
+		accNumHouses = accNumHouses/(numDataPointsMonopolized == 0 ? 1 : numDataPointsMonopolized);
 		accTotalRevenueWithHouses = accTotalRevenueWithHouses/divideBy;
 		accTotalRevenueWithoutHouses = accTotalRevenueWithoutHouses/divideBy;
 		accMortgaged = accMortgaged/divideBy;

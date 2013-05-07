@@ -83,33 +83,40 @@ public class GameDataAccumulator {
 		/* initialize everything */
 		PropertyDataAccumulator temp;
 		Map<Integer,PropertyDataAccumulator> playerEntireGameTemp;
-		int totalNumDataPoints = 0;
 		for(String s : gamePropertyData.keySet()){
 			initializeSetSpecificData(s);
 		}
 		
+		List<PropertyDataAccumulator> l = new ArrayList<>(gamePropertyData.values());
+		int totalNumDataPoints = l.get(0).numDataPoints;
+		totalNumDataPoints = totalNumDataPoints == 0 ? 1 : totalNumDataPoints;
+		
+		
 		/* Add the overall property information */
 		for(PropertyDataAccumulator p : gamePropertyData.values()){
 			temp = setPropertyData.get(p.propertyName);
-			temp.accNumHouses += p.accNumHouses;
+			/* if the property was monopolized, add the value it maxed out at */
+			temp.accNumHouses += p.accTimeOwned > 0 ? p.accNumHouses : 0;
+			temp.numDataPointsMonopolized += p.accTimeOwned > 0 ? 1 : 0;
 			temp.accTotalRevenueWithHouses += p.accTotalRevenueWithHouses;
 			temp.accTotalRevenueWithoutHouses += p.accTotalRevenueWithoutHouses;
 			temp.numDataPoints += 1;
 			totalNumDataPoints = p.numDataPoints;
 			p.reset();
 		}
-		totalNumDataPoints = totalNumDataPoints == 0 ? 1 : totalNumDataPoints;
 		
 		/* Add the player specific property information */
 		for(Entry<String,Map<Integer,PropertyDataAccumulator>> e : gamePlayerPropertyData.entrySet()){
 			playerEntireGameTemp = setPlayerPropertyData.get(e.getKey());
 			for(PropertyDataAccumulator p : e.getValue().values()){
 				temp = playerEntireGameTemp.get(p.ownerID);
-				temp.accNumHouses += p.accNumHouses;
+				/* if the property was monopolized, add the value it maxed out at */
+				temp.accNumHouses += p.accTimeOwned > 0 ? p.accNumHouses : 0;
+				temp.numDataPointsMonopolized += p.accTimeOwned > 0 ? 1 : 0;
 				temp.accTotalRevenueWithHouses += p.accTotalRevenueWithHouses;
 				temp.accTotalRevenueWithoutHouses += p.accTotalRevenueWithoutHouses;
-				temp.accTimeOwned += ((double)p.numDataPoints)/totalNumDataPoints;
-				temp.numDataPoints += 1;
+				temp.accTimeOwned += ((double)p.numDataPoints)/totalNumDataPoints; /* average % time owned during game */
+				temp.numDataPoints += p.numDataPoints > 0 ? 1 : 0; /* increment data points if it was owned in a given game */
 				p.reset();
 			}
 		}
@@ -171,22 +178,24 @@ public class GameDataAccumulator {
 		
 		/* Add the overall property information */
 		PropertyDataAccumulator accData = gamePropertyData.get(data.propertyName);
-		accData.accNumHouses = Math.max(accData.accNumHouses, data.numHouses);
+		accData.accNumHouses = Math.max(accData.accNumHouses, data.numHouses);			
+		accData.accTimeOwned += data.monopolized ? 1 : 0; /* num turns for which it was monopolized */ 		
 		accData.accTotalRevenueWithHouses = Math.max(accData.accTotalRevenueWithHouses, data.totalRevenueWithHouses);
 		accData.accTotalRevenueWithoutHouses = Math.max(accData.accTotalRevenueWithoutHouses, data.totalRevenueWithoutHouses);
 		accData.numDataPoints += 1;
 		
 		/* Add the player specific property information */
-		if(data.ownerID == -1){ //the property is not owned
+		if(data.ownerID == -1){ /* the property is not owned */
 			return;
 		}
 		
 		Map<Integer,PropertyDataAccumulator> allPlayers = gamePlayerPropertyData.get(data.propertyName);
 		PropertyDataAccumulator playerData = allPlayers.get(data.ownerID);
 		playerData.accNumHouses = Math.max(playerData.accNumHouses, data.numHouses);
+		playerData.accTimeOwned += data.monopolized ? 1 : 0; /* num turns for which it was monopolized */ 
 		playerData.accTotalRevenueWithHouses = Math.max(playerData.accTotalRevenueWithHouses, data.personalRevenueWithHouses);
 		playerData.accTotalRevenueWithoutHouses = Math.max(playerData.accTotalRevenueWithoutHouses, data.personalRevenueWithoutHouses);
-		playerData.numDataPoints += data.monopolized ? 1 : 0;
+		playerData.numDataPoints += 1;
 	}
 
 	/**
@@ -276,3 +285,17 @@ public class GameDataAccumulator {
 				overallPropertyData,matchIsOver);		
 	}
 }
+
+
+/*
+What is being calculated:
+
+
+
+
+
+
+
+
+
+*/

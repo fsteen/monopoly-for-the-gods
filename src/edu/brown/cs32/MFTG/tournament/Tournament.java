@@ -20,6 +20,7 @@ import edu.brown.cs32.MFTG.monopoly.Player;
 import edu.brown.cs32.MFTG.networking.ClientCommunicationException;
 import edu.brown.cs32.MFTG.networking.ClientHandler;
 import edu.brown.cs32.MFTG.networking.ClientLostException;
+import edu.brown.cs32.MFTG.networking.ClientSideException;
 import edu.brown.cs32.MFTG.networking.InvalidResponseException;
 import edu.brown.cs32.MFTG.networking.PlayGamesCallable;
 import edu.brown.cs32.MFTG.networking.getPlayerCallable;
@@ -112,10 +113,12 @@ public class Tournament implements Runnable{
 
 		try {
 			getPlayerConnections();
+			Thread.sleep(3000);
 		} catch (IOException e) {
 			System.out.println("you are fucked");
+			shutDown();
 			return;
-		}
+		} catch (InterruptedException e) {} //swallow
 		
 		/* initialze variables */
 		int gamesPerModule = (int)Math.ceil(((double)_settings.gamesPerRound)/_numPlayers);
@@ -134,6 +137,11 @@ public class Tournament implements Runnable{
 
 			/* play a round of games */
 			data = playRoundOfGames(players, DataProcessor.generateSeeds(gamesPerModule, _players.size(), confirmationIndices,_rand));
+			
+			if (data == null){
+				shutDown();
+				return;
+			}
 
 			/* check for cheating */
 			if(data.size() > 0){
@@ -143,6 +151,7 @@ public class Tournament implements Runnable{
 				sendEndOfRoundData(accumulateEndOfRoundData(data, roundNum));
 			}
 		}
+		shutDown();
 	}
 
 	/**
@@ -154,15 +163,27 @@ public class Tournament implements Runnable{
 
 		while(connectionsMade < _players.size()){
 			Socket clientConnection = _socket.accept();
-			ClientHandler cHandler = new ClientHandler(clientConnection, connectionsMade,_settings);
+			ClientHandler cHandler = new ClientHandler(clientConnection, connectionsMade, _settings);
 			connectionsMade++;
 			_clientHandlers.add(cHandler);
 			try {
 				cHandler.sendIDAndTimeouts();
-			} catch (ClientCommunicationException e) {
+			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	/**
+	 * Shuts down a single client, and notifies all the other clients
+	 * @param i identifies the client to shut down by its place in the clientHandler list
+	 */
+	private void shutDownClient(int i){
+		String message = "An error has occured with client " + _clientHandlers.get(i)._id 
+						  + ". Removing this client from the game";
+		_clientHandlers.get(i).shutDown();
+		_clientHandlers.remove(i);
+		sendErrorMessage(message);
 	}
 
 	/**
@@ -186,8 +207,12 @@ public class Tournament implements Runnable{
 				players.add(playerFutures.get(i).get());
 			} catch (InterruptedException | ExecutionException e) {
 				
+				if (e.getCause() instanceof ClientSideException){
+					shutDownClient(i);
+					continue;
+				}
+				
 				if (e.getCause() instanceof SocketTimeoutException || e.getCause() instanceof SocketException){
-					System.out.println("caught timeout stuff");
 					_clientHandlers.get(i).setDoubleRead();
 				} else {
 					e.getCause().printStackTrace(); // will be removed, just for debugging
@@ -244,9 +269,12 @@ public class Tournament implements Runnable{
 				numFails++;
 			} catch (ExecutionException e) {
 				
+				if (e.getCause() instanceof ClientSideException){
+					shutDownClient(i);
+					continue;
+				}
+				
 				if (e.getCause() instanceof SocketTimeoutException || e.getCause() instanceof SocketException){
-					
-					System.out.println("removing player from the game");
 					
 					sendErrorMessage("Connection with client " + _clientHandlers.get(i)._id + " timed out. " +
 							"Removing this client from the game");
@@ -257,7 +285,7 @@ public class Tournament implements Runnable{
 					
 					if (_clientHandlers.size() < 2){
 						sendErrorMessage("Not enough clients remaining to play a game. The game lobby will now close.");
-						shutDown();
+						return null;
 					}
 				} else {
 					e.getCause().printStackTrace(); // will be removed in final version
@@ -301,7 +329,11 @@ public class Tournament implements Runnable{
 	 * To be called immediately before the program shuts down
 	 */
 	private void shutDown(){
-		// TODO implement
+		try {
+			_socket.close();
+		} catch (IOException e) {
+			// Just walk away quietly
+		}
 	}
 	
 	/**

@@ -103,11 +103,11 @@ public class MonopolyGui extends JFrame{
 
 		if(_musicOn){
 			_outSongNames = new ArrayList<>(2);
-			_outSongNames.add("music/NoChurchInTheWild.mp3");
-			_outSongNames.add("music/SwaggerLikeUs.mp3");
+			_outSongNames.add("m.mp3");//("music/NoChurchInTheWild.mp3");
+//			_outSongNames.add("music/SwaggerLikeUs.mp3");
 
 			_inSongNames = new ArrayList<>(2);
-			_inSongNames.add("music/Autobots.mp3");		
+			_inSongNames.add("m.mp3");//("music/Autobots.mp3");		
 			_currentOutSongNumber=(int) Math.floor(Math.random()*_outSongNames.size());
 			_currentInSongNumber=(int) Math.floor(Math.random()*_inSongNames.size());
 			_currentSong=new Music(_outSongNames.get(_currentOutSongNumber), this, false);

@@ -14,8 +14,6 @@ import java.util.List;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
-import edu.brown.cs32.MFTG.monopoly.Board;
-import edu.brown.cs32.MFTG.monopoly.Game;
 import edu.brown.cs32.MFTG.monopoly.GameData;
 import edu.brown.cs32.MFTG.monopoly.Player;
 import edu.brown.cs32.MFTG.monopoly.Player.Aggression;
@@ -100,16 +98,25 @@ public class AIClient extends Client{
 			return;
 		}
 		try {
-			_id = respondToSendID();
+			respondToSendConstants();
 		} catch (IOException | InvalidRequestException e1) {
+			System.err.println("An error has occured. AI will now exit");
+			sayGoodbye();
 			return;
 		}
 
 		while(true){
 			try {
 				handleRequest();
+			} catch (IOException | InvalidRequestException e){
+				System.err.println("An error has occured. AI will now exit");
+				sayGoodbye();
+				return;
 			} catch (Exception e){
-				// TODO handle this
+				e.printStackTrace();
+				System.err.println("An error has occured. AI will now exit");
+				sayGoodbye();
+				return;
 			}
 		}
 	}
@@ -117,17 +124,18 @@ public class AIClient extends Client{
 	/**
 	 * Responds to a request sent over the server to display game data by displaying the data received
 	 * @param the request which is being responded to
-	 * @throws JsonParseException
-	 * @throws JsonMappingException
 	 * @throws IOException
+	 * @throws InvalidRequestException 
 	 */
-	protected void respondToDisplayData(ClientRequestContainer request) throws JsonParseException, JsonMappingException, IOException{
+	protected void respondToDisplayData(ClientRequestContainer request) throws IOException, InvalidRequestException{
+		if (request == null){
+			throw new InvalidRequestException("Null request");
+		}
+		
 		List<String> arguments = request._arguments;
 
-		if (arguments == null){
-			// error
-		} else if (arguments.size() < 1){
-			// error
+		if (arguments == null || arguments.size() < 1){
+			throw new InvalidRequestException("Wrong number of arguments");
 		}
 
 		GameDataReport gameDataReport = _oMapper.readValue(arguments.get(0), GameDataReport.class);
@@ -153,14 +161,14 @@ public class AIClient extends Client{
 	public Player finishGetPlayer(){
 		Player temp = new Player(_player);
 		if(_currentGameData==null) {
-			_player.setColorValue("purple", 2.5, 75, 2.25, 2);
-			_player.setColorValue("light blue", 2.5, 75, 2.25, 2);
+			_player.setColorValue("purple", 2.5, 75, 3, 3);
+			_player.setColorValue("light blue", 2.5, 150, 4, 4);
 			_player.setColorValue("pink", 2.5, 150, 2.25, 2);
 			_player.setColorValue("orange", 2.5, 150,2.25, 2);
 			_player.setColorValue("red", 2.5, 225, 2.25, 2);
 			_player.setColorValue("yellow", 2.5, 225, 2.25, 2);
 			_player.setColorValue("green", 2.5, 300, 2.25, 2);
-			_player.setColorValue("dark blue", 2.5, 300, 2.25, 2);
+			_player.setColorValue("dark blue", 2.5, 400, 4, 4);
 
 			_player.setJailWait(1);
 			_player.setJailRich(1);
@@ -174,7 +182,7 @@ public class AIClient extends Client{
 			_player.setBuildingEvenness(Balance.UNEVEN);
 			_player.setHouseSelling(Amount.FEWER);
 			
-			_player.setPropertyValue("mediterranean avenue", 70);
+			_player.setPropertyValue("mediterranean avenue", 50);
 			_player.setPropertyValue("baltic avenue", 70);
 			_player.setPropertyValue("reading railroad", 210);
 			_player.setPropertyValue("oriental avenue", 110);
@@ -201,18 +209,18 @@ public class AIClient extends Client{
 			_player.setPropertyValue("pennsylvania avenue", 330);
 			_player.setPropertyValue("short line", 210);
 			_player.setPropertyValue("park place", 360);
-			_player.setPropertyValue("boardwalk", 410);
+			_player.setPropertyValue("boardwalk", 500);
 
 		}
 		else if(_previousGameData==null) {
-			_player.setColorValue("purple", 2, 55, 1.9, 1.8);
-			_player.setColorValue("light blue", 2.7, 100, 2.5, 2.25);
+			_player.setColorValue("purple", 2, 85, 3.1, 3.1);
+			_player.setColorValue("light blue", 2.7, 160, 4.1, 4.1);
 			_player.setColorValue("pink", 2.5, 150, 2.25, 2);
 			_player.setColorValue("orange", 2.6, 150,2.35, 2.1);
 			_player.setColorValue("red", 2.5, 225, 2.25, 2);
 			_player.setColorValue("yellow", 2.5, 225, 2.25, 2);
 			_player.setColorValue("green", 2, 250, 1.9, 1.8);
-			_player.setColorValue("dark blue", 2, 250, 1.9, 1.8);
+			_player.setColorValue("dark blue", 2, 410, 4.1, 4.1);
 
 			_player.setJailRich(3);
 			_player.setJailPoor(3);
@@ -222,8 +230,8 @@ public class AIClient extends Client{
 			_player.setTradingFear(1.2);
 			_player.setLiquidity(8);
 			
-			_player.setPropertyValue("mediterranean avenue", 60);
-			_player.setPropertyValue("baltic avenue", 60);
+			_player.setPropertyValue("mediterranean avenue", 50);
+			_player.setPropertyValue("baltic avenue", 80);
 			_player.setPropertyValue("reading railroad", 220);
 			_player.setPropertyValue("oriental avenue", 130);
 			_player.setPropertyValue("vermont avenue", 130);
@@ -244,12 +252,12 @@ public class AIClient extends Client{
 			_player.setPropertyValue("ventnor avenue", 270);		
 			_player.setPropertyValue("water works",160);		
 			_player.setPropertyValue("marvin gardens", 290);	
-			_player.setPropertyValue("pacific avenue", 300);
-			_player.setPropertyValue("north carolina avenue", 300);
-			_player.setPropertyValue("pennsylvania avenue", 320);
+			_player.setPropertyValue("pacific avenue", 290);
+			_player.setPropertyValue("north carolina avenue", 290);
+			_player.setPropertyValue("pennsylvania avenue", 310);
 			_player.setPropertyValue("short line", 220);
 			_player.setPropertyValue("park place", 350);
-			_player.setPropertyValue("boardwalk", 400);
+			_player.setPropertyValue("boardwalk", 500);
 
 
 		}

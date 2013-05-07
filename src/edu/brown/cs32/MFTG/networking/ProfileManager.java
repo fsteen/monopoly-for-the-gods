@@ -4,6 +4,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.nio.channels.FileLock;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -36,19 +38,16 @@ public class ProfileManager {
 	 * Builds the profile map from the given input file
 	 */
 	private void buildProfileMap(){
-		File f = new File(_filePath);
+		ObjectMapper oMapper = new ObjectMapper();
 
-		if (!(f.isFile() && f.canRead())){
-			_profiles = new HashMap<>();
-			return;
-		}
+		try (RandomAccessFile raf = new RandomAccessFile(_filePath, "rw")){
+			try (FileLock fLock = raf.getChannel().lock()){
+				String json = raf.readLine();
 
-		try {
-			ObjectMapper oMapper = new ObjectMapper();
+				Map<String, Profile> profiles = oMapper.readValue(json, new TypeReference<Map<String, Profile>>() {});
 
-			Map<String, Profile> profiles = oMapper.readValue(f, new TypeReference<Map<String, Profile>>() {});
-
-			_profiles = profiles;
+				_profiles = profiles;
+			}
 
 		} catch (IOException e) {
 			_profiles = new HashMap<>();
@@ -66,11 +65,11 @@ public class ProfileManager {
 		// make sure that the file is either writable or nonexistent
 		if (f.isFile() && !f.canWrite())
 			return false;
-		
+
 		// if f exists, make sure that it's a file
 		if (f.exists() && !f.isFile())
 			return false;
-		
+
 		// attempt to write the profiles to file
 		try (BufferedWriter bWriter = new BufferedWriter(new FileWriter(f))){
 			String json = _oMapper.writeValueAsString(_profiles);
