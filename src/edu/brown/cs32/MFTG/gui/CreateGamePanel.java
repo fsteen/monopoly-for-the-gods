@@ -2,13 +2,11 @@ package edu.brown.cs32.MFTG.gui;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
-import java.awt.TextField;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -16,16 +14,13 @@ import java.io.IOException;
 import java.util.List;
 
 import javax.imageio.ImageIO;
-import javax.swing.ButtonGroup;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.event.MouseInputAdapter;
 
 import edu.brown.cs32.MFTG.tournament.Settings;
-import edu.brown.cs32.MFTG.tournament.Tournament;
 
-
+@SuppressWarnings("serial")
 public class CreateGamePanel extends JPanel{
 	private ImagePanel _createLite, _backLite, _backDark, _goLite, _goDark;
 	private BufferedImage _background;

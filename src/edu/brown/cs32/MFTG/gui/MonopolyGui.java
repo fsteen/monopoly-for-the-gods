@@ -343,8 +343,9 @@ public class MonopolyGui extends JFrame{
 		switchPanels("end");
 	}
 
-
 	public Client getClient(){
 		return _client;
 	}
+	
+	
 }

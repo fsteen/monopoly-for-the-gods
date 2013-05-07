@@ -84,7 +84,7 @@ public abstract class Client implements Runnable{
 	 * Sends a goodbye message to the server
 	 * @throws IOException 
 	 */
-	protected void sayGoodbye() {
+	public void sayGoodbye() {
 		ClientRequestContainer r = new ClientRequestContainer(Method.GOODBYE, new ArrayList<String>());
 		try {
 			write(r);

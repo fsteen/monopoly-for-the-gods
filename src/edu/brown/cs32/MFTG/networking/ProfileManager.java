@@ -40,6 +40,15 @@ public class ProfileManager {
 			try (FileLock fLock = raf.getChannel().lock()){
 				String json = raf.readLine();
 
+				if (json == null){
+					_profiles = new HashMap<>();
+					String toWrite = oMapper.writeValueAsString(_profiles);
+					raf.seek(0);
+					raf.writeBytes(toWrite);
+					raf.writeByte('\n');
+					return;
+				}
+				
 				Map<String, Profile> profiles = oMapper.readValue(json, new TypeReference<Map<String, Profile>>() {});
 
 				_profiles = profiles;
