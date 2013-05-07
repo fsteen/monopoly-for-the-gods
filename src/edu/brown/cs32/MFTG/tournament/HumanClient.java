@@ -66,7 +66,7 @@ public class HumanClient extends Client{
 		try {
 			respondToSendConstants();
 			_gui.createBoard(_id, _gui.getCurrentProfile(), this);
-			_gui.playNextInGameSong();
+			if(_gui.getUserMusic())_gui.playNextInGameSong();
 		} catch (IOException | InvalidRequestException e1) {
 			displayMessage("Unable to retrieve a unique ID from the server :(");
 			sayGoodbye();
@@ -203,9 +203,8 @@ public class HumanClient extends Client{
 		}
 		
 		/* displays the end game screen */
-		_gui.playNextOutOfGameSong();
 		_gui.createEndGame(_gui.getBoard(), combinedData.getPlayerWithMostWins() == _id, names);
-		_gui.playNextOutOfGameSong();
+		if(_gui.getUserMusic())_gui.playNextOutOfGameSong();
 		
 		/* update records */
 		_gui.getCurrentProfile().getRecord().addMatch(combinedData.getPlayerWithMostWins() == _id);

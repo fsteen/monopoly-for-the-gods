@@ -24,9 +24,9 @@ public class Music {
 	}
 
 	public void close() { 
+		_stopped=true;
 		if (_player != null) {
 			_player.close(); 
-			_stopped=true;
 		}
 		
 	}
