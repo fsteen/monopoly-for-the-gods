@@ -1,1 +1,1 @@
-{"dsfsdfd":{"_name":"dsfsdfd","record":{"numMatches":0,"numMatchesWon":0,"numSets":0,"numSetsWon":0,"numGames":0,"numGamesWon":0,"matchWinningPercentage":0.0,"setWinningPercentage":0.0,"gameWinningPercentage":0.0}}}
+{"dsfsdfd":{"_name":"dsfsdfd","record":{"numMatches":0,"numMatchesWon":0,"numSets":6,"numSetsWon":2,"numGames":3000,"numGamesWon":1509,"matchWinningPercentage":0.0,"setWinningPercentage":0.3333333333333333,"gameWinningPercentage":0.503}}}
