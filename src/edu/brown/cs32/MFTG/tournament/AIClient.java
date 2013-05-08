@@ -105,7 +105,7 @@ public class AIClient extends Client{
 			return;
 		}
 
-		while(true){
+		while(_running){
 			try {
 				handleRequest();
 			} catch (IOException | InvalidRequestException e){
@@ -141,6 +141,9 @@ public class AIClient extends Client{
 		GameDataReport gameDataReport = _oMapper.readValue(arguments.get(0), GameDataReport.class);
 		_previousGameData=_currentGameData;
 		_currentGameData = gameDataReport;
+		
+		if (gameDataReport._matchIsOver)
+			_running = false;
 	}
 
 	public synchronized void addGameData(GameData gameData){

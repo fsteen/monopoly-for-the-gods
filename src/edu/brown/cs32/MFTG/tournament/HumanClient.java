@@ -143,6 +143,7 @@ public class HumanClient extends Client{
 		/* take care of end of game business */
 		if(combinedData._matchIsOver){
 			finishMatch(combinedData);
+			_running = false;
 		}
 		
 		/* update the board */
