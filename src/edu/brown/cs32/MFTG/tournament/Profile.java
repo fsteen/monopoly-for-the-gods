@@ -146,7 +146,7 @@ public class Profile {
 		_record = record;
 	}
 
-	private void setTimidValues(Player p) {
+	public static void setTimidValues(Player p) {
 		p.setColorValue("purple", 1.2, 55, 1.1, 1.05);
 		p.setColorValue("light blue", 1.2, 55, 1.1, 1.05);
 		p.setColorValue("pink", 1.2, 110, 1.1, 1.05);
@@ -198,7 +198,7 @@ public class Profile {
 		p.setPropertyValue("boardwalk", 390);
 	}
 
-	private void setAggressiveValues(Player p) {
+	public static void setAggressiveValues(Player p) {
 		p.setColorValue("purple", 2.5, 75, 2.25, 2);
 		p.setColorValue("light blue", 2.5, 75, 2.25, 2);
 		p.setColorValue("pink", 2.5, 150, 2.25, 2);
@@ -250,7 +250,7 @@ public class Profile {
 		p.setPropertyValue("boardwalk", 410);
 	}
 
-	private void setBalancedValues(Player p) {
+	public static void setBalancedValues(Player p) {
 		p.setColorValue("purple", 1.7, 60, 1.5, 1.3);
 		p.setColorValue("light blue", 60, 1.2, 1.5, 1.3);
 		p.setColorValue("pink", 1.7, 120, 1.5, 1.3);
