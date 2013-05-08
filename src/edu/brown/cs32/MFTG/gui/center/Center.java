@@ -101,7 +101,15 @@ public class Center extends JPanel {
 	public void setView(View view) {
 		_viewPanel.setView(view);
 	}
-	
 
+	public void disableGraph() {
+		_profitGraph.disableGraph();
+	}
+
+	public void enableGraph() {
+		_profitGraph.enableGraph();
+	}
+	
+	
 	
 }

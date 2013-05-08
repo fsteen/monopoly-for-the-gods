@@ -34,10 +34,11 @@ public class DynamicChartPanel extends ChartPanel {
 	private XYLineAndShapeRenderer _renderer;
 	
 	private ButtonGroup _buttons;
-	private JToggleButton _buyCash;
-	private JToggleButton _buildCash;
-	private JToggleButton _unmortgageCash;
+	private JButton _buyCash;
+	private JButton _buildCash;
+	private JButton _unmortgageCash;
 	private ProfitGraph _graph;
+	private boolean _changeEnabled = true;
 	
 	public DynamicChartPanel(JFreeChart chart, XYLineAndShapeRenderer renderer, ProfitGraph graph) {
 		super(chart);
@@ -59,12 +60,34 @@ public class DynamicChartPanel extends ChartPanel {
 		initializeButtons();
 	}
 	
+	public void disableGraph() {
+		_changeEnabled = false;
+		_buyCash.setBackground(Color.LIGHT_GRAY);
+		_buildCash.setBackground(Color.LIGHT_GRAY);
+		_unmortgageCash.setBackground(Color.LIGHT_GRAY);
+		
+		_buyCash.setFocusable(false);
+		_buildCash.setFocusable(false);
+		_unmortgageCash.setFocusable(false);
+	}
+	
+	public void enableGraph() {
+		_changeEnabled = true;
+		_buyCash.setBackground(Color.BLUE);
+		_buildCash.setBackground(Color.GREEN);
+		_unmortgageCash.setBackground(Color.RED);
+		
+		_buyCash.setFocusable(true);
+		_buildCash.setFocusable(true);
+		_unmortgageCash.setFocusable(true);
+	}
+	
 	public void initializeButtons() {
 		_buttons = new ButtonGroup();
 		
-		_buyCash = new JToggleButton("Buy");
-		_buildCash = new JToggleButton("Build");
-		_unmortgageCash = new JToggleButton("Unmortgage");
+		_buyCash = new JButton("Buy");
+		_buildCash = new JButton("Build");
+		_unmortgageCash = new JButton("Unmortgage");
 		
 		_buyCash.setToolTipText("<html>Set the minimum amount of cash needed in order to buy properties<br/>click this then drag the line in the graph<html/");
 		_buildCash.setToolTipText("<html>Set the minimum amount of cash needed in order to build houses<br/>click this then drag the line in the graph<html/");
@@ -142,12 +165,24 @@ public class DynamicChartPanel extends ChartPanel {
 		if(_moving == -1) {
 			super.mouseDragged(e);
 		}
-		else {
+		else if (_changeEnabled){
 			double newHeight = e.getY();
 			if(Math.abs(newHeight - _currHeight) < 10) {
 				update(newHeight - _currHeight);
 			}
 			_currHeight = newHeight;
+		}
+		else if (_changeEnabled == false) {
+			_moving = -1;
+			_renderer.setSeriesPaint(0, Color.BLUE);
+			_renderer.setSeriesPaint(1, Color.GREEN);
+			_renderer.setSeriesPaint(2, Color.RED);
+			_renderer.setSeriesPaint(3, Color.BLACK);
+			_renderer.setSeriesPaint(4, Color.GRAY);
+			
+			_buyCash.setSelected(false);
+			_buildCash.setSelected(false);
+			_unmortgageCash.setSelected(false);
 		}
 	}
 
@@ -175,24 +210,29 @@ public class DynamicChartPanel extends ChartPanel {
 			}
 			XYItemEntity xyItem = (XYItemEntity) entity;
 			int loc = xyItem.getSeriesIndex();
-			if(loc == 0) {
-				_moving = 0;
-				_renderer.setSeriesPaint(0, Color.YELLOW);
-				_buttons.setSelected(_buyCash.getModel(), true);
+			
+			if(_changeEnabled) {
+				if(loc == 0) {
+					_moving = 0;				_buyCash.setSelected(false);
+
+					_renderer.setSeriesPaint(0, Color.YELLOW);
+					_buttons.setSelected(_buyCash.getModel(), true);
+				}
+				else if (loc == 1) {
+					_moving = 1;
+					_renderer.setSeriesPaint(1, Color.YELLOW);
+					_buttons.setSelected(_buildCash.getModel(), true);
+				}
+				else if (loc == 2) {
+					_moving = 2;
+					_renderer.setSeriesPaint(2, Color.YELLOW);
+					_buttons.setSelected(_unmortgageCash.getModel(), true);
+				}
+				else {
+					_moving = -1;
+				}
 			}
-			else if (loc == 1) {
-				_moving = 1;
-				_renderer.setSeriesPaint(1, Color.YELLOW);
-				_buttons.setSelected(_buildCash.getModel(), true);
-			}
-			else if (loc == 2) {
-				_moving = 2;
-				_renderer.setSeriesPaint(2, Color.YELLOW);
-				_buttons.setSelected(_unmortgageCash.getModel(), true);
-			}
-			else {
-				_moving = -1;
-			}
+			
 		}
 
 		@Override
@@ -205,7 +245,7 @@ public class DynamicChartPanel extends ChartPanel {
 				_renderer.setSeriesPaint(2, Color.RED);
 				_renderer.setSeriesPaint(3JButton, Color.BLACK);
 				_renderer.setSeriesPaint(4, Color.GRAY);
-				return;
+				return;JToggleButton
 			}
 			XYItemEntity xyItem = (XYItemEntity) entity;
 			
@@ -227,9 +267,9 @@ public class DynamicChartPanel extends ChartPanel {
 	
 	public class RolloverListener implements MouseListener {
 
-		private JToggleButton _button;
-		public RolloverListener (JToggleButton button) {
-			_button = button;
+		private JButton _button;
+		public RolloverListener (JButton _buyCash) {
+			_button = _buyCash;
 		}
 		
 		@Override
@@ -271,13 +311,20 @@ public class DynamicChartPanel extends ChartPanel {
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			_moving = line;
-			_renderer.setSeriesPaint(0, Color.BLUE);
-			_renderer.setSeriesPaint(1, Color.GREEN);
-			_renderer.setSeriesPaint(2, Color.RED);
-			_renderer.setSeriesPaint(3, Color.BLACK);
-			_renderer.setSeriesPaint(4, Color.GRAY);
-			_renderer.setSeriesPaint(_moving, Color.YELLOW);
+			if(_changeEnabled) {
+				_moving = line;
+				_renderer.setSeriesPaint(0, Color.BLUE);
+				_renderer.setSeriesPaint(1, Color.GREEN);
+				_renderer.setSeriesPaint(2, Color.RED);
+				_renderer.setSeriesPaint(3, Color.BLACK);
+				_renderer.setSeriesPaint(4, Color.GRAY);
+				_renderer.setSeriesPaint(_moving, Color.YELLOW);
+			}
+			else if (_changeEnabled == false) {
+				_buyCash.setSelected(false);
+				_buildCash.setSelected(false);
+				_unmortgageCash.setSelected(false);
+			}
 		}
 		
 	}

@@ -386,10 +386,13 @@ public class Board extends JPanel {
 	public void newRound(int time) {
 		//time in seconds
 		_center.reenableSetHeuristics(time);
+		_center.enableGraph();
 		_player = null;
 	}
 	
 	public Player getHeuristics () {
+		_center.disableGraph();
+		
 		Player player = new Player(_id,_profile._name);
 		
 		HashMap<String, Integer> propertyValues = new HashMap<>();

@@ -28,7 +28,7 @@ public class ProfitGraph extends JPanel {
 	private XYSeriesCollection _dataset = new XYSeriesCollection();;
 	private JFreeChart _chart;
 	private XYPlot _plot;
-	private ChartPanel _chartPanel;
+	private DynamicChartPanel _chartPanel;
 	
 	private List<PlayerWealthDataReport> _currData = null;
 	
@@ -165,6 +165,14 @@ public class ProfitGraph extends JPanel {
 		_minMortgageCash = minUnmortgageCash;
 		
 		update();
+	}
+
+	public void disableGraph() {
+		_chartPanel.disableGraph();
+	}
+	
+	public void enableGraph () {
+		_chartPanel.enableGraph();
 	}
 
 }
