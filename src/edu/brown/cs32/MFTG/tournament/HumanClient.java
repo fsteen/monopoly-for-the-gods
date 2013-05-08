@@ -231,6 +231,7 @@ public class HumanClient extends Client{
 	 * @param data 
 	 */
 	private void sendDataToGui(GameDataReport data){
+		System.out.println(data.toString());
 		_gui.getBoard().setPlayerSpecificPropertyData(getPlayerPropertyData(data._overallPlayerPropertyData));
 		_gui.getBoard().setPropertyData(data._overallPropertyData);
 		_gui.getBoard().setWealthData(getPlayerWealthData(data._timeStamps));

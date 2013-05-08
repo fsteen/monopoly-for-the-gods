@@ -24,7 +24,7 @@ import edu.brown.cs32.MFTG.monopoly.TimeStamp;
 
 public class DataProcessorTests {
 
-//	@Test
+	@Test
 	public void generateConfirmationIndicesTest(){
 		Random rand = new Random();
 		List<Integer> confirmationIndices1 = DataProcessor.generateConfirmationIndices(100, .10,rand);
@@ -87,7 +87,7 @@ public class DataProcessorTests {
 		List<GameData> data = new ArrayList<>();
 		data.add(g.getGameData());
 		
-		System.out.println(DataProcessor.aggregate(data, 500).toString());
+		System.out.println(DataProcessor.aggregate(data, 500).toGameDataReport().toString());
 	}
 	
 //	@Test
@@ -141,10 +141,11 @@ public class DataProcessorTests {
 			g.run();
 			data.add(g.getGameData());
 		}
-		System.out.println(DataProcessor.aggregate(data, 50).toString());
+//		data.get(0).printData();
+		System.out.println(DataProcessor.aggregate(data, 50).toGameDataReport().toString());
 	}
 	
-//	@Test
+	@Test
 	public void generateGameDataReportMany4Player(){
 		Random rand = new Random();
 		Player p0=new Player(0,"");
@@ -155,7 +156,7 @@ public class DataProcessorTests {
 		List<GameData> data = new ArrayList<>();
 		Game g;
 		
-		for(int i = 0; i < 400; i++){ //play 400 games
+		for(int i = 0; i < 500; i++){ //play 400 games
 			g = new Game(1,rand.nextLong(),1000,500, false, false, p0, p1, p2, p3);
 			g.run();
 			data.add(g.getGameData());

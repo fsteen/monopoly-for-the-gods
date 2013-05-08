@@ -21,7 +21,7 @@ public class PropertyDataAccumulator{
 		accNumHouses = 0.0;
 		accTotalRevenueWithHouses = 0.0;
 		accTotalRevenueWithoutHouses = 0.0;
-		accMortgaged = 0.0;
+		accMortgaged = 0.0; /* not used */
 		accTimeOwned = 0.0;
 		numDataPoints = 0;
 		numDataPointsMonopolized = 0;
