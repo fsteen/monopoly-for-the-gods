@@ -36,6 +36,8 @@ public class ProfitGraph extends JPanel {
 	private int _minBuildCash = 0;
 	private int _minMortgageCash = 0;
 	
+	private int _blank = 3000;
+	
 	private XYLineAndShapeRenderer _renderer;
 	
 	public ProfitGraph() {
@@ -51,8 +53,6 @@ public class ProfitGraph extends JPanel {
 		this.setPreferredSize(dim);
 		this.setSize(dim);
 
-		setToolTipText("<html>Set the minimum amount of cash you need in order to perform different transactions<br/>Click on a colored button above and then drag the highlighted line in the chart<html/>");
-		
 		this.setLocation(3*Constants.WIDTH, 2*Constants.WIDTH);
 	
 		this.add(_chartPanel);
@@ -80,6 +80,7 @@ public class ProfitGraph extends JPanel {
 		XYSeries minBuy = new XYSeries("Minimum Buy Cash");
 		XYSeries minBuild = new XYSeries("Minimum Build Cash");
 		XYSeries minMortgage = new XYSeries("Minimum Mortgage Cash");
+		XYSeries blank = new XYSeries("Blank");
 		
 		for(double x=0; x<100; x+=.1) {
 			minBuy.add(x, _minBuyCash);
@@ -89,6 +90,9 @@ public class ProfitGraph extends JPanel {
 		_dataset.addSeries(minBuy);
 		_dataset.addSeries(minBuild);
 		_dataset.addSeries(minMortgage);
+		
+		blank.add(0, _blank);
+		_dataset.addSeries(blank);
 		
 		if (_currData != null) {
 			XYSeries cash = new XYSeries("Cash");
@@ -131,14 +135,18 @@ public class ProfitGraph extends JPanel {
 		_renderer.setSeriesShapesVisible(2, false);
 		_renderer.setSeriesPaint(2, Color.RED);
 		_renderer.setSeriesVisible(2, true);
-		_renderer.setSeriesStroke(3, new BasicStroke(2));
-		_renderer.setSeriesPaint(3, Color.BLACK);
+		_renderer.setSeriesStroke(3, new BasicStroke(0));
 		_renderer.setSeriesShapesVisible(3, false);
+		_renderer.setSeriesPaint(3, Constants.BACKGROUND_COLOR);
 		_renderer.setSeriesVisible(3, true);
 		_renderer.setSeriesStroke(4, new BasicStroke(2));
-		_renderer.setSeriesPaint(4, Color.GRAY);
+		_renderer.setSeriesPaint(4, Color.BLACK);
 		_renderer.setSeriesShapesVisible(4, false);
-		_renderer.setSeriesVisible(4, true);
+		_renderer.setSeriesVisible(5, true);
+		_renderer.setSeriesStroke(5, new BasicStroke(2));
+		_renderer.setSeriesPaint(5, Color.GRAY);
+		_renderer.setSeriesShapesVisible(5, false);
+		_renderer.setSeriesVisible(5, true);
 		_plot.setRenderer(_renderer);
 		
 		NumberAxis rangeAxis = (NumberAxis) _plot.getRangeAxis();
