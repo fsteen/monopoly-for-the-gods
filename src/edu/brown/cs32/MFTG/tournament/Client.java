@@ -42,7 +42,7 @@ public abstract class Client implements Runnable{
 	protected int _port;
 	protected String _host;
 	
-	private boolean _running;
+	protected boolean _running;
 	
 	protected int _playGamesTO;
 	protected int _displayDataTO;
