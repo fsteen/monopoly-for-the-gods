@@ -164,6 +164,7 @@ public class EndGamePanel extends JPanel{
 			int yloc=e.getY();
 			if(intersects(xloc,yloc,_backLite,_backLoc)) {
 				if(_backDark.isVisible()) {
+					_main.getClient().sayGoodbye(true);
 					fixPanels();
 					_main.switchPanels("greet");
 				}
@@ -174,6 +175,7 @@ public class EndGamePanel extends JPanel{
 			}
 			else if(intersects(xloc,yloc,_viewLite,_viewLoc)) {
 				if(_viewDark.isVisible()) {
+					_main.getClient().sayGoodbye(true);
 					fixPanels();
 					_board.switchToEndGameMenu();
 					_main.switchPanels("board");
