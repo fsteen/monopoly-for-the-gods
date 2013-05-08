@@ -190,6 +190,7 @@ public abstract class Client implements Runnable{
 		}
 		try {
 			_id = Integer.parseInt(arguments.get(0));
+			System.out.println("Im a client with id " + _id);
 			_playGamesTO = Integer.parseInt(arguments.get(1));
 			_displayDataTO = Integer.parseInt(arguments.get(2));
 			_server.setSoTimeout(0); // turn the timeout off, since we may need to wait for others to connect

@@ -40,7 +40,7 @@ public class AIClient extends Client{
 
 	public AIClient() {
 		super();
-		_player = new Player(_id,"Computer");
+//		_player = new Player(_id,"Computer");
 		_previousPlayer=null;
 		_colorKeys = new HashMap<>(30);
 		initializeColorKeys();
@@ -159,7 +159,11 @@ public class AIClient extends Client{
 	}
 
 	public Player finishGetPlayer(){
+		if(_player == null){
+			_player = new Player(_id,"Computer");
+		}
 		Player temp = new Player(_player);
+		System.out.println("old id " + _player.ID + " new id " + temp.ID);
 		if(_currentGameData==null) {
 			_player.setColorValue("purple", 2.5, 75, 3, 3);
 			_player.setColorValue("light blue", 2.5, 150, 4, 4);
@@ -446,6 +450,8 @@ public class AIClient extends Client{
 			}
 		}
 		_previousPlayer=temp;
+		
+		System.out.println("Client-" + _id + " created a player with id " + _player.ID + " and name " + _player.Name);
 		return _player;
 	}
 

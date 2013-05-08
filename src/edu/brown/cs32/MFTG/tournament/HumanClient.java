@@ -187,7 +187,9 @@ public class HumanClient extends Client{
 	 */
 	public Player finishGetPlayer(){
 		if(_timer!= null) _timer.stop();
-		return _gui.getBoard().getPlayer();
+		Player p = _gui.getBoard().getPlayer();
+		System.out.println("Client-" + _id + " created a player with id " + p.ID + " and name " + p.Name);
+		return p;
 	}
 	
 	/**
@@ -196,18 +198,28 @@ public class HumanClient extends Client{
 	 */
 	private void finishMatch(GameDataReport combinedData){
 		int numPlayers = combinedData._timeStamps.get(0).wealthData.size();
-		String[] names = new String[BackendConstants.MAX_NUM_PLAYERS];
 		
-		for(int i = 0; i < names.length; i++){
-			names[i] = i < numPlayers ? _playerNames.get(i) : "";
+		
+		
+		
+		List<String> names = new ArrayList<>();
+		
+//		for(int i = 0; )
+		
+		for(int i = 0; i < BackendConstants.MAX_NUM_PLAYERS; i++){
+			names.add(i < numPlayers ? _playerNames.get(i) : "");
 		}
+		int winnerID = combinedData.getPlayerWithMostWins();
+		names.remove(winnerID);
+		names.add(0, _playerNames.get(winnerID));
+		System.out.println("names " + names);
 		
 		/* displays the end game screen */
-		_gui.createEndGame(_gui.getBoard(), combinedData.getPlayerWithMostWins() == _id, names);
+		_gui.createEndGame(_gui.getBoard(), winnerID == _id, names.toArray(new String[names.size()]));
 		if(_gui.getUserMusic())_gui.playNextOutOfGameSong();
 		
 		/* update records */
-		_gui.getCurrentProfile().getRecord().addMatch(combinedData.getPlayerWithMostWins() == _id);
+		_gui.getCurrentProfile().getRecord().addMatch(winnerID == _id);
 		_gui.saveProfiles();
 	}
 	
@@ -225,6 +237,7 @@ public class HumanClient extends Client{
 	 * Populates the map of player ids to names
 	 */
 	protected void setPlayerNames(List<Player> players){
+		System.out.println("players " + players);
 		for(Player p : players){
 			_playerNames.put(p.ID, p.Name);
 		}
