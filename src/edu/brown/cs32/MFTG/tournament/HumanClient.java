@@ -72,7 +72,7 @@ public class HumanClient extends Client{
 			sayGoodbye(false);
 			return;
 		}
-		Callable<Void> worker = new HumanRequestCallable(this);
+		Callable<Void> worker = new RequestCallable(this);
 		_executor.submit(worker);
 	}
 

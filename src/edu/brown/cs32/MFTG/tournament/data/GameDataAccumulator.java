@@ -104,7 +104,7 @@ public class GameDataAccumulator {
 			totalNumDataPoints = p.numDataPoints;
 			p.reset();
 		}
-		
+
 		/* Add the player specific property information */
 		for(Entry<String,Map<Integer,PropertyDataAccumulator>> e : gamePlayerPropertyData.entrySet()){
 			playerEntireGameTemp = setPlayerPropertyData.get(e.getKey());
