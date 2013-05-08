@@ -175,8 +175,11 @@ public abstract class Client implements Runnable{
 		} else if (method == Method.DISPLAYERROR){
 			respondToDisplayError(request);
 		
+		} else if (method == Method.GAMECLOSED){
+		//	shutDown();
+			
 		} else {
-			assert(false);
+			System.err.println("Invalid response");
 		}
 	}
 
