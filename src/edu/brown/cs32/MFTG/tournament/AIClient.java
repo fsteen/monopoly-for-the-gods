@@ -145,6 +145,10 @@ public class AIClient extends Client{
 		if (gameDataReport._matchIsOver)
 			_running = false;
 	}
+	
+	protected void respondToGameClosed(){
+		_running = false;
+	}
 
 	public synchronized void addGameData(GameData gameData){
 		List<GameData> temp = new ArrayList<>();
