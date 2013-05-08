@@ -121,7 +121,7 @@ public class HumanClient extends Client{
 	
 	protected void respondToGameClosed(){
 		_running = false;
-		_gui.switchPanels("welcome");
+		_gui.switchPanels("greet");
 	}
 
 	/*******************************************************/
