@@ -118,6 +118,11 @@ public class HumanClient extends Client{
 
 		displayGameData(gameDataReport);
 	}
+	
+	protected void respondToGameClosed(){
+		_running = false;
+		_gui.switchPanels("welcome");
+	}
 
 	/*******************************************************/
 
