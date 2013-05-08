@@ -307,7 +307,6 @@ public class AIClient extends Client{
 			if(prevwealth>=mywealth) {
 				//I did really poorly and lost in cash and wealth
 				if(prevcash>=mycash) {
-					//System.out.println("YOU SUCK!");
 					_player.setLiquidity(Math.min(Math.max(1,_previousPlayer.getLiquidity()-.9*(_previousPlayer.getLiquidity()-_player.getLiquidity())),10));
 					_player.setTimeChange(Math.min(Math.max(1,_previousPlayer.getTimeChange()-.9*(_previousPlayer.getTimeChange()-_player.getTimeChange())),10));
 					_player.setMinBuyCash((int) Math.max(0,_previousPlayer.getMinBuyCash()-.9*(_previousPlayer.getMinBuyCash()-_player.getMinBuyCash())));
@@ -317,7 +316,6 @@ public class AIClient extends Client{
 				}
 				//I hoarded cash way too much
 				else {
-					//System.out.println("TOO MUCH CASH!");
 					_player.setMinBuildCash(Math.max(0, _previousPlayer.getMinBuildCash()-50));
 					_player.setMinBuyCash(Math.max(0,_previousPlayer.getMinBuyCash()-50));
 					_player.setMinUnmortgageCash(Math.max(0,_previousPlayer.getMinUnmortgageCash()-50));
@@ -325,7 +323,6 @@ public class AIClient extends Client{
 			}
 			//if I did well
 			else {
-				//System.out.println("KEEP GOING!");
 				_player.setLiquidity(Math.min(Math.max(1,_previousPlayer.getLiquidity()+.9*(_previousPlayer.getLiquidity()-_player.getLiquidity())),10));
 				_player.setTimeChange(Math.min(Math.max(1,_previousPlayer.getTimeChange()+.9*(_previousPlayer.getTimeChange()-_player.getTimeChange())),10));
 				_player.setMinBuyCash((int) Math.max(0,_previousPlayer.getMinBuyCash()+.9*(_previousPlayer.getMinBuyCash()-_player.getMinBuyCash())));

@@ -148,7 +148,6 @@ public class Player {
 	public int getPropertyValue(String property){
 		if(_propertyValues.containsKey(property))
 				return _propertyValues.get(property);
-		System.out.println("Property Values doesn't contain: " + property);
 		return 0;
 	}
 	
