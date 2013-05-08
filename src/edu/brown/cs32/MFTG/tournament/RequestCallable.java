@@ -19,7 +19,7 @@ public class RequestCallable implements Callable<Void>{
 	}
 
 	public Void call() throws Exception {
-		while(true){
+		while(_client.isRunning()){
 			try {
 			_client.handleRequest();
 			} catch (InvalidRequestException e){
@@ -36,6 +36,7 @@ public class RequestCallable implements Callable<Void>{
 				return null;
 			}
 		}
+		return null;
 	}
 }
 

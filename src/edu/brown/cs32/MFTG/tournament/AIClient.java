@@ -104,7 +104,7 @@ public class AIClient extends Client{
 			sayGoodbye(true);
 			return;
 		}
-
+		_running = true;
 		while(_running){
 			try {
 				handleRequest();
