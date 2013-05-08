@@ -36,17 +36,17 @@ public class MonopolyGui extends JFrame{
 	private List<String> _outSongNames, _inSongNames;
 	private int _currentOutSongNumber, _currentInSongNumber;
 	private Music _currentSong;
-	private boolean _musicOn;
+	private boolean _musicOn, _userMusic;
 
 	public MonopolyGui(Client client, boolean music) {
 		super("Monopoly for the GODS");
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		_musicOn=music;
-		
+
 		//this code is run at closing
 		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
 			public void run() {
-				saveProfiles();
+		//		saveProfiles();
 			}
 		}, "Shutdown-thread"));
 
@@ -99,15 +99,17 @@ public class MonopolyGui extends JFrame{
 
 		this.pack();
 		this.setVisible(true);
-
+		_userMusic=_musicOn;
 
 		if(_musicOn){
 			_outSongNames = new ArrayList<>(2);
-			_outSongNames.add("m.mp3");//("music/NoChurchInTheWild.mp3");
-//			_outSongNames.add("music/SwaggerLikeUs.mp3");
+			//_outSongNames.add("m.mp3");
+			_outSongNames.add("music/NoChurchInTheWild.mp3");
+			_outSongNames.add("music/SwaggerLikeUs.mp3");
 
 			_inSongNames = new ArrayList<>(2);
-			_inSongNames.add("m.mp3");//("music/Autobots.mp3");		
+			//_inSongNames.add("m.mp3");
+			_inSongNames.add("music/Autobots.mp3");		
 			_currentOutSongNumber=(int) Math.floor(Math.random()*_outSongNames.size());
 			_currentInSongNumber=(int) Math.floor(Math.random()*_inSongNames.size());
 			_currentSong=new Music(_outSongNames.get(_currentOutSongNumber), this, false);
@@ -119,13 +121,17 @@ public class MonopolyGui extends JFrame{
 	 * stops music
 	 */
 	public void stopMusic(){
-		if(_musicOn)_currentSong.close();
+		if(_musicOn) {
+			_userMusic=false;
+			_currentSong.close();
+		}
 	}
 
 	/**
 	 */
 	public void playNextOutOfGameSong(){
 		if(_musicOn){
+			_userMusic=true;
 			_currentSong.close();
 			_currentOutSongNumber = (_currentOutSongNumber+1)%_outSongNames.size();
 			String newSongName = _outSongNames.get(_currentOutSongNumber);
@@ -138,14 +144,42 @@ public class MonopolyGui extends JFrame{
 	 * play song in game
 	 */
 	public void playNextInGameSong(){
-		System.out.println(_musicOn);
 		if(_musicOn){
+			_userMusic=true;
 			_currentSong.close();
 			_currentInSongNumber = (_currentInSongNumber+1)%_inSongNames.size();
 			String newSongName = _inSongNames.get(_currentInSongNumber);
 			_currentSong = new Music(newSongName, this, true);
 			_currentSong.play();
 		}
+	}
+
+	/**
+	 * 
+	 * @return user music
+	 */
+	public boolean getMusicOn() {
+		return _musicOn;
+	}
+	
+	/**
+	 * 
+	 * @return user music
+	 */
+	public boolean getUserMusic() {
+		return _userMusic;
+	}
+
+
+	/**
+	 * 
+	 * @param userMusic
+	 */
+	public void setUserMusic(boolean userMusic) {
+		if(_musicOn==false) {
+			return;
+		}
+		_userMusic=userMusic;
 	}
 
 	/**
@@ -280,7 +314,7 @@ public class MonopolyGui extends JFrame{
 		}
 		return null;
 	}
-	
+
 	public void destroyBoard(){
 		_panels.remove("board");
 	}
@@ -309,8 +343,9 @@ public class MonopolyGui extends JFrame{
 		switchPanels("end");
 	}
 
-
 	public Client getClient(){
 		return _client;
 	}
+	
+	
 }

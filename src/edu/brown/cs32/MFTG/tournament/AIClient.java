@@ -100,6 +100,8 @@ public class AIClient extends Client{
 		try {
 			respondToSendConstants();
 		} catch (IOException | InvalidRequestException e1) {
+			System.err.println("An error has occured. AI will now exit");
+			sayGoodbye(true);
 			return;
 		}
 
@@ -108,12 +110,12 @@ public class AIClient extends Client{
 				handleRequest();
 			} catch (IOException | InvalidRequestException e){
 				System.err.println("An error has occured. AI will now exit");
-				sayGoodbye();
+				sayGoodbye(false);
 				return;
 			} catch (Exception e){
 				e.printStackTrace();
 				System.err.println("An error has occured. AI will now exit");
-				sayGoodbye();
+				sayGoodbye(false);
 				return;
 			}
 		}
@@ -122,17 +124,18 @@ public class AIClient extends Client{
 	/**
 	 * Responds to a request sent over the server to display game data by displaying the data received
 	 * @param the request which is being responded to
-	 * @throws JsonParseException
-	 * @throws JsonMappingException
 	 * @throws IOException
+	 * @throws InvalidRequestException 
 	 */
-	protected void respondToDisplayData(ClientRequestContainer request) throws JsonParseException, JsonMappingException, IOException{
+	protected void respondToDisplayData(ClientRequestContainer request) throws IOException, InvalidRequestException{
+		if (request == null){
+			throw new InvalidRequestException("Null request");
+		}
+		
 		List<String> arguments = request._arguments;
 
-		if (arguments == null){
-			// error
-		} else if (arguments.size() < 1){
-			// error
+		if (arguments == null || arguments.size() < 1){
+			throw new InvalidRequestException("Wrong number of arguments");
 		}
 
 		GameDataReport gameDataReport = _oMapper.readValue(arguments.get(0), GameDataReport.class);
@@ -349,7 +352,6 @@ public class AIClient extends Client{
 					else if(monopolyDif<0){
 						_player.setMonopolyValue(color, _player.getMonopolyValue(color)+monopolyDif*.9);
 					}
-					System.out.println("5b1");
 					double houseDif = _player.getHouseValueOfColor(color)-_previousPlayer.getHouseValueOfColor(color);
 					if(houseDif>0) {
 						_player.setHouseValueOfColor(color, _player.getHouseValueOfColor(color)-houseDif*.9);
@@ -357,7 +359,6 @@ public class AIClient extends Client{
 					else if(houseDif<0){
 						_player.setHouseValueOfColor(color, _player.getHouseValueOfColor(color)+houseDif*.9);
 					}
-					System.out.println("5b2");
 					double sameDif = _player.getSameColorEffect(color)-_previousPlayer.getSameColorEffect(color);
 					if(sameDif>0) {
 						_player.setSameColorEffect(color, _player.getSameColorEffect(color)-sameDif*.9);

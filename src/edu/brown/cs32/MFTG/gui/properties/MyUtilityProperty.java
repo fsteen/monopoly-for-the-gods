@@ -41,7 +41,7 @@ public class MyUtilityProperty extends MyPropertyPanel {
 
 	@Override
 	public void paintComponent(Graphics g) {
-		super.paintComponent(g, _picture, Color.WHITE);
+		super.paintComponent(g, _picture, Color.GRAY);
 	}
 
 	@Override

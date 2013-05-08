@@ -57,7 +57,7 @@ public class Constants {
 		private Price (String path, String text) {
 			try {
 				BufferedImage i = ImageIO.read(new File(path));
-				icon = Helper.transparent(i);
+				icon = Helper.transparentWhite(i);
 				this.text = text;
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -80,7 +80,7 @@ public class Constants {
 		private Quantity (String path, String text) {
 			try {
 				BufferedImage i = ImageIO.read(new File(path));
-				icon = Helper.transparent(i);
+				icon = Helper.transparentWhite(i);
 				this.text = text;
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -103,7 +103,7 @@ public class Constants {
 		private Aggression (String path, String text) {
 			try {
 				BufferedImage i = ImageIO.read(new File(path));
-				icon = Helper.transparent(i);
+				icon = Helper.transparentWhite(i);
 				this.text = text;
 			} catch (IOException e) {
 				// TODO Auto-generated catch block

@@ -20,7 +20,7 @@ import edu.brown.cs32.MFTG.monopoly.Player;
 import edu.brown.cs32.MFTG.networking.ClientCommunicationException;
 import edu.brown.cs32.MFTG.networking.ClientHandler;
 import edu.brown.cs32.MFTG.networking.ClientLostException;
-import edu.brown.cs32.MFTG.networking.ClientSideException;
+import edu.brown.cs32.MFTG.networking.ClientExitException;
 import edu.brown.cs32.MFTG.networking.InvalidResponseException;
 import edu.brown.cs32.MFTG.networking.PlayGamesCallable;
 import edu.brown.cs32.MFTG.networking.getPlayerCallable;
@@ -50,7 +50,7 @@ public class Tournament implements Runnable{
 		if (port <= 1024){
 			throw new IllegalArgumentException("Ports under 1024 are reserved!");
 		}
-		
+
 		/* initialize everything */
 		_socket = new ServerSocket(port);
 		_clientHandlers = new ArrayList<>();
@@ -84,7 +84,7 @@ public class Tournament implements Runnable{
 	 */
 	private Player newBalancedPlayer(int id){
 		Player p = new Player(id,"balanced");
-		
+
 		p.setColorValue("purple", 1.7, 1.2, 1.5, 1.3);
 		p.setColorValue("light blue", 1.2, 1.2, 1.5, 1.3);
 		p.setColorValue("pink", 1.7, 1.2, 1.5, 1.3);
@@ -102,10 +102,10 @@ public class Tournament implements Runnable{
 		p.setMinUnmortgageCash(300);
 		p.setTradingFear(1.3);
 		p.setLiquidity(6);
-		
+
 		return p;
 	}
-	
+
 	/**
 	 * The main loop, goes through the steps of the game sending instructions to the clients
 	 */
@@ -116,9 +116,10 @@ public class Tournament implements Runnable{
 			Thread.sleep(3000);
 		} catch (IOException e) {
 			System.out.println("you are fucked");
+			shutDown();
 			return;
 		} catch (InterruptedException e) {} //swallow
-		
+
 		/* initialze variables */
 		int gamesPerModule = (int)Math.ceil(((double)_settings.gamesPerRound)/_numPlayers);
 		List<Player> players = null;
@@ -130,12 +131,22 @@ public class Tournament implements Runnable{
 
 			/* request a Player from each client */
 			players = getNewPlayers(players);
+			
+			if (players == null){
+				shutDown();
+				return;
+			}
 
 			/* generate which seeds will be used for integrity validation */
 			confirmationIndices = DataProcessor.generateConfirmationIndices(gamesPerModule, BackendConstants.CONFIRMATION_PERCENTAGE,_rand);
 
 			/* play a round of games */
 			data = playRoundOfGames(players, DataProcessor.generateSeeds(gamesPerModule, _players.size(), confirmationIndices,_rand));
+
+			if (data == null){
+				shutDown();
+				return;
+			}
 
 			/* check for cheating */
 			if(data.size() > 0){
@@ -145,6 +156,7 @@ public class Tournament implements Runnable{
 				sendEndOfRoundData(accumulateEndOfRoundData(data, roundNum));
 			}
 		}
+		shutDown();
 	}
 
 	/**
@@ -166,14 +178,21 @@ public class Tournament implements Runnable{
 			}
 		}
 	}
-	
+
 	/**
 	 * Shuts down a single client, and notifies all the other clients
 	 * @param i identifies the client to shut down by its place in the clientHandler list
 	 */
-	private void shutDownClient(int i){
-		String message = "An error has occured with client " + _clientHandlers.get(i)._id 
-						  + ". Removing this client from the game";
+	private void shutDownClient(int i, ClientExitException e){
+		String message;
+
+		if (e.cleanExit){
+			message = "Client " + _clientHandlers.get(i)._id + "has left the game lobby";
+		} else {
+			message = "An error has occured with client " + _clientHandlers.get(i)._id 
+					+ ". Removing this client from the game";
+		}
+		
 		_clientHandlers.get(i).shutDown();
 		_clientHandlers.remove(i);
 		sendErrorMessage(message);
@@ -199,27 +218,33 @@ public class Tournament implements Runnable{
 			try {
 				players.add(playerFutures.get(i).get());
 			} catch (InterruptedException | ExecutionException e) {
-				
-				if (e.getCause() instanceof ClientSideException){
-					shutDownClient(i);
+
+				if (e.getCause() instanceof ClientExitException){
+					shutDownClient(i, (ClientExitException) e.getCause());
+					
+					if (_clientHandlers.size() < 2){
+						sendErrorMessage("Not enough clients remaining to play a game. The game lobby will now close.");
+						return null;
+					}
+					
 					continue;
 				}
-				
+
 				if (e.getCause() instanceof SocketTimeoutException || e.getCause() instanceof SocketException){
 					_clientHandlers.get(i).setDoubleRead();
 				} else {
 					e.getCause().printStackTrace(); // will be removed, just for debugging
 				}
-				
+
 				if (prevPlayers != null){
 					players.add(prevPlayers.get(i));
-					
+
 					sendErrorMessage("Unable to retrieve heuristic information from client " + _clientHandlers.get(i)._id + 
 							". Reusing old heuristics");
 
 				} else {
 					players.add(newBalancedPlayer(i));
-					
+
 					sendErrorMessage("Unable to retrieve heuristic information from client " + _clientHandlers.get(i)._id + 
 							". Using default balanced heuristics");
 				}
@@ -261,25 +286,32 @@ public class Tournament implements Runnable{
 				e.printStackTrace();
 				numFails++;
 			} catch (ExecutionException e) {
-				
-				if (e.getCause() instanceof ClientSideException){
-					shutDownClient(i);
+
+				if (e.getCause() instanceof ClientExitException){
+					shutDownClient(i, (ClientExitException) e.getCause());
+					System.out.println("here");
+					if (_clientHandlers.size() < 2){
+						sendErrorMessage("Not enough clients remaining to play a game. The game lobby will now close.");
+						return null;
+					}
+					
 					continue;
 				}
-				
+
 				if (e.getCause() instanceof SocketTimeoutException || e.getCause() instanceof SocketException){
-					
+
 					sendErrorMessage("Connection with client " + _clientHandlers.get(i)._id + " timed out. " +
 							"Removing this client from the game");
 					_clientHandlers.remove(i);
 					players.remove(i);
 					gameDataFutures.remove(i);
 					i--;
-					
+
 					if (_clientHandlers.size() < 2){
 						sendErrorMessage("Not enough clients remaining to play a game. The game lobby will now close.");
-						shutDown();
+						return null;
 					}
+					
 				} else {
 					e.getCause().printStackTrace(); // will be removed in final version
 					numFails++;
@@ -292,8 +324,8 @@ public class Tournament implements Runnable{
 
 		return gameData;
 	}
-	
-	
+
+
 	/**
 	 * Tell the client handlers to send the end of round data back to the clients
 	 * @param aggregatedData the data to send
@@ -307,7 +339,7 @@ public class Tournament implements Runnable{
 			}
 		}
 	}
-	
+
 	/**
 	 * Send an error message to the clients
 	 * @param errorMessage
@@ -317,14 +349,18 @@ public class Tournament implements Runnable{
 			c.sendErrorMessage(errorMessage);
 		}
 	}
-	
+
 	/**
 	 * To be called immediately before the program shuts down
 	 */
 	private void shutDown(){
-		// TODO implement
+		try {
+			_socket.close();
+		} catch (IOException e) {
+			// Just walk away quietly
+		}
 	}
-	
+
 	/**
 	 * Combine all of the data after a set of games is completed
 	 * @param data the data to combine
@@ -338,24 +374,24 @@ public class Tournament implements Runnable{
 			accumulators[j] = data.get(j).toGameDataAccumulator();
 		}
 		GameDataAccumulator combined = DataProcessor.combineAccumulators(accumulators);
-		
+
 		/* figure out and set the round winner */
 		int winnerID = combined.getPlayerWithMostGamesWon(_settings.winType).getLeft();
 		_roundWinners.put(winnerID, _roundWinners.get(winnerID) + 1);
-		
+
 		if(_settings.winType == WinningCondition.LAST_SET_WON && roundNum == _settings.numRounds-1){
 			resetRoundWinners();
 			winnerID = combined.getPlayerWithMostGamesWon(_settings.winType).getLeft();
 			_roundWinners.put(winnerID, _roundWinners.get(winnerID) + 1);
 		}
-		
+
 		combined.playerWins = _roundWinners;
 
 		/* determine whether match is over */
 		if(roundNum == _settings.numRounds-1){
 			combined.matchIsOver = true;
 		}
-		
+
 		return combined.toGameDataReport();
 	}
 

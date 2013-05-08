@@ -68,9 +68,9 @@ public abstract class Client implements Runnable{
 	
 	public abstract void run();
 
-	protected abstract void respondToDisplayError(ClientRequestContainer request);
+	protected abstract void respondToDisplayError(ClientRequestContainer request) throws InvalidRequestException;
 	
-	protected abstract void respondToDisplayData(ClientRequestContainer request) throws JsonParseException, JsonMappingException, IOException;
+	protected abstract void respondToDisplayData(ClientRequestContainer request) throws IOException, InvalidRequestException;
 	
 	public abstract void startGetPlayer(int time);
 	
@@ -84,8 +84,9 @@ public abstract class Client implements Runnable{
 	 * Sends a goodbye message to the server
 	 * @throws IOException 
 	 */
-	protected void sayGoodbye() {
-		ClientRequestContainer r = new ClientRequestContainer(Method.GOODBYE, new ArrayList<String>());
+	public void sayGoodbye(boolean cleanGoodbye) {
+		String arg = (cleanGoodbye) ? "true" : "false";
+		ClientRequestContainer r = new ClientRequestContainer(Method.GOODBYE, Arrays.asList(arg));
 		try {
 			write(r);
 		} catch (IOException e) {
@@ -113,13 +114,13 @@ public abstract class Client implements Runnable{
 	 */
 	protected ClientRequestContainer readRequest() throws IOException{
 		String json = _input.readLine();
-		try {
-			return _oMapper.readValue(json, ClientRequestContainer.class);
-		} catch (Exception e){
-			System.out.println("json: " + json);
+		
+		if (json == null){
 			assert(false);
 			return null;
 		}
+		
+		return _oMapper.readValue(json, ClientRequestContainer.class);
 	}
 
 	/**
@@ -177,17 +178,15 @@ public abstract class Client implements Runnable{
 		ClientRequestContainer request = readRequest();
 
 		if (request == null || request._method != Method.SENDCONSTANTS){
-			throw new InvalidRequestException();
+			throw new InvalidRequestException("Wrong request type");
 		}
 
 		_lastRequest = Method.SENDCONSTANTS;
 		
 		List<String> arguments = request._arguments;
 
-		if (arguments == null){
-			// throw an error
-		} else if (arguments.size() < 3){
-			// throw a different error
+		if (arguments == null || arguments.size() < 3){
+			throw new InvalidRequestException("Wrong number of arguments");
 		}
 		try {
 			_id = Integer.parseInt(arguments.get(0));
@@ -195,28 +194,68 @@ public abstract class Client implements Runnable{
 			_displayDataTO = Integer.parseInt(arguments.get(2));
 			_server.setSoTimeout(0); // turn the timeout off, since we may need to wait for others to connect
 		} catch (NumberFormatException e){
-			throw new InvalidRequestException();
+			throw new InvalidRequestException("Arguments are not valid numbers");
 		}
 	}
 	
 	/**
 	 * Responds to a request sent over the socket for player data, and sends the player information back in response
 	 * @param the request which is being responded to
+	 * @throws InvalidRequestException 
 	 * @throws JsonParseException
 	 * @throws JsonMappingException
 	 * @throws IOException
 	 */
-	private void respondToGetPlayer(ClientRequestContainer request) {
+	private void respondToGetPlayer(ClientRequestContainer request) throws InvalidRequestException {
+		if (request == null)
+			throw new InvalidRequestException();
+		
 		List<String> arguments = request._arguments;
 		
-		if (arguments == null){
-			// throw an error
-		} else if (arguments.size() < 1){
-			// throw a different error
+		if (arguments == null || arguments.size() < 1){
+			throw new InvalidRequestException("Wrong number of arguments");
 		}
-		int time = Integer.parseInt(arguments.get(0));
+		
+		int time;
+		
+		try {
+			time = Integer.parseInt(arguments.get(0));
+		} catch (NumberFormatException e){
+			throw new InvalidRequestException("Argument must be a valid integer");
+		}
 		
 		startGetPlayer(time);
+	}
+	
+	/**
+	 * Responds to a request sent over the socket to play games, and sends the game data back in response
+	 * @param the request which is being responded to
+	 * @throws JsonParseException
+	 * @throws JsonMappingException
+	 * @throws IOException
+	 * @throws InvalidRequestException 
+	 */
+	private void respondToPlayGames(ClientRequestContainer request) throws JsonParseException, JsonMappingException, IOException, InvalidRequestException{
+		if (request == null)
+			throw new InvalidRequestException();
+		
+		List<String> arguments = request._arguments;
+		
+		if (arguments == null || arguments.size() < 3){
+			throw new InvalidRequestException();
+		}
+		
+		JavaType listOfPlayers = _oMapper.getTypeFactory().constructCollectionType(List.class, Player.class);
+		JavaType listOfSeeds = _oMapper.getTypeFactory().constructCollectionType(List.class, Long.class);
+		List<Player> players = _oMapper.readValue(arguments.get(0), listOfPlayers);
+		List<Long> seeds = _oMapper.readValue(arguments.get(1), listOfSeeds);
+		Settings settings = _oMapper.readValue(arguments.get(2), Settings.class);
+		
+		GameDataReport gameData = playGames(players, seeds, settings);
+		String gameDataJson = _oMapper.writeValueAsString(gameData);
+		
+		ClientRequestContainer response = new ClientRequestContainer(Method.SENDGAMEDATA, Arrays.asList(gameDataJson));
+		write(response);
 	}
 		
 	public void finishRespondToGetPlayer(){
@@ -250,49 +289,15 @@ public abstract class Client implements Runnable{
 		}
 	}
 	
-	
-	/**
-	 * Responds to a request sent over the socket to play games, and sends the game data back in response
-	 * @param the request which is being responded to
-	 * @throws JsonParseException
-	 * @throws JsonMappingException
-	 * @throws IOException
-	 */
-	private void respondToPlayGames(ClientRequestContainer request) throws JsonParseException, JsonMappingException, IOException{
-		List<String> arguments = request._arguments;
-
-		if (arguments == null){
-			// throw a different different error
-		} else if (arguments.size() < 3){
-			// you get the idea
-		}
-		
-		JavaType listOfPlayers = _oMapper.getTypeFactory().constructCollectionType(List.class, Player.class);
-		JavaType listOfSeeds = _oMapper.getTypeFactory().constructCollectionType(List.class, Long.class);
-		List<Player> players = _oMapper.readValue(arguments.get(0), listOfPlayers);
-		List<Long> seeds = _oMapper.readValue(arguments.get(1), listOfSeeds);
-		Settings settings = _oMapper.readValue(arguments.get(2), Settings.class);
-		
-		GameDataReport gameData = playGames(players, seeds, settings);
-		String gameDataJson = _oMapper.writeValueAsString(gameData);
-		
-		ClientRequestContainer response = new ClientRequestContainer(Method.SENDGAMEDATA, Arrays.asList(gameDataJson));
-		write(response);
-	}
-	
 	/**
 	 * Creates a new tournament and runs it in a new thread
 	 * @param players the player heuristics from all of the clients
 	 * @param settings the game settings
 	 * @param port the server port
+	 * @throws IOException 
 	 */
-	public void launchTournament(List<Integer> players, Settings settings, int port){
-		try {
-			_pool.execute((new Tournament(players, settings, port)));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public void launchTournament(List<Integer> players, Settings settings, int port) throws IOException{
+		_pool.execute((new Tournament(players, settings, port)));
 	}
 	
 	/**

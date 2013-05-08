@@ -60,47 +60,15 @@ public class ProfitGraph extends JPanel {
 
 	public void setMinCash(int index, double value) {
 		if(index==0){
-			System.out.println("buy");
 			_minBuyCash = (int) value;
 		}
 		else if (index ==1) {
-			System.out.println("build");
 			_minBuildCash = (int) value;
 		}
 		else if(index == 2) {
-			System.out.println("Mortgage");
 			_minMortgageCash = (int) value;
 		}
 	}
-	
-/*	
-	public void createDataset() {
-		XYSeries netWorth = new XYSeries("Net Worth");
-		XYSeries cash = new XYSeries("Cash");
-		for(int x=0; x<100; x++) {
-			double y1 = Math.random()*10000;
-			double y2 = Math.random()*1000;
-			netWorth.add(x, y1);
-			cash.add(x, y2);
-		}
-		XYSeries minBuild = new XYSeries("Minimum Build Cash");
-		XYSeries minBuy = new XYSeries("Minimum Buy Cash");
-		XYSeries minMortgage = new XYSeries("Minimum Mortgage Cash");
-		
-		for(double x=0; x<100; x+=.1) {
-			minBuild.add(x, _minBuildCash);
-			minBuy.add(x, _minBuyCash);
-			minMortgage.add(x, _minMortgageCash);
-		}
-		
-		_dataset.removeAllSeries();
-		_dataset.addSeries(netWorth);
-		_dataset.addSeries(cash);
-		_dataset.addSeries(minBuild);
-		_dataset.addSeries(minBuy);
-		_dataset.addSeries(minMortgage);
-	}
-	*/
 	
 	public void setWealthData(List<PlayerWealthDataReport> data) {
 		_currData = data;

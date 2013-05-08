@@ -115,6 +115,14 @@ public class Profile {
 		_players.put(name,p);
 
 	}
+	
+	/**
+	 * Setter for the players attribute
+	 * @return _players
+	 */
+	public Map<String, Player> getPlayers(){
+		return _players;
+	}
 
 	/**
 	 * Setter for the players attribute

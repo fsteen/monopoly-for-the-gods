@@ -56,17 +56,20 @@ public class HumanClient extends Client{
 			_output = new BufferedWriter(new OutputStreamWriter(_server.getOutputStream()));
 		} catch (UnknownHostException e) {
 			displayMessage("Unknown host. Unable to connect to server :( WHAT THE FUCK, MAN!!!");
+			sayGoodbye(false);
 			return;
 		} catch (IOException e) {
 			displayMessage("Unable to connect to server :(");
+			sayGoodbye(false);
 			return;
 		}
 		try {
 			respondToSendConstants();
 			_gui.createBoard(_id, _gui.getCurrentProfile(), this);
-			_gui.playNextInGameSong();
+			if(_gui.getUserMusic())_gui.playNextInGameSong();
 		} catch (IOException | InvalidRequestException e1) {
 			displayMessage("Unable to retrieve a unique ID from the server :(");
+			sayGoodbye(false);
 			return;
 		}
 		Callable<Void> worker = new RequestCallable(this);
@@ -78,14 +81,16 @@ public class HumanClient extends Client{
 	/**
 	 * 
 	 * @param the request which is being responded to
+	 * @throws InvalidRequestException 
 	 */
-	protected void respondToDisplayError(ClientRequestContainer request){
+	protected void respondToDisplayError(ClientRequestContainer request) throws InvalidRequestException{
+		if (request == null)
+			throw new InvalidRequestException("Null request");
+		
 		List<String> arguments = request._arguments;
 
-		if (arguments == null){
-			// throw an error
-		} else if (arguments.size() < 1){
-			// throw a different error
+		if (arguments == null || arguments.size() < 1){
+			throw new InvalidRequestException("Wrong number of arguments");
 		}
 
 		displayMessage(arguments.get(0));
@@ -98,13 +103,14 @@ public class HumanClient extends Client{
 	 * @throws JsonMappingException
 	 * @throws IOException
 	 */
-	protected void respondToDisplayData(ClientRequestContainer request) throws JsonParseException, JsonMappingException, IOException{
+	protected void respondToDisplayData(ClientRequestContainer request) throws IOException, InvalidRequestException{
+		if (request == null)
+			throw new InvalidRequestException("Null request");
+		
 		List<String> arguments = request._arguments;
 
-		if (arguments == null){
-			// error
-		} else if (arguments.size() < 1){
-			// error
+		if (arguments == null || arguments.size() < 1){
+			throw new InvalidRequestException("Wrong number of arguments");
 		}
 
 		GameDataReport gameDataReport = _oMapper.readValue(arguments.get(0), GameDataReport.class);
@@ -118,7 +124,7 @@ public class HumanClient extends Client{
 	 * Returns the user to the welcome screen  
 	 */
 	synchronized void returnToWelcomeScreen(){
-		sayGoodbye();
+		sayGoodbye(true);
 		_gui.switchPanels("greet");
 	}
 	
@@ -197,9 +203,8 @@ public class HumanClient extends Client{
 		}
 		
 		/* displays the end game screen */
-		_gui.playNextOutOfGameSong();
 		_gui.createEndGame(_gui.getBoard(), combinedData.getPlayerWithMostWins() == _id, names);
-		_gui.playNextOutOfGameSong();
+		if(_gui.getUserMusic())_gui.playNextOutOfGameSong();
 		
 		/* update records */
 		_gui.getCurrentProfile().getRecord().addMatch(combinedData.getPlayerWithMostWins() == _id);
