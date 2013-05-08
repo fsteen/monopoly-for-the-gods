@@ -172,6 +172,7 @@ public class GamePlayer {
 			finalValue=initialValue*_player.getBreakingOpponentMonopolyValue(property.Color);
 		}
 		finalValue*=timeEffect*=liquidEffect;
+		finalValue=Math.min(finalValue, _cash-_player.getMinBuyCash());
 		//System.out.println(property.Name+" value: "+finalValue+" TimeEffect: "+timeEffect+" LiquidEffect: "+liquidEffect);
 		return finalValue;
 		
