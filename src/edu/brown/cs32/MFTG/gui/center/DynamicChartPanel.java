@@ -44,7 +44,7 @@ public class DynamicChartPanel extends ChartPanel {
 		super(chart);
 		_graph = graph;
 		_renderer = renderer;
-		//this.setMouseWheelEnabled(true);
+		this.setMouseWheelEnabled(true);
 		_chart = chart;
 		
 		this.addChartMouseListener(new MinCashListener());
@@ -55,6 +55,8 @@ public class DynamicChartPanel extends ChartPanel {
 		this.setMinimumSize(dim);
 		this.setPreferredSize(dim);
 		this.setSize(dim);
+		
+		setToolTipText("i'm here");
 		
 		this.setLocation(0, 0);
 		initializeButtons();
