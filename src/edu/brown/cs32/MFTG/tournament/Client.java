@@ -42,6 +42,8 @@ public abstract class Client implements Runnable{
 	protected int _port;
 	protected String _host;
 	
+	private boolean _running;
+	
 	protected int _playGamesTO;
 	protected int _displayDataTO;
 
@@ -56,6 +58,8 @@ public abstract class Client implements Runnable{
 	public Client() {
 		_oMapper = new ObjectMapper();
 		_lastRequest = Method.DISPLAYGAMEDATA;
+		
+		_running = true;
 
 		_pool = Executors.newFixedThreadPool(BackendConstants.NUM_THREADS);
 		_numThreadsDone = new AtomicInteger(0);
@@ -81,7 +85,7 @@ public abstract class Client implements Runnable{
 	public abstract void addGameData(GameData gameData);
 
 	/**
-	 * Sends a goodbye message to the server
+	 * Sends a goodbye message to the server 
 	 * @throws IOException 
 	 */
 	public void sayGoodbye(boolean cleanGoodbye) {
@@ -93,6 +97,7 @@ public abstract class Client implements Runnable{
 			// Do nothing -- if you can't write this message, just give up
 			e.printStackTrace();
 		}
+		_running = false;
 	}
 	
 	/**
@@ -121,6 +126,10 @@ public abstract class Client implements Runnable{
 		}
 		
 		return _oMapper.readValue(json, ClientRequestContainer.class);
+	}
+	
+	boolean isRunning(){
+		return _running;
 	}
 
 	/**
