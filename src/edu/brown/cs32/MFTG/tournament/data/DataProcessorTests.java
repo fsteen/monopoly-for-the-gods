@@ -90,7 +90,7 @@ public class DataProcessorTests {
 		System.out.println(DataProcessor.aggregate(data, 500).toGameDataReport().toString());
 	}
 	
-//	@Test
+	@Test
 	public void combineAccumulatorsTest(){
 		Random rand = new Random();
 		Player p0=new Player(0,"");
@@ -145,7 +145,7 @@ public class DataProcessorTests {
 		System.out.println(DataProcessor.aggregate(data, 50).toGameDataReport().toString());
 	}
 	
-	@Test
+//	@Test
 	public void generateGameDataReportMany4Player(){
 		Random rand = new Random();
 		Player p0=new Player(0,"");

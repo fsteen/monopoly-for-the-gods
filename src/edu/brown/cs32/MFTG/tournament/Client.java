@@ -344,6 +344,8 @@ public abstract class Client implements Runnable{
 			}
 		}
 		
+		System.out.println("in client " + _id);
+		System.out.println(_data.toGameDataReport());
 		return _data.toGameDataReport();
 	}
 

@@ -326,8 +326,8 @@ public class Tournament implements Runnable{
 	 * @param aggregatedData the data to send
 	 */
 	private void sendEndOfRoundData(GameDataReport aggregatedData) {
-		System.out.println("in tournament");
-		System.out.println(aggregatedData);
+//		System.out.println("in tournament");
+//		System.out.println(aggregatedData);
 		for(ClientHandler c : _clientHandlers){
 			try {
 				c.setGameData(aggregatedData);
