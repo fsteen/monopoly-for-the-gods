@@ -97,7 +97,7 @@ public class RecordsSidePanel extends JPanel{
 		_matchWinningPercentageRecord.setText(String.format("%.3f", r.getMatchWinningPercentage()));
 
 		_numSetsRecord.setText(String.valueOf(r.getNumSets()));
-		_numSetsWonRecord.setText(String.valueOf(r.getNumSets()));
+		_numSetsWonRecord.setText(String.valueOf(r.getNumSetsWon()));
 		_setWinningPercentageRecord.setText(String.format("%.3f", r.getSetWinningPercentage()));
 
 		_numGamesRecord.setText(String.valueOf(r.getNumGames()));
