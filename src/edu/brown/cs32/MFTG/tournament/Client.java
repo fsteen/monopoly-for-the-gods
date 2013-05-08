@@ -76,6 +76,8 @@ public abstract class Client implements Runnable{
 	
 	protected abstract void respondToDisplayData(ClientRequestContainer request) throws IOException, InvalidRequestException;
 	
+	protected abstract void respondToGameClosed();
+	
 	public abstract void startGetPlayer(int time);
 	
 	public abstract Player finishGetPlayer();
@@ -176,7 +178,7 @@ public abstract class Client implements Runnable{
 			respondToDisplayError(request);
 		
 		} else if (method == Method.GAMECLOSED){
-		//	shutDown();
+			respondToGameClosed();
 			
 		} else {
 			System.err.println("Invalid response");
