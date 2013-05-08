@@ -40,7 +40,7 @@ public class AIClient extends Client{
 
 	public AIClient() {
 		super();
-		_player = new Player(_id,"Computer");
+//		_player = new Player(_id,"Computer");
 		_previousPlayer=null;
 		_colorKeys = new HashMap<>(30);
 		initializeColorKeys();
@@ -101,7 +101,7 @@ public class AIClient extends Client{
 			respondToSendConstants();
 		} catch (IOException | InvalidRequestException e1) {
 			System.err.println("An error has occured. AI will now exit");
-			sayGoodbye();
+			sayGoodbye(true);
 			return;
 		}
 
@@ -110,12 +110,12 @@ public class AIClient extends Client{
 				handleRequest();
 			} catch (IOException | InvalidRequestException e){
 				System.err.println("An error has occured. AI will now exit");
-				sayGoodbye();
+				sayGoodbye(false);
 				return;
 			} catch (Exception e){
 				e.printStackTrace();
 				System.err.println("An error has occured. AI will now exit");
-				sayGoodbye();
+				sayGoodbye(false);
 				return;
 			}
 		}
@@ -159,7 +159,11 @@ public class AIClient extends Client{
 	}
 
 	public Player finishGetPlayer(){
+		if(_player == null){
+			_player = new Player(_id,"Computer");
+		}
 		Player temp = new Player(_player);
+		System.out.println("old id " + _player.ID + " new id " + temp.ID);
 		if(_currentGameData==null) {
 			_player.setColorValue("purple", 2.5, 75, 3, 3);
 			_player.setColorValue("light blue", 2.5, 150, 4, 4);
@@ -352,7 +356,6 @@ public class AIClient extends Client{
 					else if(monopolyDif<0){
 						_player.setMonopolyValue(color, _player.getMonopolyValue(color)+monopolyDif*.9);
 					}
-					System.out.println("5b1");
 					double houseDif = _player.getHouseValueOfColor(color)-_previousPlayer.getHouseValueOfColor(color);
 					if(houseDif>0) {
 						_player.setHouseValueOfColor(color, _player.getHouseValueOfColor(color)-houseDif*.9);
@@ -360,7 +363,6 @@ public class AIClient extends Client{
 					else if(houseDif<0){
 						_player.setHouseValueOfColor(color, _player.getHouseValueOfColor(color)+houseDif*.9);
 					}
-					System.out.println("5b2");
 					double sameDif = _player.getSameColorEffect(color)-_previousPlayer.getSameColorEffect(color);
 					if(sameDif>0) {
 						_player.setSameColorEffect(color, _player.getSameColorEffect(color)-sameDif*.9);
@@ -448,6 +450,8 @@ public class AIClient extends Client{
 			}
 		}
 		_previousPlayer=temp;
+		
+		System.out.println("Client-" + _id + " created a player with id " + _player.ID + " and name " + _player.Name);
 		return _player;
 	}
 

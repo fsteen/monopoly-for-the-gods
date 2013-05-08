@@ -46,6 +46,7 @@ public class SettingsPanel extends JPanel{
 	private PlayersScrollPane _playersScrollPane;
 
 	private JList<String> _profileList;
+	private JCheckBox _music;
 	private DefaultListModel<String> _profileListModel;
 	private boolean _selectActivated;
 
@@ -72,11 +73,11 @@ public class SettingsPanel extends JPanel{
 			topPanel.setPreferredSize(topSize);
 			topPanel.setLocation(Constants.FULL_WIDTH/32+3, START_HEIGHT+BUTTON_HEIGHT*6/5);
 
-			JCheckBox music = new JCheckBox("Music: ", true);
-			music.setFont(new Font("musicFont",Font.PLAIN, 30));
-			music.setHorizontalTextPosition(SwingConstants.LEADING);
-//			music.addItemListener(new MusicListener());
-			topPanel.add(music);
+			_music = new JCheckBox("Music: ", _main.getMusicOn());
+			_music.setFont(new Font("musicFont",Font.PLAIN, 30));
+			_music.setHorizontalTextPosition(SwingConstants.LEADING);
+			_music.addItemListener(new MusicListener());
+			topPanel.add(_music);
 			
 			_settingsLite = new ImagePanel(Helper.resize(ImageIO.read(new File("images/SettingsLite.png")), BUTTON_WIDTH-40, BUTTON_HEIGHT));
 			_settingsLoc= new Point(START_WIDTH, START_HEIGHT);
@@ -136,7 +137,8 @@ public class SettingsPanel extends JPanel{
 	 * resets the list of profiles 
 	 */
 	public void resetProfileList() {
-		_settingsScrollPane.addProfileNames();;
+		_settingsScrollPane.addProfileNames();
+		_music.setSelected(_main.getUserMusic());
 	}
 
 	private void addProfileList(){
@@ -256,20 +258,24 @@ public class SettingsPanel extends JPanel{
 
 	}
 	
-//	private class MusicListener implements ItemListener{
-//
-//		@Override
-//		public void itemStateChanged(ItemEvent e) {
-//			if(e.getStateChange()==ItemEvent.SELECTED){
-//				_main.playNextOutOfGameSong();
-//
-//			}
-//			else{
-//				_main.stopMusic();
-//			}
-//			
-//		}
-//		
-//	}
+	private class MusicListener implements ItemListener{
+
+		@Override
+		public void itemStateChanged(ItemEvent e) {
+			if(e.getStateChange()==ItemEvent.SELECTED){
+				if(_main.getMusicOn()==false) {
+					_music.setSelected(false);
+					return;
+				}
+				_main.playNextOutOfGameSong();
+
+			}
+			else{
+				_main.stopMusic();
+			}
+			
+		}
+		
+	}
 }
 

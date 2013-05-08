@@ -23,9 +23,6 @@ public class EndGameMenu extends BoardMenu {
 		_main=main;
 		removeDeleteButton();
 		
-		JCheckBox music = new JCheckBox("Music: ", true);
-		music.setHorizontalTextPosition(SwingConstants.LEADING);
-		music.addItemListener(new MusicListener());
 		
 		JButton back = new JButton("Back");
 		back.addActionListener(new BackListener());
@@ -35,7 +32,6 @@ public class EndGameMenu extends BoardMenu {
 		setPreferredSize(dimension);
 		
 		
-		add(music);
 		add(back);
 	}
 	
@@ -47,21 +43,6 @@ public class EndGameMenu extends BoardMenu {
 			
 		}
 			
-	}
-	
-	private class MusicListener implements ItemListener{
-
-		@Override
-		public void itemStateChanged(ItemEvent e) {
-			if(e.getStateChange()==ItemEvent.SELECTED){
-				_main.playNextInGameSong();
-			}
-			else{
-				_main.stopMusic();
-			}
-			
-		}
-		
 	}
 
 }
