@@ -188,7 +188,6 @@ public class HumanClient extends Client{
 	public Player finishGetPlayer(){
 		if(_timer!= null) _timer.stop();
 		Player p = _gui.getBoard().getPlayer();
-		System.out.println("Client-" + _id + " created a player with id " + p.ID + " and name " + p.Name);
 		return p;
 	}
 	
@@ -212,7 +211,6 @@ public class HumanClient extends Client{
 		int winnerID = combinedData.getPlayerWithMostWins();
 		names.remove(winnerID);
 		names.add(0, _playerNames.get(winnerID));
-		System.out.println("names " + names);
 		
 		/* displays the end game screen */
 		_gui.createEndGame(_gui.getBoard(), winnerID == _id, names.toArray(new String[names.size()]));
@@ -237,7 +235,6 @@ public class HumanClient extends Client{
 	 * Populates the map of player ids to names
 	 */
 	protected void setPlayerNames(List<Player> players){
-		System.out.println("players " + players);
 		for(Player p : players){
 			_playerNames.put(p.ID, p.Name);
 		}

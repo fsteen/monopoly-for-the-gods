@@ -115,7 +115,6 @@ public class Tournament implements Runnable{
 			getPlayerConnections();
 			Thread.sleep(3000);
 		} catch (IOException e) {
-			System.out.println("you are fucked");
 			shutDown();
 			return;
 		} catch (InterruptedException e) {} //swallow
@@ -169,7 +168,6 @@ public class Tournament implements Runnable{
 		while(connectionsMade < _players.size()){
 			Socket clientConnection = _socket.accept();
 			ClientHandler cHandler = new ClientHandler(clientConnection, connectionsMade, _settings);
-			System.out.println("client id " + connectionsMade);
 			connectionsMade++;
 			_clientHandlers.add(cHandler);
 			try {
@@ -290,7 +288,6 @@ public class Tournament implements Runnable{
 
 				if (e.getCause() instanceof ClientExitException){
 					shutDownClient(i, (ClientExitException) e.getCause());
-					System.out.println("here");
 					if (_clientHandlers.size() < 2){
 						sendErrorMessage("Not enough clients remaining to play a game. The game lobby will now close.");
 						return null;

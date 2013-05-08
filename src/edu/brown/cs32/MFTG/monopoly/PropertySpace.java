@@ -29,7 +29,6 @@ public class PropertySpace extends Space {
 				return;
 			}
 			int rent =_property.getRent();
-			//System.out.println(String.format("%s paid %d to %s on %s", currentPlayer, rent, _property.getOwner(),_property));
 			game.transferMoney(currentPlayer, _property.getOwner(), rent);
 			_property.addRevenue(rent);
 

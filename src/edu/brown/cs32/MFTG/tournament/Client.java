@@ -190,7 +190,6 @@ public abstract class Client implements Runnable{
 		}
 		try {
 			_id = Integer.parseInt(arguments.get(0));
-			System.out.println("Im a client with id " + _id);
 			_playGamesTO = Integer.parseInt(arguments.get(1));
 			_displayDataTO = Integer.parseInt(arguments.get(2));
 			_server.setSoTimeout(0); // turn the timeout off, since we may need to wait for others to connect
@@ -269,10 +268,8 @@ public abstract class Client implements Runnable{
 		
 		try {
 			for(Entry<String, Double[]> d : p.getColorValues().entrySet()){
-			//	System.out.println(d);
 			}
 			for(Entry<String, Integer> d : p.getPropertyValues().entrySet()){
-			//	System.out.println(d);
 			}
 			
 			playerString = _oMapper.writeValueAsString(p);
