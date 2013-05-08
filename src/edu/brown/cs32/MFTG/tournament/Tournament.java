@@ -222,7 +222,6 @@ public class Tournament implements Runnable{
 					shutDownClient(i, (ClientExitException) e.getCause());
 					
 					if (_clientHandlers.size() < 2){
-						sendErrorMessage("Not enough clients remaining to play a game. The game lobby will now close.");
 						return null;
 					}
 					
@@ -289,7 +288,6 @@ public class Tournament implements Runnable{
 				if (e.getCause() instanceof ClientExitException){
 					shutDownClient(i, (ClientExitException) e.getCause());
 					if (_clientHandlers.size() < 2){
-						sendErrorMessage("Not enough clients remaining to play a game. The game lobby will now close.");
 						return null;
 					}
 					
@@ -306,7 +304,6 @@ public class Tournament implements Runnable{
 					i--;
 
 					if (_clientHandlers.size() < 2){
-						sendErrorMessage("Not enough clients remaining to play a game. The game lobby will now close.");
 						return null;
 					}
 					
@@ -352,6 +349,11 @@ public class Tournament implements Runnable{
 	 * To be called immediately before the program shuts down
 	 */
 	private void shutDown(){
+		
+		for (ClientHandler c : _clientHandlers){
+			c.shutDown();
+		}
+		
 		try {
 			_socket.close();
 		} catch (IOException e) {

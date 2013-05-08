@@ -158,7 +158,7 @@ public class ClientHandler {
 		// request that the client play the games
 		write(request);
 
-		_client.setSoTimeout(gameTimeout()); // 50 seconds per 10000 games
+		_client.setSoTimeout(gameTimeout());
 		
 		if (_doubleRead){
 			readResponse();
@@ -234,6 +234,13 @@ public class ClientHandler {
 	 * Performs all necessary cleanup
 	 */
 	public void shutDown(){
+		ClientRequestContainer request = new ClientRequestContainer(Method.GAMECLOSED, new ArrayList<String>());
+		try {
+			write(request);
+		} catch (IOException e1) {
+			// shrug and say, "fuck it"
+		}
+		
 		try {
 			_client.close();
 		} catch (IOException e) {

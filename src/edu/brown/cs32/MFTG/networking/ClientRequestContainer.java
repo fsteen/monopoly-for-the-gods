@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class ClientRequestContainer {
-	public enum Method {GETPLAYER, SENDPLAYER, PLAYGAMES, SENDGAMEDATA, DISPLAYGAMEDATA, DISPLAYERROR, SENDCONSTANTS, GOODBYE};
+	public enum Method {GETPLAYER, SENDPLAYER, PLAYGAMES, SENDGAMEDATA, DISPLAYGAMEDATA, DISPLAYERROR, SENDCONSTANTS, GOODBYE, GAMECLOSED};
 	
 	public final Method _method;
 	public final List<String> _arguments;
