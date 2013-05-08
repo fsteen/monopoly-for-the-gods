@@ -16,7 +16,7 @@ public class GameTest {
 		Player p0=new Player(0,"");
 		Player p1=new Player(1,"");
 		
-		Game g = new Game(1,13,1000, 500,false, false, p0,p1);
+		Game g = new Game(1,13,1000, 500,false, true, p0,p1);
 		g.run();
 		g.getGameData().printData();
 		
