@@ -228,7 +228,8 @@ public class HumanClient extends Client{
 		int winnerID = idsAndWins.get(0).getLeft();
 		
 		/* displays the end game screen */
-		_gui.createEndGame(_gui.getBoard(), winnerID == _id, names);
+		boolean isWinner = idsAndWins.get(winnerID) == idsAndWins.get(_id);
+		_gui.createEndGame(_gui.getBoard(), isWinner, names);
 		if(_gui.getUserMusic())_gui.playNextOutOfGameSong();
 		
 		/* update records */
@@ -246,8 +247,7 @@ public class HumanClient extends Client{
 		_gui.getBoard().setWealthData(getPlayerWealthData(data._timeStamps));
 	}
 	
-	/**		for(int i = 0; i < BackendConstants.m)
-
+	/**
 	 * Populates the map of player ids to names
 	 */
 	protected void setPlayerNames(List<Player> players){		
