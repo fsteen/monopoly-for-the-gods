@@ -134,6 +134,6 @@ public class GameDataReport {
 		GameDataReport that = (GameDataReport) o;
 		
 		return Objects.equals(_timeStamps, that._timeStamps) && Objects.equals(_overallPlayerPropertyData, that._overallPlayerPropertyData)
-				&& Objects.equals(_playerWins, that._playerWins) && Objects.equals(_winList, that._winList) && _matchIsOver == that._matchIsOver;  //TODO add back in
+			&& Objects.equals(_playerWins, that._playerWins) && Objects.equals(_winList, that._winList) && _matchIsOver == that._matchIsOver;  //TODO add back in
 	}
 }

@@ -10,9 +10,12 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -31,6 +34,7 @@ import edu.brown.cs32.MFTG.networking.InvalidRequestException;
 import edu.brown.cs32.MFTG.tournament.data.DataProcessor;
 import edu.brown.cs32.MFTG.tournament.data.GameDataAccumulator;
 import edu.brown.cs32.MFTG.tournament.data.GameDataReport;
+import edu.brown.cs32.MFTG.tournament.data.Pair;
 
 public class HumanClient extends Client{
 
@@ -157,6 +161,27 @@ public class HumanClient extends Client{
 	}
 	
 	/**
+	 * Called by the game runnables to update GameData info
+	 * when they finish playing
+	 * @param gameData
+	 */
+	public synchronized void addGameData(GameData gameData){		
+		List<GameData> dataList = new ArrayList<>();
+		dataList.add(gameData);
+		GameDataAccumulator newData = DataProcessor.aggregate(dataList,BackendConstants.NUM_DATA_POINTS);
+
+		_data = _data == null ? newData :
+			DataProcessor.combineAccumulators(_data, DataProcessor.aggregate(dataList,BackendConstants.NUM_DATA_POINTS));
+
+		/* display data and determine the next display point */
+		_numGamesPlayed++;
+		if(_numGamesPlayed >= _nextDisplaySize){
+			sendDataToGui(_data.toGameDataReport());
+			_nextDisplaySize += BackendConstants.DATA_PACKET_SIZE;
+		}
+	}
+	
+	/**
 	 * Starts the timer for choosing heuristics, after which the player will be retrieved
 	 * @param the time, in seconds, to wait before requesting the player
 	 */
@@ -183,17 +208,27 @@ public class HumanClient extends Client{
 	 */
 	private void finishMatch(GameDataReport combinedData){
 		int numPlayers = combinedData._timeStamps.get(0).wealthData.size();
-		List<String> names = new ArrayList<>();
 		
-		for(int i = 0; i < BackendConstants.MAX_NUM_PLAYERS; i++){
-			names.add(i < numPlayers ? _playerNames.get(i) : "");
+		List<Pair<Integer,Double>> idsAndWins = new ArrayList<>();
+		for(Entry<Integer, Double> d : combinedData._playerWins.entrySet()){
+			idsAndWins.add(new Pair<Integer,Double>(d.getKey(), d.getValue()));
 		}
-		int winnerID = combinedData.getPlayerWithMostWins();
-		names.remove(winnerID);
-		names.add(0, _playerNames.get(winnerID));
+		Collections.sort(idsAndWins, new Comparator<Pair<Integer, Double>>(){
+			@Override
+			public int compare(Pair<Integer, Double> o1, Pair<Integer, Double> o2) {
+				return o2.getRight().compareTo(o1.getRight());
+			}
+		});
+		String name;
+		String[] names = new String[idsAndWins.size()];
+		for(int i = 0; i < idsAndWins.size(); i++){
+			name = idsAndWins.get(i).getLeft() < numPlayers ? _playerNames.get(idsAndWins.get(i).getLeft()) : "";
+			names[i] = name;
+		}
+		int winnerID = idsAndWins.get(0).getLeft();
 		
 		/* displays the end game screen */
-		_gui.createEndGame(_gui.getBoard(), winnerID == _id, names.toArray(new String[names.size()]));
+		_gui.createEndGame(_gui.getBoard(), winnerID == _id, names);
 		if(_gui.getUserMusic())_gui.playNextOutOfGameSong();
 		
 		/* update records */
@@ -211,10 +246,11 @@ public class HumanClient extends Client{
 		_gui.getBoard().setWealthData(getPlayerWealthData(data._timeStamps));
 	}
 	
-	/**
+	/**		for(int i = 0; i < BackendConstants.m)
+
 	 * Populates the map of player ids to names
 	 */
-	protected void setPlayerNames(List<Player> players){
+	protected void setPlayerNames(List<Player> players){		
 		for(Player p : players){
 			_playerNames.put(p.ID, p.Name);
 		}
