@@ -347,36 +347,6 @@ public abstract class Client implements Runnable{
 
 		return _data.toGameDataReport();
 	}
-//	public GameDataReport playGames(List<Player> players, List<Long> seeds, Settings settings) {
-//		setPlayerNames(players); /* record the player names for displaying at the end */
-//		List<Future<GameData>> gameDataFutures = new ArrayList<>();
-//		GameDataAccumulator all;
-//		GameRunnerFactory gameRunnerFactory = new GameRunnerFactory(BackendConstants.MAX_NUM_TURNS,
-//				settings.freeParking,settings.doubleOnGo,settings.auctions,players.toArray(new Player[players.size()]));
-//		
-//		/* launch the games in separate threads */
-//		for(int i = 0; i < seeds.size(); i++){
-//			gameDataFutures.add(_pool.submit(gameRunnerFactory.build(i, seeds.get(i))));
-//		}
-//		
-//		/* wait for the games to finish */
-//		try{
-//			int nextDisplaySize = BackendConstants.DATA_PACKET_SIZE; /* reset the next display point */
-//			all = DataProcessor.aggregate(gameDataFutures.get(0).get(),BackendConstants.NUM_DATA_POINTS);
-//			for(int i = 1; i < gameDataFutures.size(); i++){
-//				DataProcessor.combineAccumulators(all, DataProcessor.aggregate(gameDataFutures.get(i).get(),BackendConstants.NUM_DATA_POINTS));
-//				if(i >= nextDisplaySize){
-//					sendDataToGui(all.toGameDataReport());
-//					nextDisplaySize += BackendConstants.DATA_PACKET_SIZE;
-//				}
-//			}
-//			return all.toGameDataReport();
-//		} catch (InterruptedException | ExecutionException e) {
-//			/* if all else fails ... just play one game and return the results */
-//			GameRunner g = gameRunnerFactory.build(0,seeds.get(0));
-//			return DataProcessor.aggregate(g.call(),BackendConstants.NUM_DATA_POINTS).toGameDataReport();
-//		}
-//	}
 
 	/**
 	 * Find the player property data specific to this player
