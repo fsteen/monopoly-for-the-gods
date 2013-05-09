@@ -149,6 +149,17 @@ public class AIClient extends Client{
 	protected void respondToGameClosed(){
 		_running = false;
 	}
+	
+	public synchronized void addGameData(GameData gameData){
+		List<GameData> temp = new ArrayList<>();
+		temp.add(gameData);
+		GameDataAccumulator a = DataProcessor.aggregate(temp,BackendConstants.NUM_DATA_POINTS);
+		if(_data == null){
+			_data = a;
+		} else {
+			DataProcessor.combineAccumulators(_data, DataProcessor.aggregate(temp,BackendConstants.NUM_DATA_POINTS));
+		}
+	}
 
 	public void startGetPlayer(int time){
 		finishRespondToGetPlayer();
@@ -346,6 +357,4 @@ public class AIClient extends Client{
 	protected void respondToDisplayError(ClientRequestContainer request) {} /* do nothing, there is no error to display */
 
 	protected void setPlayerNames(List<Player> players){} /* do nothing */
-	
-	protected void sendDataToGui(GameDataReport data){} /* do nothing */
 }
