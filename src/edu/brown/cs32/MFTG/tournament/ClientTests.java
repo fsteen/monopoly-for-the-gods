@@ -1,23 +1,23 @@
 package edu.brown.cs32.MFTG.tournament;
 
-import static org.junit.Assert.*;
 
+import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import org.junit.Test;
 
-import edu.brown.cs32.MFTG.monopoly.GameData;
 import edu.brown.cs32.MFTG.monopoly.Player;
 import edu.brown.cs32.MFTG.tournament.data.GameDataAccumulator;
 import edu.brown.cs32.MFTG.tournament.data.GameDataReport;
+import edu.brown.cs32.MFTG.tournament.Settings.WinningCondition;
 
 public class ClientTests {
 
 //	@Test
 	public void threadingTest(){
-		//NOTE : have GameRunnerFactory construct DummyGameRunners for this test
+		//NOTE : have GameRunnerFactory construct DummyGameRunners for this test  ... this class no longer exists
 		
 		List<Long> seeds = new ArrayList<>();
 		seeds.add((long) 1);
@@ -31,7 +31,7 @@ public class ClientTests {
 		
 	}
 	
-	@Test
+	//@Test
 	public void playGamesTest(){
 		List<Player> players = new ArrayList<>();
 		players.add(new Player(0,""));
@@ -45,6 +45,8 @@ public class ClientTests {
 		seeds.add((long) -22222);
 		seeds.add((long) 98989);
 		seeds.add((long) 77733);
+		
+		Settings s = new Settings(1000, 30, false, -1, false, WinningCondition.MOST_MONEY, 0, 0);
 		
 		Client p = new HumanClient(false);
 		GameDataReport data = p.playGames(players, seeds, null);
