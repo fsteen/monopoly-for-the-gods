@@ -1,7 +1,5 @@
 package edu.brown.cs32.MFTG.tournament;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 import edu.brown.cs32.MFTG.monopoly.Game;
 import edu.brown.cs32.MFTG.monopoly.Player;
 
@@ -13,13 +11,8 @@ public class GameRunnerFactory {
 	private int _maxNumTurns, _freeParking;
 	private boolean _doubleOnGo, _auctions;
 	private Player[] _players;
-	private Client _module;
-	private AtomicInteger _numThreadsDone;
 	
-	public GameRunnerFactory(AtomicInteger numThreadsDone, Client module,
-			int maxNumTurns, int freeParking, boolean doubleOnGo, boolean auctions, Player...players){
-		_numThreadsDone = numThreadsDone;
-		_module = module;
+	public GameRunnerFactory(int maxNumTurns, int freeParking, boolean doubleOnGo, boolean auctions, Player...players){
 		_maxNumTurns = maxNumTurns;
 		_freeParking = freeParking;
 		_doubleOnGo = doubleOnGo;
@@ -29,11 +22,6 @@ public class GameRunnerFactory {
 	
 	public GameRunner build(int gameNum, long seed){
 		return new GameRunner(
-				new Game(gameNum,seed,_maxNumTurns,_freeParking,_doubleOnGo,_auctions,_players),
-				_numThreadsDone,
-				_module);
-		
-//		//for testing
-//		return new DummyGameRunner(null, _threadsDone, _module);
+				new Game(gameNum,seed,_maxNumTurns,_freeParking,_doubleOnGo,_auctions,_players));
 	}
 }

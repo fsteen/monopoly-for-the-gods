@@ -10,9 +10,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.Future;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -25,6 +26,7 @@ import edu.brown.cs32.MFTG.monopoly.Player;
 import edu.brown.cs32.MFTG.networking.ClientRequestContainer;
 import edu.brown.cs32.MFTG.networking.ClientRequestContainer.Method;
 import edu.brown.cs32.MFTG.networking.InvalidRequestException;
+import edu.brown.cs32.MFTG.tournament.data.DataProcessor;
 import edu.brown.cs32.MFTG.tournament.data.GameDataAccumulator;
 import edu.brown.cs32.MFTG.tournament.data.GameDataReport;
 import edu.brown.cs32.MFTG.tournament.data.PlayerWealthDataReport;
@@ -48,21 +50,14 @@ public abstract class Client implements Runnable{
 	protected int _displayDataTO;
 
 	/* Module variables */
-	protected int _nextDisplaySize;
-	protected int _numGamesPlayed;
-	protected GameDataAccumulator _data;
-	protected AtomicInteger _numThreadsDone;
 	protected ExecutorService _pool;
 	protected int _id;
 
 	public Client() {
 		_oMapper = new ObjectMapper();
 		_lastRequest = Method.DISPLAYGAMEDATA;
-		
 		_running = true;
-
 		_pool = Executors.newFixedThreadPool(BackendConstants.NUM_THREADS);
-		_numThreadsDone = new AtomicInteger(0);
 	}
 	
 	public void connect(int port, String host){
@@ -76,14 +71,16 @@ public abstract class Client implements Runnable{
 	
 	protected abstract void respondToDisplayData(ClientRequestContainer request) throws IOException, InvalidRequestException;
 	
+	protected abstract void respondToGameClosed();
+	
 	public abstract void startGetPlayer(int time);
 	
 	public abstract Player finishGetPlayer();
 	
 	protected abstract void setPlayerNames(List<Player> players);
 	
-	public abstract void addGameData(GameData gameData);
-
+	protected abstract void sendDataToGui(GameDataReport data);
+	
 	/**
 	 * Sends a goodbye message to the server 
 	 * @throws IOException 
@@ -175,8 +172,11 @@ public abstract class Client implements Runnable{
 		} else if (method == Method.DISPLAYERROR){
 			respondToDisplayError(request);
 		
+		} else if (method == Method.GAMECLOSED){
+			respondToGameClosed();
+			
 		} else {
-			assert(false);
+			System.err.println("Invalid response");
 		}
 	}
 
@@ -314,32 +314,35 @@ public abstract class Client implements Runnable{
 	 * @param settings the game settings
 	 * @return the data collected from the games
 	 */
-	public GameDataReport playGames(List<Player> players, List<Long> seeds, Settings settings){
-		/* reset variables */
-		_numGamesPlayed = 0;
-		_data = null;
-		_nextDisplaySize = BackendConstants.DATA_PACKET_SIZE;
-		_numThreadsDone.set(0);
+	public GameDataReport playGames(List<Player> players, List<Long> seeds, Settings settings) {
 		setPlayerNames(players);
-		
-		/* launch the games in separate threads */
-		GameRunnerFactory gameRunnerFactory = new GameRunnerFactory(_numThreadsDone, this, BackendConstants.MAX_NUM_TURNS,
+		List<Future<GameData>> gameDataFutures = new ArrayList<>();
+		GameDataAccumulator all;
+		GameRunnerFactory gameRunnerFactory = new GameRunnerFactory(BackendConstants.MAX_NUM_TURNS,
 				settings.freeParking,settings.doubleOnGo,settings.auctions,players.toArray(new Player[players.size()]));
 		
+		/* launch the games in separate threads */
 		for(int i = 0; i < seeds.size(); i++){
-			_pool.execute(gameRunnerFactory.build(i,seeds.get(i)));
+			gameDataFutures.add(_pool.submit(gameRunnerFactory.build(i, seeds.get(i))));
 		}
 		
 		/* wait for the games to finish */
-		synchronized (this){
-			while(_numThreadsDone.get() < seeds.size()){
-				try{
-					this.wait();
-				} catch (InterruptedException e){}
+		try{
+			int nextDisplaySize = BackendConstants.DATA_PACKET_SIZE;
+			all = DataProcessor.aggregate(gameDataFutures.get(0).get(),BackendConstants.NUM_DATA_POINTS);
+			for(int i = 1; i < gameDataFutures.size(); i++){
+				DataProcessor.combineAccumulators(all, DataProcessor.aggregate(gameDataFutures.get(i).get(),BackendConstants.NUM_DATA_POINTS));
+				if(i >= nextDisplaySize){
+					sendDataToGui(all.toGameDataReport());
+					nextDisplaySize += BackendConstants.DATA_PACKET_SIZE;
+				}
 			}
+			return all.toGameDataReport();
+		} catch (InterruptedException | ExecutionException e) {
+			/* just play one game and return the results */
+			GameRunner g = gameRunnerFactory.build(0,seeds.get(0));
+			return DataProcessor.aggregate(g.call(),BackendConstants.NUM_DATA_POINTS).toGameDataReport();
 		}
-		
-		return _data.toGameDataReport();
 	}
 
 	/**

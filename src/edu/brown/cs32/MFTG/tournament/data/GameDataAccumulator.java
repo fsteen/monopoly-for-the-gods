@@ -95,7 +95,7 @@ public class GameDataAccumulator {
 		/* Add the overall property information */
 		for(PropertyDataAccumulator p : gamePropertyData.values()){
 			temp = setPropertyData.get(p.propertyName);
-			/* if the property was monopolized, add the value it maxed out at */
+			/* if the property was monopolized (recorded in accTimeOwned here), add the value it maxed out at */
 			temp.accNumHouses += p.accTimeOwned > 0 ? p.accNumHouses : 0;
 			temp.numDataPointsMonopolized += p.accTimeOwned > 0 ? 1 : 0;
 			temp.accTotalRevenueWithHouses += p.accTotalRevenueWithHouses;
@@ -289,13 +289,18 @@ public class GameDataAccumulator {
 
 /*
 What is being calculated:
+Property Data:
+numHouses - the average max number of houses for games in which there was a monopoly on this property
+numDataPointsMonopolized - the number of timestamps for which it was monopolized
+totalRevenueWithHouses - the average max totalRevenueWithHouses
+totalRevenueWithoutHouses - the average max totalRevenueWithoutHouses
+numDataPoints - the number of data points for this property
 
+Player Property Data:
 
-
-
-
-
-
-
-
+numHouses - the average max number of houses for games in which this player had a monopoly on this property
+numDataPointsMonopolized - the number of timestamps for which it was monopolized for this player
+totalRevenueWithHouses - the average max totalRevenueWithHouses for times when this player owned the property
+totalRevenueWithoutHouses - the average max totalRevenueWithoutHouses for times when this player owned the property
+numDataPoints - the number of data points for this property for this player
 */

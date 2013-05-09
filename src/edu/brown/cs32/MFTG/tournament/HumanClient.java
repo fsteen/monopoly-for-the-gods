@@ -118,6 +118,11 @@ public class HumanClient extends Client{
 
 		displayGameData(gameDataReport);
 	}
+	
+	protected void respondToGameClosed(){
+		_running = false;
+		_gui.switchPanels("greet");
+	}
 
 	/*******************************************************/
 
@@ -136,7 +141,6 @@ public class HumanClient extends Client{
 	public void displayGameData(GameDataReport combinedData) {
 		/* update records */
 		_gui.getCurrentProfile().getRecord().addSet(combinedData.getPlayerWithMostWins() == _id);
-		System.out.println("client " + _id + " winner " + combinedData.getPlayerWithMostWins());
 		for(Integer i : combinedData._winList.values()){
 			_gui.getCurrentProfile().getRecord().addGame(i == _id);
 		}
@@ -150,27 +154,6 @@ public class HumanClient extends Client{
 		/* update the board */
 		sendDataToGui(combinedData);
 		_gui.getBoard().setWinnerData(combinedData._playerWins, _playerNames);
-	}
-	
-	/**
-	 * Called by the game runnables to update GameData info
-	 * when they finish playing
-	 * @param gameData
-	 */
-	public synchronized void addGameData(GameData gameData){		
-		List<GameData> dataList = new ArrayList<>();
-		dataList.add(gameData);
-		GameDataAccumulator newData = DataProcessor.aggregate(dataList,BackendConstants.NUM_DATA_POINTS);
-		
-		_data = _data == null ? newData :
-			DataProcessor.combineAccumulators(_data, DataProcessor.aggregate(dataList,BackendConstants.NUM_DATA_POINTS));
-		
-		/* display data and determine the next display point */
-		_numGamesPlayed++;
-		if(_numGamesPlayed >= _nextDisplaySize){
-			sendDataToGui(_data.toGameDataReport());
-			_nextDisplaySize += BackendConstants.DATA_PACKET_SIZE;
-		}
 	}
 	
 	/**
@@ -200,13 +183,7 @@ public class HumanClient extends Client{
 	 */
 	private void finishMatch(GameDataReport combinedData){
 		int numPlayers = combinedData._timeStamps.get(0).wealthData.size();
-		
-		
-		
-		
 		List<String> names = new ArrayList<>();
-		
-//		for(int i = 0; )
 		
 		for(int i = 0; i < BackendConstants.MAX_NUM_PLAYERS; i++){
 			names.add(i < numPlayers ? _playerNames.get(i) : "");
@@ -220,8 +197,6 @@ public class HumanClient extends Client{
 		if(_gui.getUserMusic())_gui.playNextOutOfGameSong();
 		
 		/* update records */
-		System.out.println("updating records");
-		System.out.println("client " + _id + " winner " + winnerID);
 		_gui.getCurrentProfile().getRecord().addMatch(winnerID == _id);
 		_gui.saveProfiles();
 	}
@@ -230,7 +205,7 @@ public class HumanClient extends Client{
 	 * Updates data in the gui
 	 * @param data 
 	 */
-	private void sendDataToGui(GameDataReport data){
+	protected void sendDataToGui(GameDataReport data){
 		_gui.getBoard().setPlayerSpecificPropertyData(getPlayerPropertyData(data._overallPlayerPropertyData));
 		_gui.getBoard().setPropertyData(data._overallPropertyData);
 		_gui.getBoard().setWealthData(getPlayerWealthData(data._timeStamps));
