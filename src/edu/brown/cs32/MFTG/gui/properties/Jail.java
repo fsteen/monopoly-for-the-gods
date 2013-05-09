@@ -63,6 +63,7 @@ public class Jail extends CornerProperty{
 	
 	public List<Integer> getWait() {
 		List<Integer> waits = new ArrayList<>();
+		System.out.println("JAIL: wait is " + waits);
 		if(_wait!=null) waits.add(_wait);
 		else waits.add(3);
 		if(_poor!=null) waits.add(_poor);
@@ -73,6 +74,11 @@ public class Jail extends CornerProperty{
 	}
 
 	public void setWaits(int jailWait, int jailPoor, int jailRich) {
+		_wait = jailWait;
+		System.out.println("JAIL: jail wait is " + jailWait);
+		_poor = jailPoor;
+		_rich = jailRich;
+		
 		_jailWait.setSelectedIndex(jailWait);
 		_jailWait.setSelectedIndex(jailPoor);
 		_jailWait.setSelectedIndex(jailRich);

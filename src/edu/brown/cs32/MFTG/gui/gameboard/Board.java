@@ -424,10 +424,14 @@ public class Board extends JPanel {
 		
 		List<Integer> waits = _jail.getWait();
 		player.setJailWait(waits.get(0));
+		System.out.println("jail wait: " + waits.get(0));
 		player.setJailPoor(waits.get(1));
 		player.setJailRich(waits.get(2));
 		
 		_center.setButtonChoices(player);
+		
+		this.setHeuristics(player);
+		
 		return player;
 	}
 	
