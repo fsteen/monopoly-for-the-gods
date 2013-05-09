@@ -56,8 +56,6 @@ public class DynamicChartPanel extends ChartPanel {
 		this.setPreferredSize(dim);
 		this.setSize(dim);
 		
-		setToolTipText("i'm here");
-		
 		this.setLocation(0, 0);
 		initializeButtons();
 	}
@@ -91,9 +89,9 @@ public class DynamicChartPanel extends ChartPanel {
 		_buildCash = new JButton("Build");
 		_unmortgageCash = new JButton("Unmortgage");
 		
-		_buyCash.setToolTipText("<html>Set the minimum amount of cash needed in order to buy properties<br/>click this then drag the line in the graph<html/");
-		_buildCash.setToolTipText("<html>Set the minimum amount of cash needed in order to build houses<br/>click this then drag the line in the graph<html/");
-		_unmortgageCash.setToolTipText("<html>Set the minimum amount of cash needed in order to unmortgage properties<br/>click this then drag the line in the graph<html/");
+		_buyCash.setToolTipText("<html>Gray: Wealth; Black: Cash<br/>Set the minimum amount of cash needed in order to buy properties<br/>click this then drag the line in the graph<html/");
+		_buildCash.setToolTipText("<html>Gray: Wealth; Black: Cash<br/>Set the minimum amount of cash needed in order to build houses<br/>click this then drag the line in the graph<html/");
+		_unmortgageCash.setToolTipText("<html>Gray: Wealth; Black: Cash<br/>Set the minimum amount of cash needed in order to unmortgage properties<br/>click this then drag the line in the graph<html/");
 		
 		_buyCash.setLocation(180, 5);
 		_buildCash.setLocation(230, 5);
