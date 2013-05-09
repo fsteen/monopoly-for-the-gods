@@ -56,21 +56,26 @@ public class WinnerPanelVertical extends JPanel {
 	public void update (Map<Integer, Double> data, Map<Integer, String> names) {
 		_chart.setTitle("Who's Winning?");
 		Integer negativeOne = new Integer(-1);
-		int series = -1;
 		for(Integer i: data.keySet()) {
+			System.out.println("\ni'm looking at: " + i);
 			if(i.equals(negativeOne)) {
+				System.out.println("its a tie");
 				_dataset.addValue(data.get(i), "Tie", "Player");
 			}
 			else if (i.equals(_id)) {
-				series = _dataset.getRowCount();
 				_dataset.addValue(data.get(i), names.get(i) + " (ME!)", "Player");
 				_dataset.getColumnCount();
 			}
 			else {
 				if(names.containsKey(i))
-					_dataset.addValue(data.get(i), names.get(i), "Player");
-				else 
-					_dataset.addValue(data.get(i), "Player " + i, "Player");
+				{
+					System.out.println("player name: " + names.get(i));
+					_dataset.addValue(data.get(i), names.get(i) + " (" + i + ")", "Player");
+				}
+				else {
+					System.out.println("no name");
+					_dataset.addValue(data.get(i), "Player " + i, "Player");					
+				}
 			}
 		}
 	}

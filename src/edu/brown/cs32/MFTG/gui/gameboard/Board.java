@@ -424,13 +424,10 @@ public class Board extends JPanel {
 		
 		List<Integer> waits = _jail.getWait();
 		player.setJailWait(waits.get(0));
-		System.out.println("jail wait: " + waits.get(0));
 		player.setJailPoor(waits.get(1));
 		player.setJailRich(waits.get(2));
 		
 		_center.setButtonChoices(player);
-		
-		this.setHeuristics(player);
 		
 		return player;
 	}
@@ -480,6 +477,8 @@ public class Board extends JPanel {
 	}
 	
 	public void setWinnerData(Map<Integer, Double> data, Map<Integer, String> names){
+		System.out.println("winner value: " + data);
+		System.out.println("name value: " + names);
 		_center.setWinnerData(data, names);
 	}
 
