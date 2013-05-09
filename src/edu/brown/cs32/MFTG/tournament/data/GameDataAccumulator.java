@@ -297,10 +297,14 @@ totalRevenueWithoutHouses - the average max totalRevenueWithoutHouses
 numDataPoints - the number of data points for this property
 
 Player Property Data:
-
 numHouses - the average max number of houses for games in which this player had a monopoly on this property
 numDataPointsMonopolized - the number of timestamps for which it was monopolized for this player
 totalRevenueWithHouses - the average max totalRevenueWithHouses for times when this player owned the property
 totalRevenueWithoutHouses - the average max totalRevenueWithoutHouses for times when this player owned the property
 numDataPoints - the number of data points for this property for this player
+
+Player Wealth Data: (A list of these for each Time Stamp)
+cash - the average cash at a given time in the game
+wealth - the average wealth at a given time in the game
+numDataPoints - the number of data ponits for this point in the game
 */
