@@ -390,9 +390,7 @@ public class Board extends JPanel {
 		_player = null;
 	}
 	
-	public Player getHeuristics () {
-		_center.disableGraph();
-		
+	public Player getHeuristics () {		
 		Player player = new Player(_id,_profile._name);
 		
 		HashMap<String, Integer> propertyValues = new HashMap<>();
@@ -433,6 +431,7 @@ public class Board extends JPanel {
 	}
 	
 	public Player getPlayer () {
+		_center.disableGraph();
 		if(_player != null) {
 			return _player;
 		}
@@ -487,7 +486,6 @@ public class Board extends JPanel {
 	
 	public void setWealthData(List<PlayerWealthDataReport> data) {
 		_center.setWealthData(data);
-		
 		
 		this.validate();
 		this.updateUI();

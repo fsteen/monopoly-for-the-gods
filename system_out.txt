@@ -1,65 +1,28 @@
-client id 0
-client id 1
-Im a client with id 0
-Im a client with id 1
-Client-0 created a player with id 0 and name Judah
-players [0-Player, 1-Player]
-aggregate railroad property data
-aggregate railroad property data
-aggregate railroad property data
-aggregate railroad property data
-railroad time owned: 0.0
-railroad time owned: 0.0
-railroad time owned: 0.0
-railroad time owned: 0.0
-Client-0 created a player with id 0 and name Judah
-players [0-Player, 1-Player]
-aggregate railroad property data
-aggregate railroad property data
-aggregate railroad property data
-aggregate railroad property data
-railroad time owned: 0.0
-railroad time owned: 0.0
-railroad time owned: 0.0
-railroad time owned: 0.0
-YOU SUCK!
-Client-0 created a player with id 0 and name Judah
-players [0-Player, 1-Player]
-aggregate railroad property data
-aggregate railroad property data
-aggregate railroad property data
-aggregate railroad property data
-railroad time owned: 0.0
-railroad time owned: 0.0
-railroad time owned: 0.0
-railroad time owned: 0.0
-KEEP GOING!
-Client-0 created a player with id 0 and name Judah
-players [0-Player, 1-Player]
-aggregate railroad property data
-aggregate railroad property data
-aggregate railroad property data
-aggregate railroad property data
-KEEP GOING!
-railroad time owned: 0.0
-railroad time owned: 0.0
-railroad time owned: 0.0
-railroad time owned: 0.0
-Client-0 created a player with id 0 and name Judah
-players [0-Player, 1-Player]
-names [Computer, Judah, , ]
-aggregate railroad property data
-aggregate railroad property data
-aggregate railroad property data
-aggregate railroad property data
-railroad time owned: 0.0
-railroad time owned: 0.0
-railroad time owned: 0.0
-railroad time owned: 0.0
-client id 0
-Im a client with id 0
-client id 1
-Im a client with id 1
-Client-0 created a player with id 0 and name Judah
-players [0-Player, 1-Player]
-here
+
+i'm looking at: 0
+player name: Chizu
+
+i'm looking at: 1
+
+i'm looking at: 2
+no name
+
+i'm looking at: 3
+no name
+
+i'm looking at: -1
+its a tie
+i'm looking at: 0
+
+i'm looking at: 1
+player name: Alex
+
+i'm looking at: 2
+no name
+
+i'm looking at: 3
+no name
+
+i'm looking at: -1
+its a tie
+e

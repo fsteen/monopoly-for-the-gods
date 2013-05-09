@@ -14,12 +14,12 @@ public class Main {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		/*try {
+		try {
 			System.setErr(new PrintStream(new FileOutputStream("system_err.txt")));
 			System.setOut(new PrintStream(new FileOutputStream("system_out.txt")));
 		} catch (FileNotFoundException e) {
 			System.exit(1);
-		}*/
+		}
 		boolean music=false;
 		if(args.length>0&&args[0].equals("-music")){
 			music=true;
