@@ -4,16 +4,15 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -27,7 +26,6 @@ import edu.brown.cs32.MFTG.monopoly.Player;
 import edu.brown.cs32.MFTG.networking.ClientRequestContainer;
 import edu.brown.cs32.MFTG.networking.ClientRequestContainer.Method;
 import edu.brown.cs32.MFTG.networking.InvalidRequestException;
-import edu.brown.cs32.MFTG.tournament.data.DataProcessor;
 import edu.brown.cs32.MFTG.tournament.data.GameDataAccumulator;
 import edu.brown.cs32.MFTG.tournament.data.GameDataReport;
 import edu.brown.cs32.MFTG.tournament.data.PlayerWealthDataReport;
@@ -51,7 +49,8 @@ public abstract class Client implements Runnable{
 	protected int _displayDataTO;
 
 	/* Module variables */
-	protected ExecutorService _pool;
+	protected ExecutorService _tournamentPool;
+	protected ExecutorService _gamePool;
 	protected int _id;
 	protected int _nextDisplaySize;
 	protected int _numGamesPlayed;
@@ -62,7 +61,7 @@ public abstract class Client implements Runnable{
 		_oMapper = new ObjectMapper();
 		_lastRequest = Method.DISPLAYGAMEDATA;
 		_running = true;
-		_pool = Executors.newFixedThreadPool(BackendConstants.NUM_THREADS);
+		_tournamentPool = Executors.newFixedThreadPool(BackendConstants.NUM_THREADS);
 		_numThreadsDone = new AtomicInteger(0);
 	}
 	
@@ -98,7 +97,6 @@ public abstract class Client implements Runnable{
 			write(r);
 		} catch (IOException e) {
 			// Do nothing -- if you can't write this message, just give up
-			e.printStackTrace();
 		}
 		_running = false;
 	}
@@ -298,7 +296,7 @@ public abstract class Client implements Runnable{
 		try {
 			write(response);
 		} catch (IOException e) {
-			e.printStackTrace();
+			// there's nothing you can really do here...
 		}
 	}
 	
@@ -310,7 +308,7 @@ public abstract class Client implements Runnable{
 	 * @throws IOException 
 	 */
 	public void launchTournament(List<Integer> players, Settings settings, int port) throws IOException{
-		_pool.execute((new Tournament(players, settings, port)));
+		_tournamentPool.execute((new Tournament(players, settings, port)));
 	}
 	
 	/**
@@ -333,7 +331,7 @@ public abstract class Client implements Runnable{
 				settings.freeParking,settings.doubleOnGo,settings.auctions,players.toArray(new Player[players.size()]));
 
 		for(int i = 0; i < seeds.size(); i++){
-			_pool.execute(gameRunnerFactory.build(i,seeds.get(i)));
+			_gamePool.execute(gameRunnerFactory.build(i,seeds.get(i)));
 		}
 
 		/* wait for the games to finish */

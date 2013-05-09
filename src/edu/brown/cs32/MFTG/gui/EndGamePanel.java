@@ -86,10 +86,10 @@ public class EndGamePanel extends JPanel{
 			_name4.setSize(nameSize);
 			_name4.setPreferredSize(nameSize);
 			
-			_name1.setLocation(10,245);
-			_name2.setLocation(140,380);
-			_name3.setLocation(260,560);
-			_name4.setLocation(390,770);
+			_name1.setLocation(10,250);
+			_name2.setLocation(145,385);
+			_name3.setLocation(275,570);
+			_name4.setLocation(415,810);
 			
 			_name1.setFont(_nameFont);
 			_name2.setFont(_nameFont);

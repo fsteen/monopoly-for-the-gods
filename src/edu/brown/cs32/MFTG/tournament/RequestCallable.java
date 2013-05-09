@@ -23,16 +23,19 @@ public class RequestCallable implements Callable<Void>{
 			try {
 			_client.handleRequest();
 			} catch (InvalidRequestException e){
-				_client.displayMessage("An invalid request has been received from the server. Now exiting the game.");
+				if (_client.isRunning()) _client.displayMessage("An invalid request has been received from the server. Now exiting the game.");
 				_client.returnToWelcomeScreen();
+				_client._gamePool.shutdown();
 				return null;
 			} catch (IOException e){
-				_client.displayMessage("An error communicating with the server has occured. Now exiting the game.");
+				if (_client.isRunning()) _client.displayMessage("An error communicating with the server has occured. Now exiting the game.");
 				_client.returnToWelcomeScreen();
+				_client._gamePool.shutdown();
 				return null;
 			} catch (Exception e){
-				e.printStackTrace();
+				if (_client.isRunning()) _client.displayMessage("An error has occured. Now exiting the game.");
 				_client.returnToWelcomeScreen();
+				_client._gamePool.shutdown();
 				return null;
 			}
 		}

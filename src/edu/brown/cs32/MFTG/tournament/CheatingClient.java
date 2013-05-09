@@ -38,7 +38,7 @@ public class CheatingClient extends HumanClient {
 				settings.freeParking,settings.doubleOnGo,settings.auctions,players.toArray(new Player[players.size()]));
 
 		for(int i = 0; i < seeds.size(); i++){
-			_pool.execute(gameRunnerFactory.build(i,rand.nextLong()));
+			_gamePool.execute(gameRunnerFactory.build(i,rand.nextLong()));
 		}
 
 		/* wait for the games to finish */
