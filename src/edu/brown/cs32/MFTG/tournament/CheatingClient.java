@@ -7,6 +7,11 @@ import edu.brown.cs32.MFTG.monopoly.Player;
 import edu.brown.cs32.MFTG.tournament.data.GameDataReport;
 
 public class CheatingClient extends HumanClient {
+	
+	public static void main(String[] args) {
+		new CheatingClient(false);
+
+	}
 
 	public CheatingClient(boolean music) {
 		super(music);
