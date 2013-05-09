@@ -127,7 +127,7 @@ public class SliderPanel extends JPanel {
 			double tradingFear) {
 		_liquidity.setValue((int) (10*liquidity));
 		_timeChange.setValue((int) (10*timeChange));
-		_tradingFear.setValue((int) (30*tradingFear));
+		_tradingFear.setValue((int) (20*tradingFear));
 	}
 
 }

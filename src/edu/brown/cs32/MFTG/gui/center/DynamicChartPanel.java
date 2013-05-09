@@ -155,8 +155,8 @@ public class DynamicChartPanel extends ChartPanel {
 		_renderer.setSeriesPaint(0, Color.BLUE);
 		_renderer.setSeriesPaint(1, Color.GREEN);
 		_renderer.setSeriesPaint(2, Color.RED);
-		_renderer.setSeriesPaint(3, Color.BLACK);
-		_renderer.setSeriesPaint(4, Color.GRAY);
+		_renderer.setSeriesPaint(4, Color.BLACK);
+		_renderer.setSeriesPaint(5, Color.GRAY);
 		
 		_buyCash.setSelected(false);
 		_buildCash.setSelected(false);
@@ -179,8 +179,8 @@ public class DynamicChartPanel extends ChartPanel {
 			_renderer.setSeriesPaint(0, Color.BLUE);
 			_renderer.setSeriesPaint(1, Color.GREEN);
 			_renderer.setSeriesPaint(2, Color.RED);
-			_renderer.setSeriesPaint(3, Color.BLACK);
-			_renderer.setSeriesPaint(4, Color.GRAY);
+			_renderer.setSeriesPaint(4, Color.BLACK);
+			_renderer.setSeriesPaint(5, Color.GRAY);
 			
 			_buyCash.setSelected(false);
 			_buildCash.setSelected(false);
@@ -195,8 +195,8 @@ public class DynamicChartPanel extends ChartPanel {
 			_renderer.setSeriesPaint(0, Color.BLUE);
 			_renderer.setSeriesPaint(1, Color.GREEN);
 			_renderer.setSeriesPaint(2, Color.RED);
-			_renderer.setSeriesPaint(3, Color.BLACK);
-			_renderer.setSeriesPaint(4, Color.GRAY);
+			_renderer.setSeriesPaint(4, Color.BLACK);
+			_renderer.setSeriesPaint(5, Color.GRAY);
 			
 			
 			
@@ -205,8 +205,8 @@ public class DynamicChartPanel extends ChartPanel {
 				_renderer.setSeriesPaint(0, Color.BLUE);
 				_renderer.setSeriesPaint(1, Color.GREEN);
 				_renderer.setSeriesPaint(2, Color.RED);
-				_renderer.setSeriesPaint(3, Color.BLACK);
-				_renderer.setSeriesPaint(4, Color.GRAY);
+				_renderer.setSeriesPaint(4, Color.BLACK);
+				_renderer.setSeriesPaint(5, Color.GRAY);
 				_moving = -1;
 				return;
 			}
@@ -318,8 +318,8 @@ public class DynamicChartPanel extends ChartPanel {
 				_renderer.setSeriesPaint(0, Color.BLUE);
 				_renderer.setSeriesPaint(1, Color.GREEN);
 				_renderer.setSeriesPaint(2, Color.RED);
-				_renderer.setSeriesPaint(3, Color.BLACK);
-				_renderer.setSeriesPaint(4, Color.GRAY);
+				_renderer.setSeriesPaint(4, Color.BLACK);
+				_renderer.setSeriesPaint(5, Color.GRAY);
 				_renderer.setSeriesPaint(_moving, Color.YELLOW);
 			}
 			else if (_changeEnabled == false) {
