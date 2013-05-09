@@ -150,7 +150,7 @@ public class Tournament implements Runnable{
 			/* check for cheating */
 			if(data.size() > 0){
 				if(DataProcessor.isCorrupted(data, confirmationIndices)){
-					System.out.println("someone is cheating");
+					System.err.println("someone is cheating");
 				}
 				sendEndOfRoundData(accumulateEndOfRoundData(data, roundNum));
 			}
@@ -263,7 +263,7 @@ public class Tournament implements Runnable{
 		List<GameDataReport> gameData = new ArrayList<>();
 
 		if (_clientHandlers.size() != seeds.size()){
-			System.out.println("seed size doesn't match num clients");
+			System.err.println("seed size doesn't match num clients");
 		}
 
 		/* tell the clients to play games */
@@ -326,8 +326,6 @@ public class Tournament implements Runnable{
 	 * @param aggregatedData the data to send
 	 */
 	private void sendEndOfRoundData(GameDataReport aggregatedData) {
-//		System.out.println("in tournament");
-//		System.out.println(aggregatedData);
 		for(ClientHandler c : _clientHandlers){
 			try {
 				c.setGameData(aggregatedData);
