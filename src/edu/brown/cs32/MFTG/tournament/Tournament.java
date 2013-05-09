@@ -150,7 +150,8 @@ public class Tournament implements Runnable{
 			/* check for cheating */
 			if(data.size() > 0){
 				if(DataProcessor.isCorrupted(data, confirmationIndices)){
-					System.err.println("someone is cheating");
+					sendErrorMessage("Somebody is cheating! The game lobby will now close");
+					shutDown();
 				}
 				sendEndOfRoundData(accumulateEndOfRoundData(data, roundNum));
 			}
