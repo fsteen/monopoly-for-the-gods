@@ -39,7 +39,6 @@ import edu.brown.cs32.MFTG.tournament.data.Pair;
 public class HumanClient extends Client{
 
 	private MonopolyGui _gui;
-	private ExecutorService _executor = Executors.newCachedThreadPool();
 	private Timer _timer;
 	private Map<Integer,String> _playerNames;
 
@@ -54,6 +53,7 @@ public class HumanClient extends Client{
 	 * @throws IOException
 	 */
 	public void run(){
+		_gamePool = Executors.newCachedThreadPool();
 		try {
 			_server = new Socket(_host, _port);
 			_input = new BufferedReader(new InputStreamReader(_server.getInputStream()));
@@ -78,7 +78,7 @@ public class HumanClient extends Client{
 		}
 		_running = true;
 		Callable<Void> worker = new RequestCallable(this);
-		_executor.submit(worker);
+		_gamePool.submit(worker);
 	}
 
 	/***************Networking Methods*************************/

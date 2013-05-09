@@ -10,6 +10,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.Executors;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -88,13 +89,16 @@ public class AIClient extends Client{
 
 	
 	public void run() {
+		_gamePool = Executors.newCachedThreadPool();
 		try {
 			_server = new Socket(_host,_port);
 			_input = new BufferedReader(new InputStreamReader(_server.getInputStream()));
 			_output = new BufferedWriter(new OutputStreamWriter(_server.getOutputStream()));
 		} catch (UnknownHostException e) {
+			_gamePool.shutdown();
 			return;
 		} catch (IOException e) {
+			_gamePool.shutdown();
 			return;
 		}
 		try {
@@ -102,6 +106,7 @@ public class AIClient extends Client{
 		} catch (IOException | InvalidRequestException e1) {
 			System.err.println("An error has occured. AI will now exit");
 			sayGoodbye(true);
+			_gamePool.shutdown();
 			return;
 		}
 		_running = true;
@@ -111,14 +116,17 @@ public class AIClient extends Client{
 			} catch (IOException | InvalidRequestException e){
 				System.err.println("An error has occured. AI will now exit");
 				sayGoodbye(false);
+				_gamePool.shutdown();
 				return;
 			} catch (Exception e){
 				e.printStackTrace();
 				System.err.println("An error has occured. AI will now exit");
 				sayGoodbye(false);
+				_gamePool.shutdown();
 				return;
 			}
 		}
+		_gamePool.shutdown();
 	}
 
 	/**

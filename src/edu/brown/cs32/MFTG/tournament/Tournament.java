@@ -140,7 +140,7 @@ public class Tournament implements Runnable{
 			confirmationIndices = DataProcessor.generateConfirmationIndices(gamesPerModule, BackendConstants.CONFIRMATION_PERCENTAGE,_rand);
 
 			/* play a round of games */
-			data = playRoundOfGames(players, DataProcessor.generateSeeds(gamesPerModule, _players.size(), confirmationIndices,_rand));
+			data = playRoundOfGames(players, DataProcessor.generateSeeds(gamesPerModule, _clientHandlers.size(), confirmationIndices,_rand));
 
 			if (data == null){
 				shutDown();
