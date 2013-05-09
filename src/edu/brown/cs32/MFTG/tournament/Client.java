@@ -14,6 +14,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -52,12 +53,17 @@ public abstract class Client implements Runnable{
 	/* Module variables */
 	protected ExecutorService _pool;
 	protected int _id;
+	protected int _nextDisplaySize;
+	protected int _numGamesPlayed;
+	protected GameDataAccumulator _data;
+	protected AtomicInteger _numThreadsDone;
 
 	public Client() {
 		_oMapper = new ObjectMapper();
 		_lastRequest = Method.DISPLAYGAMEDATA;
 		_running = true;
 		_pool = Executors.newFixedThreadPool(BackendConstants.NUM_THREADS);
+		_numThreadsDone = new AtomicInteger(0);
 	}
 	
 	public void connect(int port, String host){
@@ -79,7 +85,7 @@ public abstract class Client implements Runnable{
 	
 	protected abstract void setPlayerNames(List<Player> players);
 	
-	protected abstract void sendDataToGui(GameDataReport data);
+	public abstract void addGameData(GameData gameData);
 	
 	/**
 	 * Sends a goodbye message to the server 
@@ -314,36 +320,63 @@ public abstract class Client implements Runnable{
 	 * @param settings the game settings
 	 * @return the data collected from the games
 	 */
-	public GameDataReport playGames(List<Player> players, List<Long> seeds, Settings settings) {
+	public GameDataReport playGames(List<Player> players, List<Long> seeds, Settings settings){
+		/* reset variables */
+		_numGamesPlayed = 0;
+		_data = null;
+		_nextDisplaySize = BackendConstants.DATA_PACKET_SIZE;
+		_numThreadsDone.set(0);
 		setPlayerNames(players);
-		List<Future<GameData>> gameDataFutures = new ArrayList<>();
-		GameDataAccumulator all;
-		GameRunnerFactory gameRunnerFactory = new GameRunnerFactory(BackendConstants.MAX_NUM_TURNS,
-				settings.freeParking,settings.doubleOnGo,settings.auctions,players.toArray(new Player[players.size()]));
-		
+
 		/* launch the games in separate threads */
+		GameRunnerFactory gameRunnerFactory = new GameRunnerFactory(_numThreadsDone, this, BackendConstants.MAX_NUM_TURNS,
+				settings.freeParking,settings.doubleOnGo,settings.auctions,players.toArray(new Player[players.size()]));
+
 		for(int i = 0; i < seeds.size(); i++){
-			gameDataFutures.add(_pool.submit(gameRunnerFactory.build(i, seeds.get(i))));
+			_pool.execute(gameRunnerFactory.build(i,seeds.get(i)));
 		}
-		
+
 		/* wait for the games to finish */
-		try{
-			int nextDisplaySize = BackendConstants.DATA_PACKET_SIZE;
-			all = DataProcessor.aggregate(gameDataFutures.get(0).get(),BackendConstants.NUM_DATA_POINTS);
-			for(int i = 1; i < gameDataFutures.size(); i++){
-				DataProcessor.combineAccumulators(all, DataProcessor.aggregate(gameDataFutures.get(i).get(),BackendConstants.NUM_DATA_POINTS));
-				if(i >= nextDisplaySize){
-					sendDataToGui(all.toGameDataReport());
-					nextDisplaySize += BackendConstants.DATA_PACKET_SIZE;
-				}
+		synchronized (this){
+			while(_numThreadsDone.get() < seeds.size()){
+				try{
+					this.wait();
+				} catch (InterruptedException e){}
 			}
-			return all.toGameDataReport();
-		} catch (InterruptedException | ExecutionException e) {
-			/* just play one game and return the results */
-			GameRunner g = gameRunnerFactory.build(0,seeds.get(0));
-			return DataProcessor.aggregate(g.call(),BackendConstants.NUM_DATA_POINTS).toGameDataReport();
 		}
+
+		return _data.toGameDataReport();
 	}
+//	public GameDataReport playGames(List<Player> players, List<Long> seeds, Settings settings) {
+//		setPlayerNames(players); /* record the player names for displaying at the end */
+//		List<Future<GameData>> gameDataFutures = new ArrayList<>();
+//		GameDataAccumulator all;
+//		GameRunnerFactory gameRunnerFactory = new GameRunnerFactory(BackendConstants.MAX_NUM_TURNS,
+//				settings.freeParking,settings.doubleOnGo,settings.auctions,players.toArray(new Player[players.size()]));
+//		
+//		/* launch the games in separate threads */
+//		for(int i = 0; i < seeds.size(); i++){
+//			gameDataFutures.add(_pool.submit(gameRunnerFactory.build(i, seeds.get(i))));
+//		}
+//		
+//		/* wait for the games to finish */
+//		try{
+//			int nextDisplaySize = BackendConstants.DATA_PACKET_SIZE; /* reset the next display point */
+//			all = DataProcessor.aggregate(gameDataFutures.get(0).get(),BackendConstants.NUM_DATA_POINTS);
+//			for(int i = 1; i < gameDataFutures.size(); i++){
+//				DataProcessor.combineAccumulators(all, DataProcessor.aggregate(gameDataFutures.get(i).get(),BackendConstants.NUM_DATA_POINTS));
+//				if(i >= nextDisplaySize){
+//					sendDataToGui(all.toGameDataReport());
+//					nextDisplaySize += BackendConstants.DATA_PACKET_SIZE;
+//				}
+//			}
+//			return all.toGameDataReport();
+//		} catch (InterruptedException | ExecutionException e) {
+//			/* if all else fails ... just play one game and return the results */
+//			GameRunner g = gameRunnerFactory.build(0,seeds.get(0));
+//			return DataProcessor.aggregate(g.call(),BackendConstants.NUM_DATA_POINTS).toGameDataReport();
+//		}
+//	}
 
 	/**
 	 * Find the player property data specific to this player
