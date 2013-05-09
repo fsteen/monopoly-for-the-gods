@@ -1,28 +1,70 @@
 
 i'm looking at: 0
-player name: Chizu
 
 i'm looking at: 1
+player name: Computer
 
 i'm looking at: 2
-no name
+player name: Computer
 
 i'm looking at: 3
-no name
+player name: Computer
 
 i'm looking at: -1
 its a tie
+
 i'm looking at: 0
 
 i'm looking at: 1
-player name: Alex
+player name: Computer
 
 i'm looking at: 2
-no name
+player name: Computer
 
 i'm looking at: 3
-no name
+player name: Computer
 
 i'm looking at: -1
 its a tie
-e
+
+i'm looking at: 0
+
+i'm looking at: 1
+player name: Computer
+
+i'm looking at: 2
+player name: Computer
+
+i'm looking at: 3
+player name: Computer
+
+i'm looking at: -1
+its a tie
+
+i'm looking at: 0
+
+i'm looking at: 1
+player name: Computer
+
+i'm looking at: 2
+player name: Computer
+
+i'm looking at: 3
+player name: Computer
+
+i'm looking at: -1
+its a tie
+
+i'm looking at: 0
+
+i'm looking at: 1
+player name: Computer
+
+i'm looking at: 2
+player name: Computer
+
+i'm looking at: 3
+player name: Computer
+
+i'm looking at: -1
+its a tie
