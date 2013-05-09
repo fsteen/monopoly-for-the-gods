@@ -76,7 +76,7 @@ public class DataProcessorTests {
 		}
 	}
 	
-//	@Test
+	@Test
 	public void generateGameDataReportSingleGame(){
 		Player p0=new Player(0,"");
 		Player p1=new Player(1,"");
@@ -87,10 +87,11 @@ public class DataProcessorTests {
 		List<GameData> data = new ArrayList<>();
 		data.add(g.getGameData());
 		
-		System.out.println(DataProcessor.aggregate(data, 500).toGameDataReport().toString());
+		g.getGameData().printData();
+//		System.out.println(DataProcessor.aggregate(data, 500).toGameDataReport().toString());
 	}
 	
-	@Test
+//	@Test
 	public void combineAccumulatorsTest(){
 		Random rand = new Random();
 		Player p0=new Player(0,"");
@@ -121,13 +122,13 @@ public class DataProcessorTests {
 		data.addAll(data2);
 		GameDataReport c = DataProcessor.aggregate(data, 50).toGameDataReport();
 		GameDataReport c2 = DataProcessor.combineAccumulators(r,r2).toGameDataReport();
-		System.out.println(c);
-		System.out.println(c2);
+//		System.out.println(c);
+//		System.out.println(c2);
 		
 		assertTrue(c2.equals(c));
 	}
 	
-//	@Test
+	@Test
 	public void generateGameDataReportMany(){
 		Random rand = new Random();
 		Player p0=new Player(0,"");

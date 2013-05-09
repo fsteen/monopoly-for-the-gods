@@ -20,7 +20,13 @@ public class PlayerWealthDataAccumulator{
 	}
 	
 	public void averageWith(PlayerWealthDataAccumulator p){
-		if(numDataPoints != 0 && p.numDataPoints != 0){
+		if(p.numDataPoints == 0){
+			return;
+		} else if(numDataPoints == 0){
+			accCash = p.accCash;
+			accTotalWealth = p.accTotalWealth;
+			numDataPoints = p.numDataPoints;
+		} else {
 			int newNumDataPoints = p.numDataPoints + numDataPoints;
 			accCash = ((accCash * numDataPoints) + (p.accCash * p.numDataPoints))/newNumDataPoints;
 			accTotalWealth = ((accTotalWealth * numDataPoints) + (p.accTotalWealth * p.numDataPoints))/newNumDataPoints;

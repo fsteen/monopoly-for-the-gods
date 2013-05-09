@@ -19,7 +19,7 @@ public class DataProcessor {
 	 * @return the GameDataAccumulator 
 	 */
 	public static GameDataAccumulator aggregate(List<GameData> data, int numDataPoints){
-		GameDataAccumulator overall = new GameDataAccumulator(numDataPoints/*, data.get(0)._numPlayers*/);
+		GameDataAccumulator overall = new GameDataAccumulator(numDataPoints);
 		for(GameData d : data){
 			combineGameData(overall, d);
 			overall.gameFinished();
@@ -27,6 +27,18 @@ public class DataProcessor {
 		}
 		overall.average();
 		return overall;
+	}
+	
+	/**
+	 * Wrapper method for the above
+	 * @param data
+	 * @param numDataPoints
+	 * @return
+	 */
+	public static GameDataAccumulator aggregate(GameData data, int numDataPoints){
+		List<GameData> d = new ArrayList<>();
+		d.add(data);
+		return aggregate(d,numDataPoints);
 	}
 	
 	/**

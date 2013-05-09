@@ -158,27 +158,6 @@ public class HumanClient extends Client{
 	}
 	
 	/**
-	 * Called by the game runnables to update GameData info
-	 * when they finish playing
-	 * @param gameData
-	 */
-	public synchronized void addGameData(GameData gameData){		
-		List<GameData> dataList = new ArrayList<>();
-		dataList.add(gameData);
-		GameDataAccumulator newData = DataProcessor.aggregate(dataList,BackendConstants.NUM_DATA_POINTS);
-		
-		_data = _data == null ? newData :
-			DataProcessor.combineAccumulators(_data, DataProcessor.aggregate(dataList,BackendConstants.NUM_DATA_POINTS));
-		
-		/* display data and determine the next display point */
-		_numGamesPlayed++;
-		if(_numGamesPlayed >= _nextDisplaySize){
-			sendDataToGui(_data.toGameDataReport());
-			_nextDisplaySize += BackendConstants.DATA_PACKET_SIZE;
-		}
-	}
-	
-	/**
 	 * Starts the timer for choosing heuristics, after which the player will be retrieved
 	 * @param the time, in seconds, to wait before requesting the player
 	 */
@@ -205,13 +184,7 @@ public class HumanClient extends Client{
 	 */
 	private void finishMatch(GameDataReport combinedData){
 		int numPlayers = combinedData._timeStamps.get(0).wealthData.size();
-		
-		
-		
-		
 		List<String> names = new ArrayList<>();
-		
-//		for(int i = 0; )
 		
 		for(int i = 0; i < BackendConstants.MAX_NUM_PLAYERS; i++){
 			names.add(i < numPlayers ? _playerNames.get(i) : "");
@@ -235,8 +208,7 @@ public class HumanClient extends Client{
 	 * Updates data in the gui
 	 * @param data 
 	 */
-	private void sendDataToGui(GameDataReport data){
-//		System.out.println(data.toString());
+	protected void sendDataToGui(GameDataReport data){
 		_gui.getBoard().setPlayerSpecificPropertyData(getPlayerPropertyData(data._overallPlayerPropertyData));
 		_gui.getBoard().setPropertyData(data._overallPropertyData);
 		_gui.getBoard().setWealthData(getPlayerWealthData(data._timeStamps));

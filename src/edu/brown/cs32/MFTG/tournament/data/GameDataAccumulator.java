@@ -292,15 +292,15 @@ What is being calculated:
 Property Data:
 numHouses - the average max number of houses for games in which there was a monopoly on this property
 numDataPointsMonopolized - the number of timestamps for which it was monopolized
-totalRevenueWithHouses - the average totalRevenueWithHouses throughout the game
-totalRevenueWithoutHouses - the average totalRevenueWithoutHouses throughout the game
+totalRevenueWithHouses - the average max totalRevenueWithHouses
+totalRevenueWithoutHouses - the average max totalRevenueWithoutHouses
 numDataPoints - the number of data points for this property
 
 Player Property Data:
 
 numHouses - the average max number of houses for games in which this player had a monopoly on this property
 numDataPointsMonopolized - the number of timestamps for which it was monopolized for this player
-totalRevenueWithHouses - the average totalRevenueWithHouses throughout the game for times when this player owned the property
-totalRevenueWithoutHouses - the average totalRevenueWithoutHouses throughout the game for times when this player owned the property
+totalRevenueWithHouses - the average max totalRevenueWithHouses for times when this player owned the property
+totalRevenueWithoutHouses - the average max totalRevenueWithoutHouses for times when this player owned the property
 numDataPoints - the number of data points for this property for this player
 */
