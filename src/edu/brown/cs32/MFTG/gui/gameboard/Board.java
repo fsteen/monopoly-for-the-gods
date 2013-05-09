@@ -428,6 +428,7 @@ public class Board extends JPanel {
 		player.setJailRich(waits.get(2));
 		
 		_center.setButtonChoices(player);
+		
 		return player;
 	}
 	
@@ -476,6 +477,8 @@ public class Board extends JPanel {
 	}
 	
 	public void setWinnerData(Map<Integer, Double> data, Map<Integer, String> names){
+		System.out.println("winner value: " + data);
+		System.out.println("name value: " + names);
 		_center.setWinnerData(data, names);
 	}
 

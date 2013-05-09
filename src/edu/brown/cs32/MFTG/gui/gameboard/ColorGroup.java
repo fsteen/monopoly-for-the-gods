@@ -223,8 +223,8 @@ public class ColorGroup extends JPanel {
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			if(e.getButton() == MouseEvent.BUTTON1 && e.getClickCount()==2) {
-				nextView();
-				update();
+				/* nextView();
+				update(); */
 			}
 			if(e.getButton() == MouseEvent.BUTTON3) {
 				JFrame frame = new JFrame("Deed Cards");
